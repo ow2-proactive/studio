@@ -2,7 +2,7 @@
 
 	Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
 
-    var ENABLE_WORKFLOWS = false;
+    var ENABLE_WORKFLOWS = true;
 
 	PaletteView = Backbone.View.extend({
 		initialize: function() {
@@ -55,7 +55,7 @@
 		initialize: function() {
 	        this.model.on("change", this.render, this);
             this.render();
-        },
+        }
 	});
 	
 	ViewWithProperties = ViewWatchingModelChange.extend({
@@ -151,40 +151,6 @@
 			this.$el.droppable({
 				accept: ".job-element",
 		  		drop: function(event, ui) {
-
-                    // tooltips
-                    if (!localStorage['hint-dropped']) {
-		            	localStorage['hint-dropped'] = true;
-		            	var box = rendering.$el;
-		            	box.attr('data-toggle', 'popover');
-		            	box.attr('data-placement', 'right');
-		            	box.attr('data-content', 'Click on it to see its properties');
-		            	box.attr('title', 'You have just created a task!');
-		            	box.popover('show')
-			        	
-		            	box.mouseup(function() {
-		            		
-		            		box.popover('destroy');
-		            		var props = $("#properties-container");
-		            		props.attr('data-toggle', 'popover');
-		            		props.attr('data-placement', 'right');
-		            		props.attr('data-content', 'Computind logic, data, node criteria and many more');
-		            		props.attr('title', 'Here you can tune task\'s properties');
-		            		props.popover('show')
-
-		            		props.mouseover(function() {
-			            		props.popover('destroy');
-			            	})
-			        	})
-		        	}
-		        	
-//		        	that.$el.bind('mousewheel', function(event, delta) {
-//		        		if (delta > 0) that.zoomIn()
-//		        		else that.zoomOut()
-//		        		event.preventDefault();
-//		        	})
-
-
                     var elem = $(ui.draggable);
                     if (!elem.hasClass('control-flow')) {
                         that.createTask(ui)
@@ -211,7 +177,7 @@
                     if (connection.connection.scope=='dependency') {
                         targetModel.addDependency(sourceModel);
                     } else {
-                        sourceModel.addControlFlow(connection.connection.scope, targetModel);
+                        sourceModel.setControlFlow(connection.connection.scope, targetModel);
                     }
                 }
 			});
@@ -491,6 +457,8 @@
 			this.element = $('<div class="task"><a href="#" class="task-name"><img src="'
                 +this.icons[this.modelType]+'" width="20px">&nbsp;<span class="name">'
                 +this.model.get("Task Name")+'</span></a></div>');
+
+            this.showBlockInTask();
         },
 
         updateTaskName: function() {
@@ -535,10 +503,10 @@
         showBlockInTask: function() {
             var block = this.model.get("Block");
             if (block && block != 'none') {
-                if (block == 'start') this.$el.removeClass('block-end').addClass('block-start');
-                else this.$el.removeClass('block-start').addClass('block-end');
+                if (block == 'start') this.element.removeClass('block-end').addClass('block-start');
+                else this.element.removeClass('block-start').addClass('block-end');
             } else {
-                 this.$el.removeClass('block-end').removeClass('block-start');
+                 this.element.removeClass('block-end').removeClass('block-start');
             }
         },
 	    validateForm: function() {
@@ -583,7 +551,8 @@
                                 var ifModel = that.model.controlFlow['if'];
                                 if (!ifModel) return 'if'
                                 else if (!ifModel['else']) return 'else'
-                                else return 'continuation'
+                                else if (!ifModel['continuation']) return 'continuation'
+                                else return "";
                             },
                             cssClass:"l1 component label",
                             events: {'click': function(label, evn) { that.showControlFlowScript(label, evn)}}
@@ -646,15 +615,15 @@
             var that = this;
             var params = this.endpointsParams(type);
 
+            //console.log('here@!!!', (type=='dependency'?-1:1));
             var targetEndpoint = {
                 paintStyle:{ width:15, height:15, fillStyle:params.color },
                 connectorStyle : { strokeStyle:params.color },
-                connectorOverlays:params.overlays,
                 scope:params.scope,
                 cssClass:"target-endpoint " + params.scope + "-target-endpoint",
                 dropOptions:{ hoverClass:"hover", activeClass:"active" },
                 isTarget:true,
-                maxConnections:-1
+                maxConnections:(type=='dependency'?-1:1)
             };
             return jsPlumb.addEndpoint(that.$el, targetEndpoint, { 'anchor':params.anchorTarget });
         },
@@ -849,6 +818,48 @@
                                     jsPlumb.connect({source:taskView.$el, target:dependency.$el, overlays:taskView.overlays()});
                                 }
                             })
+                        }
+                        if (task.controlFlow) {
+                            if (task.controlFlow.if) {
+                                var ifFlow = task.controlFlow.if;
+
+                                var taskIf = task2View[task.get('Task Name')];
+                                var endpointIf = taskIf.addSourceEndPoint('if')
+                                if (ifFlow.task) {
+                                    var taskTarget = task2View[ifFlow.task.get('Task Name')];
+                                    var endpointTarget = taskTarget.addTargetEndPoint('if')
+                                    console.log("!!!", endpointIf);
+                                    endpointIf.connectorOverlays[1][1].label = 'if';
+                                    jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:taskIf.overlays()});
+                                }
+                                if (ifFlow.else) {
+                                    var taskElse = task2View[ifFlow.else.task.get('Task Name')];
+                                    var endpointElse = taskElse.addTargetEndPoint('if')
+                                    endpointIf.connectorOverlays[1][1].label = 'else';
+                                    jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:taskIf.overlays()});
+                                }
+                                if (ifFlow.continuation) {
+                                    var taskContinuation = task2View[ifFlow.continuation.task.get('Task Name')];
+                                    var endpointContinuation = taskContinuation.addTargetEndPoint('if')
+                                    endpointIf.connectorOverlays[1][1].label = 'continuation';
+                                    jsPlumb.connect({source:endpointIf, target:endpointContinuation, overlays:taskIf.overlays()});
+                                }
+                            }
+                            if (task.controlFlow.replicate) {
+                                var taskReplicateView = task2View[task.get('Task Name')];
+                                var taskDepView = task2View[jobModel.getDependantTask(task.get('Task Name'))];
+                                var endpointSource = taskReplicateView.addSourceEndPoint('replicate')
+                                var endpointTarget = taskDepView.addTargetEndPoint('replicate')
+                                jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:taskReplicateView.overlays()});
+                            }
+                            if (task.controlFlow.loop) {
+                                var loopTarget = task.controlFlow.loop.task;
+                                var taskLoopView = task2View[task.get('Task Name')];
+                                var targetView = task2View[loopTarget.get('Task Name')];
+                                var endpointSource = taskLoopView.addSourceEndPoint('loop')
+                                var endpointTarget = targetView.addTargetEndPoint('loop')
+                                jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:taskLoopView.overlays()});
+                            }
                         }
                     })
 

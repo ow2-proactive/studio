@@ -108,11 +108,11 @@
 				["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
 			"Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'variables->variable'}, itemToString: inlineNameValue , subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
-                "Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} },
+                "Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
             }},
 			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab":"Generic Info", 'placeholder':'genericInformation->info'}, itemToString: inlineNameValue, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
-                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} },
+                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
             }},
 			"Input Space Url": {type:"Text", fieldAttrs: {"data-tab":"Data", 'placeholder':'inputSpace->@attributes->url'}}, 
 			"Output Space Url" : {type:"Text", fieldAttrs: {'placeholder':'outputSpace->@attributes->url'}},
@@ -122,7 +122,7 @@
 			"Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->cancelJobOnError'}, options: 
 				[{val:"true", label: "cancel job as soon as one task fails"}, {val:"false", label: "continue job execution when a task fails"}]},
 			"If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->restartTaskOnError'}, options:
-				["anywhere", "elsewhere"]},
+				["anywhere", "elsewhere"]}
 		},
 		initialize: function() {
             this.set({"Project Name": "Project"});
@@ -145,6 +145,21 @@
 				t.removeControlFlow(task);
 			})
 		},
+        getDependantTask: function(taskName) {
+            for (i in this.tasks) {
+                var task = this.tasks[i];
+                if (task.dependencies) {
+                    for (j in task.dependencies) {
+                        var dep = task.dependencies[j];
+                        if (taskName == dep.get('Task Name')) {
+                            return task.get('Task Name');
+                        }
+                    }
+                }
+            }
+
+            return;
+        },
 		populate : function(obj) {
 			this.populateSchema(obj);
 			var that = this;
@@ -188,11 +203,36 @@
 						$.each(task.depends.task, function(i, dep) {
 							if (name2Task[dep['@attributes']['ref']]) {
 								var depTaskModel = name2Task[dep['@attributes']['ref']];
-								taskModel.addControlFlow(depTaskModel);
+								taskModel.addDependency(depTaskModel);
 							}
 						})
 					}
 				})
+                // adding controlFlows after all dependencies are set
+                $.each(obj.taskFlow.task, function(i, task) {
+                    var taskModel = name2Task[task['@attributes']['name']]
+                    if (task.controlFlow) {
+                        if (task.controlFlow.if) {
+                            var ifFlow = task.controlFlow.if['@attributes'];
+                            taskModel.setif(name2Task[ifFlow['target']])
+                            taskModel.controlFlow.if.model.populateSchema(task.controlFlow.if);
+                            taskModel.setif(name2Task[ifFlow['else']])
+                            taskModel.setif(name2Task[ifFlow['continuation']])
+                        }
+                        if (task.controlFlow.replicate) {
+                            var branchWithScript = new BranchWithScript();
+                            branchWithScript.populateSchema(task.controlFlow.replicate);
+                            taskModel.controlFlow = {replicate:{model: branchWithScript}};
+                        }
+                        if (task.controlFlow.loop) {
+                            var branchWithScript = new BranchWithScript();
+                            branchWithScript.populateSchema(task.controlFlow.loop);
+                            var loopTarget = task.controlFlow.loop['@attributes']['target'];
+                            var targetTask = name2Task[loopTarget];
+                            taskModel.controlFlow = {loop:{task: targetTask, model: branchWithScript}};
+                        }
+                    }
+                })
 				delete name2Task;
 			}
 		}
@@ -223,7 +263,7 @@
 			"Class":{type:"Text", fieldAttrs: {'placeholder':'@attributes->class'}},
 			"Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'parameters->parameter'}, itemToString: inlineNameValue, subSchema: {
                 "Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}},
-                "Value": {type:"Text", fieldAttrs: {'placeholder':'@attributes->value'}},
+                "Value": {type:"Text", fieldAttrs: {'placeholder':'@attributes->value'}}
             }},
 			"Fork Environment": {type: 'Select', fieldAttrs: {'placeholder':'forkEnvironment', 'strategy':'checkpresence'}, 
 				options: [
@@ -237,13 +277,13 @@
                 "Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}},
                 "Value": {type:"Text", fieldAttrs: {'placeholder':'@attributes->value'}},
                 "Append": {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->append'}},
-    			"Append Char" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->appendChar'}}, 
+    			"Append Char" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->appendChar'}}
             }},
 			"Environment Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder':'forkEnvironment->envScript->script'}}
 		},
 		initialize: function() {
 	        this.set({"Fork Environment": "false"});
-	    },		
+	    }
 	});
 
 	NativeExecutable = SchemaModel.extend({
@@ -280,7 +320,7 @@
 			"Store Task Logs in a File" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousLogs'}},
 			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'genericInformation->info'}, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
-                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} },
+                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
             }},
 			"Number of Nodes" : {type: 'Number', fieldAttrs: {"data-tab":"Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes'}},
 			"Topology": { type: 'Select', fieldAttrs: {'placeholder':'parallel->topology'}, options: ["none", "arbitrary", 
@@ -291,7 +331,7 @@
 			                                        {val: "differentHostsExclusive", label: "different host exclusive"}]  },
 			"Or Topology Threshold Proximity": {type:"Number", fieldAttrs: {'placeholder':'parallel->topology->thresholdProximity->@attributes->threshold'}},
 			"Control Flow": {type: 'Select', options: ["none", "if", "replicate", "loop"], fieldAttrs: {"data-tab":"Control Flow"}},
-			"Block": {type: 'Select', options: ["none", {val:"start", label: "start block"}, {val:"end", label: "end block"}]},
+			"Block": {type: 'Select', options: ["none", {val:"start", label: "start block"}, {val:"end", label: "end block"}], fieldAttrs: {"placeholder":"controlFlow->@attributes->block"}},
 			"Selection Scripts": {type: 'List', itemType: 'NestedModel', model: SelectionScript, itemToString: function() {return "Selection Script"}, fieldAttrs: {"data-tab":"Selection Scripts", 'placeholder':'selection->script'}},
             "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab":"Pre Script", 'placeholder':'pre->script'}},
             "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab":"Post Script", 'placeholder':'post->script'}},
@@ -308,8 +348,8 @@
                 "Includes": {type:"Text", fieldAttrs: {'placeholder':'@attributes->includes'}},
                 "Access Mode": {type: 'Select',
                 	fieldAttrs: {'placeholder':'@attributes->accessMode'},
-                	options: ["transferToOutputSpace", "transferToGlobalSpace", "transferToUserSpace", "none"]},
-            }},
+                	options: ["transferToOutputSpace", "transferToGlobalSpace", "transferToUserSpace", "none"]}
+            }}
 		},
 
 		initialize: function() {
@@ -345,13 +385,13 @@
                 console.log("Removing dependency", task, "from", this)
             }
         },
-		addControlFlow: function(controlFlowType, task) {
-            if (this['add'+controlFlowType]) this['add'+controlFlowType](task);
+		setControlFlow: function(controlFlowType, task) {
+            if (this['set'+controlFlowType]) this['set'+controlFlowType](task);
 		},
 		removeControlFlow: function(controlFlowType, task) {
-            if (this['add'+controlFlowType]) this['remove'+controlFlowType](task);
+            if (this['remove'+controlFlowType]) this['remove'+controlFlowType](task);
         },
-        addif: function(task) {
+        setif: function(task) {
 
             if (!this.controlFlow['if'])  {
                 this.controlFlow = {'if':{}}
@@ -377,7 +417,7 @@
                 }
             }
         },
-        addloop: function(task) {
+        setloop: function(task) {
             console.log('Adding loop')
             this.controlFlow = {loop:{task:task, model: new BranchWithScript()}}
         },
@@ -385,14 +425,14 @@
             console.log('Removing loop')
             delete this.controlFlow['loop']
         },
-        addreplicate: function(task) {
+        setreplicate: function(task) {
             console.log('Adding replicate')
             this.controlFlow = {replicate:{model: new BranchWithScript()}}
         },
         removereplicate: function(controlFlow, task) {
             console.log('Removing replicate')
             delete this.controlFlow['replicate']
-        },
+        }
 	});
 
     BranchWithScript = SchemaModel.extend({
