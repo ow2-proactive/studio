@@ -390,7 +390,8 @@
         		taskWidth = t.width();
         	})
         	var edges = [];
-        	$.each(jsPlumb.getConnections(), function(i, con) {
+
+        	$.each(jsPlumb.getAllConnections(), function(i, con) {
         		edges.push({sourceId:con.source.id, targetId:con.target.id})
         	})
         	// computing layout with dagre 
@@ -615,7 +616,6 @@
             var that = this;
             var params = this.endpointsParams(type);
 
-            //console.log('here@!!!', (type=='dependency'?-1:1));
             var targetEndpoint = {
                 paintStyle:{ width:15, height:15, fillStyle:params.color },
                 connectorStyle : { strokeStyle:params.color },
@@ -828,7 +828,6 @@
                                 if (ifFlow.task) {
                                     var taskTarget = task2View[ifFlow.task.get('Task Name')];
                                     var endpointTarget = taskTarget.addTargetEndPoint('if')
-                                    console.log("!!!", endpointIf);
                                     endpointIf.connectorOverlays[1][1].label = 'if';
                                     jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:taskIf.overlays()});
                                 }
