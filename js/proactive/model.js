@@ -109,7 +109,7 @@
 	
 	Job = SchemaModel.extend({
 		schema: {
-			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General", 'placeholder':'@attributes->projectName'}},
+			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->projectName'}},
 			"Job Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}}, 
 			"Description": {type:"Text", fieldAttrs: {'placeholder':'description->#text'}}, 
 			"Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'jobClasspath->pathElement', 'itemplaceholder':'@attributes->path'}},
@@ -123,7 +123,7 @@
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
             }},
-			"Input Space Url": {type:"Text", fieldAttrs: {"data-tab":"Data", 'placeholder':'inputSpace->@attributes->url'}}, 
+			"Input Space Url": {type:"Text", fieldAttrs: {"data-tab":"File Transfer", 'placeholder':'inputSpace->@attributes->url'}},
 			"Output Space Url" : {type:"Text", fieldAttrs: {'placeholder':'outputSpace->@attributes->url'}},
 			"Global Space Url" : {type:"Text", fieldAttrs: {'placeholder':'globalSpace->@attributes->url'}},
 			"User Space Url" : {type:"Text", fieldAttrs: {'placeholder':'userSpace->@attributes->url'}},
@@ -198,7 +198,7 @@
 					}
 
 					taskModel.populateSchema(task);
-					console.log("Pushing task", task)
+					console.log("Pushing task", taskModel)
 					that.tasks.push(taskModel);
 					name2Task[taskModel.get("Task Name")] = taskModel;
 				});
@@ -313,14 +313,14 @@
 
 	Task = SchemaModel.extend({
 		schema: {
-			"Task Name" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->name', "data-tab":"Executable"}},
+			"Task Name" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->name', "data-tab":"Execution"}},
 			"Type": {type: 'Radio', fieldAttrs: {},
 					options: [
 				          {val: "ScriptExecutable", label: "Script"},
 				          {val: "NativeExecutable", label: "Native Command"},
 				          {val: "JavaExecutable", label: "Java Class"}]},
 			"Parameters" : {type: 'NestedModel', model: ScriptExecutable},
-			"Description": {type:"Text", fieldAttrs: {"data-tab":"General", 'placeholder':'description->#text'}},
+			"Description": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'description->#text'}},
 			"Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder':'@attributes->maxNumberOfExecution'}}, 
 			"Maximum Execution Time (hh:mm:ss)": {type:"Text", fieldAttrs: {'placeholder':'@attributes->walltime'}}, 
 			"Result Preview Class": {type:"Text", fieldAttrs: {'placeholder':'@attributes->resultPreviewClass'}}, 

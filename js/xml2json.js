@@ -31,7 +31,6 @@ function parseXml(xml) {
 
 // Changes XML to JSON
 function xmlToJson(xml) {
-	console.log('!!!here', xml)
 	// Create the return object
 	var obj = {};
 	if (xml.nodeType == 1) { // element

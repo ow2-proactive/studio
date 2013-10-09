@@ -386,8 +386,10 @@
 
             var that = this;
             this.clean();
+            console.log("Changing job model from", this.model);
             this.model = jobModel;
             xmlView.model = jobModel;
+            console.log("To", this.model);
 
             var task2View = {};
             $.each(jobModel.tasks, function(i, task) {
@@ -735,6 +737,8 @@
             	});
         	}
         	console.log("Generating job xml", job);
+            console.log("Job model", this.model);
+
         	var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
 
         	// beautifying the job xml - removing multiple spaces
@@ -785,9 +789,7 @@
                 })
             }
 
-            console.log(this.model.controlFlow)
-
-        	var taskTemplate = _.template($("#task-template").html(), 
+        	var taskTemplate = _.template($("#task-template").html(),
         			{'task': this.model.toJSON(), 
         			'selectionScripts': selectionScripts,
         			'preScript': preScript.trim(),
@@ -830,8 +832,12 @@
 	
 	ScriptExecutableXmlView = Backbone.View.extend({
         render: function() {
-        	var script = new TemplateView({model:this.model["Script"], template:"#script-template"}).render().$el.text();
-        	var template = _.template($("#script-executable-template").html(), {'script': script});
+            var script = this.model["Script"];
+            if (typeof(this.model.get) != "undefined" && this.model.get("Script")) {
+                script = this.model.get("Script").toJSON();
+            }
+        	var scriptView = new TemplateView({model:script, template:"#script-template"}).render().$el.text();
+        	var template = _.template($("#script-executable-template").html(), {'script': scriptView});
         	this.$el.text(template);
         	return this;
         }
