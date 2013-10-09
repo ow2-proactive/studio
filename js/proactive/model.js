@@ -59,39 +59,48 @@
 							})
 						}
 					} else {
-						var value = this.getValue(placeholder, obj);
-						if (value) {
-							if (typeof value === 'object') {
-								if (this.schema[prop].type=="Select") {
-									// looking for a filed in the value matching select options
-									if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy=='checkpresence') {
-										if (value) {
-											console.log("Setting", prop, "from", placeholder, "to", "true")
-											that.set(prop, "true")
-										}
-									} else {
-										$.each(this.schema[prop].options, function(i, option) {
-											if (value[option] || value[option.val]) {
-												console.log("Setting", prop, "from", placeholder, "to", option.val?option.val:option)
-												that.set(prop, option.val?option.val:option)
-												return false;
-											}
-										});										
-									}
-								} else if (this.schema[prop].type=="NestedModel") {
-									var model = new this.schema[prop].model();
-									console.log(model)
-									model.populateSchema(value)
-									console.log("Setting", prop, "from", placeholder, "to", model)
-									that.set(prop, model)
-								} else {
-									console.log("Should no be here", prop, value);
-								}
-							} else {
-								console.log("Setting", prop, "from", placeholder, "to", value)
-								that.set(prop, value)
-							}
-						}
+                        var value = null;
+                        if (!value && placeholder instanceof Array) {
+                            for (ph in placeholder) {
+                                value = this.getValue(placeholder[ph], obj)
+                                if (value) {break;}
+                            }
+                        } else {
+                            var value = this.getValue(placeholder, obj);
+                        }
+                        if (value) {
+                            if (typeof value === 'object') {
+                                if (this.schema[prop].type=="Select") {
+                                    // looking for a filed in the value matching select options
+                                    if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy=='checkpresence') {
+                                        if (value) {
+                                            console.log("Setting", prop, "from", placeholder, "to", "true")
+                                            that.set(prop, "true")
+                                        }
+                                    } else {
+                                        $.each(this.schema[prop].options, function(i, option) {
+                                            if (value[option] || value[option.val]) {
+                                                console.log("Setting", prop, "from", placeholder, "to", option.val?option.val:option)
+                                                that.set(prop, option.val?option.val:option)
+                                                return false;
+                                            }
+                                        });
+                                    }
+                                } else if (this.schema[prop].type=="NestedModel") {
+                                    var model = new this.schema[prop].model();
+                                    console.log(model)
+                                    model.populateSchema(value)
+                                    console.log("Setting", prop, "from", placeholder, "to", model)
+                                    that.set(prop, model)
+                                } else {
+                                    console.log("Should no be here", prop, value);
+                                }
+                            } else {
+                                console.log("Setting", prop, "from", placeholder, "to", value)
+                                value = value.trim()
+                                that.set(prop, value)
+                            }
+                        }
 					}
 				}
 			}
@@ -240,10 +249,10 @@
 
 	Script = SchemaModel.extend({
 		schema: {
-            "Script": {type:"TextArea", fieldAttrs: {'placeholder':'code->#text'}},
+            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
             "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
-            "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}},
+            "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}}
 		}
 	});
 

@@ -380,7 +380,82 @@
 
             this.$el.click();
         },
+        import: function(json) {
+            jobModel = new Job();
+            jobModel.populate(json.job)
 
+            var that = this;
+            this.clean();
+            this.model = jobModel;
+            xmlView.model = jobModel;
+
+            var task2View = {};
+            $.each(jobModel.tasks, function(i, task) {
+                var view = new TaskView({model:task});
+                that.addView(view, {top:0, left:0});
+                task2View[task.get('Task Name')] = view;
+            })
+
+            //adding dependencies after all views exist
+            $.each(jobModel.tasks, function(i, task) {
+                if (task.dependencies) {
+                    $.each(task.dependencies, function(i, dep) {
+                        if (task2View[dep.get('Task Name')]) {
+                            var taskView = task2View[dep.get('Task Name')];
+                            var dependency = task2View[task.get('Task Name')];
+                            jsPlumb.connect({source:taskView.$el, target:dependency.$el, overlays:taskView.overlays()});
+                        }
+                    })
+                }
+                if (task.controlFlow) {
+                    if (task.controlFlow.if) {
+                        var ifFlow = task.controlFlow.if;
+
+                        var taskIf = task2View[task.get('Task Name')];
+                        var endpointIf = taskIf.addSourceEndPoint('if')
+                        if (ifFlow.task) {
+                            var taskTarget = task2View[ifFlow.task.get('Task Name')];
+                            var endpointTarget = taskTarget.addTargetEndPoint('if')
+                            endpointIf.connectorOverlays[1][1].label = 'if';
+                            jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:taskIf.overlays()});
+                        }
+                        if (ifFlow.else) {
+                            var taskElse = task2View[ifFlow.else.task.get('Task Name')];
+                            var endpointElse = taskElse.addTargetEndPoint('if')
+                            endpointIf.connectorOverlays[1][1].label = 'else';
+                            jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:taskIf.overlays()});
+                        }
+                        if (ifFlow.continuation) {
+                            var taskContinuation = task2View[ifFlow.continuation.task.get('Task Name')];
+                            var endpointContinuation = taskContinuation.addTargetEndPoint('if')
+                            endpointIf.connectorOverlays[1][1].label = 'continuation';
+                            jsPlumb.connect({source:endpointIf, target:endpointContinuation, overlays:taskIf.overlays()});
+                        }
+                    }
+                    if (task.controlFlow.replicate) {
+                        var taskReplicateView = task2View[task.get('Task Name')];
+                        var taskDepView = task2View[jobModel.getDependantTask(task.get('Task Name'))];
+                        var endpointSource = taskReplicateView.addSourceEndPoint('replicate')
+                        var endpointTarget = taskDepView.addTargetEndPoint('replicate')
+                        jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:taskReplicateView.overlays()});
+                    }
+                    if (task.controlFlow.loop) {
+                        var loopTarget = task.controlFlow.loop.task;
+                        var taskLoopView = task2View[task.get('Task Name')];
+                        var targetView = task2View[loopTarget.get('Task Name')];
+                        var endpointSource = taskLoopView.addSourceEndPoint('loop')
+                        var endpointTarget = targetView.addTargetEndPoint('loop')
+                        jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:taskLoopView.overlays()});
+                    }
+                }
+            })
+
+            jobModel.trigger('change');
+            this.autoLayout();
+            // regenerating the form
+            this.$el.click();
+
+        },
         autoLayout: function() {
         	var nodes = [];
         	var taskWidth = 0;
@@ -661,9 +736,11 @@
         	}
         	console.log("Generating job xml", job);
         	var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
-        	
+
         	// beautifying the job xml - removing multiple spaces
-        	jobRendering = jobRendering.replace(/\s+/g,' ');
+        	jobRendering = jobRendering.replace(/ {2,}/g, ' ');
+            // removing multiple \n before closing xml element tag
+            jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
         	// indenting using vkbeautify
         	this.$el.empty()
         	var pre = $('<pre class="brush:xml;toolbar:false;" id="workflow-xml"></pre>');
@@ -794,78 +871,7 @@
 				
 				if (evt.target.readyState == FileReader.DONE) {
                     var json = xmlToJson(parseXml(evt.target.result))
-                    jobModel = new Job();
-                    jobModel.populate(json.job)
-
-                    workflowView.clean();
-                    workflowView.model = jobModel;
-                    xmlView.model = jobModel;
-
-                    var task2View = {};
-                    $.each(jobModel.tasks, function(i, task) {
-                        var view = new TaskView({model:task});
-                        workflowView.addView(view, {top:0, left:0});
-                        task2View[task.get('Task Name')] = view;
-                    })
-
-                    //adding dependencies after all views exist
-                    $.each(jobModel.tasks, function(i, task) {
-                        if (task.dependencies) {
-                            $.each(task.dependencies, function(i, dep) {
-                                if (task2View[dep.get('Task Name')]) {
-                                    var taskView = task2View[dep.get('Task Name')];
-                                    var dependency = task2View[task.get('Task Name')];
-                                    jsPlumb.connect({source:taskView.$el, target:dependency.$el, overlays:taskView.overlays()});
-                                }
-                            })
-                        }
-                        if (task.controlFlow) {
-                            if (task.controlFlow.if) {
-                                var ifFlow = task.controlFlow.if;
-
-                                var taskIf = task2View[task.get('Task Name')];
-                                var endpointIf = taskIf.addSourceEndPoint('if')
-                                if (ifFlow.task) {
-                                    var taskTarget = task2View[ifFlow.task.get('Task Name')];
-                                    var endpointTarget = taskTarget.addTargetEndPoint('if')
-                                    endpointIf.connectorOverlays[1][1].label = 'if';
-                                    jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:taskIf.overlays()});
-                                }
-                                if (ifFlow.else) {
-                                    var taskElse = task2View[ifFlow.else.task.get('Task Name')];
-                                    var endpointElse = taskElse.addTargetEndPoint('if')
-                                    endpointIf.connectorOverlays[1][1].label = 'else';
-                                    jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:taskIf.overlays()});
-                                }
-                                if (ifFlow.continuation) {
-                                    var taskContinuation = task2View[ifFlow.continuation.task.get('Task Name')];
-                                    var endpointContinuation = taskContinuation.addTargetEndPoint('if')
-                                    endpointIf.connectorOverlays[1][1].label = 'continuation';
-                                    jsPlumb.connect({source:endpointIf, target:endpointContinuation, overlays:taskIf.overlays()});
-                                }
-                            }
-                            if (task.controlFlow.replicate) {
-                                var taskReplicateView = task2View[task.get('Task Name')];
-                                var taskDepView = task2View[jobModel.getDependantTask(task.get('Task Name'))];
-                                var endpointSource = taskReplicateView.addSourceEndPoint('replicate')
-                                var endpointTarget = taskDepView.addTargetEndPoint('replicate')
-                                jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:taskReplicateView.overlays()});
-                            }
-                            if (task.controlFlow.loop) {
-                                var loopTarget = task.controlFlow.loop.task;
-                                var taskLoopView = task2View[task.get('Task Name')];
-                                var targetView = task2View[loopTarget.get('Task Name')];
-                                var endpointSource = taskLoopView.addSourceEndPoint('loop')
-                                var endpointTarget = targetView.addTargetEndPoint('loop')
-                                jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:taskLoopView.overlays()});
-                            }
-                        }
-                    })
-
-                    jobModel.trigger('change');
-                    workflowView.autoLayout();
-                    // regenerating the form
-                    workflowView.$el.click();
+                    workflowView.import(json);
 				}
 			}
 			reader.readAsBinaryString(file);						

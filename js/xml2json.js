@@ -31,10 +31,9 @@ function parseXml(xml) {
 
 // Changes XML to JSON
 function xmlToJson(xml) {
-	
+	console.log('!!!here', xml)
 	// Create the return object
 	var obj = {};
-
 	if (xml.nodeType == 1) { // element
 		// do attributes
 		if (xml.attributes.length > 0) {
@@ -44,7 +43,10 @@ function xmlToJson(xml) {
 				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
 			}
 		}
-	} else if (xml.nodeType == 3) { // text
+	} else if (xml.nodeType == 4) { // CDATA
+        var res = xml.nodeValue.replace("<!CDATA[", "");
+        obj = res.replace("]]>", "");
+    } else if (xml.nodeType == 3) { // text
 		obj = xml.nodeValue;
 	}
 

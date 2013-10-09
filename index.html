@@ -251,7 +251,7 @@
 <script type="text/template" id="script-template-short">
 	<% if (model["Script"] && model["Script"].length>0) { %>
     <% print("<sc"+"ript") %> <% if (model["Type"]) { %>type="<%=model["Type"]%>" <% } %>>
-		<code language="<%=model["Engine"]%>"><![CDATA[<%=model["Script"]%>]]></code>
+		<code language="<%=model["Engine"]%>"><![CDATA[<%=model["Script"] %>]]></code>
     <% print("</sc"+"ript>") %>
 	<% } %>
 </script>
@@ -260,7 +260,11 @@
 	<% if (model["Or Path"].length>0 || model["Or Url"].length>0 || model["Script"].length>0) { %>
     <% print("<sc"+"ript") %> <% if (model["Type"]) { %>type="<%=model["Type"]%>" <% } %>>
     	<% if (model["Script"] && model["Script"].length>0) {%>
-			<code language="<%=model["Engine"]%>"><![CDATA[<%=model["Script"]%>]]></code>
+			<code language="<%=model["Engine"]%>">
+<![CDATA[
+    <%= model["Script"] %>
+]]>
+            </code>
     	<% } else { %>
 	    	<% if (model["Or Path"] && model["Or Path"].length>0) { %>
     		<file path="<%=model["Or Path"]%>">
