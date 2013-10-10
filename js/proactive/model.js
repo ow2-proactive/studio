@@ -412,7 +412,7 @@
                 ifModel.model = new BranchWithScript();
             } else if (!ifModel['else']) {
                 ifModel['else'] = {task:task};
-            } else {
+            } else if (!ifModel['continuation']) {
                 ifModel['continuation'] = {task:task};
             }
 

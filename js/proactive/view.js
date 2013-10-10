@@ -122,8 +122,9 @@
         			propertiesView.$el.append(removeButton);
         		}
         		
-        	})
-        	return this;
+        	});
+
+            return this;
 	    }
 	})
 
@@ -150,7 +151,12 @@
                     }
 		  		}
 			});
-			
+
+            this.initJsPlumb();
+            this.$el.html(this.zoomArea);
+            this.model.on("change:Project Name", this.updateProjectName, this);
+        },
+        initJsPlumb: function() {
 			jsPlumb.bind("connection", function(connection) {
 
                 connection.sourceEndpoint.addClass("connected")
@@ -197,13 +203,12 @@
                         $(task).data('view').addTargetEndPoint(connection.scope);
                     }
                 })
-
                 jsPlumb.repaintEverything()
             });
 
             // hiding unnecessary target endpoints
             jsPlumb.bind('connectionDragStop', function(connection) {
-               $(".target-endpoint:not(.connected)").remove();
+                $(".target-endpoint:not(.connected)").remove();
             });
 
 
@@ -225,8 +230,6 @@
                 }
 			});
 
-			this.$el.html(this.zoomArea);
-			this.model.on("change:Project Name", this.updateProjectName, this);
         },
         createTask: function(ui) {
             var offset = this.$el.offset();
@@ -341,6 +344,7 @@
 	    clean: function() {
 	    	this.zoomArea.empty();
 	    	jsPlumb.reset()
+            this.initJsPlumb()
 	    },
         addView: function(view, position) {
 
@@ -712,30 +716,34 @@
 				that.render();
 			})
         },
-        render: function() {
-        	var that = this;
-        	var job = this.model.toJSON();
-        	
-        	var tasks = [];
-        	if (this.model.tasks) {
-            	$.each(this.model.tasks, function(i, task) {
-            		var view = new TaskXmlView({model:task, jobView:that}).render();
-            		tasks.push(view.$el.text());
-            	});
-        	}
-        	console.log("Generating job xml", job);
+        generateXml: function() {
+            var that = this;
+            var job = this.model.toJSON();
+
+            var tasks = [];
+            if (this.model.tasks) {
+                $.each(this.model.tasks, function(i, task) {
+                    var view = new TaskXmlView({model:task, jobView:that}).render();
+                    tasks.push(view.$el.text());
+                });
+            }
+            console.log("Generating job xml", job);
             console.log("Job model", this.model);
 
-        	var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
+            var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
 
-        	// beautifying the job xml - removing multiple spaces
-        	jobRendering = jobRendering.replace(/ {2,}/g, ' ');
+            // beautifying the job xml - removing multiple spaces
+            jobRendering = jobRendering.replace(/ {2,}/g, ' ');
             // removing multiple \n before closing xml element tag
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
+            // indenting using vkbeautify
+            return vkbeautify.xml(jobRendering.trim());
+        },
+        render: function() {
         	// indenting using vkbeautify
         	this.$el.empty()
         	var pre = $('<pre class="brush:xml;toolbar:false;" id="workflow-xml"></pre>');
-        	pre.text(vkbeautify.xml(jobRendering.trim()))
+        	pre.text(vkbeautify.xml(this.generateXml()))
         	this.$el.append(pre);
         	SyntaxHighlighter.highlight();
 
@@ -839,14 +847,24 @@
         	return this;
         }
 	});
-	
+
 	var jobModel = new Job();
 
 	var palleteView = new PaletteView({el: $("#palette-container")});
 	var workflowView = new WorkflowView({el: $("#workflow-designer"), model: jobModel});
 	var propertiesView = new PropertiesView({el: $("#properties-container")});
-	var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});	
-	
+	var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
+
+    jsPlumb.bind("ready", function() {
+        //localStorage.removeItem("job-model");
+        if (supports_html5_storage() && typeof localStorage["job-model"] === 'string') {
+            console.log("Restoring model from the local storage", localStorage["job-model"])
+            var json = xmlToJson(parseXml(localStorage["job-model"]))
+            workflowView.import(json);
+        }
+        workflowView.$el.click();
+    })
+
 	workflowView.$el.click();
 	
 	$("#import-button").click(function() {
@@ -892,19 +910,50 @@
 	$("#submit-button").click(function() {
 		xmlView.render();
 
-		var button = $(this);				
+		var button = $(this);
 		var xml = "";
 		$('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
-		
+
 		$('#scheduler-connect-modal').modal();
 		$('#submit-button-dialog').unbind('click');
 		$('#submit-button-dialog').click(function() {
 			creds = {};
 			$.each($("#scheduler-connect-modal").find("input"), function(i, input) {
-				creds[$(input).attr("data-name")] = $(input).val() 
+				creds[$(input).attr("data-name")] = $(input).val()
 			})
 			SchedulerClient.submit(creds, xml)
 		})
 	});
-	
+
+    $("#clear-button").click(function() {
+        console.log("Removing the workflow");
+        localStorage.removeItem('job-model');
+        jobModel = new Job();
+        var that = this;
+        workflowView.clean();
+        workflowView.model = jobModel;
+        xmlView.model = jobModel;
+        jobModel.trigger('change');
+        workflowView.$el.click();
+    });
+
+
+    function save_workflow_to_storage() {
+        if (supports_html5_storage() && xmlView) {
+            localStorage["job-model"] = xmlView.generateXml()
+            console.log("Saving job model into the local storage");
+            console.log(localStorage["job-model"]);
+        }
+    }
+
+    function supports_html5_storage() {
+        try {
+            return 'localStorage' in window && window['localStorage'] !== null;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // saving job xml every min to local store
+    setInterval(save_workflow_to_storage, 5000);
 })(jQuery)

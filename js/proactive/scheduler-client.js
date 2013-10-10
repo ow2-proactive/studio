@@ -18,7 +18,7 @@ var SchedulerClient = {
 		
 		$.ajax({
 		    type : "POST",
-		    url : creds['url']+"/rest/scheduler/login",
+		    url : creds['url']+"/login",
 		    data : {username:creds['user'], password:creds['pass']},
 		    success: function(data) {
 		    	// scheduler login request return invalid json with status code 200
@@ -48,7 +48,7 @@ var SchedulerClient = {
 		    var multipart = "";
 	
 			console.log("Submitting", jobXml)
-		    request.open("POST",creds['url']+"/rest/scheduler/submit",true);
+		    request.open("POST",creds['url']+"/submit",true);
 	
 		    var boundary=Math.random().toString().substr(2);
 		    request.setRequestHeader("sessionid", that.sessionId);
