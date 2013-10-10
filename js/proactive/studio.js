@@ -37,6 +37,7 @@
 		});	
 
 		resetRenderMode(jsPlumb.SVG);
+        console.log("!!!!!!!jsplumb ready")
 	});
 
 	$('.workflow-view').click(function (e) {

@@ -259,7 +259,7 @@
 	SelectionScript = SchemaModel.extend({
 		// TODO inherit from Script - first attempt did not work because schema is shared - type appears in pre/post scripts as well
 		schema: {
-            "Script": {type:"TextArea", fieldAttrs: {'placeholder':'code->#text'}},
+            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
             "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
             "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}},

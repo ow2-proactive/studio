@@ -43,7 +43,7 @@ function xmlToJson(xml) {
 			}
 		}
 	} else if (xml.nodeType == 4) { // CDATA
-        var res = xml.nodeValue.replace("<!CDATA[", "");
+        var res = xml.nodeValue.replace("<![CDATA[", "");
         obj = res.replace("]]>", "");
     } else if (xml.nodeType == 3) { // text
 		obj = xml.nodeValue;

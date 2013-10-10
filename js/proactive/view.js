@@ -31,19 +31,6 @@
                 this.$el.append(taskWidget);
             }
 
-        	if (!localStorage['hint-drag-and-drop']) {
-        		localStorage['hint-drag-and-drop'] = true;
-        		taskWidget.attr('data-toggle', 'popover');
-        		taskWidget.attr('data-placement', 'right');
-        		taskWidget.attr('data-content', 'Drag and drop task to start building your workflow');
-        		taskWidget.attr('title', 'Welcome');
-        		taskWidget.popover('show');
-            	
-        		taskWidget.mouseover(function() {
-        			taskWidget.popover('destroy');
-            	})
-        	}
-        	
         	$(".draggable").draggable({helper: "clone"});
 	    }	
 	});
