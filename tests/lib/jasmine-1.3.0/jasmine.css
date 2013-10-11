@@ -10,7 +10,7 @@ body { background-color: #eeeeee; padding: 0; margin: 5px; overflow-y: scroll; }
 #HTMLReporter .banner { margin-top: 14px; }
 #HTMLReporter .duration { color: #aaaaaa; float: right; }
 #HTMLReporter .symbolSummary { overflow: hidden; *zoom: 1; margin: 14px 0; }
-#HTMLReporter .symbolSummary li { display: block; float: left; height: 7px; width: 14px; margin-bottom: 7px; font-size: 16px; }
+#HTMLReporter .symbolSummary li { display: block; float: left; height: 7px; width: 14px; margin-bottom: 7px; font-size: 16px; display: inline !important; clear: none;}
 #HTMLReporter .symbolSummary li.passed { font-size: 14px; }
 #HTMLReporter .symbolSummary li.passed:before { color: #5e7d00; content: "\02022"; }
 #HTMLReporter .symbolSummary li.failed { line-height: 9px; }

@@ -17,7 +17,7 @@
 	});
 
 	jsPlumb.bind("ready", function() {
-
+        console.log("JsPlumb is ready");
 	    // render mode
 		var resetRenderMode = function(desiredMode) {
 			var newMode = jsPlumb.setRenderMode(desiredMode);

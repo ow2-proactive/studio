@@ -326,6 +326,8 @@
 			"Result Preview Class": {type:"Text", fieldAttrs: {'placeholder':'@attributes->resultPreviewClass'}}, 
 			"Run as me" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->runAsMe'}}, 
 			"Precious Result" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousResult'}},
+            "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->cancelJobOnError'}, options:
+                [{val:"true", label: "cancel job as soon as one task fails"}, {val:"false", label: "continue job execution when a task fails"}]},
 			"Store Task Logs in a File" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousLogs'}},
 			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'genericInformation->info'}, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
@@ -372,6 +374,7 @@
             this.set({"Maximum Number of Execution": 1});
             this.set({"Run as me": false});
             this.set({"Precious Result": false});
+            this.set({"Cancel Job On Error Policy": "false"});
             this.set({"Store Task Logs in a File": false});
             this.set({"Number of Nodes": 1});
 

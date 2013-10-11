@@ -856,9 +856,8 @@
 	var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
 
     jsPlumb.bind("ready", function() {
-        //localStorage.removeItem("job-model");
         if (supports_html5_storage() && typeof localStorage["job-model"] === 'string') {
-            console.log("Restoring model from the local storage", localStorage["job-model"])
+//            console.log("Restoring model from the local storage", localStorage["job-model"])
             var json = xmlToJson(parseXml(localStorage["job-model"]))
             workflowView.import(json);
         }
@@ -942,7 +941,7 @@
         if (supports_html5_storage() && xmlView) {
             localStorage["job-model"] = xmlView.generateXml()
             console.log("Saving job model into the local storage");
-            console.log(localStorage["job-model"]);
+            //console.log(localStorage["job-model"]);
         }
     }
 
