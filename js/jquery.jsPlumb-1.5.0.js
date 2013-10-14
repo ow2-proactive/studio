@@ -860,11 +860,11 @@
                             _listeners[event][i](value, originalEvent);
                         else {
                             // for events we don't want to die on, catch and log.
-                            try {                            
+//                            try {
                                 ret = _listeners[event][i](value, originalEvent);
-                            } catch (e) {
-                                jsPlumbUtil.log("jsPlumb: fire failed for event " + event + " : " + e);
-                            }
+//                            } catch (e) {
+//                                jsPlumbUtil.log("jsPlumb: fire failed for event " + event + " : " + e);
+//                            }
                         }
                         i++;
                         if (_listeners == null || _listeners[event] == null) _gone = true;                    
@@ -1471,8 +1471,7 @@
 			    if (this.canvas != null)
 			        _removeClass(this.canvas, clazz);
 			},
-			
-			setType : function(typeId, params, doNotRepaint) {				
+			setType : function(typeId, params, doNotRepaint) {
 				this._jsPlumb.types = _splitType(typeId) || [];
 				_applyTypes(this, params, doNotRepaint);									
 			},

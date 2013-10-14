@@ -157,6 +157,8 @@
             this.model.on("change:Project Name", this.updateProjectName, this);
         },
         initJsPlumb: function() {
+            jsPlumb.unbind();
+
 			jsPlumb.bind("connection", function(connection) {
 
                 connection.sourceEndpoint.addClass("connected")
@@ -191,6 +193,7 @@
                     if (connection.connection.scope=='dependency') {
                         targetModel.removeDependency(sourceModel);
                     } else {
+                        jsPlumb.deleteEndpoint(connection.targetEndpoint);
                         sourceModel.removeControlFlow(connection.connection.scope, targetModel);
                     }
                 }
@@ -219,15 +222,6 @@
 
                 console.log("click on the ", connection)
 				jsPlumb.detach(connection);
-
-                var sourceModel = $(source).data("view").model;
-                var targetModel = $(target).data("view").model;
-
-                if (connection.connection.scope=='dependency') {
-                    targetModel.removeControlFlow(connection.connection.scope, sourceModel);
-                } else {
-                    sourceModel.removeControlFlow(connection.connection.scope, targetModel);
-                }
 			});
 
         },
@@ -618,7 +612,7 @@
                         [ "Label", {
                             label: function() {
                                 var ifModel = that.model.controlFlow['if'];
-                                if (!ifModel) return 'if'
+                                if (!ifModel || ifModel&&!ifModel.model ) return 'if'
                                 else if (!ifModel['else']) return 'else'
                                 else if (!ifModel['continuation']) return 'continuation'
                                 else return "";
@@ -775,7 +769,7 @@
                 $.each(['if', 'loop', 'replicate'], function(i, control) {
                     if (that.model.controlFlow[control]) {
                         var controlModel = that.model.controlFlow[control].model;
-                        if (controlModel.get('Script')) {
+                        if (controlModel && controlModel.get('Script')) {
                             that.model.controlFlow[control].script =
                                 new TemplateView({model: controlModel.get('Script'), template:"#script-template"}).render().$el.text();
                             return false;

@@ -408,26 +408,30 @@
             if (!this.controlFlow['if'])  {
                 this.controlFlow = {'if':{}}
             }
-            var ifModel = this.controlFlow['if']
-
-            if (!ifModel.model) {
-                ifModel.task = task;
-                ifModel.model = new BranchWithScript();
-            } else if (!ifModel['else']) {
-                ifModel['else'] = {task:task};
-            } else if (!ifModel['continuation']) {
-                ifModel['continuation'] = {task:task};
+            if (!this.controlFlow['if'].model) {
+                this.controlFlow['if'].task = task;
+                this.controlFlow['if'].model = new BranchWithScript();
+            } else if (!this.controlFlow['if']['else']) {
+                this.controlFlow['if']['else'] = {task:task};
+            } else if (!this.controlFlow['if']['continuation']) {
+                this.controlFlow['if']['continuation'] = {task:task};
             }
 
-            console.log('Adding if branch', ifModel, 'to', this)
+            console.log('Adding if branch', this.controlFlow['if'], 'to', this)
         },
         removeif: function(task) {
-            console.log('Removing if branch')
-            for(var f in this.controlFlow['if']){
-                if (this.controlFlow['if'][i].task == task) {
-                    delete this.controlFlow['if'][f];
-                }
+            if (this.controlFlow['if'].task == task) {
+                console.log('Removing IF')
+                this.controlFlow['if'].model = undefined;
+                this.controlFlow['if'].task = undefined;
+            } else if (this.controlFlow['if']['else'] && this.controlFlow['if']['else'].task == task) {
+                console.log('Removing ELSE')
+                delete this.controlFlow['if']['else'];
+            } else if (this.controlFlow['if']['continuation'] && this.controlFlow['if']['continuation'].task == task) {
+                console.log('Removing CONTINUATION')
+                delete this.controlFlow['if']['continuation'];
             }
+            console.log('Removing if branch', this.controlFlow, task)
         },
         setloop: function(task) {
             console.log('Adding loop')
