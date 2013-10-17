@@ -13,7 +13,7 @@
 				</parameters>
 			</javaExecutable>
 		</task>
-        <task name="task2replicate" preciousResult="true" cancelJobOnError="true">
+        <task name="task2replicate" cancelJobOnError="true" preciousResult="true">
             <description>replicate task2</description>
             <javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask">
             </javaExecutable>
@@ -29,18 +29,22 @@ runs=3;
                 </replicate>
             </controlFlow>
         </task>
-		<task name="task2" preciousResult="true" cancelJobOnError="true">
+		<task name="task2" cancelJobOnError="true" preciousResult="true" >
 			<description>task with replication id = 1 will throw an exception</description>
-			<depends><task ref="task2replicate" /></depends>
+			<depends>
+                <task ref="task2replicate" />
+            </depends>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.FailTaskConditionally">
                 <parameters>
                     <parameter name="replicationId" value="$REP" />  
                 </parameters>
 			</javaExecutable>
 		</task>
-        <task name="task2merge" preciousResult="true" cancelJobOnError="true">
+        <task name="task2merge" cancelJobOnError="true" preciousResult="true" >
             <description>merge task</description>
-            <depends><task ref="task2" /></depends>
+            <depends>
+                <task ref="task2" />
+            </depends>
             <javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask">
             </javaExecutable>
         </task>

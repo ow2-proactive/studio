@@ -6,7 +6,8 @@
   <taskFlow>
 
     <task name="A">
-      <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob" />
+      <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob" >
+      </javaExecutable>
       <controlFlow block="none" >
         <if target="B" else="C" continuation="D">
           <script>
@@ -29,11 +30,15 @@
     </task>
 
     <task name="C">
-      <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob" />
+      <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob" >
+
+      </javaExecutable>
     </task>
 
     <task name="D">
-      <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob" />
+      <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob" >
+
+      </javaExecutable>
     </task>
 
   </taskFlow>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
 	 xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
-	 name="ScriptTask" projectName="">
+     cancelJobOnError="false" name="ScriptTask" priority="normal">
 	<taskFlow>
 		<!--Used for TestXMLTransformer and TestScriptTask -->
 		<task name="notforked">
 			<scriptExecutable>
 				<script>
-					<code language="javascript">
+					<code language="javascript"> <![CDATA[
 						print(java.lang.Thread.currentThread().getName() + '\n');
-					</code>
+					]]> </code>
 				</script>
 			</scriptExecutable>
 		</task>

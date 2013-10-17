@@ -8,20 +8,11 @@
 	<variable name="root" value="${pa.scheduler.home}/samples/jobs_descriptors/Workflow/branching"/>
   </variables>
 
-  <!--
-     iterates over lines of a text file,
-     for each line, if it is shorter than 40 characters,
-     transform all characters to '_',
-     else tranform all characters to '^'
-     finally, put the lines in a single output file
-	-->
-
   <taskFlow>
 
     <task name="A">
 	  <pre>
 		<script>
-          <!-- if at iteration 0, removes output from previous execution -->
           <file path="${root}/clean_tmp.js">
 			<arguments>
 			  <argument value="${root}" />
@@ -29,8 +20,6 @@
 		  </file>
 		</script>
 	  </pre>
-	  <!-- extracts the line from the input file corresponding
-	       the current iteration -->
 	  <nativeExecutable>
         <staticCommand value="${root}/getline.sh">
 		  <arguments>
@@ -38,10 +27,7 @@
 		  </arguments>
 		</staticCommand>
 	  </nativeExecutable>
-	  <!-- start block: LOOP target -->
 	  <controlFlow block="start">
-	    <!-- if the line is < 40 chars do B1, else do B2,
-							  but always do C afterwars-->
 			 <if target="B1" else="B2" continuation="C">
 			   <script>
 				 <file path="${root}/if.js">
@@ -53,8 +39,6 @@
 			 </if>
 	  </controlFlow>
 	</task>
-
-    <!-- tranform the current line's chars in '_' -->
     <task name="B1">
 	  <nativeExecutable>
         <staticCommand value="${root}/line1.sh">
@@ -64,8 +48,6 @@
 		</staticCommand>
 	  </nativeExecutable>
 	</task>
-
-    <!-- tranform the current line's chars in '^' -->
     <task name="B2">
 	  <nativeExecutable>
         <staticCommand value="${root}/line2.sh">
@@ -76,7 +58,6 @@
 	  </nativeExecutable>
 	</task>
 
-	<!-- append the current line to the output -->
     <task name="C">
 	  <nativeExecutable>
         <staticCommand value="${root}/putline.sh">
@@ -85,10 +66,7 @@
 		  </arguments>
 		</staticCommand>
 	  </nativeExecutable>
-	  <!-- end block: looped block -->
 	  <controlFlow block="end">
-	    <!-- while lines are left untreated in the input file
-			 make another iteration -->
 		<loop target="A">
           <script>
 			<file path="${root}/loop.js">

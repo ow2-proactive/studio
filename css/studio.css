@@ -533,3 +533,7 @@ input[name="Type"] {
 .label {
     margin-left: 10px;
 }
+
+.release-status {
+    font-size: 12px;
+}

@@ -5,34 +5,34 @@
      name="Job" priority="low" projectName="myProject" cancelJobOnError="true">
   <taskFlow>
     <task name="T" maxNumberOfExecution="4">
-      <description> // <![CDATA[
+      <description> <![CDATA[
       x=220,y=73
-      // ]]> </description>
+      ]]> </description>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
       <controlFlow block="none" >
-        <if target="T1" else="T2" continuation="">
+        <if target="T1" else="T2">
           <script>
             <code language="javascript">
-// <![CDATA[
+<![CDATA[
 branch = "if";
-// ]]>
+]]>
             </code>
           </script>
         </if>
       </controlFlow>
     </task>
     <task name="T1" maxNumberOfExecution="4">
-      <description> // <![CDATA[
+      <description> <![CDATA[
       x=151,y=155
-      // ]]> </description>
+      ]]> </description>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
     </task>
     <task name="T2" maxNumberOfExecution="4">
-      <description> // <![CDATA[
+      <description> <![CDATA[
       x=286,y=157
-      // ]]> </description>
+      ]]> </description>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
     </task>

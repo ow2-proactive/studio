@@ -57,7 +57,7 @@ runs=2;
         <loop target="T">
           <script>
             <code language="javascript">
-// <![CDATA[
+<![CDATA[
 importPackage(java.io);
 var ID   = 3;
 var RUNS = 2;
@@ -79,7 +79,7 @@ output.close();
 } else {
 loop = false;
 }
-// ]]>
+]]>
             </code>
           </script>
         </loop>

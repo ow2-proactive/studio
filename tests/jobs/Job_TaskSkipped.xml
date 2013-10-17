@@ -4,29 +4,26 @@
 	name="job_killer" priority="normal" cancelJobOnError="false">
 	<description>The second task will be skipped</description>
     <taskFlow>
-        <task name="T" maxNumberOfExecution="1">
-            <description></description>
+        <task name="T" maxNumberOfExecution="2">
             <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
             </javaExecutable>
-            <controlFlow block="none" >
-                <if target="T1" else="T2" continuation="">
+            <controlFlow>
+                <if target="T1" else="T2">
                     <script>
                         <code language="javascript">
-                            // <![CDATA[
+                            <![CDATA[
   branch = "if";
-// ]]>
+ ]]>
                         </code>
                     </script>
                 </if>
             </controlFlow>
         </task>
-        <task name="T1" maxNumberOfExecution="1">
-            <description>  </description>
+        <task name="T1" maxNumberOfExecution="2">
             <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
             </javaExecutable>
         </task>
-        <task name="T2" maxNumberOfExecution="1">
-            <description></description>
+        <task name="T2" maxNumberOfExecution="2">
             <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
             </javaExecutable>
         </task>

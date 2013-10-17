@@ -2,9 +2,6 @@
 <job xmlns="urn:proactive:jobdescriptor:dev" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:dev ../../src/scheduler/src/org/ow2/proactive/scheduler/common/xml/schemas/jobdescriptor/dev/schedulerjob.xsd"
 	name="job_PI" priority="normal" cancelJobOnError="true">
-	<description> Computing PI according to MonteCarlo method. This job will launch 6 MonteCarlo
-		task, then 2 tasks will average 3 results each. So a last task will average the 2 last
-		result. Finally this last task will be the final result. </description>
 	<taskFlow>
 		<task name="Computation1">
 			<description>Compute Pi and return it</description>
@@ -68,7 +65,7 @@
 				<task ref="Computation3"/>
 			</depends>
 			<javaExecutable
-				class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"/>
+				class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"> </javaExecutable>
 		</task>
 		<task name="Average2">
 			<description>Do the average of 4 5 6 and return it.</description>
@@ -78,7 +75,7 @@
 				<task ref="Computation6"/>
 			</depends>
 			<javaExecutable
-				class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"/>
+				class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"> </javaExecutable>
 
 		</task>
 		<task name="LastAverage" preciousResult="true">
@@ -89,7 +86,7 @@
 				<task ref="Average2"/>
 			</depends>
 			<javaExecutable
-				class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"/>
+				class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"> </javaExecutable>
 
 		</task>
 	</taskFlow>

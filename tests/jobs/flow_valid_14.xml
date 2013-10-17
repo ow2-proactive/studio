@@ -18,6 +18,7 @@
         <loop target="T">
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </loop>

@@ -5,7 +5,6 @@
      name="Job" priority="low" projectName="myProject" cancelJobOnError="true">
   <taskFlow>
     <task name="T" maxNumberOfExecution="4">
-      <description>x=208,y=71</description>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
       <controlFlow block="none" >
@@ -21,7 +20,6 @@
       </controlFlow>
     </task>
     <task name="T1" maxNumberOfExecution="4">
-      <description>x=208,y=178</description>
       <depends>
         <task ref ="T" />
       </depends>
@@ -30,7 +28,6 @@
       <controlFlow block="start" />
     </task>
     <task name="T3" maxNumberOfExecution="4">
-      <description>x=209,y=392</description>
       <depends>
         <task ref ="T2" />
       </depends>
@@ -39,7 +36,6 @@
       <controlFlow block="none" />
     </task>
     <task name="T2" maxNumberOfExecution="4">
-      <description>x=209,y=282</description>
       <depends>
         <task ref ="T1" />
       </depends>

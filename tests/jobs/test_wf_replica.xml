@@ -33,7 +33,7 @@ if ($IT == 0) {
 	  <controlFlow block="start">
 		<replicate>
 		  <script>
-			<code language='javascript'><![CDATA[
+			<code language="javascript"><![CDATA[
 runs = 2;
 			]]></code>
 		  </script>
@@ -64,13 +64,8 @@ for (var i=0; i < files.length; i++) {
 	  </outputFiles>
 	</task>
 
-	<task name="replica" cancelJobOnError="false" restartTaskOnError="elsewhere"
-		  runAsMe="false" maxNumberOfExecution="4" preciousResult="true" walltime="10:00"
-		  resultPreviewClass="foo.bar.Baz">
-	  <description>
-		This task will be replicated. We put as much stuff as possible in it
-		to check if everything is nicely replicated
-	  </description>
+	<task name="replica" maxNumberOfExecution="4" preciousResult="true" restartTaskOnError="elsewhere"
+		  walltime="10:00"  resultPreviewClass="foo.bar.Baz">
 	  <genericInformation>
         <info name="info1" value="value1"/>
         <info name="info2" value="value2"/>
@@ -179,7 +174,7 @@ command = "echo generated hello " + it;
 	  <controlFlow block="end">
 		<loop target="split">
 		  <script>
-			<code language='javascript'><![CDATA[
+			<code language="javascript"><![CDATA[
 loop = ($IT < 1);
 			]]></code>
 		  </script>

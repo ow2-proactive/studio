@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns="urn:proactive:jobdescriptor:dev" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:proactive:jobdescriptor:dev ../../src/scheduler/src/org/ow2/proactive/scheduler/common/xml/schemas/jobdescriptor/dev/schedulerjob.xsd" name="job_nativ" priority="normal" cancelJobOnError="false">
+<job xmlns="urn:proactive:jobdescriptor:dev" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:proactive:jobdescriptor:dev ../../src/scheduler/src/org/ow2/proactive/scheduler/common/xml/schemas/jobdescriptor/dev/schedulerjob.xsd"
+     cancelJobOnError="false" name="job_nativ" priority="normal">
   <variables>
     <!-- pa.scheduler.home is known as java property - ie : start with -Dpa.scheduler.home=value -->
     <variable name="WORK_DIR" value="${pa.scheduler.home}/samples/jobs_descriptors/job_modelica"/>
     <!-- Path to your modelica installation (the bin directory) -->
-    <variable name="MODELICA_BIN_DIR" value="C:/OpenModelica1.4.5/bin"></variable>
+    <variable name="MODELICA_BIN_DIR" value="C:/OpenModelica1.4.5/bin"/>
   </variables>
   <description>Will compile the .mos file</description>
     <!-- @snippet-start modelica_task_mos -->
@@ -14,14 +15,14 @@
             <selection>
                 <!-- This job descriptor works only on windows -->
 				<script type="static">
-					<file path="${pa.scheduler.home}/samples/scripts/selection/checkWindows.js"/>
+					<file path="${pa.scheduler.home}/samples/scripts/selection/checkWindows.js"> </file>
 				</script>
 			</selection>
             <nativeExecutable>
                 <staticCommand value="${MODELICA_BIN_DIR}/omc" workingDir="${WORK_DIR}">
                     <arguments>
-                        <argument value=" +s "></argument>
-                        <argument value="${WORK_DIR}/BouncingBall.mos"></argument>
+                        <argument value=" +s "/>
+                        <argument value="${WORK_DIR}/BouncingBall.mos"/>
                     </arguments>
                 </staticCommand>
             </nativeExecutable>

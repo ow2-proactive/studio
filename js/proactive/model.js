@@ -1,5 +1,5 @@
 (function($){
-	
+
 	// populates model according to the schema (xml import)
 	SchemaModel = Backbone.Model.extend({
 	
@@ -218,27 +218,26 @@
 					}
 				})
                 // adding controlFlows after all dependencies are set
-                $.each(obj.taskFlow.task, function(i, task) {
-                    var taskModel = name2Task[task['@attributes']['name']]
-                    if (task.controlFlow) {
-                        if (task.controlFlow.if) {
-                            var ifFlow = task.controlFlow.if['@attributes'];
+                $.each(obj.taskFlow.task, function(i, taskJson) {
+                    var taskModel = name2Task[taskJson['@attributes']['name']]
+                    if (taskJson.controlFlow) {
+                        if (taskJson.controlFlow.if) {
+                            var ifFlow = taskJson.controlFlow.if['@attributes'];
                             taskModel.setif(name2Task[ifFlow['target']])
-                            taskModel.controlFlow.if.model.populateSchema(task.controlFlow.if);
+                            taskModel.controlFlow.if.model.populateSchema(taskJson.controlFlow.if);
                             taskModel.setif(name2Task[ifFlow['else']])
                             taskModel.setif(name2Task[ifFlow['continuation']])
                         }
-                        if (task.controlFlow.replicate) {
-                            var branchWithScript = new BranchWithScript();
-                            branchWithScript.populateSchema(task.controlFlow.replicate);
-                            taskModel.controlFlow = {replicate:{model: branchWithScript}};
+                        if (taskJson.controlFlow.replicate) {
+                            taskModel.setreplicate(null);
+                            taskModel.controlFlow.replicate.model.populateSchema(taskJson.controlFlow.replicate);
                         }
-                        if (task.controlFlow.loop) {
-                            var branchWithScript = new BranchWithScript();
-                            branchWithScript.populateSchema(task.controlFlow.loop);
-                            var loopTarget = task.controlFlow.loop['@attributes']['target'];
+                        if (taskJson.controlFlow.loop) {
+                            var branch = new BranchWithScript();
+                            branch.populateSchema(taskJson.controlFlow.loop);
+                            var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
                             var targetTask = name2Task[loopTarget];
-                            taskModel.controlFlow = {loop:{task: targetTask, model: branchWithScript}};
+                            taskModel.controlFlow = {'loop':{task: targetTask, model: branch}};
                         }
                     }
                 })
@@ -252,6 +251,7 @@
             "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
             "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
+            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
             "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}}
 		}
 	});
@@ -262,6 +262,7 @@
             "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
             "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
+            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
             "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}},
 			"Type" : {type: 'Select', options: ["dynamic", "static"], fieldAttrs: {'placeholder':'@attributes->type'}}
 		}
@@ -301,7 +302,7 @@
 			"Working Folder": {type:"Text", fieldAttrs: {'placeholder':'staticCommand->@attributes->workingDir'}},
 			"Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'staticCommand->arguments->argument', 'itemplaceholder':'@attributes->value'}},
 			"Or Dynamic Command": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder':'dynamicCommand->generation->script'}},
-			"Working Dir": {type:"Text", fieldAttrs: {'placeholder':'dynamicCommand->@attributes->workingDir'}},
+			"Working Dir": {type:"Text", fieldAttrs: {'placeholder':'dynamicCommand->@attributes->workingDir'}}
 		}
 	});
 
@@ -320,7 +321,7 @@
 				          {val: "NativeExecutable", label: "Native Command"},
 				          {val: "JavaExecutable", label: "Java Class"}]},
 			"Parameters" : {type: 'NestedModel', model: ScriptExecutable},
-			"Description": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'description->#text'}},
+			"Description": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':['description->#cdata-section', 'description->#text']}},
 			"Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder':'@attributes->maxNumberOfExecution'}}, 
 			"Maximum Execution Time (hh:mm:ss)": {type:"Text", fieldAttrs: {'placeholder':'@attributes->walltime'}}, 
 			"Result Preview Class": {type:"Text", fieldAttrs: {'placeholder':'@attributes->resultPreviewClass'}}, 
@@ -328,6 +329,8 @@
 			"Precious Result" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousResult'}},
             "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->cancelJobOnError'}, options:
                 [{val:"true", label: "cancel job as soon as one task fails"}, {val:"false", label: "continue job execution when a task fails"}]},
+            "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->restartTaskOnError'}, options:
+                ["anywhere", "elsewhere"]},
 			"Store Task Logs in a File" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousLogs'}},
 			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'genericInformation->info'}, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
@@ -375,6 +378,7 @@
             this.set({"Run as me": false});
             this.set({"Precious Result": false});
             this.set({"Cancel Job On Error Policy": "false"});
+            this.set({"If An Error Occurs Restart Task": "anywhere"});
             this.set({"Store Task Logs in a File": false});
             this.set({"Number of Nodes": 1});
 
@@ -405,6 +409,7 @@
         },
         setif: function(task) {
 
+            this.set({'Control Flow': 'if'});
             if (!this.controlFlow['if'])  {
                 this.controlFlow = {'if':{}}
             }
@@ -420,6 +425,7 @@
             console.log('Adding if branch', this.controlFlow['if'], 'to', this)
         },
         removeif: function(task) {
+            this.set({'Control Flow': 'none'});
             if (this.controlFlow['if'].task == task) {
                 console.log('Removing IF')
                 this.controlFlow['if'].model = undefined;
@@ -435,18 +441,22 @@
         },
         setloop: function(task) {
             console.log('Adding loop')
-            this.controlFlow = {loop:{task:task, model: new BranchWithScript()}}
+            this.set({'Control Flow': 'loop'});
+            this.controlFlow = {'loop':{task:task, model: new BranchWithScript()}}
         },
         removeloop: function(controlFlow, task) {
             console.log('Removing loop')
+            this.set({'Control Flow': 'none'});
             delete this.controlFlow['loop']
         },
         setreplicate: function(task) {
             console.log('Adding replicate')
-            this.controlFlow = {replicate:{model: new BranchWithScript()}}
+            this.set({'Control Flow': 'replicate'});
+            this.controlFlow = {'replicate':{model: new BranchWithScript()}}
         },
         removereplicate: function(controlFlow, task) {
             console.log('Removing replicate')
+            this.set({'Control Flow': 'none'});
             delete this.controlFlow['replicate']
         }
 	});

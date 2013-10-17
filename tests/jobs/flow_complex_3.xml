@@ -5,19 +5,17 @@
      name="Job" priority="low" projectName="myProject" cancelJobOnError="true">
   <taskFlow>
     <task name="T1" maxNumberOfExecution="4">
-      <description> // <![CDATA[
-      x=194,y=158,a=194,b=158
-      // ]]> </description>
+      <description> <![CDATA[ x=194,y=158,a=194,b=158 ]]> </description>
       <depends>
         <task ref ="T" />
       </depends>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
-      <controlFlow block="none" >
+      <controlFlow >
         <loop target="T1">
           <script>
             <code language="javascript">
-// <![CDATA[
+<![CDATA[
 importPackage(java.io);
 var ID   = 1 + "_" + $REP;
 var RUNS = 3;
@@ -39,36 +37,35 @@ output.close();
 } else {
 loop = false;
 }
-// ]]>
+]]>
             </code>
           </script>
         </loop>
       </controlFlow>
     </task>
     <task name="T2" maxNumberOfExecution="4">
-      <description> // <![CDATA[
-      x=195,y=243
-      // ]]> </description>
+      <description>
+          <![CDATA[ x=195,y=243 ]]>
+      </description>
       <depends>
         <task ref ="T1" />
       </depends>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
-      <controlFlow block="none" />
     </task>
     <task name="T" maxNumberOfExecution="4">
-      <description> // <![CDATA[
-      x=195,y=74
-      // ]]> </description>
+      <description>
+          <![CDATA[ x=195,y=74 ]]>
+      </description>
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
-      <controlFlow block="none" >
+      <controlFlow >
         <replicate>
           <script>
             <code language="javascript">
-// <![CDATA[
+<![CDATA[
 runs=3;
-// ]]>
+]]>
             </code>
           </script>
         </replicate>

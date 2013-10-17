@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns="urn:proactive:jobdescriptor:3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 ../../src/scheduler/src/org/ow2/proactive/scheduler/common/xml/schemas/jobdescriptor/3.2/schedulerjob.xsd"
-	name="TestJobLegacySchemas" projectName="TestJobLegacySchemas" priority="high" cancelJobOnError="false" restartTaskOnError="anywhere" maxNumberOfExecution="1" >
+	name="TestJobLegacySchemas" projectName="TestJobLegacySchemas" priority="high" cancelJobOnError="false" restartTaskOnError="elsewhere" maxNumberOfExecution="111111" >
     <!-- Tests many functionalities of the scheduler -->
 
     <variables>
@@ -81,7 +81,7 @@
                 <task ref="Computation2"/>
             </depends>
             <javaExecutable
-                    class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"/>
+                    class="org.ow2.proactive.scheduler.examples.MonteCarloAverage"> </javaExecutable>
         </task>
 
         <!-- Tests spaces -->
@@ -251,23 +251,25 @@
             <description>Testing the pre and post scripts.</description>
             <selection>
                 <script>
-                    <code language="javascript">selected=true;</code>
+                    <code language="javascript"><![CDATA[
+                    selected=true;
+                    ]]> </code>
                 </script>
             </selection>
             <pre>
                 <script>
-                    <file path="${HOME}/set.js"/>
+                    <file path="${HOME}/set.js"> </file>
                 </script>
             </pre>
-            <javaExecutable class="org.ow2.proactive.scheduler.examples.PropertyTask"/>
+            <javaExecutable class="org.ow2.proactive.scheduler.examples.PropertyTask"> </javaExecutable>
             <post>
                 <script>
-                    <file path="${HOME}/unset.js"/>
+                    <file path="${HOME}/unset.js"> </file>
                 </script>
             </post>
             <cleaning>
                 <script>
-                    <file path="${HOME}/clean.js"/>
+                    <file path="${HOME}/clean.js"> </file>
                 </script>
             </cleaning>
         </task>
@@ -278,13 +280,13 @@
             <nativeExecutable>
                 <dynamicCommand workingDir="$PROACTIVE_HOME">
                     <generation>
-                        <script> <code language="javascript">
+                        <script> <code language="javascript">  <![CDATA[
                             if(org.objectweb.proactive.utils.OperatingSystem.getOperatingSystem() == org.objectweb.proactive.utils.OperatingSystem.windows){
                             command="ping localhost";
                             } else {
                             command="ping -c 3 localhost";
                             }
-                        </code>
+                        ]]> </code>
                         </script>
                     </generation>
                 </dynamicCommand>
@@ -300,27 +302,27 @@
         <!-- Tests workflows -->
 
         <task name="WF" maxNumberOfExecution="4">
-            <description> // <![CDATA[
+            <description> <![CDATA[
       x=200,y=80
-      // ]]> </description>
+      ]]> </description>
             <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
             </javaExecutable>
             <controlFlow block="start" >
                 <replicate>
                     <script>
                         <code language="javascript">
-                            // <![CDATA[
+                            <![CDATA[
 runs = 2;
-// ]]>
+]]>
                         </code>
                     </script>
                 </replicate>
             </controlFlow>
         </task>
         <task name="WF4" maxNumberOfExecution="4">
-            <description> // <![CDATA[
+            <description> <![CDATA[
       x=243,y=219
-      // ]]> </description>
+      ]]> </description>
             <depends>
                 <task ref ="WF1" />
             </depends>
@@ -390,9 +392,9 @@ loop = false;
         <task name="ScriptExecutable">
             <scriptExecutable>
                 <script>
-                    <code language="javascript">
+                    <code language="javascript"> <![CDATA[
                         result = '42'
-                    </code>
+                    ]]> </code>
                 </script>
             </scriptExecutable>
         </task>

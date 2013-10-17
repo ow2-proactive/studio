@@ -11,23 +11,23 @@
 
 			<pre>
 				<script>
-					<code language="javascript">
+					<code language="javascript"> <![CDATA[
 						importClass(org.ow2.proactive.scripting.PropertyUtils);
 						java.lang.System.setProperty("key1", "value1");
 						print("Setting system property key1 = " + java.lang.System.getProperty("key1") + "\n");
 						java.lang.System.setProperty("key2", "value2");
 						print("Setting system property key2 = " + java.lang.System.getProperty("key2") + "\n");
 						PropertyUtils.propagateProperty("key1");
-					</code>
+					]]> </code>
 				</script>
 			</pre>
-				<javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask"/>
+				<javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask"> </javaExecutable>
 			<post>
 				<script>
-					<code language="javascript">
+					<code language="javascript"> <![CDATA[
 						importClass(org.ow2.proactive.scripting.PropertyUtils);
 						PropertyUtils.propagateProperty("key2");
-					</code>
+					]]> </code>
 				</script>
 			</post>
 		</task>
@@ -38,14 +38,14 @@
 			</depends>
 			<pre>
 				<script>
-					<code language="javascript">
+					<code language="javascript">  <![CDATA[
 						print("Get system property key1 = " + java.lang.System.getProperty("key1") + "\n");
 						print("Get system property key2 = " + java.lang.System.getProperty("key2") + "\n");
 						var v1 = java.lang.System.getProperty("key1");
 						var v2 = java.lang.System.getProperty("key2");
 						if (v1!="value1"){thrrrrow.me.An.exception();}
 						if (v2!="value2"){thrrrrow.me.An.exception();}
-					</code>
+					]]> </code>
 				</script>
 			</pre>
 			<nativeExecutable>
@@ -58,27 +58,27 @@
 		<task name="task3ex" preciousResult="true">
 			<pre>
 				<script>
-					<code language="javascript">
+					<code language="javascript"> <![CDATA[
 						importClass(org.ow2.proactive.scripting.PropertyUtils);
 						PropertyUtils.propagateProperty("prohibited%name");
-					</code>
+					]]> </code>
 				</script>
 			</pre>
-			<javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask"/>
+			<javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask"> </javaExecutable>
 		</task>
 
 
 		<task name="task4" preciousResult="true">
 			<pre>
 				<script>
-					<code language="javascript">
+					<code language="javascript">  <![CDATA[
 						importClass(org.ow2.proactive.scripting.PropertyUtils);
 						java.lang.System.setProperty("user.var.1", ".User Value 1.");
 						PropertyUtils.propagateProperty("user.var.1");
-					</code>
+					]]> </code>
 				</script>
 			</pre>
-			<javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask"/>
+			<javaExecutable class="org.ow2.proactive.scheduler.examples.EmptyTask"> </javaExecutable>
 		</task>
 
 
@@ -88,12 +88,12 @@
 			</depends>
 			<pre>
 				<script>
-					<code language="javascript">
+					<code language="javascript"> <![CDATA[
 						importClass(org.ow2.proactive.scripting.PropertyUtils);
 						java.lang.System.setProperty("user.var.2", ".User Value 2.");
 						PropertyUtils.exportProperty("user.var.2");
 						PropertyUtils.exportProperty("user.var.1");
-					</code>
+					]]> </code>
 				</script>
 			</pre>
 			<nativeExecutable>

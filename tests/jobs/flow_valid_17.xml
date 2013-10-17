@@ -62,6 +62,7 @@
         <if target="T1" else="T2" continuation="T9">
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </if>

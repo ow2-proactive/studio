@@ -2,8 +2,6 @@
 
 	Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
 
-    var ENABLE_WORKFLOWS = true;
-
 	PaletteView = Backbone.View.extend({
 		initialize: function() {
             this.render();
@@ -13,23 +11,19 @@
         			'<span class="label draggable ui-draggable job-element" title="Computational task">'+
         			'<img src="img/gears.png" width="40px">Task</span>');
 
-            if (ENABLE_WORKFLOWS) {
-                var ifWidget = $(
-                    '<span class="label draggable ui-draggable job-element control-flow control-flow-if" title="If Control">'+
-                        '<img src="img/gears.png" width="20px">If</span>');
+            var ifWidget = $(
+                '<span class="label draggable ui-draggable job-element control-flow control-flow-if" title="If Control">'+
+                    '<img src="img/gears.png" width="20px">If</span>');
 
-                var loopWidget = $(
-                    '<span class="label draggable ui-draggable job-element control-flow control-flow-loop" title="Loop Control">'+
-                        '<img src="img/gears.png" width="20px">Loop</span>');
+            var loopWidget = $(
+                '<span class="label draggable ui-draggable job-element control-flow control-flow-loop" title="Loop Control">'+
+                    '<img src="img/gears.png" width="20px">Loop</span>');
 
-                var replicateWidget = $(
-                    '<span class="label draggable ui-draggable  job-element control-flow control-flow-replicate" title="Replicate Control">'+
-                        '<img src="img/gears.png" width="20px">Replicate</span>');
+            var replicateWidget = $(
+                '<span class="label draggable ui-draggable  job-element control-flow control-flow-replicate" title="Replicate Control">'+
+                    '<img src="img/gears.png" width="20px">Replicate</span>');
 
-                this.$el.append(taskWidget).append(replicateWidget).append(ifWidget).append(loopWidget);
-            } else {
-                this.$el.append(taskWidget);
-            }
+            this.$el.append(taskWidget).append(replicateWidget).append(ifWidget).append(loopWidget);
 
         	$(".draggable").draggable({helper: "clone"});
 	    }	
@@ -51,8 +45,10 @@
         	if (this.element) this.$el = this.element;
         	
         	this.$el.unbind('click');
+
         	this.$el.click(function (event) {
         		event.stopPropagation();
+                that.clearSelection();
 
         		var form = new Backbone.Form({
         		    'model': that.model
@@ -123,9 +119,20 @@
         		}
         		
         	});
+            this.$el.dblclick(function() {
+                event.stopPropagation();
+            })
 
             return this;
-	    }
+	    },
+        clearSelection : function() {
+            if(document.selection && document.selection.empty) {
+                document.selection.empty();
+            } else if(window.getSelection) {
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+            }
+        }
 	})
 
 
@@ -152,11 +159,20 @@
 		  		}
 			});
 
+            this.$el.dblclick(function(event) {
+                that.clearSelection();
+
+                console.log("Creating task", event);
+                that.createTask({offset:{top:event.clientY, left:event.clientX}});
+            })
+
             this.initJsPlumb();
             this.$el.html(this.zoomArea);
             this.model.on("change:Project Name", this.updateProjectName, this);
         },
         initJsPlumb: function() {
+            var that = this;
+
             jsPlumb.unbind();
 
 			jsPlumb.bind("connection", function(connection) {
@@ -366,6 +382,7 @@
             this.$el.click();
         },
         import: function(json) {
+
             jobModel = new Job();
             jobModel.populate(json.job)
 
@@ -375,6 +392,9 @@
             this.model = jobModel;
             xmlView.model = jobModel;
             console.log("To", this.model);
+
+            // to avoid model change by creating connections clean all jsplumb events
+            jsPlumb.unbind();
 
             var task2View = {};
             $.each(jobModel.tasks, function(i, task) {
@@ -406,13 +426,13 @@
                             endpointIf.connectorOverlays[1][1].label = 'if';
                             jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:taskIf.overlays()});
                         }
-                        if (ifFlow.else) {
+                        if (ifFlow.else && ifFlow.else.task) {
                             var taskElse = task2View[ifFlow.else.task.get('Task Name')];
                             var endpointElse = taskElse.addTargetEndPoint('if')
                             endpointIf.connectorOverlays[1][1].label = 'else';
                             jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:taskIf.overlays()});
                         }
-                        if (ifFlow.continuation) {
+                        if (ifFlow.continuation && ifFlow.continuation.task) {
                             var taskContinuation = task2View[ifFlow.continuation.task.get('Task Name')];
                             var endpointContinuation = taskContinuation.addTargetEndPoint('if')
                             endpointIf.connectorOverlays[1][1].label = 'continuation';
@@ -437,6 +457,7 @@
                 }
             })
 
+            this.initJsPlumb();
             jobModel.trigger('change');
             this.autoLayout();
             // regenerating the form
@@ -514,7 +535,7 @@
 			this.modelType = this.model.get("Type");
 	        this.model.on("change:Task Name", this.updateTaskName, this);
 	        this.model.on("change:Type", this.changeTaskType, this);
-            this.model.on("change:Control Flow", this.changeControlFlow, this);
+            this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
 
 			this.element = $('<div class="task"><a href="#" class="task-name"><img src="'
@@ -548,9 +569,10 @@
         	}
         	this.modelType = executableType;
 	    },
-        changeControlFlow: function() {
+        controlFlowChanged: function(model, valu, handler) {
+            var fromFormChange = handler.error; // its defined when form was changed
             var control = this.model.get("Control Flow");
-            if (control && control != 'none') {
+            if (fromFormChange && control && control != 'none') {
                 $('.source-endpoint:not(.connected)').remove();
                 $('.target-endpoint:not(.connected)').remove();
 
@@ -572,13 +594,16 @@
                  this.element.removeClass('block-end').removeClass('block-start');
             }
         },
-	    validateForm: function() {
+	    showOrHideForkEnvironment: function() {
 			var executable = this.model.get("Parameters");
 			if (executable) {
 				var forkEnvTitle = "Fork Environment";
 				var forkEnvDiv = propertiesView.$el.find('[placeholder="forkEnvironment"]')
-				if (!executable[forkEnvTitle]==undefined) { return; }
-	
+                if (typeof(executable.toJSON) != "undefined") {
+                    executable = executable.toJSON();
+                }
+				if (executable[forkEnvTitle]==undefined) { return; }
+
 				if (executable[forkEnvTitle]=="true") {
 					forkEnvDiv.nextAll("div").show();
 				} else {
@@ -695,9 +720,9 @@
 	    	this.$el.click(function() {
 	    		that.form.on('Parameters:change', function(f, task) {
 	    			that.form.commit();
-	    			that.validateForm();
+	    			that.showOrHideForkEnvironment();
 	    		})
-	    		that.validateForm();
+	    		that.showOrHideForkEnvironment();
 	    	})
 	    	return this;
 	    }
@@ -795,12 +820,16 @@
 
 	JavaExecutableXmlView = Backbone.View.extend({
         render: function() {
+            var model = this.model;
+            if (typeof(this.model.toJSON) != "undefined") {
+                model = this.model.toJSON();
+            }
         	var script = undefined;
-        	if (this.model["Environment Script"]) {
-        		script = new TemplateView({model:this.model["Environment Script"], template:"#script-template"}).render().$el.text();
+        	if (model["Environment Script"]) {
+        		script = new TemplateView({model:model["Environment Script"], template:"#script-template"}).render().$el.text();
         		script = script.trim();
         	}
-        	var template = _.template($("#java-executable-template").html(), {model: this.model.toJSON(), 'script': script});
+        	var template = _.template($("#java-executable-template").html(), {model: model, 'script': script});
         	this.$el.text(template);
         	return this;
         }
@@ -808,12 +837,16 @@
 
 	NativeExecutableXmlView = Backbone.View.extend({
         render: function() {
-        	var script = undefined;
-        	if (this.model["Or Dynamic Command"]) {
-        		script = new TemplateView({model:this.model["Or Dynamic Command"], template:"#script-template"}).render().$el.text();
+        	var model = this.model;
+            if (typeof(this.model.toJSON) != "undefined") {
+                model = this.model.toJSON();
+            }
+            var script = undefined;
+        	if (model["Or Dynamic Command"]) {
+        		script = new TemplateView({model:model["Or Dynamic Command"], template:"#script-template"}).render().$el.text();
         		script = script.trim();
         	}
-        	var template = _.template($("#native-executable-template").html(), {model: this.model, 'script': script});
+        	var template = _.template($("#native-executable-template").html(), {model: model, 'script': script});
         	this.$el.text(template);
         	return this;
         }
@@ -835,6 +868,11 @@
 	TemplateView = Backbone.View.extend({
         render: function() {
         	if (this.model) {
+
+                if (typeof(this.model.toJSON) != "undefined" && this.model) {
+                    this.model = this.model.toJSON();
+                }
+
             	var template = _.template($(this.options.template).html(), {'model': this.model});
             	this.$el.text(template);
         	}
@@ -851,7 +889,6 @@
 
     jsPlumb.bind("ready", function() {
         if (supports_html5_storage() && typeof localStorage["job-model"] === 'string') {
-//            console.log("Restoring model from the local storage", localStorage["job-model"])
             var json = xmlToJson(parseXml(localStorage["job-model"]))
             workflowView.import(json);
         }

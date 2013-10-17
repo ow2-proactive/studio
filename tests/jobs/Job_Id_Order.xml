@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:dev" xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.1/schedulerjob.xsd" name="ProactiveJob">
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:dev" xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.1/schedulerjob.xsd"
+     cancelJobOnError="false" name="ProactiveJob" priority="normal">
 	<taskFlow>
 
 		<task name="premiere">
 			<javaExecutable
-					class="org.ow2.proactive.scheduler.examples.EmptyTask" />
+					class="org.ow2.proactive.scheduler.examples.EmptyTask"></javaExecutable>
 		</task>
 		<task name="deuxieme">
 			<javaExecutable
-					class="org.ow2.proactive.scheduler.examples.EmptyTask" />
+					class="org.ow2.proactive.scheduler.examples.EmptyTask"></javaExecutable>
 		</task>
 		<task name="troisieme">
 			<javaExecutable
-					class="org.ow2.proactive.scheduler.examples.EmptyTask" />
+					class="org.ow2.proactive.scheduler.examples.EmptyTask"></javaExecutable>
 		</task>
 	</taskFlow>
 </job>

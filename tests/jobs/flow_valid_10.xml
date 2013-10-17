@@ -65,6 +65,7 @@
         <replicate>
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </replicate>

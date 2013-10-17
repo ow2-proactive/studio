@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns="urn:proactive:jobdescriptor:dev" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:dev ../../src/scheduler/src/org/ow2/proactive/scheduler/common/xml/schemas/jobdescriptor/dev/schedulerjob.xsd"
-	name="job_MultiNodes" priority="high">
-	<description>
-	    A TaskFlow job that will find out the Nth first prime number where N is given as
-		argument. It will use the multi-nodes feature to compute it on several node
-	</description>
+    cancelJobOnError="false" name="job_MultiNodes" priority="high">
 	<taskFlow>
 <!-- @snippet-start java_task_multinodes_parallel -->
 		<task name="MultiNodesTask">
 			<description>Will control the workers in order to find the prime number</description>
-			<parallel numberOfNodes="4"/>
+			<parallel numberOfNodes="4"></parallel>
 			<javaExecutable
 				class="org.ow2.proactive.scheduler.examples.MultiNodeExample">
 				<parameters>

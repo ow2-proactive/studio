@@ -18,10 +18,10 @@
 			</depends>
 			<selection>
 				<script>
-					<code language="javascript">
+					<code language="javascript"> <![CDATA[
 						println("Invalid selection script started");
 						d
-					</code>
+					]]> </code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">

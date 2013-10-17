@@ -58,9 +58,10 @@
       <javaExecutable class="org.ow2.proactive.scheduler.examples.IncrementJob">
       </javaExecutable>
       <controlFlow block="none" >
-        <if target="T1" else="T2" continuation="">
+        <if target="T1" else="T2" >
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </if>

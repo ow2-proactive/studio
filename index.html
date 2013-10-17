@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
-		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/bootstrap-responsive.css">
 		<link rel="stylesheet" href="css/studio.css">
 	</head>
@@ -19,7 +19,7 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	          </button>
-	          <a class="brand" style="vertical-align:middle"><img src="img/proactive_32.png" style="height:24px"> ProActive Studio</a>
+	          <a class="brand" style="vertical-align:middle"><img src="img/proactive_32.png" style="height:24px"> ProActive Studio <span class="release-status">alpha</span></a>
 	          <div class="nav-collapse collapse">
 	            <ul class="nav">
 	              <li><a id="submit-button" href="#" class="pointer"><i class="icon-share "></i> Execute</a></li>
@@ -87,20 +87,15 @@
   </div>
 </div>
 
-<!--job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
-        name="<%= job["Job Name"]%>" projectName="<%= job["Project Name"]%>" priority="<%= job["Job Priority"]%>"
-        cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>" maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>" restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>"-->
-
 <script type="text/template" class="template" id="job-template">
 	<?xml version="1.0" encoding="UTF-8"?>
-    <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:dev"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:dev ../../../src/org/ow2/proactive/scheduler/common/xml/schemas/jobdescriptor/dev/schedulerjob.xsd"
+    <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
+         xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
 	    name="<%= job["Job Name"]%>"
-        <% if (job["Project Name"]!='Project') { %>projectName="<%= job["Project Name"]%>" <% } %>
+        <%if (job["Project Name"]!='Project') {%>projectName="<%= job["Project Name"]%>" <%}%>
         priority="<%= job["Job Priority"]%>"
 		cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
-        <% if (job["Max Number Of Executions For Task"]>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>" <% } %>
+        <% if (job["Max Number Of Executions For Task"]&&parseInt(job["Max Number Of Executions For Task"])>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>" <% } %>
         <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
 	
 		<% if (job["Local Variables"] && job["Local Variables"].length>0) { %>
@@ -112,7 +107,7 @@
 		<% } %>
 	
 		<% if (job["Description"] && job["Description"].length>0) { %>
-		<description><%= job["Description"]%></description>
+		<description> <![CDATA[ <%= job["Description"]%> ]]> </description>
 		<% } %>
 		
 		<% if (job["Job Classpath"] && job["Job Classpath"].length>0) { %>
@@ -137,7 +132,13 @@
 		<% if (job["Output Space Url"] && job["Output Space Url"].length>0) { %>
 		<outputSpace url="<%= job["Output Space Url"]%>"/>
 		<% } %>
-	
+        <% if (job["Global Space Url"] && job["Global Space Url"].length>0) { %>
+        <globalSpace url="<%= job["Global Space Url"]%>"/>
+        <% } %>
+        <% if (job["User Space Url"] && job["User Space Url"].length>0) { %>
+        <userSpace url="<%= job["User Space Url"]%>"/>
+        <% } %>
+
 		<taskFlow>
 			<% _.each(tasks, function(task) { %>
 					<%=task%>
@@ -148,12 +149,13 @@
 
 <script type="text/template" class="template" id="task-template">
 	<task name="<%=task["Task Name"]%>"
-        <% if (task["Maximum Number of Execution"]>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>" <% } %>
+        <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>" <% } %>
         <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
         <% if (task["Cancel Job On Error Policy"]=='true') { %>cancelJobOnError="<%=task["Cancel Job On Error Policy"]%>" <% } %>
         <% if (task["Precious Result"]=='true') { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
         <% if (task["Run as me"]) { %>runAsMe="<%=task["Run as me"]%>" <% } %>
-		
+        <% if (task["If An Error Occurs Restart Task"] && task["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= task["If An Error Occurs Restart Task"]%>" <% } %>
+
 		<%if (task["Maximum Execution Time (hh:mm:ss)"]){%>
 			walltime="<%=task["Maximum Execution Time (hh:mm:ss)"]%>"
 		<%}%>
@@ -162,7 +164,7 @@
 		<%}%>>
 		
 		<% if (task["Description"] && task["Description"].length>0) { %>
-		<description><%= task["Description"]%></description>
+		<description> <![CDATA[ <%= task["Description"]%> ]]> </description>
 		<% } %>
 		
 		<% if (task["Generic Info"] && task["Generic Info"].length>0) { %>
@@ -184,7 +186,7 @@
 		<% if (task["Input Files"] && task["Input Files"].length>0) { %>
 		<inputFiles>
 		<% _.each(task["Input Files"], function(file) { %>
-				<files excludes="<%=file["Excludes"]%>" includes="<%=file["Includes"]%>" accessMode="<%=file["Access Mode"]%>"/>
+				<files <%if (file["Excludes"]&&file["Excludes"].length>0) {%>excludes="<%=file["Excludes"]%>"<% } %> <%if (file["Includes"]&&file["Includes"].length>0) {%>includes="<%=file["Includes"]%>"<% } %> accessMode="<%=file["Access Mode"]%>"/>
 		<% }) %>	
 		</inputFiles>
 		<% } %>
@@ -218,9 +220,9 @@
 
         <% if (controlFlow && controlFlow['if']) { %>
         <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
-        <if <% if (controlFlow['if']){ %>target="<%=controlFlow['if'].task.get('Task Name')%>"<%}%>
-            <% if (controlFlow['if']['else']){ %>else="<%=controlFlow['if']['else'].task.get('Task Name')%>"<%}%>
-            <% if (controlFlow['if']['continuation']){ %>continuation="<%=controlFlow['if']['continuation'].task.get('Task Name')%>"<%}%>>
+        <if <% if (controlFlow['if']&&controlFlow['if'].task){ %>target="<%=controlFlow['if'].task.get('Task Name')%>"<%}%>
+            <% if (controlFlow['if']['else']&&controlFlow['if']['else'].task){ %>else="<%=controlFlow['if']['else'].task.get('Task Name')%>"<%}%>
+            <% if (controlFlow['if']['continuation']&&controlFlow['if']['continuation'].task){ %>continuation="<%=controlFlow['if']['continuation'].task.get('Task Name')%>"<%}%>>
             <%=controlFlow['if'].script%>
         </if>
         </controlFlow>
@@ -231,7 +233,7 @@
         </loop>
         </controlFlow>
         <% } else if (controlFlow && controlFlow['replicate']) { %>
-        <controlFlow><replicate>
+        <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>><replicate>
         <%=controlFlow['replicate'].script%>
         </replicate></controlFlow>
         <% } else if (task["Block"] && task["Block"]!='none') { %>
@@ -254,7 +256,7 @@
 		<% if (task["Output Files"] && task["Output Files"].length>0) { %>
 		<outputFiles>
 		<% _.each(task["Output Files"], function(file) { %>
-				<files excludes="<%=file["Excludes"]%>" includes="<%=file["Includes"]%>" accessMode="<%=file["Access Mode"]%>"/>
+				<files <%if (file["Excludes"]&&file["Excludes"].length>0) {%>excludes="<%=file["Excludes"]%>"<%}%> <%if (file["Includes"]&&file["Includes"].length>0) {%>includes="<%=file["Includes"]%>"<%}%> accessMode="<%=file["Access Mode"]%>"/>
 		<% }) %>	
 		</outputFiles>
 		<% } %>
@@ -300,8 +302,8 @@
 
 <script type="text/template" class="template" id="java-executable-template">
       <javaExecutable class="<%=model["Class"]%>">
-		<% if (model["Fork Environment"]=="Fork a new JVM") { %>
-        <forkEnvironment javaHome="<%=model["Java Home"]%>" workingDir="<%=model["Working Dir"]%>">
+		<% if (model["Fork Environment"]=="true") { %>
+        <forkEnvironment <% if(model["Java Home"]&&model["Java Home"].length>0) {%> javaHome="<%=model["Java Home"]%>"<%}%> <% if(model["Working Dir"]&&model["Working Dir"].length>0) {%>workingDir="<%=model["Working Dir"]%>"<%}%>>
 			<% if (model["Environment Variables"] && model["Environment Variables"].length>0) { %>
 			<SystemEnvironment>          
 			<% _.each(model["Environment Variables"], function(arg) { %>
@@ -346,7 +348,7 @@
       <nativeExecutable>
 
       	<% if (model["Static Command"] && model["Static Command"].length>0 || !script) { %>
-        <staticCommand value="<%=model["Static Command"]%>" workingDir="<%=model["Working Folder"]%>">
+        <staticCommand value="<%=model["Static Command"]%>" <% if (model["Working Folder"] && model["Working Folder"].length>0) { %>workingDir="<%=model["Working Folder"]%>"<% } %>>
         	<% if (model["Arguments"] && model["Arguments"].length>0) { %>
 			<arguments>
 			<% _.each(model["Arguments"], function(arg) { %>
@@ -358,7 +360,7 @@
 
     	<% } else { %>
 
-        <dynamicCommand workingDir="<%=model["Working Dir"]%>">
+        <dynamicCommand <% if (model["Working Dir"] && model["Working Dir"].length>0) { %>workingDir="<%=model["Working Dir"]%>"<% } %>>
         <generation>
 			<%=script%>
         </generation>

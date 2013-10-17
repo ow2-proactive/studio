@@ -18,6 +18,7 @@
         <loop target="T">
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </loop>
@@ -54,6 +55,7 @@
         <loop target="T4">
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </loop>
@@ -94,6 +96,7 @@
         <loop target="T3">
           <script>
             <code language="javascript">
+                <![CDATA[ non_empty_code ]]>
             </code>
           </script>
         </loop>
