@@ -762,7 +762,8 @@
         	// indenting using vkbeautify
         	this.$el.empty()
         	var pre = $('<pre class="brush:xml;toolbar:false;" id="workflow-xml"></pre>');
-        	pre.text(vkbeautify.xml(this.generateXml()))
+            this.generatedXml = vkbeautify.xml(this.generateXml())
+        	pre.text(this.generatedXml)
         	this.$el.append(pre);
         	SyntaxHighlighter.highlight();
 
@@ -966,6 +967,14 @@
         jobModel.trigger('change');
         workflowView.$el.click();
     });
+
+
+    $("#download-xml-button").click(function() {
+        console.log("Saving xml");
+        var jobName = jobModel.get("Job Name")
+        var blob = new Blob([xmlView.generatedXml]);
+        saveAs(blob, jobName+".xml")
+    })
 
 
     function save_workflow_to_storage() {
