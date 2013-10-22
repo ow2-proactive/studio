@@ -75,9 +75,18 @@
             		$.each(form.$el.children().children(), function(i, elem) {
             			var el = $(elem);
             			if (el.attr("data-tab")) {
-            				var accId = "acc-"+i;
+                            var accId = "acc-"+i;
+                            // defining if this accordion should be opened
+                            var openAccordion = false;
+                            if (i==0 && !that.openedAccordion) {
+                                openAccordion = true;
+                            }
+                            if (accId == that.openedAccordion) {
+                                openAccordion = true;
+                            }
+
             				var accordionGroup = $('<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-properties" href="#'+accId+'">'+el.attr("data-tab")+'</a></div></div>');
-            				currentAccordionGroup = $('<div id="'+accId+'" class="accordion-body collapse '+(i==0?"in":"")+'"></div>');
+            				currentAccordionGroup = $('<div id="'+accId+'" class="accordion-body collapse '+(openAccordion?"in":"")+'"></div>');
             				accordionGroup.append(currentAccordionGroup);
             				accordion.append(accordionGroup);
             				curLabel = el.attr("data-tab").replace(/ /g, '');
@@ -100,11 +109,20 @@
             				el = el.find("label").addClass("checkbox").append(checkbox);
             			}
 
-            			currentAccordionGroup.append($('<div class="form-wrap"></div>').append(el));
+                        currentAccordionGroup.append($('<div class="form-wrap"></div>').append(el));
+
             		})
             		
             		propertiesView.$el.html(breadcrumb);
             		propertiesView.$el.append(accordion);
+
+                    // saving expanded accordion
+                    $(".accordion-toggle").click(function() {
+                        var accordionBody = $(this).parents(".accordion-group").find(".accordion-body");
+                        if (!accordionBody.hasClass("in")) {
+                            that.openedAccordion = accordionBody.attr('id')
+                        }
+                    })
         		} else {
                     propertiesView.$el.html(breadcrumb);
                     propertiesView.$el.append(form.$el);
