@@ -25,6 +25,7 @@ body {
 	padding-top:20px;
 	padding-left:30px;
     position: absolute;
+    width: 75%;
     top: 85%;
     left: 20%;
 }

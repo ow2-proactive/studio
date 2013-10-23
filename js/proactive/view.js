@@ -994,11 +994,7 @@
 		$('#scheduler-connect-modal').modal();
 		$('#submit-button-dialog').unbind('click');
 		$('#submit-button-dialog').click(function() {
-			creds = {};
-			$.each($("#scheduler-connect-modal").find("input"), function(i, input) {
-				creds[$(input).attr("data-name")] = $(input).val()
-			})
-			SchedulerClient.submit(creds, xml)
+			SchedulerClient.submit(get_credentials(), xml)
 		})
 	});
 
@@ -1056,6 +1052,26 @@
         }
     }
 
+    function get_credentials() {
+        var creds = {};
+        $.each($("#scheduler-connect-modal").find("input"), function(i, input) {
+            creds[$(input).attr("data-name")] = $(input).val()
+        });
+        return creds;
+    }
+
+    function validate_job() {
+        console.log("Validating");
+		SchedulerClient.validate(get_credentials(), xmlView.generateXml());
+    }
+
+    $("#validate-button").click(function() {
+        validate_job();
+    });
+
     // saving job xml every min to local store
     setInterval(save_workflow_to_storage, 5000);
+
+    setInterval(validate_job, 5000);
+
 })(jQuery)
