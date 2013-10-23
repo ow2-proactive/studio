@@ -48,7 +48,7 @@
 
         	this.$el.click(function (event) {
         		event.stopPropagation();
-                that.clearSelection();
+                that.clearTextSelection();
 
         		var form = new Backbone.Form({
         		    'model': that.model
@@ -59,7 +59,17 @@
         		breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">'+jobModel.get("Job Name")+'</span> <span class="divider">/</span></li>')
         		if (that.model.get("Task Name")) {
             		breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">'+that.model.get("Task Name")+'</span></li>')
-        		}
+
+                    // selecting the current task
+                    $(".selected-task").removeClass("selected-task");
+                    that.$el.addClass("selected-task")
+                    var removeTask = $('<a href="#" class="icon-trash pull-right" title="Remove task"></a>');
+                    removeTask.click(function() {
+                        workflowView.removeView(that);
+                        return false;
+                    })
+                    breadcrumb.append(removeTask)
+                }
 
         		that.form = form;
         		form.on('change', function(f, changed) {
@@ -128,14 +138,6 @@
                     propertiesView.$el.append(form.$el);
         		}
         		
-        		if (that.model.get("Task Name")) {
-        			var removeButton = $('<button type="button" class="btn btn-danger remove-button">Remove Task</button>');
-        			removeButton.click(function() {
-                        workflowView.removeView(that)
-        			})
-        			propertiesView.$el.append(removeButton);
-        		}
-        		
         	});
             this.$el.dblclick(function() {
                 event.stopPropagation();
@@ -143,7 +145,7 @@
 
             return this;
 	    },
-        clearSelection : function() {
+        clearTextSelection : function() {
             if(document.selection && document.selection.empty) {
                 document.selection.empty();
             } else if(window.getSelection) {
@@ -178,7 +180,7 @@
 			});
 
             this.$el.dblclick(function(event) {
-                that.clearSelection();
+                that.clearTextSelection();
 
                 console.log("Creating task", event);
                 that.createTask({offset:{top:event.clientY, left:event.clientX}});
@@ -1012,6 +1014,14 @@
         saveAs(blob, jobName+".xml")
     })
 
+    // removing a task by del
+    $('body').keyup(function(e){
+        if (e.keyCode == 46) {
+            // del pressed
+            var taskView = $(".selected-task").data('view');
+            workflowView.removeView(taskView);
+        }
+    })
 
     function save_workflow_to_storage() {
         if (supports_html5_storage() && xmlView) {
