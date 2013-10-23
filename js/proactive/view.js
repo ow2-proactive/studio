@@ -409,6 +409,12 @@
 			return rendering;
         },
         removeView: function(view) {
+
+            var endPoints = jsPlumb.getEndpoints(view.$el)
+            for (var i in endPoints) {
+                jsPlumb.deleteEndpoint(endPoints[i]);
+            }
+
             jobModel.removeTask(view.model);
             view.$el.remove();
             jsPlumb.remove(view.$el);
