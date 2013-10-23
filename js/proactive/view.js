@@ -194,10 +194,8 @@
             jsPlumb.unbind();
 
 			jsPlumb.bind("connection", function(connection) {
-
                 connection.sourceEndpoint.addClass("connected")
                 connection.targetEndpoint.addClass("connected")
-
 				var source = connection.source;
 				var target = connection.target;
                 if ($(target).data("view")) {
@@ -212,7 +210,6 @@
 			});
 			
 			jsPlumb.bind('connectionDetached', function(connection) {
-
                 if (connection.connection.scope!='dependency') {
                     connection.sourceEndpoint.removeClass("connected")
                 }
@@ -246,10 +243,30 @@
             // hiding unnecessary target endpoints
             jsPlumb.bind('connectionDragStop', function(connection) {
                 $(".target-endpoint:not(.connected)").remove();
+
+                if (!connection.target) {
+                    // creating a task where drag stopped
+                    var sourcePoints = jsPlumb.getEndpoints($("#"+connection.sourceId));
+                    for (var i in sourcePoints) {
+                        if (sourcePoints[i].scope == connection.scope) {
+                            var sourceView = $("#" + connection.sourceId).data('view')
+                            var newTask = that.createTask({offset:{top:that.mouseup.top, left:that.mouseup.left}});
+                            var endpointDep = newTask.addTargetEndPoint(connection.scope)
+                            jsPlumb.connect({source:sourcePoints[i], target:endpointDep, overlays: sourceView.overlays()});
+
+                            break;
+                        }
+                    }
+
+                }
             });
 
+            this.$el.mouseup(function(event) {
+                that.mouseup = {top: event.clientY, left: event.clientX};
+            })
 
-			jsPlumb.bind("click", function(connection, originalEvent) {
+
+            jsPlumb.bind("click", function(connection, originalEvent) {
                 if (originalEvent.isPropagationStopped()) return false;
 				var source = connection.source;
 				var target = connection.target;
@@ -270,6 +287,8 @@
 
             this.model.addTask(rendering.model);
             this.model.trigger('change');
+
+            return view;
         },
         createIfWorkflow: function(ui) {
             var offset = this.$el.offset();
@@ -960,8 +979,7 @@
 		xmlView.render();
 
 		var button = $(this);
-		var xml = "";
-		$('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
+		var xml = xmlView.generatedXml;
 
 		$('#scheduler-connect-modal').modal();
 		$('#submit-button-dialog').unbind('click');
