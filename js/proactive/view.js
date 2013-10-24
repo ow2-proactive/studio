@@ -987,7 +987,9 @@
 		xmlView.render();
 
 		var button = $(this);
-		var xml = xmlView.generatedXml;
+		var xml = "";
+        // make it in this ugly way to have a right line number for the xml in case of error
+        $('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
 
 		$('#scheduler-connect-modal').modal();
 		$('#submit-button-dialog').unbind('click');
