@@ -1031,6 +1031,15 @@
         }
     })
 
+    // submitting job by pressing enter
+    $('#scheduler-connect-modal').on( 'keypress', function( e ) {
+        if( e.keyCode === 13 ) {
+            e.preventDefault();
+            $("#submit-button-dialog").click();
+
+        }
+    } );
+
     function save_workflow_to_storage() {
         if (supports_html5_storage() && xmlView) {
             localStorage["job-model"] = xmlView.generateXml()
