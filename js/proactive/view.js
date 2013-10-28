@@ -30,6 +30,79 @@
 	});
 	
 	PropertiesView = Backbone.View.extend({
+        listWorkflows: function() {
+
+            var breadcrumb = $('<ul class="breadcrumb"></ul>');
+            var workflows = $('<li class="active"><span>Workflows</span> <span class="divider">/</span></li>');
+            breadcrumb.append(workflows)
+
+            var newWorkflow = $('<button type="button" class="btn btn-success btn-small create-workflow-button">Create Workflow</button>')
+
+            newWorkflow.click(function() {
+
+                var jobModel = new Job();
+                var jobName = jobModel.get("Job Name");
+                var jobXml = xmlView.xml(jobModel);
+
+                projects.addEmptyWorkflow(jobName);
+                projects.saveCurrentWorkflow(jobName, jobXml);
+
+                var workflowJson = projects.getCurrentWorkFlowAsJson()
+                if (workflowJson) {
+                    workflowView.import(workflowJson);
+                }
+
+                propertiesView.listWorkflows();
+            })
+
+            propertiesView.$el.html(breadcrumb);
+            propertiesView.$el.append(newWorkflow);
+
+            var workflows = projects.getWorkFlows();
+            var selectedWorkflow = projects.getSelectWorkflowIndex();
+            if (workflows.length > 0) {
+                var table = $('<table class="table table-striped table-hover"></table>');
+                var rows = $('<tbody></tbody>')
+
+                table.append('<thead><tr><th>#</th><th>Name</th><th>Actions</th></tr></thead>');
+                table.append(rows);
+
+                for (var i=workflows.length-1; i>=0; i--) {
+                    var rowClass = "";
+                    if (i == selectedWorkflow) rowClass = "success";
+                    rows.append('<tr data-id="'+i+'" class="'+rowClass+'"><td>'+(i+1)+'</td><td title="Click to edit">'+workflows[i].name+'</td><td><button type="button" class="btn btn-info btn-mini btn-clone">Clone</button> <button type="button" class="btn btn-danger btn-mini btn-remove">Remove</button></td></tr>')
+                }
+
+                propertiesView.$el.append(table);
+
+                table.find('.btn-clone').click(function() {
+
+                })
+                table.find('.btn-remove').click(function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    var workflowIndex = $(this).parents("tr").attr('data-id');
+                    if (workflowIndex) {
+                        console.log("Removing project number ", workflowIndex)
+                        projects.removeWorkflowAt(workflowIndex);
+                        propertiesView.listWorkflows();
+                    }
+                })
+                table.find('tr').click(function() {
+                    var workflowIndex = $(this).attr('data-id');
+                    if (workflowIndex) {
+                        projects.setSelectWorkflowIndex(workflowIndex);
+                        var workflowJson = projects.getCurrentWorkFlowAsJson()
+                        if (workflowJson) {
+                            workflowView.import(workflowJson);
+                        }
+                    }
+                })
+            }
+
+            return false;
+        }
 	});
 
 	ViewWatchingModelChange = Backbone.View.extend({
@@ -55,7 +128,8 @@
         		}).render();
 
         		var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
-        		breadcrumb.append('<li class="active"><span id="breadcrumb-project-name">'+jobModel.get("Project Name")+'</span> <span class="divider">/</span></li>')        			
+                var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a> <span class="divider">/</span></li>');
+        		breadcrumb.append(workflows)
         		breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">'+jobModel.get("Job Name")+'</span> <span class="divider">/</span></li>')
         		if (that.model.get("Task Name")) {
             		breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">'+that.model.get("Task Name")+'</span></li>')
@@ -70,6 +144,10 @@
                     })
                     breadcrumb.append(removeTask)
                 }
+
+                workflows.click(function() {
+                    return propertiesView.listWorkflows();
+                })
 
         		that.form = form;
         		form.on('change', function(f, changed) {
@@ -119,7 +197,8 @@
             				el = el.find("label").addClass("checkbox").append(checkbox);
             			}
 
-                        currentAccordionGroup.append($('<div class="form-wrap"></div>').append(el));
+                        if (currentAccordionGroup)
+                            currentAccordionGroup.append($('<div class="form-wrap"></div>').append(el));
 
             		})
             		
@@ -188,7 +267,7 @@
 
             this.initJsPlumb();
             this.$el.html(this.zoomArea);
-            this.model.on("change:Project Name", this.updateProjectName, this);
+            this.model.on("change:Job Name", this.updateJobName, this);
         },
         initJsPlumb: function() {
             var that = this;
@@ -386,8 +465,8 @@
 
             this.model.trigger('change');
         },
-	    updateProjectName: function() {
-	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))			
+	    updateJobName: function() {
+//	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))
 	    	$("#breadcrumb-job-name").text(this.model.get("Job Name"))			
 	    },
 	    clean: function() {
@@ -437,6 +516,8 @@
             this.model = jobModel;
             xmlView.model = jobModel;
             console.log("To", this.model);
+
+            this.model.on("change:Job Name", this.updateJobName, this);
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
@@ -780,19 +861,19 @@
 				that.render();
 			})
         },
-        generateXml: function() {
+        xml: function(jModel) {
             var that = this;
-            var job = this.model.toJSON();
+            var job = jModel.toJSON();
 
             var tasks = [];
-            if (this.model.tasks) {
-                $.each(this.model.tasks, function(i, task) {
+            if (jModel.tasks) {
+                $.each(jModel.tasks, function(i, task) {
                     var view = new TaskXmlView({model:task, jobView:that}).render();
                     tasks.push(view.$el.text());
                 });
             }
             console.log("Generating job xml", job);
-            console.log("Job model", this.model);
+            console.log("Job model", jModel);
 
             var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
 
@@ -802,6 +883,10 @@
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
             // indenting using vkbeautify
             return vkbeautify.xml(jobRendering.trim());
+        },
+        generateXml: function() {
+            var that = this;
+            return this.xml(this.model)
         },
         render: function() {
         	// indenting using vkbeautify
@@ -926,6 +1011,7 @@
         }
 	});
 
+    var projects = new Projects();
 	var jobModel = new Job();
 
 	var palleteView = new PaletteView({el: $("#palette-container")});
@@ -933,10 +1019,17 @@
 	var propertiesView = new PropertiesView({el: $("#properties-container")});
 	var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
 
+    projects.init();
+
     jsPlumb.bind("ready", function() {
-        if (supports_html5_storage() && typeof localStorage["job-model"] === 'string') {
-            var json = xmlToJson(parseXml(localStorage["job-model"]))
-            workflowView.import(json);
+        var workflowJson = projects.getCurrentWorkFlowAsJson()
+        if (workflowJson) {
+            workflowView.import(workflowJson);
+        } else {
+            var jobXml = xmlView.xml(jobModel);
+            var jobName = jobModel.get("Job Name")
+            projects.addEmptyWorkflow(jobName);
+            projects.saveCurrentWorkflow(jobName, jobXml);
         }
         workflowView.$el.click();
     })
@@ -946,6 +1039,7 @@
 	$("#import-button").click(function() {
 		$('#import-file').click();
 	})
+
 	$('#import-file').change(function(env) {
 		var files = env.target.files;
 		if (files.length > 0) {
@@ -1010,6 +1104,9 @@
         workflowView.$el.click();
     });
 
+    $("#save-button").click(function() {
+        save_workflow_to_storage();
+    });
 
     $("#download-xml-button").click(function() {
         console.log("Saving xml");
@@ -1037,19 +1134,7 @@
     } );
 
     function save_workflow_to_storage() {
-        if (supports_html5_storage() && xmlView) {
-            localStorage["job-model"] = xmlView.generateXml()
-            console.log("Saving job model into the local storage");
-            //console.log(localStorage["job-model"]);
-        }
-    }
-
-    function supports_html5_storage() {
-        try {
-            return 'localStorage' in window && window['localStorage'] !== null;
-        } catch (e) {
-            return false;
-        }
+        projects.saveCurrentWorkflow(jobModel.get("Job Name"), xmlView.generateXml());
     }
 
     function get_credentials() {
@@ -1071,7 +1156,7 @@
 
     // saving job xml every min to local store
     setInterval(save_workflow_to_storage, 5000);
-
+    // validating job periodically
     setInterval(validate_job, 5000);
 
 })(jQuery)

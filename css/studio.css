@@ -542,3 +542,11 @@ input[name="Type"] {
 .selected-task {
     border-width: 2px;
 }
+
+.table-hover {
+    cursor: pointer;
+}
+
+.create-workflow-button {
+    margin-bottom: 10px;
+}

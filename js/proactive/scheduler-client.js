@@ -42,7 +42,7 @@ var SchedulerClient = {
 
     submit: function (creds, jobXml) {
         var that = this;
-        console.log("Submitting", jobXml)
+//        console.log("Submitting", jobXml)
         this.authenticate(creds, function () {
             url = creds["url"];
             that.alert("Connecting to the scheduler at " + url, 'alert-success')
@@ -60,7 +60,7 @@ var SchedulerClient = {
 
     validate: function (creds, jobXml) {
         var that = this;
-        console.log("Validating", jobXml)
+//        console.log("Validating", jobXml)
         that.send_multipart_request(creds['url'] + "/validate", jobXml, {}, function (result) {
             if (!result.valid) {
                 that.alert("<p>Invalid workflow:</p>" + result.errorMessage, 'alert-error');

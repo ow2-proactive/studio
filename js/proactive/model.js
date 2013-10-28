@@ -109,8 +109,8 @@
 	
 	Job = SchemaModel.extend({
 		schema: {
-			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->projectName'}},
-			"Job Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}}, 
+//			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->projectName'}},
+			"Job Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->name'}},
 			"Description": {type:"Text", fieldAttrs: {'placeholder':'description->#text'}}, 
 			"Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'jobClasspath->pathElement', 'itemplaceholder':'@attributes->path'}},
 			"Job Priority": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->priority'}, options:
@@ -134,7 +134,7 @@
 				["anywhere", "elsewhere"]}
 		},
 		initialize: function() {
-            this.set({"Project Name": "Project"});
+//            this.set({"Project Name": "Project"});
             this.set({"Job Name": "MyJob"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
@@ -472,5 +472,84 @@
 		var value = prop['Value'] ? prop['Value'] : prop['Property Value'];
 		return "Name: "+ name + ", Value: " + value;
 	}
-	
+
+    Projects = Backbone.Model.extend({
+        supports_html5_storage: function() {
+            try {
+                return 'localStorage' in window && window['localStorage'] !== null;
+            } catch (e) {
+                return false;
+            }
+        },
+        init: function() {
+            if (this.supports_html5_storage() && !localStorage["workflows"]) {
+                localStorage["workflows"] = "[]";
+            }
+        },
+        LSPush: function(key, obj) {
+            var decoded = JSON.parse(localStorage[key]);
+            decoded.push(obj);
+            localStorage[key] = JSON.stringify(decoded);
+            return decoded.length;
+        },
+        addEmptyWorkflow: function(name) {
+            if (this.supports_html5_storage() && localStorage["workflows"]) {
+                var local = localStorage["workflows"]
+                var length = this.LSPush("workflows", {'name':name});
+                localStorage["workflow-selected"] = length-1;
+            }
+        },
+        getWorkFlows: function() {
+            if (this.supports_html5_storage() && localStorage["workflows"]) {
+                return JSON.parse(localStorage["workflows"])
+            }
+            return [];
+        },
+        getCurrentWorkFlowAsJson: function() {
+            if (this.supports_html5_storage() && localStorage["workflows"] && localStorage["workflow-selected"] != undefined) {
+                var selectedIndex = localStorage["workflow-selected"];
+                var decodedLS = JSON.parse(localStorage["workflows"]);
+                if (decodedLS[selectedIndex] && decodedLS[selectedIndex].xml) {
+                    return xmlToJson(parseXml(decodedLS[selectedIndex].xml))
+                }
+            }
+        },
+        saveCurrentWorkflow: function(name, workflowXml) {
+            if (this.supports_html5_storage() && workflowXml) {
+                if (!localStorage["workflows"]) {
+                    this.init();
+                    this.addEmptyWorkflow(name);
+                }
+
+                var selectedIndex = localStorage["workflow-selected"];
+                var lsDecoded = JSON.parse(localStorage['workflows']);
+                lsDecoded[selectedIndex].name = name;
+                lsDecoded[selectedIndex].xml = workflowXml;
+                localStorage['workflows'] = JSON.stringify(lsDecoded);
+            }
+        },
+        setSelectWorkflowIndex: function(index) {
+            if (this.supports_html5_storage()) {
+                localStorage["workflow-selected"] = index;
+            }
+
+        },
+        getSelectWorkflowIndex: function() {
+            if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
+                return localStorage["workflow-selected"]
+            }
+        },
+        removeWorkflowAt: function(index) {
+            if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
+                var lsDecoded = JSON.parse(localStorage['workflows']);
+                lsDecoded.splice(index, 1);
+                localStorage['workflows'] = JSON.stringify(lsDecoded);
+
+                if (lsDecoded.length <= localStorage["workflow-selected"]) {
+                    localStorage['workflow-selected'] = lsDecoded.length-1;
+                }
+            }
+        }
+    })
+
 })(jQuery);

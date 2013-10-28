@@ -23,6 +23,7 @@
 	          <a class="brand" style="vertical-align:middle"><img src="img/proactive_32.png" style="height:24px"> ProActive Studio <span class="release-status">beta</span></a>
 	          <div class="nav-collapse collapse">
 	            <ul class="nav">
+                  <li><a id="save-button" href="#" class="pointer"><i class="icon-hdd "></i> Save</a></li>
 	              <li><a id="submit-button" href="#" class="pointer"><i class="icon-share "></i> Execute</a></li>
                   <li class="divider"></li>
 	              <li><a id="import-button" href="#" class="pointer"><i class="icon-arrow-down "></i> Import</a></li>
@@ -95,7 +96,6 @@
     <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
          xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
 	    name="<%= job["Job Name"]%>"
-        <%if (job["Project Name"]!='Project') {%>projectName="<%= job["Project Name"]%>" <%}%>
         priority="<%= job["Job Priority"]%>"
 		cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
         <% if (job["Max Number Of Executions For Task"]&&parseInt(job["Max Number Of Executions For Task"])>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>" <% } %>
