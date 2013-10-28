@@ -76,7 +76,15 @@
                 propertiesView.$el.append(table);
 
                 table.find('.btn-clone').click(function() {
+                    event.preventDefault();
+                    event.stopPropagation();
 
+                    var workflowIndex = $(this).parents("tr").attr('data-id');
+                    if (workflowIndex) {
+                        console.log("Cloning the workflow number ", workflowIndex)
+                        projects.cloneWorkflow(workflowIndex);
+                        propertiesView.listWorkflows();
+                    }
                 })
                 table.find('.btn-remove').click(function(event) {
                     event.preventDefault();
@@ -84,8 +92,8 @@
 
                     var workflowIndex = $(this).parents("tr").attr('data-id');
                     if (workflowIndex) {
-                        console.log("Removing project number ", workflowIndex)
-                        projects.removeWorkflowAt(workflowIndex);
+                        console.log("Removing the workflow number ", workflowIndex)
+                        projects.removeWorkflow(workflowIndex);
                         propertiesView.listWorkflows();
                     }
                 })
@@ -1154,9 +1162,9 @@
         validate_job();
     });
 
-    // saving job xml every min to local store
-    setInterval(save_workflow_to_storage, 5000);
-    // validating job periodically
-    setInterval(validate_job, 5000);
+//    // saving job xml every min to local store
+//    setInterval(save_workflow_to_storage, 5000);
+//    // validating job periodically
+//    setInterval(validate_job, 5000);
 
 })(jQuery)

@@ -539,7 +539,7 @@
                 return localStorage["workflow-selected"]
             }
         },
-        removeWorkflowAt: function(index) {
+        removeWorkflow: function(index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 var lsDecoded = JSON.parse(localStorage['workflows']);
                 lsDecoded.splice(index, 1);
@@ -548,6 +548,13 @@
                 if (lsDecoded.length <= localStorage["workflow-selected"]) {
                     localStorage['workflow-selected'] = lsDecoded.length-1;
                 }
+            }
+        },
+        cloneWorkflow: function(index) {
+            if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
+                var lsDecoded = JSON.parse(localStorage['workflows']);
+                lsDecoded.push(lsDecoded[index]);
+                localStorage['workflows'] = JSON.stringify(lsDecoded);
             }
         }
     })
