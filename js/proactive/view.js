@@ -106,6 +106,7 @@
                             workflowView.import(workflowJson);
                         }
                     }
+                    propertiesView.listWorkflows();
                 })
             }
 
@@ -1137,7 +1138,6 @@
         if( e.keyCode === 13 ) {
             e.preventDefault();
             $("#submit-button-dialog").click();
-
         }
     } );
 
@@ -1162,9 +1162,9 @@
         validate_job();
     });
 
-//    // saving job xml every min to local store
-//    setInterval(save_workflow_to_storage, 5000);
-//    // validating job periodically
-//    setInterval(validate_job, 5000);
+    // saving job xml every min to local store
+    setInterval(save_workflow_to_storage, 5000);
+    // validating job periodically
+    setInterval(validate_job, 5000);
 
 })(jQuery)
