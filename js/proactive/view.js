@@ -131,6 +131,7 @@
         	this.$el.click(function (event) {
         		event.stopPropagation();
                 that.clearTextSelection();
+                $(".selected-task").removeClass("selected-task");
 
         		var form = new Backbone.Form({
         		    'model': that.model
@@ -144,8 +145,8 @@
             		breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">'+that.model.get("Task Name")+'</span></li>')
 
                     // selecting the current task
-                    $(".selected-task").removeClass("selected-task");
                     that.$el.addClass("selected-task")
+
                     var removeTask = $('<a href="#" class="icon-trash pull-right" title="Remove task"></a>');
                     removeTask.click(function() {
                         workflowView.removeView(that);
@@ -500,7 +501,9 @@
 
             var endPoints = jsPlumb.getEndpoints(view.$el)
             for (var i in endPoints) {
-                jsPlumb.deleteEndpoint(endPoints[i]);
+                try {
+                    jsPlumb.deleteEndpoint(endPoints[i]);
+                } catch (err) {}
             }
 
             jobModel.removeTask(view.model);
@@ -1128,9 +1131,16 @@
     $('body').keyup(function(e){
         if (e.keyCode == 46) {
             // del pressed
-            var taskView = $(".selected-task").data('view');
-            workflowView.removeView(taskView);
+            var selectedTask = $(".selected-task");
+            if (selectedTask.length > 0) {
+                var taskView = selectedTask.data('view');
+                workflowView.removeView(taskView);
+            }
         }
+    })
+
+    $('body').click(function(e){
+        $(".selected-task").removeClass("selected-task");
     })
 
     // submitting job by pressing enter
