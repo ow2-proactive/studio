@@ -1023,6 +1023,41 @@
         }
 	});
 
+    LoginView = Backbone.View.extend({
+        initialize: function() {
+            this.render();
+        },
+        render: function() {
+            var that = this;
+            StudioClient.isConnected(function() {
+                // logged in successfully - show user name
+                console.log("Logged in")
+
+                that.$el.html("<li> Logged in as: "+localStorage['user']+"</li>");
+            }, function() {
+                // failed to login - show login form
+                console.log("Login Required")
+                var form = $('<form class="navbar-search pull-right" action=""><input type="text" id="studio-user" class="span2 nav-login" placeholder="user"><input type="password" id="studio-pass"class="span2 nav-login" placeholder="password"></form>')
+                var buttonLogin = $('<button class="btn btn-small menu-button" data-toggle="dropdown">Login</button>');
+                form.append(buttonLogin);
+                that.$el.html(form);
+
+                buttonLogin.click(function() {
+                    StudioClient.login({
+                        url:"http://localhost:8080/rest/studio/rest",
+                        user:$("#studio-user").val(),
+                        pass:$("#studio-pass").val()
+                    }, function() {
+                        // on success
+                        form.remove();
+                        that.$el.html("<li> Logged in as: "+localStorage['user']+"</li>");
+                    })
+                })
+            })
+            return this;
+        }
+    });
+
     var projects = new Projects();
 	var jobModel = new Job();
 
@@ -1030,6 +1065,7 @@
 	var workflowView = new WorkflowView({el: $("#workflow-designer"), model: jobModel});
 	var propertiesView = new PropertiesView({el: $("#properties-container")});
 	var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
+    var loginView = new LoginView({el: $("#login-view")});
 
     projects.init();
 
@@ -1172,9 +1208,9 @@
         validate_job();
     });
 
-    // saving job xml every min to local store
-    setInterval(save_workflow_to_storage, 5000);
-    // validating job periodically
-    setInterval(validate_job, 5000);
+//    // saving job xml every min to local store
+//    setInterval(save_workflow_to_storage, 5000);
+//    // validating job periodically
+//    setInterval(validate_job, 5000);
 
 })(jQuery)

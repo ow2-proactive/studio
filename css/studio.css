@@ -550,3 +550,14 @@ input[name="Type"] {
 .create-workflow-button {
     margin-bottom: 10px;
 }
+
+.nav-login {
+    width:100px !important;
+    margin-left:10px !important;
+}
+
+.menu-button {
+    margin-bottom: 10px;
+    margin-left: 15px;
+    margin-top: 0px !important;
+}
