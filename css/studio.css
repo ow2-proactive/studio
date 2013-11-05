@@ -561,3 +561,10 @@ input[name="Type"] {
     margin-left: 15px;
     margin-top: 0px !important;
 }
+
+.logged-user {
+    padding-top:10px;
+}
+.menu-form {
+    vertical-align: middle;
+}

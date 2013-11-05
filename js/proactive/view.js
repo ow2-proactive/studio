@@ -44,8 +44,7 @@
                 var jobName = jobModel.get("Job Name");
                 var jobXml = xmlView.xml(jobModel);
 
-                projects.addEmptyWorkflow(jobName);
-                projects.saveCurrentWorkflow(jobName, jobXml);
+                projects.addEmptyWorkflow(jobName, jobXml);
 
                 var workflowJson = projects.getCurrentWorkFlowAsJson()
                 if (workflowJson) {
@@ -1027,32 +1026,51 @@
         initialize: function() {
             this.render();
         },
+        login: function() {
+            var that = this;
+            var form = $('<form class="navbar-search pull-right menu-form" action=""><input type="text" id="studio-user" class="span2 nav-login" placeholder="user"><input type="password" id="studio-pass"class="span2 nav-login" placeholder="password"></form>')
+            var buttonLogin = $('<button class="btn btn-small menu-button" data-toggle="dropdown">Login</button>');
+            form.append(buttonLogin);
+
+            buttonLogin.click(function() {
+                StudioClient.login({
+                    url:"http://localhost:8080/rest/rest/studio",
+                    user:$("#studio-user").val(),
+                    pass:$("#studio-pass").val()
+                }, function() {
+                    // on success
+                    form.remove();
+                    that.$el.html(that.logout());
+                    projects.sync();
+                })
+            })
+
+            return form;
+        },
+        logout: function() {
+            var that = this;
+            var buttonLogout = $('<button class="btn btn-small menu-button" style="margin-bottom:5px" data-toggle="dropdown">Logout</button>');
+            var menu = $('<form class="navbar-search pull-right menu-form">Logged in as <b>'+localStorage["user"]+'</b></form>');
+            menu.append(buttonLogout);
+
+            buttonLogout.click(function() {
+                localStorage.removeItem("sessionId");
+                that.$el.html(that.login());
+            })
+
+            return menu;
+        },
         render: function() {
             var that = this;
             StudioClient.isConnected(function() {
                 // logged in successfully - show user name
-                console.log("Logged in")
-
-                that.$el.html("<li> Logged in as: "+localStorage['user']+"</li>");
+                console.log("Logged in");
+                that.$el.html(that.logout());
+                projects.sync();
             }, function() {
                 // failed to login - show login form
                 console.log("Login Required")
-                var form = $('<form class="navbar-search pull-right" action=""><input type="text" id="studio-user" class="span2 nav-login" placeholder="user"><input type="password" id="studio-pass"class="span2 nav-login" placeholder="password"></form>')
-                var buttonLogin = $('<button class="btn btn-small menu-button" data-toggle="dropdown">Login</button>');
-                form.append(buttonLogin);
-                that.$el.html(form);
-
-                buttonLogin.click(function() {
-                    StudioClient.login({
-                        url:"http://localhost:8080/rest/studio/rest",
-                        user:$("#studio-user").val(),
-                        pass:$("#studio-pass").val()
-                    }, function() {
-                        // on success
-                        form.remove();
-                        that.$el.html("<li> Logged in as: "+localStorage['user']+"</li>");
-                    })
-                })
+                that.$el.html(that.login());
             })
             return this;
         }
@@ -1076,8 +1094,7 @@
         } else {
             var jobXml = xmlView.xml(jobModel);
             var jobName = jobModel.get("Job Name")
-            projects.addEmptyWorkflow(jobName);
-            projects.saveCurrentWorkflow(jobName, jobXml);
+            projects.addEmptyWorkflow(jobName, jobXml);
         }
         workflowView.$el.click();
     })
@@ -1208,9 +1225,9 @@
         validate_job();
     });
 
-//    // saving job xml every min to local store
-//    setInterval(save_workflow_to_storage, 5000);
-//    // validating job periodically
-//    setInterval(validate_job, 5000);
+    // saving job xml every min to local store
+    setInterval(save_workflow_to_storage, 5000);
+    // validating job periodically
+    setInterval(validate_job, 5000);
 
 })(jQuery)

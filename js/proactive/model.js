@@ -486,17 +486,17 @@
                 localStorage["workflows"] = "[]";
             }
         },
-        LSPush: function(key, obj) {
-            var decoded = JSON.parse(localStorage[key]);
-            decoded.push(obj);
-            localStorage[key] = JSON.stringify(decoded);
-            return decoded.length;
-        },
-        addEmptyWorkflow: function(name) {
+        addEmptyWorkflow: function(name, xml) {
             if (this.supports_html5_storage() && localStorage["workflows"]) {
-                var local = localStorage["workflows"]
-                var length = this.LSPush("workflows", {'name':name});
-                localStorage["workflow-selected"] = length-1;
+
+                var decodedLS = JSON.parse(localStorage["workflows"]);
+                var workflow = {'name':name, 'xml':xml, metadata:'{}'};
+                var id = StudioClient.createWorkflowSynchronously(workflow);
+                if (id) workflow.id = id;
+
+                decodedLS.push(workflow);
+                localStorage["workflow-selected"] = decodedLS.length-1;
+                localStorage["workflows"] = JSON.stringify(decodedLS);
             }
         },
         getWorkFlows: function() {
@@ -508,8 +508,17 @@
         getCurrentWorkFlowAsJson: function() {
             if (this.supports_html5_storage() && localStorage["workflows"] && localStorage["workflow-selected"] != undefined) {
                 var selectedIndex = localStorage["workflow-selected"];
+                if (!localStorage["workflows"]) return;
+
                 var decodedLS = JSON.parse(localStorage["workflows"]);
-                if (decodedLS[selectedIndex] && decodedLS[selectedIndex].xml) {
+
+                if (!decodedLS[selectedIndex] && decodedLS.length > 0) {
+                    selectedIndex = decodedLS.length-1;
+                    localStorage["workflow-selected"] = selectedIndex;
+                    console.log("Selected index out of range - selecting the latest workflow");
+                }
+
+                if (decodedLS[selectedIndex]) {
                     return xmlToJson(parseXml(decodedLS[selectedIndex].xml))
                 }
             }
@@ -518,14 +527,22 @@
             if (this.supports_html5_storage() && workflowXml) {
                 if (!localStorage["workflows"]) {
                     this.init();
-                    this.addEmptyWorkflow(name);
+                    this.addEmptyWorkflow(name, workflowXml);
                 }
 
                 var selectedIndex = localStorage["workflow-selected"];
                 var lsDecoded = JSON.parse(localStorage['workflows']);
+                if (lsDecoded[selectedIndex].name == name && lsDecoded[selectedIndex].xml == workflowXml) {
+                    // nothing to save
+                    return;
+                }
+
                 lsDecoded[selectedIndex].name = name;
                 lsDecoded[selectedIndex].xml = workflowXml;
+
                 localStorage['workflows'] = JSON.stringify(lsDecoded);
+                var workflow = lsDecoded[selectedIndex];
+                StudioClient.updateWorkflow(workflow.id, workflow);
             }
         },
         setSelectWorkflowIndex: function(index) {
@@ -542,19 +559,34 @@
         removeWorkflow: function(index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 var lsDecoded = JSON.parse(localStorage['workflows']);
+                var workflow = lsDecoded[index];
                 lsDecoded.splice(index, 1);
                 localStorage['workflows'] = JSON.stringify(lsDecoded);
 
                 if (lsDecoded.length <= localStorage["workflow-selected"]) {
                     localStorage['workflow-selected'] = lsDecoded.length-1;
                 }
+                StudioClient.removeWorkflow(workflow.id);
             }
         },
         cloneWorkflow: function(index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 var lsDecoded = JSON.parse(localStorage['workflows']);
+                var workflow = lsDecoded[index];
+                var id = StudioClient.createWorkflowSynchronously(workflow);
+                if (id) workflow.id = id;
+
                 lsDecoded.push(lsDecoded[index]);
                 localStorage['workflows'] = JSON.stringify(lsDecoded);
+            }
+        },
+        sync: function() {
+            if (this.supports_html5_storage()) {
+                if (!this.serverWorkflows) {
+                    // TODO loading indicator
+                    this.serverWorkflows = StudioClient.getWorkflowsSynchronously();
+                    if (this.serverWorkflows) localStorage['workflows'] = JSON.stringify(this.serverWorkflows);
+                }
             }
         }
     })
