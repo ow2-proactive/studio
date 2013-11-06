@@ -1034,7 +1034,6 @@
 
             buttonLogin.click(function() {
                 StudioClient.login({
-                    url:"http://localhost:8080/rest/rest/studio",
                     user:$("#studio-user").val(),
                     pass:$("#studio-pass").val()
                 }, function() {
@@ -1143,18 +1142,21 @@
 	});
 	
 	$("#submit-button").click(function() {
-		xmlView.render();
 
-		var button = $(this);
-		var xml = "";
-        // make it in this ugly way to have a right line number for the xml in case of error
-        $('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
+        StudioClient.isConnected(function() {
+            // submitting
+            xmlView.render();
 
-		$('#scheduler-connect-modal').modal();
-		$('#submit-button-dialog').unbind('click');
-		$('#submit-button-dialog').click(function() {
-			SchedulerClient.submit(get_credentials(), xml)
-		})
+            var button = $(this);
+            var xml = "";
+            // make it in this ugly way to have a right line number for the xml in case of error
+            $('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
+            SchedulerClient.submit(xml)
+        }, function() {
+            // ask to login first
+            $('#scheduler-connect-modal').modal();
+        })
+
 	});
 
     $("#clear-button").click(function() {
@@ -1208,17 +1210,9 @@
         projects.saveCurrentWorkflow(jobModel.get("Job Name"), xmlView.generateXml());
     }
 
-    function get_credentials() {
-        var creds = {};
-        $.each($("#scheduler-connect-modal").find("input"), function(i, input) {
-            creds[$(input).attr("data-name")] = $(input).val()
-        });
-        return creds;
-    }
-
     function validate_job() {
         console.log("Validating");
-		SchedulerClient.validate(get_credentials(), xmlView.generateXml());
+		SchedulerClient.validate(xmlView.generateXml());
     }
 
     $("#validate-button").click(function() {

@@ -65,18 +65,13 @@
 <div id="scheduler-connect-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Scheduler Login</h3>
+    <h3 id="myModalLabel">Scheduler Login Required</h3>
   </div>
   <div class="modal-body">
-  	<label>Scheduler REST URL</label>
-    <input data-name="url" type="text" value="http://cloud.activeeon.com/scheduler/rest" disabled="disabled">
-  	<label>User Name</label>
-    <input data-name="user" type="text" value="demo">
-  	<label>Password</label>
-    <input data-name="pass" type="password" value="demo">
+      <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
   </div>
   <div class="modal-footer">
-    <button id="submit-button-dialog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Submit</button>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
   </div>
 </div>
 
@@ -406,6 +401,7 @@
 		<script src="js/dagre.min.js"></script>
         <script src="js/FileSaver.js"></script>
 
+        <script src="js/proactive/app-config.js"></script>
         <script src="js/proactive/studio-client.js"></script>
 		<script src="js/proactive/model.js"></script>
 		<script src="js/proactive/view.js"></script>

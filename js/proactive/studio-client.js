@@ -9,11 +9,11 @@ var StudioClient = {
 		var that = this;
 		
 		console.log("Authenticating", creds)
-		this.alert("Connecting to ProActive Studio at " + creds['url'], 'alert-success')
+		this.alert("Connecting to ProActive Studio at " + StudioREST, 'alert-success')
 		
 		$.ajax({
 		    type : "POST",
-		    url : creds['url']+"/login",
+		    url : StudioREST+"/login",
 		    data : {username:creds['user'], password:creds['pass']},
 		    success: function(data) {
 		    	// ProActive Studio login request return invalid json with status code 200
@@ -22,11 +22,10 @@ var StudioClient = {
 		    error: function(data) {
 		    	// even id successful we are here
 		    	if (data.status==200) {
-		    		that.alert("Successfully connected to ProActive Studio at " + creds['url'], 'alert-success');
+		    		that.alert("Successfully connected to ProActive Studio at " + StudioREST, 'alert-success');
 		    		console.log("Session ID is " + data.responseText)
 		    		localStorage['sessionId'] = data.responseText;
                     localStorage['user'] = creds['user'];
-                    localStorage['url'] = creds['url'];
 		    		return onSuccess();
 		    	} else {
 					var reason = data.responseText.length>0?": "+data.responseText:""; 
@@ -43,7 +42,7 @@ var StudioClient = {
         if (localStorage['sessionId']) {
             $.ajax({
                 type : "GET",
-                url : localStorage['url']+"/connected",
+                url : StudioREST+"/connected",
                 beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
                 success: function(data) {
                     if (data) {
@@ -75,7 +74,7 @@ var StudioClient = {
         var that = this;
         $.ajax({
             type : "GET",
-            url : localStorage['url']+"/workflows",
+            url : StudioREST+"/workflows",
             async: false,
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
@@ -102,7 +101,7 @@ var StudioClient = {
         console.log("Creating workflow on the server", workflow)
         $.ajax({
             type : "POST",
-            url : localStorage['url']+"/workflows",
+            url : StudioREST+"/workflows",
             async: false,
             data : workflow,
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
@@ -131,7 +130,7 @@ var StudioClient = {
         console.log("Updating workflow on the server", id, workflow)
         $.ajax({
             type : "POST",
-            url : localStorage['url']+"/workflows/"+id,
+            url : StudioREST+"/workflows/"+id,
             data : workflow,
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
@@ -155,7 +154,7 @@ var StudioClient = {
         console.log("Deleting workflow on the server", id)
         $.ajax({
             type : "DELETE",
-            url : localStorage['url']+"/workflows/"+id,
+            url : StudioREST+"/workflows/"+id,
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
                 console.log("Workflow with id " + id + " deleted on the server", data)
