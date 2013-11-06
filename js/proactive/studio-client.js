@@ -38,7 +38,6 @@ var StudioClient = {
 
     isConnected: function(success, fail) {
         var that = this;
-        that.connected = false;
         if (localStorage['sessionId']) {
             $.ajax({
                 type : "GET",
@@ -47,15 +46,16 @@ var StudioClient = {
                 success: function(data) {
                     if (data) {
                         console.log("Connected to the studio", data)
-                        that.connected = true;
                         success()
                     } else {
                         console.log("Not connected to the studio", data)
+                        localStorage.removeItem('sessionId');
                         fail()
                     }
                 },
                 error: function(data) {
                     console.log("Not connected to the studio", data)
+                    localStorage.removeItem('sessionId')
                     fail()
                 }
             });
@@ -66,7 +66,7 @@ var StudioClient = {
 
     getWorkflowsSynchronously: function() {
 
-        if (!this.connected) return;
+        if (!localStorage['sessionId']) return;
 
         var workflows = undefined;
         console.log("Getting workflows from the server")
@@ -93,7 +93,7 @@ var StudioClient = {
 
     createWorkflowSynchronously: function(workflow) {
 
-        if (!this.connected) return;
+        if (!localStorage['sessionId']) return;
         var that = this;
 
         var id = undefined;
@@ -122,15 +122,16 @@ var StudioClient = {
         return id;
     },
 
-    updateWorkflow: function(id, workflow) {
+    updateWorkflow: function(id, workflow, async) {
 
-        if (!this.connected || !id) return;
+        if (!localStorage['sessionId'] || !id) return;
         var that = this;
 
         console.log("Updating workflow on the server", id, workflow)
         $.ajax({
             type : "POST",
             url : StudioREST+"/workflows/"+id,
+            'async': async,
             data : workflow,
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
@@ -148,7 +149,7 @@ var StudioClient = {
 
     removeWorkflow: function(id) {
 
-        if (!this.connected || !id) return;
+        if (!localStorage['sessionId'] || !id) return;
         var that = this;
 
         console.log("Deleting workflow on the server", id)

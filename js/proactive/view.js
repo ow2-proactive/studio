@@ -1041,6 +1041,11 @@
                     form.remove();
                     that.$el.html(that.logout());
                     projects.sync();
+
+                    var workflowJson = projects.getCurrentWorkFlowAsJson()
+                    if (workflowJson) {
+                        workflowView.import(workflowJson);
+                    }
                 })
             })
 
@@ -1066,6 +1071,12 @@
                 console.log("Logged in");
                 that.$el.html(that.logout());
                 projects.sync();
+
+                var workflowJson = projects.getCurrentWorkFlowAsJson()
+                if (workflowJson) {
+                    workflowView.import(workflowJson);
+                }
+
             }, function() {
                 // failed to login - show login form
                 console.log("Login Required")

@@ -489,14 +489,18 @@
         addEmptyWorkflow: function(name, xml) {
             if (this.supports_html5_storage() && localStorage["workflows"]) {
 
-                var decodedLS = JSON.parse(localStorage["workflows"]);
-                var workflow = {'name':name, 'xml':xml, metadata:'{}'};
+                var localJobs = JSON.parse(localStorage["workflows"]);
+                var workflow = {'name':name, 'xml':xml,
+                    metadata:JSON.stringify({
+                            created_at:new Date().getTime(),
+                            updated_at:new Date().getTime()
+                    })};
                 var id = StudioClient.createWorkflowSynchronously(workflow);
                 if (id) workflow.id = id;
 
-                decodedLS.push(workflow);
-                localStorage["workflow-selected"] = decodedLS.length-1;
-                localStorage["workflows"] = JSON.stringify(decodedLS);
+                localJobs.push(workflow);
+                localStorage["workflow-selected"] = localJobs.length-1;
+                localStorage["workflows"] = JSON.stringify(localJobs);
             }
         },
         getWorkFlows: function() {
@@ -510,16 +514,16 @@
                 var selectedIndex = localStorage["workflow-selected"];
                 if (!localStorage["workflows"]) return;
 
-                var decodedLS = JSON.parse(localStorage["workflows"]);
+                var localJobs = JSON.parse(localStorage["workflows"]);
 
-                if (!decodedLS[selectedIndex] && decodedLS.length > 0) {
-                    selectedIndex = decodedLS.length-1;
+                if (!localJobs[selectedIndex] && localJobs.length > 0) {
+                    selectedIndex = localJobs.length-1;
                     localStorage["workflow-selected"] = selectedIndex;
                     console.log("Selected index out of range - selecting the latest workflow");
                 }
 
-                if (decodedLS[selectedIndex]) {
-                    return xmlToJson(parseXml(decodedLS[selectedIndex].xml))
+                if (localJobs[selectedIndex]) {
+                    return xmlToJson(parseXml(localJobs[selectedIndex].xml))
                 }
             }
         },
@@ -531,18 +535,23 @@
                 }
 
                 var selectedIndex = localStorage["workflow-selected"];
-                var lsDecoded = JSON.parse(localStorage['workflows']);
-                if (lsDecoded[selectedIndex].name == name && lsDecoded[selectedIndex].xml == workflowXml) {
+                var localJobs = JSON.parse(localStorage['workflows']);
+                if (localJobs[selectedIndex].name == name && localJobs[selectedIndex].xml == workflowXml) {
                     // nothing to save
                     return;
                 }
 
-                lsDecoded[selectedIndex].name = name;
-                lsDecoded[selectedIndex].xml = workflowXml;
+                localJobs[selectedIndex].name = name;
+                if (localJobs[selectedIndex].xml!=workflowXml) {
+                    var meta = JSON.parse(localJobs[selectedIndex].metadata);
+                    meta.updated_at = new Date().getTime();
+                    localJobs[selectedIndex].metadata = JSON.stringify(meta);
+                }
+                localJobs[selectedIndex].xml = workflowXml;
 
-                localStorage['workflows'] = JSON.stringify(lsDecoded);
-                var workflow = lsDecoded[selectedIndex];
-                StudioClient.updateWorkflow(workflow.id, workflow);
+                localStorage['workflows'] = JSON.stringify(localJobs);
+                var workflow = localJobs[selectedIndex];
+                StudioClient.updateWorkflow(workflow.id, workflow, true);
             }
         },
         setSelectWorkflowIndex: function(index) {
@@ -558,34 +567,72 @@
         },
         removeWorkflow: function(index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
-                var lsDecoded = JSON.parse(localStorage['workflows']);
-                var workflow = lsDecoded[index];
-                lsDecoded.splice(index, 1);
-                localStorage['workflows'] = JSON.stringify(lsDecoded);
+                var localJobs = JSON.parse(localStorage['workflows']);
+                var workflow = localJobs[index];
+                localJobs.splice(index, 1);
+                localStorage['workflows'] = JSON.stringify(localJobs);
 
-                if (lsDecoded.length <= localStorage["workflow-selected"]) {
-                    localStorage['workflow-selected'] = lsDecoded.length-1;
+                if (localJobs.length <= localStorage["workflow-selected"]) {
+                    localStorage['workflow-selected'] = localJobs.length-1;
                 }
                 StudioClient.removeWorkflow(workflow.id);
             }
         },
         cloneWorkflow: function(index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
-                var lsDecoded = JSON.parse(localStorage['workflows']);
-                var workflow = lsDecoded[index];
+                var localJobs = JSON.parse(localStorage['workflows']);
+                var workflow = localJobs[index];
                 var id = StudioClient.createWorkflowSynchronously(workflow);
                 if (id) workflow.id = id;
 
-                lsDecoded.push(lsDecoded[index]);
-                localStorage['workflows'] = JSON.stringify(lsDecoded);
+                localJobs.push(localJobs[index]);
+                localStorage['workflows'] = JSON.stringify(localJobs);
             }
+        },
+        updatedAt: function(workflow) {
+            console.log("!!!", workflow.metadata);
+            return JSON.parse(workflow.metadata).updated_at;
         },
         sync: function() {
             if (this.supports_html5_storage()) {
-                if (!this.serverWorkflows) {
+                if (!this.remoteJobs) {
                     // TODO loading indicator
-                    this.serverWorkflows = StudioClient.getWorkflowsSynchronously();
-                    if (this.serverWorkflows) localStorage['workflows'] = JSON.stringify(this.serverWorkflows);
+
+                    this.remoteJobs = StudioClient.getWorkflowsSynchronously();
+
+                    console.log("!!!!", this.remoteJobs)
+                    if (this.remoteJobs) {
+
+                        var remoteJobIds = {};
+                        for (var i in this.remoteJobs) {
+                            remoteJobIds[this.remoteJobs[i].id] = this.remoteJobs[i];
+                        }
+
+                        var localJobs = JSON.parse(localStorage['workflows']);
+                        var reload = false;
+
+                        for (i in localJobs) {
+                            var localJob = localJobs[i];
+                            if (!localJob.id) {
+                                // creating new job
+                                StudioClient.createWorkflowSynchronously(localJob)
+                                reload = true;
+                            } else if (!remoteJobIds[localJob.id]) {
+                                // job was removed from the server
+                            } else if (this.updatedAt(localJob) > this.updatedAt(remoteJobIds[localJob.id])) {
+                                // job was updated locally - updating on the server
+                                StudioClient.updateWorkflow(localJob.id, localJob, false);
+                                reload = true;
+                            }
+                        }
+
+                        if (reload) {
+                            this.remoteJobs = StudioClient.getWorkflowsSynchronously();
+                            console.log("Reloading remote workflows", this.remoteJobs)
+                        }
+
+                        localStorage['workflows'] = JSON.stringify(this.remoteJobs);
+                    }
                 }
             }
         }
