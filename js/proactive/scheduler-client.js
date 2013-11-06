@@ -1,7 +1,7 @@
 var SchedulerClient = {
 
 	alert: function(message, type) {
-		var alert = $('<div class="alert '+type+'">'+message+'</div>');
+		var alert = $('<div/>', {class: "alert " + type}).text(message);
 		$('#alert-placeholder').empty().append(alert);
 	},
 	
@@ -19,12 +19,15 @@ var SchedulerClient = {
         });
     },
 
-    validate: function (jobXml) {
+    validate: function (jobXml, jobModel) {
         var that = this;
-//        console.log("Validating", jobXml)
         that.send_multipart_request(SchedulerREST + "/validate", jobXml, {}, function (result) {
             if (!result.valid) {
-                that.alert("<p>Invalid workflow:</p>" + result.errorMessage, 'alert-error');
+                that.alert("Invalid workflow: " + result.errorMessage, 'alert-error');
+                if (result.taskName != null) {
+                    var taskModel = jobModel.getTaskByName(result.taskName);
+                    taskModel.trigger("invalid")
+                }
             } else {
                 that.alert("Workflow is valid", 'alert-success');
             }
@@ -32,6 +35,8 @@ var SchedulerClient = {
     },
 
     send_multipart_request: function (url, content, headers, callback) {
+
+        var that = this;
 
         var request = new XMLHttpRequest();
         var multipart = "";
@@ -57,18 +62,16 @@ var SchedulerClient = {
         multipart += "--" + boundary + "--\r\n";
 
         request.onreadystatechange = function () {
-            try {
-                if (request.readyState == 4) {
-                    try {
-                        console.log("Response", request)
-                        var result = JSON.parse(request.responseText)
-                        callback(result);
-                    } catch (err) {
-                        console.log("Cannot parse json response")
-                        that.alert(request.responseText, 'alert-error');
-                    }
+            if (request.readyState == 4) {
+                console.log("Response", request)
+                try {
+                    var result = JSON.parse(request.responseText)
+                } catch (err) {
+                    console.log("Cannot parse json response", err)
+                    that.alert(request.responseText, 'alert-error');
+                    return;
                 }
-            } catch (e) {
+                callback(result);
             }
         }
 

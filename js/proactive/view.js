@@ -675,6 +675,8 @@
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
 
+            this.model.on("invalid", this.setInvalid, this);
+
 			this.element = $('<div class="task"><a href="#" class="task-name"><img src="'
                 +this.icons[this.modelType]+'" width="20px">&nbsp;<span class="name">'
                 +this.model.get("Task Name")+'</span></a></div>');
@@ -686,6 +688,10 @@
         	this.element.find(".name").text(this.model.get("Task Name"))
 	    	$("#breadcrumb-task-name").text(this.model.get("Task Name"))
 	    },
+
+        setInvalid : function() {
+            this.$el.addClass("invalid-task")
+        },
 
         changeTaskType: function() {
         	var executableType = this.model.get("Type");
@@ -1223,7 +1229,8 @@
 
     function validate_job() {
         console.log("Validating");
-		SchedulerClient.validate(xmlView.generateXml());
+        $(".invalid-task").removeClass("invalid-task");
+        SchedulerClient.validate(xmlView.generateXml(), jobModel);
     }
 
     $("#validate-button").click(function() {

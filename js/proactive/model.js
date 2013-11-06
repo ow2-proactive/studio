@@ -169,7 +169,15 @@
 
             return;
         },
-		populate : function(obj) {
+        getTaskByName: function (taskName) {
+            for (i in this.tasks) {
+                var task = this.tasks[i];
+                if (taskName == task.get('Task Name')) {
+                    return task;
+                }
+            }
+        },
+        populate : function(obj) {
 			this.populateSchema(obj);
 			var that = this;
 			if (obj.taskFlow && obj.taskFlow.task) {
