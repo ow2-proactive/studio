@@ -255,9 +255,15 @@
 		}
 	});
 
+	var scriptTemplate = _.template($('#script-form-template').html());
+	var serverScripts = function (callback) {
+		callback([""].concat(StudioClient.listScripts()));
+	}
+
 	Script = SchemaModel.extend({
 		schema: {
-            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}},
+            "Library": {type: "Select", options: serverScripts},
+            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
             "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
             "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
@@ -268,7 +274,8 @@
 	SelectionScript = SchemaModel.extend({
 		// TODO inherit from Script - first attempt did not work because schema is shared - type appears in pre/post scripts as well
 		schema: {
-            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}},
+            "Library": {type: "Select", options: serverScripts},
+            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
             "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
             "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},

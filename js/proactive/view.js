@@ -129,110 +129,115 @@
 
         	this.$el.click(function (event) {
         		event.stopPropagation();
-                that.clearTextSelection();
-                $(".selected-task").removeClass("selected-task");
-
-        		var form = new Backbone.Form({
-        		    'model': that.model
-        		}).render();
-
-        		var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
-                var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a> <span class="divider">/</span></li>');
-        		breadcrumb.append(workflows)
-        		breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">'+jobModel.get("Job Name")+'</span> <span class="divider">/</span></li>')
-        		if (that.model.get("Task Name")) {
-            		breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">'+that.model.get("Task Name")+'</span></li>')
-
-                    // selecting the current task
-                    that.$el.addClass("selected-task")
-
-                    var removeTask = $('<a href="#" class="icon-trash pull-right" title="Remove task"></a>');
-                    removeTask.click(function() {
-                        workflowView.removeView(that);
-                        return false;
-                    })
-                    breadcrumb.append(removeTask)
-                }
-
-                workflows.click(function() {
-                    return propertiesView.listWorkflows();
-                })
-
-        		that.form = form;
-        		form.on('change', function(f, changed) {
-        			form.commit();
-        		})
-
-        		var tabs = form.$el.find("[data-tab]");
-        		if (tabs.length > 0) {
-            		var accordion = $('<div class="accordion" id="accordion-properties">');
-            		var currentAccordionGroup = undefined;
-            		var curLabel = "";
-            		
-            		$.each(form.$el.children().children(), function(i, elem) {
-            			var el = $(elem);
-            			if (el.attr("data-tab")) {
-                            var accId = "acc-"+i;
-                            // defining if this accordion should be opened
-                            var openAccordion = false;
-                            if (i==0 && !that.openedAccordion) {
-                                openAccordion = true;
-                            }
-                            if (accId == that.openedAccordion) {
-                                openAccordion = true;
-                            }
-
-            				var accordionGroup = $('<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-properties" href="#'+accId+'">'+el.attr("data-tab")+'</a></div></div>');
-            				currentAccordionGroup = $('<div id="'+accId+'" class="accordion-body collapse '+(openAccordion?"in":"")+'"></div>');
-            				accordionGroup.append(currentAccordionGroup);
-            				accordion.append(accordionGroup);
-            				curLabel = el.attr("data-tab").replace(/ /g, '');
-            			}
-        				
-            			// remove duplicate labels that comes from nested types
-        				el.find("label").each(function(i, label) {
-            				var labelName = $(label).text().replace(/ /g, '');
-            				if (labelName && labelName==curLabel) {
-            					// removing the duplicate as it's already in the accordion caption
-            					$(label).remove();
-            				} else {
-            					curLabel = labelName;
-            				}
-        				})
-        				
-            			// modifying checkbox layout
-            			var checkbox = el.find("input[type='checkbox']");
-            			if (checkbox.length > 0) {
-            				el = el.find("label").addClass("checkbox").append(checkbox);
-            			}
-
-                        if (currentAccordionGroup)
-                            currentAccordionGroup.append($('<div class="form-wrap"></div>').append(el));
-
-            		})
-            		
-            		propertiesView.$el.html(breadcrumb);
-            		propertiesView.$el.append(accordion);
-
-                    // saving expanded accordion
-                    $(".accordion-toggle").click(function() {
-                        var accordionBody = $(this).parents(".accordion-group").find(".accordion-body");
-                        if (!accordionBody.hasClass("in")) {
-                            that.openedAccordion = accordionBody.attr('id')
-                        }
-                    })
-        		} else {
-                    propertiesView.$el.html(breadcrumb);
-                    propertiesView.$el.append(form.$el);
-        		}
-        		
-        	});
+                that.renderForm()
+            });
             this.$el.dblclick(function() {
                 event.stopPropagation();
             })
 
             return this;
 	    },
+
+        renderForm: function () {
+            var that = this
+            that.clearTextSelection();
+            $(".selected-task").removeClass("selected-task");
+
+            var form = new Backbone.Form({
+                'model': that.model
+            }).render();
+
+            var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
+            var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a> <span class="divider">/</span></li>');
+            breadcrumb.append(workflows)
+            breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">' + jobModel.get("Job Name") + '</span> <span class="divider">/</span></li>')
+            if (that.model.get("Task Name")) {
+                breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
+
+                // selecting the current task
+                that.$el.addClass("selected-task")
+
+                var removeTask = $('<a href="#" class="icon-trash pull-right" title="Remove task"></a>');
+                removeTask.click(function () {
+                    workflowView.removeView(that);
+                    return false;
+                })
+                breadcrumb.append(removeTask)
+            }
+
+            workflows.click(function () {
+                return propertiesView.listWorkflows();
+            })
+
+            that.form = form;
+            form.on('change', function (f, changed) {
+                form.commit();
+            })
+
+            var tabs = form.$el.find("[data-tab]");
+            if (tabs.length > 0) {
+                var accordion = $('<div class="accordion" id="accordion-properties">');
+                var currentAccordionGroup = undefined;
+                var curLabel = "";
+
+                $.each(form.$el.children().children(), function (i, elem) {
+                    var el = $(elem);
+                    if (el.attr("data-tab")) {
+                        var accId = "acc-" + i;
+                        // defining if this accordion should be opened
+                        var openAccordion = false;
+                        if (i == 0 && !that.openedAccordion) {
+                            openAccordion = true;
+                        }
+                        if (accId == that.openedAccordion) {
+                            openAccordion = true;
+                        }
+
+                        var accordionGroup = $('<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
+                        currentAccordionGroup = $('<div id="' + accId + '" class="accordion-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
+                        accordionGroup.append(currentAccordionGroup);
+                        accordion.append(accordionGroup);
+                        curLabel = el.attr("data-tab").replace(/ /g, '');
+                    }
+
+                    // remove duplicate labels that comes from nested types
+                    el.find("label").each(function (i, label) {
+                        var labelName = $(label).text().replace(/ /g, '');
+                        if (labelName && labelName == curLabel) {
+                            // removing the duplicate as it's already in the accordion caption
+                            $(label).remove();
+                        } else {
+                            curLabel = labelName;
+                        }
+                    })
+
+                    // modifying checkbox layout
+                    var checkbox = el.find("input[type='checkbox']");
+                    if (checkbox.length > 0) {
+                        el = el.find("label").addClass("checkbox").append(checkbox);
+                    }
+
+                    if (currentAccordionGroup)
+                        currentAccordionGroup.append($('<div class="form-wrap"></div>').append(el));
+
+                })
+
+                propertiesView.$el.html(breadcrumb);
+                propertiesView.$el.append(accordion);
+
+                // saving expanded accordion
+                $(".accordion-toggle").click(function () {
+                    var accordionBody = $(this).parents(".accordion-group").find(".accordion-body");
+                    if (!accordionBody.hasClass("in")) {
+                        that.openedAccordion = accordionBody.attr('id')
+                    }
+                })
+            } else {
+                propertiesView.$el.html(breadcrumb);
+                propertiesView.$el.append(form.$el);
+            }
+
+        },
         clearTextSelection : function() {
             if(document.selection && document.selection.empty) {
                 document.selection.empty();
@@ -659,6 +664,11 @@
     			this.zoom -= 0.3;
     			this.setZoom(this.zoom)
     		}
+        },
+        getTaskViewByName: function(name) {
+            return _.find(this.taskViews, function(view) {
+                return (name === view.model.get("Task Name"));
+            })
         }
 	});
 
@@ -1242,5 +1252,49 @@
     setInterval(save_workflow_to_storage, 5000);
     // validating job periodically
     setInterval(validate_job, 5000);
+
+    (function scriptManagement() {
+
+        function loadSelectedScript() {
+            var scriptName = $(this).find(":selected").text();
+            var content = StudioClient.getScript(scriptName);
+            $(this).parents('form').find('textarea').val(content);
+            getTaskViewFromFormElement(this).form.commit()
+        }
+
+        function getTaskViewFromFormElement(el) {
+            var taskName = $(el).parents("#properties-container").find('#breadcrumb-task-name').text();
+            return workflowView.getTaskViewByName(taskName)
+        }
+
+        $(document).on("click", 'select[name="Library"]', loadSelectedScript)
+
+        $(document).on("click", '.save-script', function () {
+            var scriptName = $(this).parents("form").find('select[name="Library"] :selected').text();
+            var content = $(this).parents('form').find('textarea').val();
+            StudioClient.saveScript(scriptName, content);
+        })
+
+        $(document).on("click", '.save-script-as', function () {
+            var content = $(this).parents('form').find('textarea').val();
+            var id = $(this).parents('form').find("div[name=Script]").attr("id");
+            //var taskName = $(this).parents("#properties-container").find('#breadcrumb-task-name').text();
+            var el = this;
+            $("#script-save-modal").modal()
+            $("#script-save-button").unbind("click").click(function () {
+
+                var scriptName = $('#script-save-modal input').val();
+
+                StudioClient.saveScript(scriptName, content);
+
+                getTaskViewFromFormElement(el).renderForm();
+
+                var select = $('div#' + id + ' select[name=Library]');
+                select.val(scriptName);
+                loadSelectedScript.call(select);
+            })
+        })
+
+    })();
 
 })(jQuery)

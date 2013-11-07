@@ -88,6 +88,16 @@
   </div>
 </div>
 
+<div id="script-save-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-body">
+        <label>Script name</label>
+        <input data-name="name" type="text">
+    </div>
+    <div class="modal-footer">
+        <button id="script-save-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Save</button>
+    </div>
+</div>
+
 <script type="text/template" class="template" id="job-template">
 	<?xml version="1.0" encoding="UTF-8"?>
     <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
@@ -374,6 +384,19 @@
       <scriptExecutable>
           <%=script%>
       </scriptExecutable>
+</script>
+
+<script type="text/template" class="template" id="script-form-template">
+    <div class="control-group field-<%= key %>">
+        <label class="control-label" for="<%= editorId %>"><%= title %></label>
+        <div class="controls">
+            <span data-editor></span>
+            <div class="help-inline" data-error></div>
+            <div class="help-block"><%= help %></div>
+            <button type="button" class="save-script">Save</button>
+            <button type="button" class="save-script-as">Save as...</button>
+        </div>
+    </div>
 </script>
 
 	    <script src="js/jquery-1.9.0.js"></script>

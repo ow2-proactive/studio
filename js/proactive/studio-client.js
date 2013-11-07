@@ -1,177 +1,266 @@
-var StudioClient = {
+var StudioClient = (function () {
 
-    alert: function(caption, message, type) {
-        $.pnotify({
-            title: caption,
-            text: message,
-            type: type,
-            text_escape: true,
-            opacity: .8,
-            width: '20%'
-        });
-    },
-	
-	login: function(creds, onSuccess) {
-		var that = this;
-		
-		console.log("Authenticating", creds)
-		this.alert("Connecting", "Connecting to ProActive Studio at " + StudioREST, 'info')
-		
-		$.ajax({
-		    type : "POST",
-		    url : StudioREST+"/login",
-		    data : {username:creds['user'], password:creds['pass']},
-		    success: function(data) {
-		    	// ProActive Studio login request return invalid json with status code 200
-		    	console.log("Should not be there", data)
-		    },
-		    error: function(data) {
-		    	// even id successful we are here
-		    	if (data.status==200) {
-		    		that.alert("Connected", "Successfully connected to ProActive Studio at " + StudioREST, 'success');
-		    		console.log("Session ID is " + data.responseText)
-		    		localStorage['sessionId'] = data.responseText;
-                    localStorage['user'] = creds['user'];
-		    		return onSuccess();
-		    	} else {
-					var reason = data.responseText.length>0?": "+data.responseText:""; 
-					that.alert("Cannot connect", "Cannot connect to ProActive Studio "+reason, 'error');
-					console.log("Error", data)
-		    	}
-			}
-		});		
-	},
+    var cachedScripts;
 
-    isConnected: function(success, fail) {
-        var that = this;
-        if (localStorage['sessionId']) {
+    return {
+
+        alert: function (caption, message, type) {
+            $.pnotify({
+                title: caption,
+                text: message,
+                type: type,
+                //text_escape: true,
+                opacity: .8,
+                width: '20%'
+            });
+        },
+
+        login: function (creds, onSuccess) {
+            var that = this;
+
+            console.log("Authenticating", creds)
+            this.alert("Connecting", "Connecting to ProActive Studio at " + StudioREST, 'info')
+
             $.ajax({
-                type : "GET",
-                url : StudioREST+"/connected",
-                beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
-                success: function(data) {
-                    if (data) {
-                        console.log("Connected to the studio", data)
-                        success()
-                    } else {
-                        console.log("Not connected to the studio", data)
-                        localStorage.removeItem('sessionId');
-                        fail()
-                    }
+                type: "POST",
+                url: StudioREST + "/login",
+                data: {username: creds['user'], password: creds['pass']},
+                success: function (data) {
+                    // ProActive Studio login request return invalid json with status code 200
+                    console.log("Should not be there", data)
                 },
-                error: function(data) {
-                    console.log("Not connected to the studio", data)
-                    localStorage.removeItem('sessionId')
-                    fail()
+                error: function (data) {
+                    // even id successful we are here
+                    if (data.status == 200) {
+                        that.alert("Connected", "Successfully connected to ProActive Studio at " + StudioREST, 'success');
+                        console.log("Session ID is " + data.responseText)
+                        localStorage['sessionId'] = data.responseText;
+                        localStorage['user'] = creds['user'];
+                        return onSuccess();
+                    } else {
+                        var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
+                        that.alert("Cannot connect", "Cannot connect to ProActive Studio " + reason, 'error');
+                        console.log("Error", data)
+                    }
                 }
             });
-        } else {
-            fail();
-        }
-    },
+        },
 
-    getWorkflowsSynchronously: function() {
-
-        if (!localStorage['sessionId']) return;
-
-        var workflows = undefined;
-        console.log("Getting workflows from the server")
-
-        var that = this;
-        $.ajax({
-            type : "GET",
-            url : StudioREST+"/workflows",
-            async: false,
-            beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
-            success: function(data) {
-                workflows = data;
-            },
-            error: function(data) {
-                console.log("Cannot retrieve workflows", data)
-                that.alert("Cannot retrieve workflows", "Please refresh the page!", 'error');
+        isConnected: function (success, fail) {
+            var that = this;
+            if (localStorage['sessionId']) {
+                $.ajax({
+                    type: "GET",
+                    url: StudioREST + "/connected",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    },
+                    success: function (data) {
+                        if (data) {
+                            console.log("Connected to the studio", data)
+                            success()
+                        } else {
+                            console.log("Not connected to the studio", data)
+                            localStorage.removeItem('sessionId');
+                            fail()
+                        }
+                    },
+                    error: function (data) {
+                        console.log("Not connected to the studio", data)
+                        localStorage.removeItem('sessionId')
+                        fail()
+                    }
+                });
+            } else {
+                fail();
             }
-        });
+        },
 
-        console.log("Workflows", workflows)
-        return workflows;
+        getWorkflowsSynchronously: function () {
 
-    },
+            if (!localStorage['sessionId']) return;
 
-    createWorkflowSynchronously: function(workflow) {
+            var workflows = undefined;
+            console.log("Getting workflows from the server")
 
-        if (!localStorage['sessionId']) return;
-        var that = this;
-
-        var id = undefined;
-
-        console.log("Creating workflow on the server", workflow)
-        $.ajax({
-            type : "POST",
-            url : StudioREST+"/workflows",
-            async: false,
-            data : workflow,
-            beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
-            success: function(data) {
-                if (data) {
-                    console.log("Workflow " + data + " created on the server");
-                    that.alert("Workflow created", "Workflow with id " + data + " was created on the server", 'success');
-                    id = data;
+            var that = this;
+            $.ajax({
+                type: "GET",
+                url: StudioREST + "/workflows",
+                async: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    workflows = data;
+                },
+                error: function (data) {
+                    console.log("Cannot retrieve workflows", data)
+                    that.alert("Cannot retrieve workflows", "Please refresh the page!", 'error');
                 }
-            },
-            error: function(data) {
-                var reason = data.responseText.length>0?": "+data.responseText:"";
-                that.alert("Cannot create workflow", reason, 'error');
-                console.log("Error", data)
-            }
-        });
+            });
 
-        return id;
-    },
+            console.log("Workflows", workflows)
+            return workflows;
 
-    updateWorkflow: function(id, workflow, async) {
+        },
 
-        if (!localStorage['sessionId'] || !id) return;
-        var that = this;
+        createWorkflowSynchronously: function (workflow) {
 
-        console.log("Updating workflow on the server", id, workflow)
-        $.ajax({
-            type : "POST",
-            url : StudioREST+"/workflows/"+id,
-            'async': async,
-            data : workflow,
-            beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
-            success: function(data) {
-                if (data) {
+            if (!localStorage['sessionId']) return;
+            var that = this;
+
+            var id = undefined;
+
+            console.log("Creating workflow on the server", workflow)
+            $.ajax({
+                type: "POST",
+                url: StudioREST + "/workflows",
+                async: false,
+                data: workflow,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    if (data) {
+                        console.log("Workflow " + data + " created on the server");
+                        that.alert("Workflow created", "Workflow with id " + data + " was created on the server", 'success');
+                        id = data;
+                    }
+                },
+                error: function (data) {
+                    var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
+                    that.alert("Cannot create workflow", reason, 'error');
+                    console.log("Error", data)
+                }
+            });
+
+            return id;
+        },
+
+        updateWorkflow: function (id, workflow, async) {
+
+            if (!localStorage['sessionId'] || !id) return;
+            var that = this;
+
+            console.log("Updating workflow on the server", id, workflow)
+            $.ajax({
+                type: "POST",
+                url: StudioREST + "/workflows/" + id,
+                'async': async,
+                data: workflow,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    if (data) {
 //                    that.alert("Workflow updated", "Workflow " + workflow.name + " updated on the server", 'success');
+                    }
+                },
+                error: function (data) {
+                    var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
+                    that.alert("Cannot updated workflow", reason, 'error');
+                    console.log("Error", data)
                 }
-            },
-            error: function(data) {
-                var reason = data.responseText.length>0?": "+data.responseText:"";
-                that.alert("Cannot updated workflow", reason, 'error');
-                console.log("Error", data)
-            }
-        });
-    },
+            });
+        },
 
-    removeWorkflow: function(id) {
+        removeWorkflow: function (id) {
 
-        if (!localStorage['sessionId'] || !id) return;
-        var that = this;
+            if (!localStorage['sessionId'] || !id) return;
+            var that = this;
 
-        console.log("Deleting workflow on the server", id)
-        $.ajax({
-            type : "DELETE",
-            url : StudioREST+"/workflows/"+id,
-            beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
-            success: function(data) {
-                console.log("Workflow with id " + id + " deleted on the server", data)
-                that.alert("Workflow deleted", "Workflow with id " + id + " deleted on the server", 'success');
-            },
-            error: function(data) {
-                var reason = data.responseText.length>0?": "+data.responseText:"";
-                that.alert("Cannot delete workflow", reason, 'error');
-                console.log("Error", data)
-            }
-        });
+            console.log("Deleting workflow on the server", id)
+            $.ajax({
+                type: "DELETE",
+                url: StudioREST + "/workflows/" + id,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    console.log("Workflow with id " + id + " deleted on the server", data)
+                    that.alert("Workflow deleted", "Workflow with id " + id + " deleted on the server", 'success');
+                },
+                error: function (data) {
+                    var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
+                    that.alert("Cannot delete workflow", reason, 'error');
+                    console.log("Error", data)
+                }
+            });
+        },
+
+
+        getScriptsSynchronosly: function () {
+            if (!localStorage['sessionId']) return;
+            var that = this;
+            var scripts;
+
+            console.log("Getting scripts")
+            $.ajax({
+                type: "GET",
+                url: StudioREST + "/scripts",
+                async: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    scripts = data;
+                    console.log("SCRIPTS", scripts)
+                },
+                error: function (data) {
+                    console.log("Cannot retrieve scripts", data)
+                    that.alert("Cannot retrieve scripts. Please refresh the page!", 'error');
+                }
+            });
+            return scripts;
+        },
+
+        saveScript: function (name, content) {
+
+            if (!localStorage['sessionId']) return;
+            var that = this;
+
+            var id = undefined;
+
+            console.log("Saving script", name)
+
+            $.ajax({
+                type: "POST",
+                url: StudioREST + "/scripts/" + name,
+                data: {name: name, content: content},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    if (data) {
+                        that.alert("Script updated", "Script " + name + " updated on the server", 'success');
+                    }
+                },
+                error: function (data) {
+                    var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
+                    that.alert("Cannot save script", reason, 'error');
+                    console.log("Error", data)
+                }
+            });
+
+            return id;
+
+        },
+
+        listScripts: function () {
+            console.log("listing")
+            cachedScripts = this.getScriptsSynchronosly();
+            return _.map(cachedScripts,function (script) {
+                return script.name;
+            }).sort()
+        },
+
+        getScript: function (name) {
+            console.log("loading", name)
+            return _.find(cachedScripts,function (script) {
+                return name === script.name;
+            }).content;
+        }
     }
-}
+
+})();
