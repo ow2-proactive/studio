@@ -142,7 +142,7 @@ var StudioClient = {
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
                 if (data) {
-                    that.alert("Workflow updated", "Workflow " + workflow.name + " updated on the server", 'success');
+//                    that.alert("Workflow updated", "Workflow " + workflow.name + " updated on the server", 'success');
                 }
             },
             error: function(data) {

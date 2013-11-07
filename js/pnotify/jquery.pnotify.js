@@ -928,7 +928,7 @@
 		stack: {"dir1": "down", "dir2": "left", "push": "bottom", "spacing1": 25, "spacing2": 25},
                 //Lets you change the displayed text, facilitating the internationalization.
                 labels: {
-                    redisplay: "Redisplay", 
+                    redisplay: "History",
                     all: "All", 
                     last: "Last",
                     close: "Close",

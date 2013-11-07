@@ -1,6 +1,7 @@
 (function($){
 
 	// populates model according to the schema (xml import)
+    // it uses placeholder of the model schema to find values in xml
 	SchemaModel = Backbone.Model.extend({
 	
 		getValue: function(placeholder, obj) {
@@ -608,7 +609,6 @@
 
                     this.remoteJobs = StudioClient.getWorkflowsSynchronously();
 
-                    console.log("!!!!", this.remoteJobs)
                     if (this.remoteJobs) {
 
                         var remoteJobIds = {};
