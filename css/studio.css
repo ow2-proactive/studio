@@ -11,8 +11,8 @@ body {
     background-color:#eaedef;
     border: 1px solid #e3e3e3;
     cursor:pointer;
-    min-height: 85%;
-    height: 85%;
+    min-height: 93%;
+    height: 93%;
     top: 40px;
     left: 20%;
     right: 0;
@@ -20,21 +20,11 @@ body {
     position: absolute;
 }
 
-#alert-placeholder{
-	margin-top:50px;
-	padding-top:20px;
-	padding-left:30px;
-    position: absolute;
-    width: 75%;
-    top: 85%;
-    left: 20%;
-}
-
 #properties-container {
 	width:19%;
 	max-width:19%;
-    height: 85%;
-    max-height: 85%;
+    height: 93%;
+    max-height: 93%;
     position: absolute;
     top: 40px;
     left: 0;

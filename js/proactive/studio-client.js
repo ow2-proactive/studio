@@ -1,15 +1,21 @@
 var StudioClient = {
 
-	alert: function(message, type) {
-		var alert = $('<div class="alert '+type+'">'+message+'</div>');
-		$('#alert-placeholder').empty().append(alert);
-	},
+    alert: function(caption, message, type) {
+        $.pnotify({
+            title: caption,
+            text: message,
+            type: type,
+            text_escape: true,
+            opacity: .8,
+            width: '20%'
+        });
+    },
 	
 	login: function(creds, onSuccess) {
 		var that = this;
 		
 		console.log("Authenticating", creds)
-		this.alert("Connecting to ProActive Studio at " + StudioREST, 'alert-success')
+		this.alert("Connecting", "Connecting to ProActive Studio at " + StudioREST, 'info')
 		
 		$.ajax({
 		    type : "POST",
@@ -22,14 +28,14 @@ var StudioClient = {
 		    error: function(data) {
 		    	// even id successful we are here
 		    	if (data.status==200) {
-		    		that.alert("Successfully connected to ProActive Studio at " + StudioREST, 'alert-success');
+		    		that.alert("Connected", "Successfully connected to ProActive Studio at " + StudioREST, 'success');
 		    		console.log("Session ID is " + data.responseText)
 		    		localStorage['sessionId'] = data.responseText;
                     localStorage['user'] = creds['user'];
 		    		return onSuccess();
 		    	} else {
 					var reason = data.responseText.length>0?": "+data.responseText:""; 
-					that.alert("Cannot connect to ProActive Studio "+reason, 'alert-error');
+					that.alert("Cannot connect", "Cannot connect to ProActive Studio "+reason, 'error');
 					console.log("Error", data)
 		    	}
 			}
@@ -82,7 +88,7 @@ var StudioClient = {
             },
             error: function(data) {
                 console.log("Cannot retrieve workflows", data)
-                that.alert("Cannot retrieve workflows. Please refresh the page!", 'alert-error');
+                that.alert("Cannot retrieve workflows", "Please refresh the page!", 'error');
             }
         });
 
@@ -108,13 +114,13 @@ var StudioClient = {
             success: function(data) {
                 if (data) {
                     console.log("Workflow " + data + " created on the server");
-                    that.alert("Workflow with id " + data + " was created on the server", 'alert-success');
+                    that.alert("Workflow created", "Workflow with id " + data + " was created on the server", 'success');
                     id = data;
                 }
             },
             error: function(data) {
                 var reason = data.responseText.length>0?": "+data.responseText:"";
-                that.alert("Cannot create workflow. "+reason, 'alert-error');
+                that.alert("Cannot create workflow", reason, 'error');
                 console.log("Error", data)
             }
         });
@@ -136,12 +142,12 @@ var StudioClient = {
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
                 if (data) {
-                    that.alert("Workflow " + workflow.name + " updated on the server", 'alert-success');
+                    that.alert("Workflow updated", "Workflow " + workflow.name + " updated on the server", 'success');
                 }
             },
             error: function(data) {
                 var reason = data.responseText.length>0?": "+data.responseText:"";
-                that.alert("Cannot create workflow. "+reason, 'alert-error');
+                that.alert("Cannot updated workflow", reason, 'error');
                 console.log("Error", data)
             }
         });
@@ -159,11 +165,11 @@ var StudioClient = {
             beforeSend: function(xhr){ xhr.setRequestHeader('sessionid', localStorage['sessionId']) },
             success: function(data) {
                 console.log("Workflow with id " + id + " deleted on the server", data)
-                that.alert("Workflow with id " + id + " deleted on the server", 'alert-success');
+                that.alert("Workflow deleted", "Workflow with id " + id + " deleted on the server", 'success');
             },
             error: function(data) {
                 var reason = data.responseText.length>0?": "+data.responseText:"";
-                that.alert("Cannot create workflow. "+reason, 'alert-error');
+                that.alert("Cannot delete workflow", reason, 'error');
                 console.log("Error", data)
             }
         });

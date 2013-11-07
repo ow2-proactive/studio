@@ -1234,6 +1234,7 @@
     }
 
     $("#validate-button").click(function() {
+        SchedulerClient.resetLastValidationResult()
         validate_job();
     });
 
