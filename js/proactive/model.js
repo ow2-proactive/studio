@@ -263,11 +263,12 @@
 	Script = SchemaModel.extend({
 		schema: {
             "Library": {type: "Select", options: serverScripts},
+            "Library Path": {type: "Hidden"},
             "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
 			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
-            "Or Path": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->path'}},
+            "Or Path": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->path'}},
             "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
-            "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}}
+            "Or Url": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->url'}}
 		}
 	});
 

@@ -193,7 +193,6 @@ var StudioClient = (function () {
         getScriptsSynchronosly: function () {
             if (!localStorage['sessionId']) return;
             var that = this;
-            var scripts;
 
             console.log("Getting scripts")
             $.ajax({
@@ -204,15 +203,14 @@ var StudioClient = (function () {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                 },
                 success: function (data) {
-                    scripts = data;
-                    console.log("SCRIPTS", scripts)
+                    cachedScripts = data;
                 },
                 error: function (data) {
                     console.log("Cannot retrieve scripts", data)
                     that.alert("Cannot retrieve scripts. Please refresh the page!", 'error');
                 }
             });
-            return scripts;
+            return cachedScripts;
         },
 
         saveScript: function (name, content) {
@@ -222,7 +220,7 @@ var StudioClient = (function () {
 
             var id = undefined;
 
-            console.log("Saving script", name)
+            console.log("Saving script:", name)
 
             $.ajax({
                 type: "POST",
@@ -234,6 +232,7 @@ var StudioClient = (function () {
                 success: function (data) {
                     if (data) {
                         that.alert("Script updated", "Script " + name + " updated on the server", 'success');
+                        that.getScriptsSynchronosly()
                     }
                 },
                 error: function (data) {
@@ -248,18 +247,18 @@ var StudioClient = (function () {
         },
 
         listScripts: function () {
-            console.log("listing")
-            cachedScripts = this.getScriptsSynchronosly();
-            return _.map(cachedScripts,function (script) {
+            console.log("Listing scripts")
+            this.getScriptsSynchronosly();
+            return _.map(cachedScripts, function (script) {
                 return script.name;
             }).sort()
         },
 
         getScript: function (name) {
-            console.log("loading", name)
-            return _.find(cachedScripts,function (script) {
+            console.log("Loading script:", name)
+            return _.find(cachedScripts, function (script) {
                 return name === script.name;
-            }).content;
+            });
         }
     }
 

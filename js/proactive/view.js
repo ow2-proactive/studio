@@ -878,7 +878,10 @@
 	    		that.showOrHideForkEnvironment();
 	    	})
 	    	return this;
-	    }
+	    },
+        commitForm: function() {
+            this.form.commit();
+        }
 	});
 
 	JobXmlView = Backbone.View.extend({
@@ -1257,9 +1260,10 @@
 
         function loadSelectedScript() {
             var scriptName = $(this).find(":selected").text();
-            var content = StudioClient.getScript(scriptName);
-            $(this).parents('form').find('textarea').val(content);
-            getTaskViewFromFormElement(this).form.commit()
+            var script = StudioClient.getScript(scriptName);
+            $(this).parents('form').find('textarea').val(script.content);
+            $(this).parents('form').find('input[name="Library Path"]').val(script.absolutePath);
+            getTaskViewFromFormElement(this).commitForm();
         }
 
         function getTaskViewFromFormElement(el) {
@@ -1273,12 +1277,12 @@
             var scriptName = $(this).parents("form").find('select[name="Library"] :selected').text();
             var content = $(this).parents('form').find('textarea').val();
             StudioClient.saveScript(scriptName, content);
+            getTaskViewFromFormElement(this).commitForm();
         })
 
         $(document).on("click", '.save-script-as', function () {
             var content = $(this).parents('form').find('textarea').val();
             var id = $(this).parents('form').find("div[name=Script]").attr("id");
-            //var taskName = $(this).parents("#properties-container").find('#breadcrumb-task-name').text();
             var el = this;
             $("#script-save-modal").modal()
             $("#script-save-button").unbind("click").click(function () {
