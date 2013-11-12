@@ -232,14 +232,18 @@ var StudioClient = (function () {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                 },
                 success: function (data) {
-                    if (data) {
-                        that.alert("Script updated", "Script " + name + " updated on the server", 'success');
-                    }
+                    console.log("Should not be there", data)
                 },
                 error: function (data) {
-                    var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
-                    that.alert("Cannot save script", reason, 'error');
-                    console.log("Error", data)
+                    if (data.status == 200) {
+                        if (data) {
+                            that.alert("Script updated", "Script " + name + " updated on the server", 'success');
+                        }
+                    } else {
+                        var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
+                        that.alert("Cannot save script", reason, 'error');
+                        console.log("Error", data)
+                    }
                 }
             });
 
