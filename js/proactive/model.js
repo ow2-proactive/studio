@@ -276,8 +276,10 @@
 		populateSchema: function(obj) {
 			SchemaModel.prototype.populateSchema.call(this, obj);
 			var path = this.get("Or Path");
-			var fileName = path.replace(/^.*[\\\/]/, '');
-			this.set("Library", fileName);
+            if (path) {
+                var fileName = path.replace(/^.*[\\\/]/, '');
+                this.set("Library", fileName);
+            }
 		}
 	});
 
@@ -296,8 +298,10 @@
 		populateSchema: function(obj) {
 			SchemaModel.prototype.populateSchema.call(this, obj);
 			var path = this.get("Or Path");
-			var fileName = path.replace(/^.*[\\\/]/, '');
-			this.set("Library", fileName);
+            if (path) {
+                var fileName = path.replace(/^.*[\\\/]/, '');
+                this.set("Library", fileName);
+            }
 		}
 
 	});
@@ -624,7 +628,6 @@
             }
         },
         updatedAt: function(workflow) {
-            console.log("!!!", workflow.metadata);
             return JSON.parse(workflow.metadata).updated_at;
         },
         sync: function() {
