@@ -19,7 +19,7 @@ var StudioClient = (function () {
             var that = this;
 
             console.log("Authenticating", creds)
-            this.alert("Connecting", "Connecting to ProActive Studio at " + StudioREST, 'info')
+//            this.alert("Connecting", "Connecting to ProActive Studio at " + StudioREST, 'info')
 
             $.ajax({
                 type: "POST",
@@ -260,7 +260,136 @@ var StudioClient = (function () {
             return _.find(cachedScripts,function (script) {
                 return name === script.name;
             }).content;
+        },
+
+        uploadBinaryFile: function(data, success, error) {
+            var that = this;
+
+            $.ajax({
+                url: StudioREST + '/classes',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function(data){
+                    console.log("Should not be there", data)
+                    error();
+                },
+                error: function(data){
+                    if (data.status == 200) {
+                        console.log("Success", data);
+                        that.alert("File uploaded", "File successfully uploaded", 'success');
+                        success(data.responseText);
+                    } else {
+                        console.log("Error", data);
+                        var reason = "Unknown reason";
+                        try {
+                            var err = JSON.parse(data.responseText);
+                            if (err.errorMessage) {
+                                reason = err.errorMessage;
+                            }
+                        } catch (e) {}
+
+                        that.alert("Cannot upload a file", reason, 'error');
+                        error();
+                    }
+                }
+            });
+        },
+
+        submit: function (jobXml) {
+            var that = this;
+            that.send_multipart_request(StudioREST + "/submit", jobXml, {"sessionid": localStorage['sessionId']}, function (result) {
+                if (result.errorMessage) {
+                    that.alert("Cannot submit the job", result.errorMessage, 'error');
+                } else if (result.id) {
+                    that.alert("Job submitted", "Successfully submitted " + result.readableName + " with id " + result.id, 'success');
+                } else {
+                    that.alert("Job submission", request.responseText, 'error');
+                }
+            });
+        },
+
+        validate: function (jobXml, jobModel) {
+            var that = this;
+            that.send_multipart_request(StudioREST + "/validate", jobXml, {}, function (result) {
+
+                if (that.lastResult) {
+
+                    // avoiding similar messages in the log history
+                    if (that.lastResult.errorMessage == result.errorMessage) {
+                        // same error message
+                        return;
+                    }
+                    if (result.valid && that.lastResult.valid == result.valid) {
+                        // valid
+                        return;
+                    }
+                }
+
+                if (!result.valid) {
+                    that.alert("Invalid workflow", result.errorMessage, 'error');
+                    if (result.taskName != null) {
+                        var taskModel = jobModel.getTaskByName(result.taskName);
+                        taskModel.trigger("invalid")
+                    }
+                } else {
+                    that.alert("Workflow is valid", "It can be executed now", 'success');
+                }
+                that.lastResult = result;
+            })
+        },
+        resetLastValidationResult: function() {
+            this.lastResult = undefined;
+        },
+        send_multipart_request: function (url, content, headers, callback) {
+
+            var that = this;
+
+            var request = new XMLHttpRequest();
+            var multipart = "";
+
+            request.open("POST", url, true);
+
+            var boundary = Math.random().toString().substr(2);
+
+            request.setRequestHeader("content-type",
+                "multipart/form-data; charset=utf-8; boundary=" + boundary);
+
+            for (var key in headers) {
+                if (headers.hasOwnProperty(key)) {
+                    request.setRequestHeader(key, headers[key]);
+                }
+            }
+
+            multipart += "--" + boundary
+                + "\r\nContent-Disposition: form-data; name=job.xml"
+                + "\r\nContent-type: application/xml"
+                + "\r\n\r\n" + content + "\r\n";
+
+            multipart += "--" + boundary + "--\r\n";
+
+            request.onreadystatechange = function () {
+                if (request.readyState == 4) {
+                    console.log("Response", request)
+                    try {
+                        var result = JSON.parse(request.responseText)
+                    } catch (err) {
+                        console.log("Cannot parse json response", err)
+                        that.alert(request.responseText, 'error');
+                        return;
+                    }
+                    callback(result);
+                }
+            }
+
+            request.send(multipart);
         }
+
     }
 
 })();
