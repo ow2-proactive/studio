@@ -107,13 +107,15 @@
 			}
 		}
 	});
-	
+
+    var jobClasspathTemplate = _.template($('#job-classpath-template').html());
+
 	Job = SchemaModel.extend({
 		schema: {
 //			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->projectName'}},
 			"Job Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->name'}},
 			"Description": {type:"Text", fieldAttrs: {'placeholder':'description->#text'}}, 
-			"Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'jobClasspath->pathElement', 'itemplaceholder':'@attributes->path'}},
+			"Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'jobClasspath->pathElement', 'itemplaceholder':'@attributes->path'}, itemTemplate: jobClasspathTemplate},
 			"Job Priority": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->priority'}, options:
 				["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
 			"Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'variables->variable'}, itemToString: inlineNameValue , subSchema: {

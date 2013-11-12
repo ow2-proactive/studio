@@ -428,6 +428,19 @@
     </div>
 </script>
 
+<script type="text/template" class="template" id="job-classpath-template">
+    <li class="clearfix">
+        <div class="pull-left visible-job-classpath" data-editor>
+        </div>
+        <div class="pull-left" data-editor style="display:none">
+        </div>
+        <button type="button" class="btn bbf-del btn-choose-file choose-job-classpath"><i class="icon-folder-open"></i></button>
+        <button type="button" class="btn bbf-del" data-action="remove">&times;</button>
+        <input type="file" name="file" style="display:none"/>
+    </li>
+</script>
+
+
 	    <script src="js/jquery-1.9.0.js"></script>
 		<script src="js/jquery-ui-1.9.2-min.js"></script>
 		<script src="js/jquery.ui.touch-punch.min.js"></script>
@@ -460,7 +473,6 @@
         <script src="js/proactive/studio-client.js"></script>
 		<script src="js/proactive/model.js"></script>
 		<script src="js/proactive/view.js"></script>
-        <script src="js/proactive/scheduler-client.js"></script>
 		<script src="js/proactive/studio.js"></script>
 	</body>
 

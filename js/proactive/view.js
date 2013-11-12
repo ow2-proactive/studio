@@ -170,9 +170,12 @@
             })
 
             that.form = form;
+            propertiesView.$el.data('form', form);
+
             form.on('change', function (f, changed) {
                 form.commit();
             })
+
 
             var tabs = form.$el.find("[data-tab]");
             if (tabs.length > 0) {
@@ -237,6 +240,13 @@
                 propertiesView.$el.append(form.$el);
             }
 
+            // showinf only file names in job classpath
+            $(".visible-job-classpath input").val(function () {
+                var fullPath = $(this).val();
+                var fileName = fullPath.replace(/^.*[\\\/]/, '')
+                $(this).attr('readonly', true);
+                return fileName;
+            })
         },
         clearTextSelection : function() {
             if(document.selection && document.selection.empty) {
@@ -1182,7 +1192,7 @@
             var xml = "";
             // make it in this ugly way to have a right line number for the xml in case of error
             $('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
-            SchedulerClient.submit(xml)
+            StudioClient.submit(xml)
         }, function() {
             // ask to login first
             $('#scheduler-connect-modal').modal();
@@ -1244,11 +1254,11 @@
     function validate_job() {
         console.log("Validating");
         $(".invalid-task").removeClass("invalid-task");
-        SchedulerClient.validate(xmlView.generateXml(), jobModel);
+        StudioClient.validate(xmlView.generateXml(), jobModel);
     }
 
     $("#validate-button").click(function() {
-        SchedulerClient.resetLastValidationResult()
+        StudioClient.resetLastValidationResult()
         validate_job();
     });
 
@@ -1303,6 +1313,48 @@
             })
         })
 
+    })();
+
+    (function jobClassPathManagement() {
+        $(document).on("click", '.choose-job-classpath', function() {
+            var inputFile = $(this).parents("li").find("input[type='file']");
+            inputFile.click();
+
+            inputFile.unbind("change");
+            inputFile.change(function(env) {
+
+                if ($(this)[0].files.length==0) {
+                    // no files selected
+                    return;
+                }
+
+                var selectedFileName = undefined;
+                var data = new FormData();
+                jQuery.each($(this)[0].files, function(i, file) {
+                    data.append(file.name, file);
+                    selectedFileName = file.name;
+                });
+
+                StudioClient.uploadBinaryFile(data, function(fullPath) {
+                    if (selectedFileName) {
+
+                        var fullJobClassPath = inputFile.parents("li").find("input[name='Job Classpath']");
+                        fullJobClassPath.val(fullPath);
+
+                        var fileName = fullPath.replace(/^.*[\\\/]/, '')
+                        var shortJobClassPath = inputFile.parents("li").find(".visible-job-classpath input");
+                        shortJobClassPath.val(fileName);
+                        shortJobClassPath.attr('readonly', true);
+
+                        if (propertiesView.$el.data('form')) {
+                            propertiesView.$el.data('form').commit();
+                        }
+                    }
+                }, function() {
+                    // TODO hide loading icon
+                });
+            })
+        })
     })();
 
 })(jQuery)
