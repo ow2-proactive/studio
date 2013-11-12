@@ -876,6 +876,7 @@
 	    			that.showOrHideForkEnvironment();
 	    		})
 	    		that.showOrHideForkEnvironment();
+	    		$('select[name=Library]').click();
 	    	})
 	    	return this;
 	    },
@@ -1252,14 +1253,17 @@
     });
 
     // saving job xml every min to local store
-    setInterval(save_workflow_to_storage, 5000);
+    //setInterval(save_workflow_to_storage, 5000);
     // validating job periodically
-    setInterval(validate_job, 5000);
+    //setInterval(validate_job, 5000);
 
     (function scriptManagement() {
 
         function loadSelectedScript() {
             var scriptName = $(this).find(":selected").text();
+            if (!scriptName) {
+                return;
+            }
             var script = StudioClient.getScript(scriptName);
             $(this).parents('form').find('textarea').val(script.content);
             $(this).parents('form').find('input[name="Library Path"]').val(script.absolutePath);

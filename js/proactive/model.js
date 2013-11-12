@@ -269,6 +269,13 @@
             "Or Path": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->path'}},
             "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
             "Or Url": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->url'}}
+		},
+
+		populateSchema: function(obj) {
+			SchemaModel.prototype.populateSchema.call(this, obj);
+			var path = this.get("Or Path");
+			var fileName = path.replace(/^.*[\\\/]/, '');
+			this.set("Library", fileName);
 		}
 	});
 
@@ -282,7 +289,15 @@
             "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
             "Or Url": {type:"Text", fieldAttrs: {'placeholder':'file->@attributes->url'}},
 			"Type" : {type: 'Select', options: ["dynamic", "static"], fieldAttrs: {'placeholder':'@attributes->type'}}
+		},
+
+		populateSchema: function(obj) {
+			SchemaModel.prototype.populateSchema.call(this, obj);
+			var path = this.get("Or Path");
+			var fileName = path.replace(/^.*[\\\/]/, '');
+			this.set("Library", fileName);
 		}
+
 	});
 	
 	JavaExecutable = SchemaModel.extend({
