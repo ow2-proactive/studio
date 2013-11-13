@@ -311,29 +311,29 @@
 </script>
 
 <script type="text/template" class="template" id="script-template">
-	<% if (model["Or Path"]&&model["Or Path"].length>0 || model["Or Url"]&&model["Or Url"].length>0 || model["Script"]&&model["Script"].length>0) { %>
+	<% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0) { %>
     <% print("<sc"+"ript") %> <% if (model["Type"]) { %>type="<%=model["Type"]%>" <% } %>>
         <% if (model["Script"] && model["Script"].length>0 && !model["Library Path"]) {%>
             <code language="<%=model["Engine"]%>">
 <![CDATA[
 <%= model["Script"] %>
 ]]>
-    </code>
+            </code>
         <% } else { %>
 	    	<% if (model["Library Path"] && model["Library Path"].length>0) { %>
-    		<file path="<%=model["Library Path"]%>">
-	    	<% } else if (model["Or Url"] && model["Or Url"].length>0) {%>
-    		<file url="<%=model["Or Url"]%>">
+    		    <file path="<%=model["Library Path"]%>">
 	    	<% }%>
 
 			<% if (model["Arguments"] && model["Arguments"].length>0) { %>
-			<arguments>
-			<% _.each(model["Arguments"], function(arg) { %>
-				<argument value="<%=arg%>"/>
-			<% }) %>
-			</arguments>
+			    <arguments>
+			    <% _.each(model["Arguments"], function(arg) { %>
+				    <argument value="<%=arg%>"/>
+			    <% }) %>
+			    </arguments>
 	    	<% }%>
-    		</file>
+            <% if (model["Library Path"] && model["Library Path"].length>0) { %>
+                </file>
+            <% }%>
 		<% } %>
     <% print("</sc"+"ript>") %>
 	<% } %>

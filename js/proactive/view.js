@@ -1247,6 +1247,13 @@
         }
     } );
 
+    $('#script-save-modal').on( 'keypress', function( e ) {
+        if( e.keyCode === 13 ) {
+            e.preventDefault();
+            $("#script-save-button").click();
+        }
+    } );
+
     function save_workflow_to_storage() {
         projects.saveCurrentWorkflow(jobModel.get("Job Name"), xmlView.generateXml());
     }
@@ -1271,27 +1278,48 @@
 
         function loadSelectedScript() {
             var scriptName = $(this).find(":selected").text();
+            var form = $(this).parents('form')
+            var textarea = form.find('textarea');
+            var libraryPath = form.find('input[name="Library Path"]');
+            var arguments = form.find('div[placeholder="file->arguments->argument"]');
+            var engine = form.find('div[placeholder="code->@attributes->language"]')
+            var saveButton = form.find('button.save-script')
             if (!scriptName) {
-                return;
+                textarea.val('');
+                libraryPath.val('');
+                arguments.hide();
+                engine.show();
+                saveButton.attr("disabled", true);
+            } else {
+                var script = StudioClient.getScript(scriptName);
+                textarea.val(script.content);
+                libraryPath.val(script.absolutePath);
+                arguments.show();
+                engine.hide();
+                saveButton.attr("disabled", false);
             }
-            var script = StudioClient.getScript(scriptName);
-            $(this).parents('form').find('textarea').val(script.content);
-            $(this).parents('form').find('input[name="Library Path"]').val(script.absolutePath);
-            getTaskViewFromFormElement(this).commitForm();
+            getCurrentForm().commit();
         }
 
-        function getTaskViewFromFormElement(el) {
-            var taskName = $(el).parents("#properties-container").find('#breadcrumb-task-name').text();
+        function getCurrentTaskView() {
+            var taskName = $("#properties-container").find('#breadcrumb-task-name').text();
             return workflowView.getTaskViewByName(taskName)
+        }
+
+        function getCurrentForm() {
+            return propertiesView.$el.data('form')
         }
 
         $(document).on("click", 'select[name="Library"]', loadSelectedScript)
 
         $(document).on("click", '.save-script', function () {
             var scriptName = $(this).parents("form").find('select[name="Library"] :selected').text();
+            if (!scriptName) {
+                return;
+            }
             var content = $(this).parents('form').find('textarea').val();
             StudioClient.saveScript(scriptName, content);
-            getTaskViewFromFormElement(this).commitForm();
+            getCurrentForm().commit();
         })
 
         $(document).on("click", '.save-script-as', function () {
@@ -1305,7 +1333,7 @@
 
                 StudioClient.saveScript(scriptName, content);
 
-                getTaskViewFromFormElement(el).renderForm();
+                getCurrentTaskView().renderForm();
 
                 var select = $('div#' + id + ' select[name=Library]');
                 select.val(scriptName);
