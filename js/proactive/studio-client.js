@@ -207,7 +207,7 @@ var StudioClient = (function () {
                 },
                 error: function (data) {
                     console.log("Cannot retrieve scripts", data)
-                    that.alert("Cannot retrieve scripts. Please refresh the page!", 'error');
+                    that.alert("Cannot retrieve scripts", "Please refresh the page!", 'error');
                 }
             });
             return cachedScripts;
@@ -304,7 +304,33 @@ var StudioClient = (function () {
             });
         },
 
+        getClassesSynchronously: function() {
+            if (!localStorage['sessionId']) return;
+            var that = this;
+
+            console.log("Getting classes list")
+            var classes = undefined;
+            $.ajax({
+                type: "GET",
+                url: StudioREST + "/classes",
+                async: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function (data) {
+                    classes = data;
+                },
+                error: function (data) {
+                    console.log("Cannot retrieve classes", data)
+                    that.alert("Cannot retrieve classes", "Please refresh the page!", 'error');
+                }
+            });
+            return classes;
+        },
+
         submit: function (jobXml) {
+            if (!localStorage['sessionId']) return;
+
             var that = this;
             that.send_multipart_request(StudioREST + "/submit", jobXml, {"sessionid": localStorage['sessionId']}, function (result) {
                 if (result.errorMessage) {
@@ -318,6 +344,8 @@ var StudioClient = (function () {
         },
 
         validate: function (jobXml, jobModel) {
+            if (!localStorage['sessionId']) return;
+
             var that = this;
             that.send_multipart_request(StudioREST + "/validate", jobXml, {}, function (result) {
 

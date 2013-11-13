@@ -1263,9 +1263,9 @@
     });
 
     // saving job xml every min to local store
-    setInterval(save_workflow_to_storage, 5000);
+    setInterval(save_workflow_to_storage, 10000);
     // validating job periodically
-    setInterval(validate_job, 5000);
+    setInterval(validate_job, 30000);
 
     (function scriptManagement() {
 
@@ -1355,6 +1355,20 @@
                 });
             })
         })
+
+        $(document).on('click', 'input[name="Class"]', function() {
+            if (!classes) {
+                var classes = StudioClient.getClassesSynchronously();
+                $(this).autocomplete({
+                    source: classes,
+                    messages: {
+                        noResults: '',
+                        results: function() {}
+                    }
+                });
+            }
+        })
+
     })();
 
 })(jQuery)
