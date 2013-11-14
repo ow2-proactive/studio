@@ -1119,15 +1119,22 @@
     var projects = new Projects();
 	var jobModel = new Job();
 
-	var palleteView = new PaletteView({el: $("#palette-container")});
-	var workflowView = new WorkflowView({el: $("#workflow-designer"), model: jobModel});
-	var propertiesView = new PropertiesView({el: $("#properties-container")});
-	var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
-    var loginView = new LoginView({el: $("#login-view")});
-
-    projects.init();
+	var palleteView = undefined;
+	var workflowView = undefined;
+	var propertiesView = undefined;
+	var xmlView = undefined;
+    var loginView = undefined;
 
     jsPlumb.bind("ready", function() {
+
+        palleteView = new PaletteView({el: $("#palette-container")});
+        workflowView = new WorkflowView({el: $("#workflow-designer"), model: jobModel});
+        propertiesView = new PropertiesView({el: $("#properties-container")});
+        xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
+        loginView = new LoginView({el: $("#login-view")});
+
+        projects.init();
+
         var workflowJson = projects.getCurrentWorkFlowAsJson()
         if (workflowJson) {
             workflowView.import(workflowJson);
@@ -1139,8 +1146,6 @@
         workflowView.$el.click();
     })
 
-	workflowView.$el.click();
-	
 	$("#import-button").click(function() {
 		$('#import-file').click();
 	})
