@@ -566,8 +566,9 @@
                 }
             }
         },
-        saveCurrentWorkflow: function(name, workflowXml) {
+        saveCurrentWorkflow: function(name, workflowXml, offsets) {
             if (this.supports_html5_storage() && workflowXml) {
+
                 if (!localStorage["workflows"]) {
                     this.init();
                     this.addEmptyWorkflow(name, workflowXml);
@@ -575,22 +576,23 @@
 
                 var selectedIndex = localStorage["workflow-selected"];
                 var localJobs = JSON.parse(localStorage['workflows']);
-                if (localJobs[selectedIndex].name == name && localJobs[selectedIndex].xml == workflowXml) {
-                    // nothing to save
-                    return;
-                }
 
-                localJobs[selectedIndex].name = name;
-                if (localJobs[selectedIndex].xml!=workflowXml) {
-                    var meta = JSON.parse(localJobs[selectedIndex].metadata);
+                var meta = JSON.parse(localJobs[selectedIndex].metadata);
+
+                if (localJobs[selectedIndex].name != name || localJobs[selectedIndex].xml != workflowXml || meta.offsets != offsets) {
+
+                    localJobs[selectedIndex].name = name;
+                    localJobs[selectedIndex].xml = workflowXml;
+
+                    meta.offsets = offsets;
                     meta.updated_at = new Date().getTime();
                     localJobs[selectedIndex].metadata = JSON.stringify(meta);
-                }
-                localJobs[selectedIndex].xml = workflowXml;
 
-                localStorage['workflows'] = JSON.stringify(localJobs);
-                var workflow = localJobs[selectedIndex];
-                StudioClient.updateWorkflow(workflow.id, workflow, true);
+                    localStorage['workflows'] = JSON.stringify(localJobs);
+
+                    var workflow = localJobs[selectedIndex];
+                    StudioClient.updateWorkflow(workflow.id, workflow, true);
+                }
             }
         },
         setSelectWorkflowIndex: function(index) {
@@ -672,7 +674,16 @@
                     }
                 }
             }
+        },
+        getOffsetsFromLocalStorage: function() {
+            if (this.supports_html5_storage()) {
+                var selectedIndex = localStorage["workflow-selected"];
+                var localJobs = JSON.parse(localStorage['workflows']);
+                var meta = JSON.parse(localJobs[selectedIndex].metadata);
+                return meta.offsets;
+            }
         }
+
     })
 
 })(jQuery);
