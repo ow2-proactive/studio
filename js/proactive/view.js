@@ -561,8 +561,17 @@
                     $.each(task.dependencies, function(i, dep) {
                         if (task2View[dep.get('Task Name')]) {
                             var taskView = task2View[dep.get('Task Name')];
+                            var sourceEndPoint = taskView.getSourceEndPoint("dependency")
+                            if (!sourceEndPoint) {
+                                sourceEndPoint = taskView.addSourceEndPoint("dependency")
+                            }
                             var dependency = task2View[task.get('Task Name')];
-                            jsPlumb.connect({source:taskView.$el, target:dependency.$el, overlays:taskView.overlays()});
+                            var targetEndPoint = dependency.getTargetEndPoint("dependency")
+                            if (!targetEndPoint) {
+                                targetEndPoint = dependency.addTargetEndPoint("dependency")
+                            }
+
+                            jsPlumb.connect({source:sourceEndPoint, target:targetEndPoint, overlays:taskView.overlays()});
                         }
                     })
                 }
@@ -876,6 +885,26 @@
                 maxConnections:(type=='dependency'?-1:1)
             };
             return jsPlumb.addEndpoint(that.$el, targetEndpoint, { 'anchor':params.anchorTarget });
+        },
+        getSourceEndPoint: function(type) {
+            var endpoints = jsPlumb.getEndpoints(this.$el);
+
+            for (i in endpoints) {
+                var ep = endpoints[i];
+                if (ep.scope == type && ep.isSource) {
+                    return ep;
+                }
+            }
+        },
+        getTargetEndPoint: function(type) {
+            var endpoints = jsPlumb.getEndpoints(this.$el);
+
+            for (i in endpoints) {
+                var ep = endpoints[i];
+                if (ep.scope == type && ep.isTarget) {
+                    return ep;
+                }
+            }
         },
 	    render: function() {
 	    	var that = this;
