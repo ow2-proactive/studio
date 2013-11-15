@@ -5,11 +5,13 @@ var StudioClient = (function () {
     return {
 
         alert: function (caption, message, type) {
+            var text_escape = message.indexOf("<html>") ==-1 ? true: false;
+
             $.pnotify({
                 title: caption,
                 text: message,
                 type: type,
-                //text_escape: true,
+                text_escape: text_escape,
                 opacity: .8,
                 width: '20%'
             });
@@ -19,7 +21,6 @@ var StudioClient = (function () {
             var that = this;
 
             console.log("Authenticating", creds)
-//            this.alert("Connecting", "Connecting to ProActive Studio at " + StudioREST, 'info')
 
             $.ajax({
                 type: "POST",
