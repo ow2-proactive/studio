@@ -620,7 +620,7 @@
 
             this.initJsPlumb();
             jobModel.trigger('change');
-            this.autoLayout();
+            this.restoreLayout();
             // regenerating the form
             this.$el.click();
 
@@ -659,6 +659,16 @@
         		$("#"+node.dagre.id).offset(pos)
         	}) 
     		jsPlumb.repaintEverything();
+        },
+        restoreLayout: function() {
+            var offsets = projects.getOffsetsFromLocalStorage();
+            if (offsets) {
+                $('.task').each(function() {
+                    var taskName = $(this).find("span.name").text()
+                    $(this).offset(offsets[taskName])
+                })
+                jsPlumb.repaintEverything();
+            }
         },
         zoom: 1,
         setZoom: function(zoom) {
@@ -1289,7 +1299,18 @@
     } );
 
     function save_workflow_to_storage() {
-        projects.saveCurrentWorkflow(jobModel.get("Job Name"), xmlView.generateXml());
+        projects.saveCurrentWorkflow(jobModel.get("Job Name"), xmlView.generateXml(), getOffsetsFromDOM());
+    }
+
+    function getOffsetsFromDOM() {
+        return _.object(
+            _.map($('.task'), function(t) {
+                var $t = $(t)
+                var taskName = $t.find("span.name").text()
+                var offset = $t.offset()
+                return [taskName, offset]
+            })
+        )
     }
 
     function validate_job() {
