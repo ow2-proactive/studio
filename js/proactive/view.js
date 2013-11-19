@@ -668,6 +668,8 @@
                     $(this).offset(offsets[taskName])
                 })
                 jsPlumb.repaintEverything();
+            } else {
+                this.autoLayout();
             }
         },
         zoom: 1,
