@@ -531,7 +531,7 @@
 
             this.$el.click();
         },
-        import: function(json) {
+        import: function(json, autoLayout) {
 
             jobModel = new Job();
             jobModel.populate(json.job)
@@ -620,7 +620,11 @@
 
             this.initJsPlumb();
             jobModel.trigger('change');
-            this.restoreLayout();
+            if (autoLayout) {
+                this.autoLayout()
+            } else {
+                this.restoreLayout();
+            }
             // regenerating the form
             this.$el.click();
 
@@ -1203,7 +1207,7 @@
 				
 				if (evt.target.readyState == FileReader.DONE) {
                     var json = xmlToJson(parseXml(evt.target.result))
-                    workflowView.import(json);
+                    workflowView.import(json, true);
 				}
 			}
 			reader.readAsBinaryString(file);						
