@@ -440,6 +440,25 @@
     </li>
 </script>
 
+<script type="text/template" class="template" id="workflow-view-template">
+    <html>
+    <head>
+        <link rel="stylesheet" href="<%= url %>/css/studio-standalone.css">
+        <style>
+            #workflow-designer {
+                left:0 !important;
+                top:0 !important;
+                width:<%= width %>px;
+                height:<%= height %>px;
+            }
+        </style>
+    </head>
+    <body>
+    <%= content %>
+    </body>
+    </html>
+</script>
+
 
 	    <script src="js/jquery-1.9.0.js"></script>
 		<script src="js/jquery-ui-1.9.2-min.js"></script>

@@ -968,6 +968,23 @@
             var that = this;
             return this.xml(this.model)
         },
+        generateHtml: function() {
+            var content = $("#workflow-designer").html();
+            var url = document.URL;
+            var hashPos = url.indexOf("#");
+            if (hashPos!=-1) url = url.substr(0, hashPos);
+            if (url.charAt(url.length-1)=='/') url = url.substr(0, url.length-1);
+
+            var width = $("#workflow-designer").get(0).scrollWidth;
+            var height = $("#workflow-designer").get(0).scrollHeight;
+
+            var html = _.template($('#workflow-view-template').html(),
+                {'url':url, 'content': content, 'width': width, 'height': height});
+
+            // replacing all images paths
+            html = html.replace(/img\//g, url+"/img/");
+            return html;
+        },
         render: function() {
         	// indenting using vkbeautify
         	this.$el.empty()
@@ -1236,7 +1253,9 @@
             var xml = "";
             // make it in this ugly way to have a right line number for the xml in case of error
             $('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
-            StudioClient.submit(xml)
+
+            var htmlVisualization = xmlView.generateHtml();
+            StudioClient.submit(xml, htmlVisualization)
         }, function() {
             // ask to login first
             $('#scheduler-connect-modal').modal();

@@ -329,7 +329,7 @@ var StudioClient = (function () {
             return classes;
         },
 
-        submit: function (jobXml) {
+        submit: function (jobXml, visualization) {
             if (!localStorage['sessionId']) return;
 
             var that = this;
@@ -338,6 +338,7 @@ var StudioClient = (function () {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
                 } else if (result.id) {
                     that.alert("Job submitted", "Successfully submitted " + result.readableName + " with id " + result.id, 'success');
+                    that.setVisualization(result.id, visualization);
                 } else {
                     that.alert("Job submission", request.responseText, 'error');
                 }
@@ -420,8 +421,26 @@ var StudioClient = (function () {
             }
 
             request.send(multipart);
-        }
+        },
 
+        setVisualization: function(jobId, visualization) {
+            var that = this;
+
+            $.ajax({
+                url: StudioREST + '/visualizations/'+jobId,
+                data: {visualization: visualization},
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                },
+                success: function(data){
+                    console.log("Success", data)
+                },
+                error: function(data){
+                    console.log("Error", data);
+                }
+            });
+        }
     }
 
 })();
