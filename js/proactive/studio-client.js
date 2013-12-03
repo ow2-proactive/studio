@@ -162,6 +162,7 @@ var StudioClient = (function () {
                     var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
                     that.alert("Cannot updated workflow", reason, 'error');
                     console.log("Error", data)
+                    location.reload();
                 }
             });
         },
