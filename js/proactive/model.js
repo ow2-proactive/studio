@@ -118,11 +118,11 @@
 			"Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'jobClasspath->pathElement', 'itemplaceholder':'@attributes->path'}, itemTemplate: jobClasspathTemplate},
 			"Job Priority": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->priority'}, options:
 				["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
-			"Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'variables->variable'}, itemToString: inlineNameValue , subSchema: {
+			"Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'variables->variable'}, itemToString: inlineName , subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
                 "Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
             }},
-			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab":"Generic Info", 'placeholder':'genericInformation->info'}, itemToString: inlineNameValue, subSchema: {
+			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab":"Generic Info", 'placeholder':'genericInformation->info'}, itemToString: inlineName, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
             }},
@@ -310,7 +310,7 @@
 	JavaExecutable = SchemaModel.extend({
 		schema: {
 			"Class":{type:"Text", fieldAttrs: {'placeholder':'@attributes->class'}},
-			"Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'parameters->parameter'}, itemToString: inlineNameValue, subSchema: {
+			"Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'parameters->parameter'}, itemToString: inlineName, subSchema: {
                 "Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}},
                 "Value": {type:"Text", fieldAttrs: {'placeholder':'@attributes->value'}}
             }},
@@ -506,10 +506,9 @@
         }
     });
 
-	function inlineNameValue(prop) {
+	function inlineName(prop) {
 		var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
-		var value = prop['Value'] ? prop['Value'] : prop['Property Value'];
-		return "Name: "+ name + ", Value: " + value;
+		return name;
 	}
 
     Projects = Backbone.Model.extend({

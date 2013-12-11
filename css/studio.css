@@ -495,6 +495,7 @@ button[data-action='add'] {
 
 div[name="Local Variables"] {
 	display:inline-block;
+    cursor: pointer;
 }
 
 div[name="Generic Info"] {
@@ -594,7 +595,7 @@ input[name="Type"] {
 
 button[data-action='remove'] {
     background-color:#f5f5f5;
-    /*border:none;*/
+    border:none;
     margin-bottom:4px;
 }
 
