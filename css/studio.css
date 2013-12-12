@@ -693,5 +693,15 @@ li {
 }
 
 button {
-    font-size: 12px;
+    font-size: 12px !important;
+}
+
+.table-striped td {
+    height:30px;
+    padding:5px !important;
+}
+
+.table-striped button {
+    height:25px;
+    line-height:10px;
 }

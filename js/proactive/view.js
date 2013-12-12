@@ -387,7 +387,7 @@
             console.log("Initializing TaskView")
             var view = new TaskView();
 
-            var position = {top: ui.offset.top-offset.top, left: ui.offset.left-offset.left};
+            var position = {top: ui.offset.top, left: ui.offset.left};
             var rendering = this.addView(view, position);
 
             this.model.addTask(rendering.model);
@@ -404,7 +404,7 @@
             var taskElse = new TaskView();
             var taskContinuation = new TaskView();
 
-            var positionIf = {top: ui.offset.top-offset.top, left: ui.offset.left-offset.left};
+            var positionIf = {top: ui.offset.top, left: ui.offset.left};
             var positionTarget = {top: positionIf.top + 200, left: positionIf.left - 150};
             var positionElse = {top: positionTarget.top, left: positionTarget.left + 150};
             var positionContinuation = {top: positionTarget.top, left: positionElse.left + 150};
@@ -437,7 +437,7 @@
             var taskDo = new TaskView();
             var taskWhile = new TaskView();
 
-            var positionDo = {top: ui.offset.top-offset.top, left: ui.offset.left-offset.left};
+            var positionDo = {top: ui.offset.top, left: ui.offset.left};
             var positionWhile = {top: positionDo.top + 200, left: positionDo.left};
 
             var renderingDo = this.addView(taskDo, positionDo);
@@ -469,7 +469,7 @@
             var taskInit = new TaskView();
             var taskRepl = new TaskView();
 
-            var positionInit = {top: ui.offset.top-offset.top, left: ui.offset.left-offset.left};
+            var positionInit = {top: ui.offset.top, left: ui.offset.left};
             var positionRepl = {top: positionInit.top + 200, left: positionInit.left};
 
             var renderingInit = this.addView(taskInit, positionInit);
