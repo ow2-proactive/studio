@@ -1398,24 +1398,23 @@
                 return;
             }
             var content = $(this).parents('form').find('textarea').val();
-            StudioClient.saveScript(scriptName, content);
+            StudioClient.saveScriptSynchronously(scriptName, content);
             getCurrentForm().commit();
         })
 
         $(document).on("click", '.save-script-as', function () {
             var content = $(this).parents('form').find('textarea').val();
-            var id = $(this).parents('form').find("div[name=Script]").attr("id");
-            var el = this;
+            var placeholder = $(this).parents('form').find("div[placeholder]").attr("placeholder");
             $("#script-save-modal").modal()
             $("#script-save-button").unbind("click").click(function () {
 
                 var scriptName = $('#script-save-modal input').val();
 
-                StudioClient.saveScript(scriptName, content);
+                StudioClient.saveScriptSynchronously(scriptName, content);
 
                 getCurrentTaskView().renderForm();
 
-                var select = $('div#' + id + ' select[name=Library]');
+                var select = $('div[placeholder=' + placeholder + '] select[name=Library]');
                 select.val(scriptName);
                 loadSelectedScript.call(select);
             })

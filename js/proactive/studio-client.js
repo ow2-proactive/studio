@@ -215,7 +215,7 @@ var StudioClient = (function () {
             return cachedScripts;
         },
 
-        saveScript: function (name, content) {
+        saveScriptSynchronously: function (name, content) {
 
             if (!localStorage['sessionId']) return;
             var that = this;
@@ -228,6 +228,7 @@ var StudioClient = (function () {
                 type: "POST",
                 url: StudioREST + "/scripts/" + name,
                 data: {name: name, content: content},
+                async: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                 },
