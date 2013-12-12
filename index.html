@@ -3,44 +3,45 @@
 	<head>
 		<title>ProActive Workflow Studio</title>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 		<link rel="shortcut icon" href="img/favicon.ico">
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/bootstrap-responsive.css">
-		<link rel="stylesheet" href="css/studio.css">
 	</head>
-	<body data-library="jquery">
+	<body data-library="jquery" style="zoom: 1;">
 
-		<div class="navbar navbar-fixed-top">
-	      <div class="navbar-inner">
-	        <div class="container-fluid">
-	          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	          </button>
-	          <a class="brand" style="vertical-align:middle"><img src="img/proactive_32.png" style="height:24px"> ProActive Studio <span class="release-status">beta</span></a>
-	          <div class="nav-collapse collapse">
-	            <ul class="nav">
-                  <li><a id="save-button" href="#" class="pointer"><i class="icon-hdd "></i> Save</a></li>
-	              <li><a id="submit-button" href="#" class="pointer"><i class="icon-share "></i> Execute</a></li>
-                  <li class="divider"></li>
-	              <li><a id="import-button" href="#" class="pointer"><i class="icon-arrow-down "></i> Import</a></li>
-	              <li><a id="export-button" href="#" class="pointer"><i class="icon-eye-open "></i> View Source</a></li>
-	              <li><a id="validate-button" href="#" class="pointer"><i class="icon-ok "></i> Check</a></li>
-                  <li><a id="clear-button" href="#" class="pointer"><i class="icon-repeat "></i> Clear</a></li>
-	            </ul>
-                <ul class="nav pull-right">
-                    <li id="login-view"></li>
-                </ul>
-	          </div><!--/.nav-collapse -->
-	        </div>
-	      </div>
+		<div class="navbar navbar-fixed-top" role="navigation">
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" style="vertical-align:middle"><img src="img/proactive_32.png" style="height:24px"> ProActive Studio <span class="release-status">beta</span></a>
+              </div>
+              <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                      <li><a id="save-button" href="#" class="pointer"><i class="glyphicon glyphicon-hdd"></i> Save</a></li>
+                      <li><a id="submit-button" href="#" class="pointer"><i class="glyphicon glyphicon-share "></i> Execute</a></li>
+                      <li class="divider"></li>
+                      <li><a id="import-button" href="#" class="pointer"><i class="glyphicon glyphicon-import"></i> Import</a></li>
+                      <li><a id="export-button" href="#" class="pointer"><i class="glyphicon glyphicon-eye-open "></i> View Source</a></li>
+                      <li><a id="validate-button" href="#" class="pointer"><i class="glyphicon glyphicon-ok "></i> Check</a></li>
+                      <li><a id="clear-button" href="#" class="pointer"><i class="glyphicon glyphicon-repeat "></i> Clear</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav nav navbar-right">
+                        <li id="login-view"></li>
+                    </ul>
+              </div>
 	    </div>
 
-  	    <div id="workflow-designer"></div>
-  	    <div id="properties-container"></div>
+        <table style="min-width:100%;height:100%">
+            <tr>
+                <td style="min-width:300px;width:25%; resizable:horizontal; padding-left:10px; padding-right:10px">
+                    <div id="properties-container"></div>
+                </td>
+                <td style="width:75%; padding-right:10px">
+                    <div id="workflow-designer"></div>
+                </td>
+            </tr>
+        </table>
 
   	    <table id="tools-table">
   	    <tr><td style="padding-right:20px">
@@ -48,7 +49,7 @@
   	    </td><td>
   	    <div id="tools-panel">
 			<div class="btn-group">
-              <button id="layout-button" type="button" class="btn" title="Layout"><i class="icon-align-justify"></i></button>
+              <button id="layout-button" type="button" class="btn" title="Layout"><i class="glyphicon glyphicon-align-center"></i></button>
                 <!--
               <button id="zoom-reset-button" type="button" class="btn" title="Zoom in"><i class="icon-screenshot"></i></button>
               <button id="zoom-in-button" type="button" class="btn" title="Zoom in"><i class="icon-plus"></i></button>
@@ -61,40 +62,52 @@
 
 <input type="file" id="import-file" style="display:none"/>
 
-<div id="scheduler-connect-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Scheduler Login Required</h3>
-  </div>
-  <div class="modal-body">
-      <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
-  </div>
-  <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-  </div>
-</div>
-
-<div id="xml-view-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Workflow XML</h3>
-  </div>
-  <div class="modal-body" style="height:100%">
-  <div id="workflow-xml-container"></div>
-  </div>
-  <div class="modal-footer">
-    <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
-    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-  </div>
-</div>
-
-<div id="script-save-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-body">
-        <label>Script name</label>
-        <input data-name="name" type="text">
+<div id="scheduler-connect-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Scheduler Login Required</h3>
+          </div>
+          <div class="modal-body">
+              <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
+          </div>
+          <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          </div>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button id="script-save-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Save</button>
+</div>
+
+<div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Workflow XML</h3>
+          </div>
+          <div class="modal-body" style="height:100%">
+          <div id="workflow-xml-container"></div>
+          </div>
+          <div class="modal-footer">
+            <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
+            <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div id="script-save-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <label>Script name</label>
+                <input data-name="name" type="text" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button id="script-save-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -434,7 +447,7 @@
         </div>
         <div class="pull-left" data-editor style="display:none">
         </div>
-        <button type="button" class="btn bbf-del btn-choose-file choose-job-classpath"><i class="icon-folder-open"></i></button>
+        <button type="button" class="btn bbf-del btn-choose-file choose-job-classpath"><i class="glyphicon glyphicon-folder-open"></i></button>
         <button type="button" class="btn bbf-del" data-action="remove">&times;</button>
         <input type="file" name="file" style="display:none"/>
     </li>
@@ -465,14 +478,16 @@
 		<script src="js/jquery.ui.touch-punch.min.js"></script>
 		<script src="js/jquery.mousewheel.js"></script>
 		<script type='text/javascript' src='js/jquery.jsPlumb-1.5.0.js'></script>
-		<script type='text/javascript' src='js/bootstrap.js'></script>
+		<script type='text/javascript' src='js/bootstrap-3.0.3/dist/js/bootstrap.min.js'></script>
 
 		<script type="text/javascript" src="js/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
 		<script type="text/javascript" src="js/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
 		<script type="text/javascript" src="js/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
-		<link href="js/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+        <link href="js/bootstrap-3.0.3/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	    <link href="js/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
 		<link href="js/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
-		
+        <link rel="stylesheet" href="css/studio.css">
+
 		<script src="js/vkbeautify.0.99.00.beta.js"></script>
 
 		<script src="js/underscore-min.js"></script>

@@ -13,7 +13,8 @@ var StudioClient = (function () {
                 type: type,
                 text_escape: text_escape,
                 opacity: .8,
-                width: '20%'
+                width: '20%',
+                history: false
             });
         },
 

@@ -33,7 +33,7 @@
         listWorkflows: function() {
 
             var breadcrumb = $('<ul class="breadcrumb"></ul>');
-            var workflows = $('<li class="active"><span>Workflows</span> <span class="divider">/</span></li>');
+            var workflows = $('<li class="active"><span>Workflows</span></li>');
             breadcrumb.append(workflows)
 
             var newWorkflow = $('<button type="button" class="btn btn-success btn-small create-workflow-button">Create Workflow</button>')
@@ -141,23 +141,19 @@
         renderForm: function () {
             var that = this
             that.clearTextSelection();
-            $(".selected-task").removeClass("selected-task");
 
             var form = new Backbone.Form({
                 'model': that.model
             }).render();
 
             var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
-            var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a> <span class="divider">/</span></li>');
+            var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a></li>');
             breadcrumb.append(workflows)
-            breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">' + jobModel.get("Job Name") + '</span> <span class="divider">/</span></li>')
+            breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">' + jobModel.get("Job Name") + '</span></li>')
             if (that.model.get("Task Name")) {
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
 
-                // selecting the current task
-                that.$el.addClass("selected-task")
-
-                var removeTask = $('<a href="#" class="icon-trash pull-right" title="Remove task"></a>');
+                var removeTask = $('<a href="#" class="glyphicon glyphicon-trash pull-right" title="Remove task"></a>');
                 removeTask.click(function () {
                     workflowView.removeView(that);
                     return false;
@@ -177,9 +173,13 @@
             })
 
 
+            form.$el.find("input").addClass("form-control");
+            form.$el.find("select").addClass("form-control");
+            form.$el.find("textarea").addClass("form-control");
+
             var tabs = form.$el.find("[data-tab]");
             if (tabs.length > 0) {
-                var accordion = $('<div class="accordion" id="accordion-properties">');
+                var accordion = $('<div class="panel-group" id="accordion-properties">');
                 var currentAccordionGroup = undefined;
                 var curLabel = "";
 
@@ -196,8 +196,8 @@
                             openAccordion = true;
                         }
 
-                        var accordionGroup = $('<div class="accordion-group"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
-                        currentAccordionGroup = $('<div id="' + accId + '" class="accordion-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
+                        var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
+                        currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
                         accordionGroup.append(currentAccordionGroup);
                         accordion.append(accordionGroup);
                         curLabel = el.attr("data-tab").replace(/ /g, '');
@@ -230,7 +230,7 @@
 
                 // saving expanded accordion
                 $(".accordion-toggle").click(function () {
-                    var accordionBody = $(this).parents(".accordion-group").find(".accordion-body");
+                    var accordionBody = $(this).parents(".accordion-group").find(".panel-body");
                     if (!accordionBody.hasClass("in")) {
                         that.openedAccordion = accordionBody.attr('id')
                     }
@@ -925,13 +925,23 @@
 	    render: function() {
 	    	var that = this;
 	    	ViewWithProperties.prototype.render.call(this);
-	    	this.$el.click(function() {
+	    	this.$el.click(function(e) {
+                e.stopPropagation();
+
+                if (!e.ctrlKey) {
+                    $(".selected-task").removeClass("selected-task");
+                }
+
 	    		that.form.on('Parameters:change', function(f, task) {
 	    			that.form.commit();
 	    			that.showOrHideForkEnvironment();
 	    		})
-	    		that.showOrHideForkEnvironment();
-	    		$('select[name=Library]').click();
+
+                // selecting the current task
+                that.$el.addClass("selected-task")
+
+                that.showOrHideForkEnvironment();
+	    		$('select[name=Library]').click(e);
 	    	})
 	    	return this;
 	    },
@@ -1120,8 +1130,8 @@
         },
         login: function() {
             var that = this;
-            var form = $('<form class="navbar-search pull-right menu-form" action=""><input type="text" id="studio-user" class="span2 nav-login" placeholder="user"><input type="password" id="studio-pass"class="span2 nav-login" placeholder="password"></form>')
-            var buttonLogin = $('<button class="btn btn-small menu-button" data-toggle="dropdown">Login</button>');
+            var form = $('<form><input type="text" id="studio-user" class="span2 nav-login form-control  pull-left" placeholder="user"><input type="password" id="studio-pass" class="span2 nav-login form-control pull-left" placeholder="password"></form>')
+            var buttonLogin = $('<button class="btn btn-small menu-button pull-left" data-toggle="dropdown">Login</button>');
             form.append(buttonLogin);
 
             buttonLogin.click(function() {
@@ -1304,7 +1314,11 @@
         }
     })
 
-    $('body').click(function(e){
+    $('body').click(function(e) {
+
+        console.log("clearing all selected tasks", e)
+        if (e.isPropagationStopped()) {return;}
+
         $(".selected-task").removeClass("selected-task");
     })
 
