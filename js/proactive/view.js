@@ -498,14 +498,70 @@
 	    	jsPlumb.reset()
             this.initJsPlumb()
 	    },
+        initLeftOffset: [],
+        initTopOffset: [],
         addView: function(view, position) {
 
+            var that = this;
   			var rendering = view.render();
     		rendering.$el.offset(position);
     		this.zoomArea.append(rendering.$el);
 
             view.addSourceEndPoint('dependency')
-    		jsPlumb.draggable(rendering.$el);
+            var initLeftOffset = [], initTopOffset = [];
+
+            jsPlumb.draggable(rendering.$el,
+                {
+                    start: function (event, ui) {
+                        var item = $(this);
+                        var pos = item.position();
+                        var items = $(".selected-task");
+
+                        $.each(items || {}, function (key, value) {
+                            var elemPos = $(value).position();
+                            that.initLeftOffset[key] = elemPos.left - pos.left;
+                            that.initTopOffset[key] = elemPos.top - pos.top;
+                        });
+                        //  items.trigger("start");
+                        jsPlumb.repaint(items);
+                        jsPlumb.repaint(item);
+
+
+                    },
+                    drag: function (event, ui) {
+                        var item = $(this);
+                        var pos = ui.offset;
+                        var items = $(".selected-task");
+                        $.each(items || {}, function (key, value) {
+
+                            var oPos = {
+                                left: pos.left + that.initLeftOffset[key],
+                                top: pos.top + that.initTopOffset[key]
+                            }, oEl = $(value);
+
+                            oEl.offset(oPos);
+                            jsPlumb.repaint(oEl, oPos);
+                        });
+
+                        // repaint the dragging item, passing in position
+                        jsPlumb.repaint(item, pos);
+                    },
+                    stop: function (event, ui) {
+                        var item = $(this);
+                        var pos = $(this).offset();
+                        var items = $(".selected-task");
+
+                        $.each(items || {}, function (key, value) {
+                            $(value).offset({
+                                left: pos.left + that.initLeftOffset[key],
+                                top: pos.top + that.initTopOffset[key]
+                            });
+                        });
+                        jsPlumb.repaint(items);
+                    }
+                }
+            )
+
             this.taskViews.push(view);
     		
             rendering.$el.data("view", view);
@@ -627,7 +683,6 @@
             }
             // regenerating the form
             this.$el.click();
-
         },
         autoLayout: function() {
         	var nodes = [];
@@ -925,20 +980,21 @@
 	    render: function() {
 	    	var that = this;
 	    	ViewWithProperties.prototype.render.call(this);
-	    	this.$el.click(function(e) {
-                e.stopPropagation();
-
+            this.$el.mousedown(function(e) {
                 if (!e.ctrlKey) {
                     $(".selected-task").removeClass("selected-task");
                 }
+                // selecting the current task
+                that.$el.addClass("selected-task");
+            })
+
+	    	this.$el.click(function(e) {
+                e.stopPropagation();
 
 	    		that.form.on('Parameters:change', function(f, task) {
 	    			that.form.commit();
 	    			that.showOrHideForkEnvironment();
 	    		})
-
-                // selecting the current task
-                that.$el.addClass("selected-task")
 
                 that.showOrHideForkEnvironment();
 	    		$('select[name=Library]').click(e);
@@ -1235,7 +1291,7 @@
 				if (evt.target.readyState == FileReader.DONE) {
                     var json = xmlToJson(parseXml(evt.target.result))
                     workflowView.import(json, true);
-				}
+                }
 			}
 			reader.readAsBinaryString(file);						
 		}

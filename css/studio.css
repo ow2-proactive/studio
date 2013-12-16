@@ -553,11 +553,11 @@ input[type="checkbox"] {
 }
 
 .block-start {
-    border-top:5px solid orange;
+    border-top:5px solid orange !important;
 }
 
 .block-end {
-    border-bottom:5px solid orange;
+    border-bottom:5px solid orange !important;
 }
 
 .label {
@@ -569,7 +569,8 @@ input[type="checkbox"] {
 }
 
 .selected-task {
-    border-width: 2px;
+    /*border-width: 2px;*/
+    background-color: #E8E8E8;
 }
 
 .table-hover {

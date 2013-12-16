@@ -23,13 +23,19 @@
 
   var template = _.template('\
     <% if (title) { %>\
+    <div class="modal-dialog">\
+      <div class="modal-content">\
       <div class="modal-header">\
         <% if (allowCancel) { %>\
           <a class="close">&times;</a>\
         <% } %>\
         <h3>{{title}}</h3>\
       </div>\
+      </div>\
+      </div>\
     <% } %>\
+    <div class="modal-dialog">\
+      <div class="modal-content">\
     <div class="modal-body">{{content}}</div>\
     <div class="modal-footer">\
       <% if (allowCancel) { %>\
@@ -38,6 +44,8 @@
         <% } %>\
       <% } %>\
       <a href="#" class="btn ok btn-primary">{{okText}}</a>\
+    </div>\
+    </div>\
     </div>\
   ');
 
@@ -131,6 +139,7 @@
       if (content.$el) {
         content.render();
         $el.find('.modal-body').html(content.$el);
+        $el.find("input").addClass("form-control");
       }
 
       if (options.animate) $el.addClass('fade');
