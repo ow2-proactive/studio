@@ -2325,7 +2325,11 @@ jQuery.extend({
 				return ret;
 
 			} else {
-				elem.setAttribute( name, value + "" );
+                try {
+                    elem.setAttribute( name, value + "" );
+                } catch(e) {
+                    console.log(e)
+                }
 				return value;
 			}
 
