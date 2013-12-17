@@ -1054,9 +1054,11 @@
 
             if (ifFlow.task) {
                 var taskTarget = views[ifFlow.task.get('Task Name')];
-                var endpointTarget = taskTarget.addTargetEndPoint('if')
-                endpointIf.connectorOverlays[1][1].label = 'if';
-                jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:this.overlays()});
+                if (taskTarget) {
+                    var endpointTarget = taskTarget.addTargetEndPoint('if')
+                    endpointIf.connectorOverlays[1][1].label = 'if';
+                    jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:this.overlays()});
+                }
             }
             if (ifFlow.else && ifFlow.else.task) {
                 var taskElse = views[ifFlow.else.task.get('Task Name')];
