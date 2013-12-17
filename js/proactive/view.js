@@ -837,7 +837,7 @@
 
             this.model.on("invalid", this.setInvalid, this);
 
-			this.element = $('<div class="task"><a href="#" class="task-name"><img src="'
+			this.element = $('<div class="task"><a class="task-name"><img src="'
                 +this.icons[this.modelType]+'" width="20px">&nbsp;<span class="name">'
                 +this.model.get("Task Name")+'</span></a></div>');
 
