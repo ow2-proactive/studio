@@ -229,8 +229,8 @@
                 propertiesView.$el.append(accordion);
 
                 // saving expanded accordion
-                $(".accordion-toggle").click(function () {
-                    var accordionBody = $(this).parents(".accordion-group").find(".panel-body");
+                $('[data-toggle="collapse"]').click(function () {
+                    var accordionBody = $(this).parents(".panel").find(".panel-body");
                     if (!accordionBody.hasClass("in")) {
                         that.openedAccordion = accordionBody.attr('id')
                     }
