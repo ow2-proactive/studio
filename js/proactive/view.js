@@ -1602,6 +1602,7 @@
             })
         })
         $(document).on("click", '.edit-full-screen', function () {
+            $(".CodeMirror").remove();
             var textarea = $(this).parents('form').find('textarea');
             var content = textarea.val();
             $("#set-script-content").data("area", textarea);
@@ -1615,14 +1616,12 @@
         })
         $('#full-edit-modal').on('shown.bs.modal', function() {
             $(".CodeMirror").height($(".code-editor-container").height())
-
             $("#set-script-content").data("editor").refresh()
         })
 
         $("#set-script-content").click(function() {
             var editor = $("#set-script-content").data("editor");
             editor.save()
-            $(".CodeMirror").remove();
             $(this).data("area").val($("#full-edit-modal-script-content").val());
         })
     })();
