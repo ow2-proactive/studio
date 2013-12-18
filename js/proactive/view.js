@@ -1586,17 +1586,14 @@
             StudioClient.saveScriptSynchronously(scriptName, content);
             getCurrentForm().commit();
         })
-
-        $(document).on("click", '.save-script-as', function () {
+        $(document).on("click", '.save-script-as', function() {
             var content = $(this).parents('form').find('textarea').val();
             var placeholder = $(this).parents('form').find("div[placeholder]").attr("placeholder");
             $("#script-save-modal").modal()
             $("#script-save-button").unbind("click").click(function () {
 
                 var scriptName = $('#script-save-modal input').val();
-
                 StudioClient.saveScriptSynchronously(scriptName, content);
-
                 getCurrentTaskView().renderForm();
 
                 var select = $('div[placeholder=' + placeholder + '] select[name=Library]');
@@ -1604,7 +1601,30 @@
                 loadSelectedScript.call(select);
             })
         })
+        $(document).on("click", '.edit-full-screen', function () {
+            var textarea = $(this).parents('form').find('textarea');
+            var content = textarea.val();
+            $("#set-script-content").data("area", textarea);
+            $("#full-edit-modal-script-content").val(content);
+            var editor = CodeMirror.fromTextArea($("#full-edit-modal-script-content").get(0), {
+                lineNumbers: true
+            });
+            $('#full-edit-modal').modal('show');
+            $("#set-script-content").data("editor", editor);
+            return false;
+        })
+        $('#full-edit-modal').on('shown.bs.modal', function() {
+            $(".CodeMirror").height($(".code-editor-container").height())
 
+            $("#set-script-content").data("editor").refresh()
+        })
+
+        $("#set-script-content").click(function() {
+            var editor = $("#set-script-content").data("editor");
+            editor.save()
+            $(".CodeMirror").remove();
+            $(this).data("area").val($("#full-edit-modal-script-content").val());
+        })
     })();
 
     (function jobClassPathManagement() {

@@ -97,6 +97,31 @@
     </div>
 </div>
 
+<div id="full-edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:90%;height:90%">
+        <div class="modal-content" style="height: 100%;">
+            <table style="min-height:100%;width:100%">
+                <tr><td style="height:80px">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3>Script Editor</h3>
+                        </div>
+                </td></tr>
+                <tr class="code-editor-container"><td style="height:99%;min-height:99%;vertical-align: top;">
+                        <textarea id="full-edit-modal-script-content" class="form-control" style="width:100%;height:100%"></textarea>
+                </td></tr>
+                <tr><td style="height:80px">
+                        <div class="modal-footer">
+                            <button id="set-script-content" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Done</button>
+                        </div>
+                </td></tr>
+            </table>
+            <!--<div class="modal-body" style="height: 70%;">-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
 <div id="script-save-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -433,10 +458,13 @@
         <label class="control-label" for="<%= editorId %>"><%= title %></label>
         <div class="controls">
             <span data-editor></span>
-            <div class="help-inline" data-error></div>
-            <div class="help-block"><%= help %></div>
-            <button type="button" class="save-script">Save</button>
-            <button type="button" class="save-script-as">Save as...</button>
+            <div style="width:90%">
+                <div class="help-inline" data-error></div>
+                <div class="help-block"><%= help %></div>
+                <button type="button" class="save-script">Save</button>
+                <button type="button" class="save-script-as">Save as...</button>
+                <a href=""#" class="edit-full-screen glyphicon glyphicon-edit pull-right"></a>
+            </div>
         </div>
     </div>
 </script>
@@ -508,6 +536,12 @@
 		<script src="js/proactive/model.js"></script>
 		<script src="js/proactive/view.js"></script>
 		<script src="js/proactive/studio.js"></script>
+
+        <link rel="stylesheet" href="js/codemirror-3.20/lib/codemirror.css">
+        <script src="js/codemirror-3.20/lib/codemirror.js"></script>
+        <script src="js/codemirror-3.20/mode/javascript/javascript.js"></script>
+        <script src="js/codemirror-3.20/addon/comment/comment.js"></script>
+        <script src="js/codemirror-3.20/addon/edit/matchbrackets.js"></script>
 	</body>
 
 </html>
