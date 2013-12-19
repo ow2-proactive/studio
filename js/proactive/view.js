@@ -159,6 +159,8 @@
                     return false;
                 })
                 breadcrumb.append(removeTask)
+            } else {
+                $(".selected-task").removeClass("selected-task");
             }
 
             workflows.click(function () {
@@ -1093,16 +1095,17 @@
 	    	var that = this;
 	    	ViewWithProperties.prototype.render.call(this);
             this.$el.mousedown(function(e) {
-                if (!e.ctrlKey) {
+                if (!e.ctrlKey && !that.$el.hasClass("selected-task")) {
                     $(".selected-task").removeClass("selected-task");
                 }
 
-                if (that.$el.hasClass("selected-task")) {
+                if (e.ctrlKey && that.$el.hasClass("selected-task")) {
                     // unselecting the current task
                     that.$el.removeClass("selected-task");
                 } else {
                     // selecting the current task
                     that.$el.addClass("selected-task");
+
                 }
             })
 
