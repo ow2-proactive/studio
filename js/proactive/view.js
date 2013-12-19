@@ -1144,8 +1144,6 @@
                     tasks.push(view.$el.text());
                 });
             }
-            console.log("Generating job xml", job);
-            console.log("Job model", jModel);
 
             var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
 
@@ -1192,7 +1190,6 @@
 
 	TaskXmlView = Backbone.View.extend({
         render: function() {
-        	console.log("Generating task xml", this.model);
         	var executableType = this.model.get("Type");
         	var executableView = new window[executableType+"XmlView"]({model:this.model.get("Parameters")});
         	var executable = executableView.render().$el.text();
