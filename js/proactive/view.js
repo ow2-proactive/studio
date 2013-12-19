@@ -589,6 +589,8 @@
         },
         import: function(json, autoLayout) {
 
+            this.taskViews = [];
+
             jobModel = new Job();
             jobModel.populate(json.job)
 
