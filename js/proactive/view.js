@@ -730,13 +730,13 @@
                 return (name === view.model.get("Task Name"));
             })
         },
-        copyPasteSelected: function() {
+        copyPasteTasks: function(tasks) {
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
 
             var newTaskViews = {};
-            $(".selected-task").each(function(i, t) {
+            $.each(tasks, function(i, t) {
                 var task = $(t);
                 var taskView = task.data("view");
 
@@ -1698,13 +1698,17 @@
             $(document).keydown(function(e) {
                 if (ctrlDown && e.keyCode == cKey) {
                     console.log("copy");
-                    copied = true;
+                    copied = [];
+                    $(".selected-task").each(function(i, t) {
+                        copied.push(t);
+                    })
                 };
                 if (ctrlDown && e.keyCode == vKey) {
                     if (copied) {
                         console.log("paste");
-                        copied = false;
-                        workflowView.copyPasteSelected();
+                        if (copied) {
+                            workflowView.copyPasteTasks(copied);
+                        }
                     }
                 };
             });
