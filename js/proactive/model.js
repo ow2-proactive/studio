@@ -144,6 +144,10 @@
             this.set({"Max Number Of Executions For Task": 1});
             this.set({"If An Error Occurs Restart Task": "anywhere"});
             this.tasks = [];
+            this.on("change", function(eventName, event) {
+                undoManager.save()
+            });
+
         },
 		addTask: function(task) {
 			console.log("Adding task", task)
@@ -422,6 +426,9 @@
             this.set({"Number of Nodes": 1});
 
             this.controlFlow = {};
+            this.on("change", function(eventName, event) {
+                undoManager.save()
+            });
         },
 
         addDependency: function(task) {
@@ -430,6 +437,7 @@
             index = this.dependencies.indexOf(task);
             if (index==-1) {
                 this.dependencies.push(task)
+                this.trigger("change")
                 console.log("Adding dependency to", this, "from", task)
             }
         },
@@ -437,6 +445,7 @@
             index = this.dependencies.indexOf(task);
             if (index!=-1) {
                 this.dependencies.splice(index, 1);
+                this.trigger("change")
                 console.log("Removing dependency", task, "from", this)
             }
         },
