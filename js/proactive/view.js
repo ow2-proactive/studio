@@ -270,18 +270,20 @@
 			
 			this.$el.droppable({
 				accept: ".job-element",
-		  		drop: function(event, ui) {
-                    var elem = $(ui.draggable);
-                    if (!elem.hasClass('control-flow')) {
-                        that.createTask(ui)
-                    } else if (elem.hasClass('control-flow-if')) {
-                        that.createIfWorkflow(ui)
-                    } else if (elem.hasClass('control-flow-loop')) {
-                        that.createLoopWorkflow(ui)
-                    } else if (elem.hasClass('control-flow-replicate')) {
-                        that.createReplicationWorkflow(ui)
-                    }
-		  		}
+                drop: function (event, ui) {
+                    undoManager.runWithDisabled(function() {
+                        var elem = $(ui.draggable);
+                        if (!elem.hasClass('control-flow')) {
+                            that.createTask(ui)
+                        } else if (elem.hasClass('control-flow-if')) {
+                            that.createIfWorkflow(ui)
+                        } else if (elem.hasClass('control-flow-loop')) {
+                            that.createLoopWorkflow(ui)
+                        } else if (elem.hasClass('control-flow-replicate')) {
+                            that.createReplicationWorkflow(ui)
+                        }
+                    });
+                }
 			});
 
             this.$el.dblclick(function(event) {
@@ -590,6 +592,12 @@
             this.$el.click();
         },
         import: function(json, autoLayout) {
+            this.importNoReset(json, autoLayout);
+            undoManager.reset()
+        },
+        importNoReset: function(json, autoLayout) {
+
+            this.taskViews = [];
 
             jobModel = new Job();
             jobModel.populate(json.job)
@@ -689,14 +697,20 @@
         	}) 
     		jsPlumb.repaintEverything();
         },
+        restoreLayoutFromOffsets: function (offsets) {
+            $('.task').each(function () {
+                var taskName = $(this).find("span.name").text()
+                var offset = offsets[taskName]
+                if (offset) {
+                    $(this).offset(offset)
+                }
+            })
+            jsPlumb.repaintEverything();
+        },
         restoreLayout: function() {
             var offsets = projects.getOffsetsFromLocalStorage();
             if (offsets) {
-                $('.task').each(function() {
-                    var taskName = $(this).find("span.name").text()
-                    $(this).offset(offsets[taskName])
-                })
-                jsPlumb.repaintEverything();
+                this.restoreLayoutFromOffsets(offsets);
             } else {
                 this.autoLayout();
             }
@@ -821,6 +835,36 @@
             })
 
             this.initJsPlumb();
+        },
+        getOpenAccordions: function() {
+            var result = {job: this.openedAccordion};
+            $.each(this.taskViews, function(i, taskView) {
+                var taskName = taskView.model.get("Task Name");
+                result[taskName] = taskView.openedAccordion;
+            });
+            return result;
+        },
+        restoreOpenAccordions: function(openAccordions) {
+            if (openAccordions.job) {
+                this.openedAccordion = openAccordions.job;
+            }
+            var that = this;
+            $.each(openAccordions, function(taskName, accordion) {
+                var taskView = that.getTaskViewByName(taskName);
+                if (taskView && accordion) {
+                    taskView.openedAccordion = accordion;
+                }
+            })
+        },
+        getActiveTask: function() {
+            return $("#breadcrumb-task-name").text();
+        },
+        restoreActiveTask: function(taskName) {
+            $("span.name").each(function(i, el) {
+                if ($(el).text() === taskName) {
+                    $(el).click()
+                }
+            })
         }
 	});
 
@@ -1145,8 +1189,6 @@
                     tasks.push(view.$el.text());
                 });
             }
-            console.log("Generating job xml", job);
-            console.log("Job model", jModel);
 
             var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
 
@@ -1193,7 +1235,6 @@
 
 	TaskXmlView = Backbone.View.extend({
         render: function() {
-        	console.log("Generating task xml", this.model);
         	var executableType = this.model.get("Type");
         	var executableView = new window[executableType+"XmlView"]({model:this.model.get("Parameters")});
         	var executable = executableView.render().$el.text();
@@ -1364,6 +1405,83 @@
             return this;
         }
     });
+
+    undoManager = (function () {
+        var undoStates = [];
+        var redoStates = [];
+        var enabled = true;
+        return {
+            save: function() {
+                if (!enabled) return;
+                var state = {xml: xmlView.generateXml(),
+                             offsets: getOffsetsFromDOM(),
+                             accordions: workflowView.getOpenAccordions(),
+                             activeTask: workflowView.getActiveTask()};
+                this._saveIfDifferent(state);
+            },
+            undo: function() {
+                if (undoStates.length <= 1) {
+                    StudioClient.alert("No further undo data", "");
+                    return
+                };
+                this._move(undoStates, redoStates);
+                this._restoreLastState();
+            },
+            redo: function() {
+                if (redoStates.length == 0) {
+                    StudioClient.alert("No further redo data", "");
+                    return;
+                }
+                this._move(redoStates, undoStates)
+                this._restoreLastState();
+            },
+            runWithDisabled: function(runnable) {
+                this._disable()
+                try {
+                    runnable()
+                } finally {
+                    this._enable()
+                    this.save()
+                }
+            },
+            reset: function() {
+                undoStates = []
+                redoStates = []
+                this.save()
+            },
+            _saveIfDifferent: function(state) {
+                var oldState = undoStates[undoStates.length - 1]
+                if (JSON.stringify(state) !== JSON.stringify(oldState)) {
+                    undoStates.push(state)
+                    redoStates = [];
+                }
+            },
+            _move: function(from, to) {
+                var e = from.pop()
+                if (e) {
+                    to.push(e);
+                }
+            },
+            _restoreLastState: function() {
+                var state = undoStates[undoStates.length - 1];
+                if (state) {
+                    this.runWithDisabled(function() {
+                        var json = xmlToJson(parseXml(state.xml))
+                        workflowView.importNoReset(json, false);
+                        workflowView.restoreLayoutFromOffsets(state.offsets)
+                        workflowView.restoreOpenAccordions(state.accordions)
+                        workflowView.restoreActiveTask(state.activeTask)
+                    })
+                }
+            },
+            _disable: function() {
+                enabled = false;
+            },
+            _enable: function() {
+                enabled = true;
+            }
+        }
+    })();
 
     var projects = new Projects();
 	var jobModel = new Job();
@@ -1542,6 +1660,14 @@
         validate_job();
     });
 
+    $("#undo-button").click(function() {
+        undoManager.undo()
+    });
+
+    $("#redo-button").click(function() {
+        undoManager.redo()
+    });
+
     (function scriptManagement() {
 
         function loadSelectedScript() {
@@ -1686,7 +1812,7 @@
         $(document).ready(function()
         {
             var ctrlDown = false;
-            var ctrlKey = 17, vKey = 86, cKey = 67;
+            var ctrlKey = 17, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
             var copied = false;
 
             $(document).keydown(function(e) {
@@ -1711,6 +1837,12 @@
                         }
                     }
                 };
+                if (ctrlDown && e.keyCode == zKey) {
+                    undoManager.undo();
+                }
+                if (ctrlDown && e.keyCode == yKey) {
+                    undoManager.redo();
+                }
             });
         });
     })();
