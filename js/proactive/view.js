@@ -1500,6 +1500,19 @@
         xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
         loginView = new LoginView({el: $("#login-view")});
 
+
+        // FIX for Firefox that ignores height 100%
+        var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+        if (is_firefox) {
+            $("#workflow-designer").height($("#body-container").height()-10)
+            $("#properties-container").height($("#body-container").height()-10)
+            $(window).resize(function() {
+                console.log("resize")
+                $("#workflow-designer").height($("#body-container").height()-10)
+                $("#properties-container").height($("#body-container").height()-10)
+            })
+        }
+
         projects.init();
 
         var workflowJson = projects.getCurrentWorkFlowAsJson()
