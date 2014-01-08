@@ -174,7 +174,7 @@ footer {
 
 a, a:visited {
     text-decoration:none;
-    color:#5c96bc;        
+    color:#5c96bc;
     border-radius:0.2em;
     -webkit-transition: color 0.15s ease-in;
     -moz-transition: color 0.15s ease-in;
@@ -183,7 +183,7 @@ a, a:visited {
 }
 
 a:hover {
-    color:#1b911b;
+    color:#E87224;
 }
 
 .menu, #render, #explanation {   
