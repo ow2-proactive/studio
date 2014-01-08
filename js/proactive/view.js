@@ -336,7 +336,9 @@
                     if (connection.connection.scope=='dependency') {
                         targetModel.removeDependency(sourceModel);
                     } else {
-                        jsPlumb.deleteEndpoint(connection.targetEndpoint);
+                        if (!$(target).data("view").removing) {
+                            jsPlumb.deleteEndpoint(connection.targetEndpoint);
+                        }
                         sourceModel.removeControlFlow(connection.connection.scope, targetModel);
                     }
                 }
@@ -577,11 +579,14 @@
         },
         removeView: function(view) {
 
+            view.removing = true;
             var endPoints = jsPlumb.getEndpoints(view.$el)
             for (var i in endPoints) {
                 try {
                     jsPlumb.deleteEndpoint(endPoints[i]);
-                } catch (err) {}
+                } catch (err) {
+                    console.log(err)
+                }
             }
 
             jobModel.removeTask(view.model);
@@ -1108,6 +1113,7 @@
                     var endpointTarget = taskTarget.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'if';
                     jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:this.overlays()});
+                    endpointIf.connectorOverlays[1][1].label = 'else';
                 }
             }
             if (ifFlow.else && ifFlow.else.task) {
@@ -1116,6 +1122,7 @@
                     var endpointElse = taskElse.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'else';
                     jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:this.overlays()});
+                    endpointIf.connectorOverlays[1][1].label = 'continuation';
                 }
             }
             if (ifFlow.continuation && ifFlow.continuation.task) {
@@ -1124,6 +1131,7 @@
                     var endpointContinuation = taskContinuation.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'continuation';
                     jsPlumb.connect({source:endpointIf, target:endpointContinuation, overlays:this.overlays()});
+                    endpointIf.connectorOverlays[1][1].label = '';
                 }
             }
         },

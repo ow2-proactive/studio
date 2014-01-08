@@ -240,8 +240,8 @@
                             var ifFlow = taskJson.controlFlow.if['@attributes'];
                             taskModel.setif(name2Task[ifFlow['target']])
                             taskModel.controlFlow.if.model.populateSchema(taskJson.controlFlow.if);
-                            taskModel.setif(name2Task[ifFlow['else']])
-                            taskModel.setif(name2Task[ifFlow['continuation']])
+                            taskModel.setelse(name2Task[ifFlow['else']])
+                            taskModel.setcontinuation(name2Task[ifFlow['continuation']])
                         }
                         if (taskJson.controlFlow.replicate) {
                             taskModel.setreplicate(null);
@@ -450,27 +450,41 @@
             }
         },
 		setControlFlow: function(controlFlowType, task) {
+            if (controlFlowType=='if') {
+                if (this.controlFlow['if'] && this.controlFlow['if'].task) {
+                    if (this.controlFlow['if']['else']) {
+                        controlFlowType = 'continuation';
+                    } else {
+                        controlFlowType = 'else';
+                    }
+                }
+            }
+
             if (this['set'+controlFlowType]) this['set'+controlFlowType](task);
 		},
 		removeControlFlow: function(controlFlowType, task) {
             if (this['remove'+controlFlowType]) this['remove'+controlFlowType](task);
         },
         setif: function(task) {
-
+            if (!task) {return;}
             this.set({'Control Flow': 'if'});
             if (!this.controlFlow['if'])  {
                 this.controlFlow = {'if':{}}
             }
-            if (!this.controlFlow['if'].model) {
-                this.controlFlow['if'].task = task;
-                this.controlFlow['if'].model = new BranchWithScript();
-            } else if (!this.controlFlow['if']['else']) {
-                this.controlFlow['if']['else'] = {task:task};
-            } else if (!this.controlFlow['if']['continuation']) {
-                this.controlFlow['if']['continuation'] = {task:task};
-            }
 
+            this.controlFlow['if'].task = task;
+            this.controlFlow['if'].model = new BranchWithScript();
             console.log('Adding if branch', this.controlFlow['if'], 'to', this)
+        },
+        setelse: function(task) {
+            if (!task) {return;}
+            this.controlFlow['if']['else'] = {task:task};
+            console.log('Adding else branch', this.controlFlow['if']['else'], 'to', this)
+        },
+        setcontinuation: function(task) {
+            if (!task) {return;}
+            this.controlFlow['if']['continuation'] = {task:task};
+            console.log('Adding continuation branch', this.controlFlow['if']['continuation'], 'to', this)
         },
         removeif: function(task) {
             this.set({'Control Flow': 'none'});
