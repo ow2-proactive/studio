@@ -303,9 +303,42 @@
         initJsPlumb: function() {
             var that = this;
 
+            function duplicateConnections(connection) {
+                return _.filter(jsPlumb.getAllConnections(), function(c) {
+                    return connection.target == c.target &&
+                        connection.source == c.source &&
+                        connection.scope == c.scope &&
+                        connection.id != c.id;
+                });
+            }
+
+            function detachDuplicateConnections(connection) {
+                var duplicates = duplicateConnections(connection);
+                if(duplicates.length > 0) {
+                    _.each(duplicates, function(connection) {
+                        jsPlumb.detach(connection, {fireEvent: false})
+                    });
+                    removeUnconnectedTargetEndpoints();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            function removeUnconnectedTargetEndpoints() {
+                jsPlumb.selectEndpoints().each(function(ep) {
+                    if(ep.connections.length == 0 && !ep.isSource) {
+                        jsPlumb.deleteEndpoint(ep)
+                    }
+                })
+            }
+
             jsPlumb.unbind();
 
 			jsPlumb.bind("connection", function(connection) {
+                if(detachDuplicateConnections(connection.connection)) {
+                    return;
+                }
                 connection.sourceEndpoint.addClass("connected")
                 connection.targetEndpoint.addClass("connected")
 				var source = connection.source;
@@ -354,9 +387,8 @@
                 jsPlumb.repaintEverything()
             });
 
-            // hiding unnecessary target endpoints
             jsPlumb.bind('connectionDragStop', function(connection) {
-                $(".target-endpoint:not(.connected)").remove();
+                removeUnconnectedTargetEndpoints()
 
                 if (!connection.target) {
                     // creating a task where drag stopped
@@ -387,6 +419,7 @@
 
                 console.log("click on the ", connection)
 				jsPlumb.detach(connection);
+				removeUnconnectedTargetEndpoints()
 			});
 
         },
