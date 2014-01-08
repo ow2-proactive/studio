@@ -1101,6 +1101,15 @@
             var that = this;
             var params = this.endpointsParams(type);
 
+            function alreadyHasSuchEndpoint() {
+                return _.some(jsPlumb.getEndpoints(that.$el), function(point) {
+                    return point.isTarget && point.scope == params.scope;
+                })
+            }
+            if (alreadyHasSuchEndpoint()) {
+                return;
+            }
+
             var targetEndpoint = {
                 paintStyle:{ width:15, height:15, fillStyle:params.color },
                 connectorStyle : { strokeStyle:params.color },
