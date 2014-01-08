@@ -1092,7 +1092,7 @@
                 cssClass:"source-endpoint " + params.scope + "-source-endpoint " + (params.scope=="dependency"?"connected":""),
                 scope:params.scope,
                 isSource:true,
-                maxConnections:-1
+                maxConnections: type == 'if' ? 3 : type == 'loop' || type == 'replicate' ? 1 : -1
             };
 
             return jsPlumb.addEndpoint(that.$el, sourceEndpoint, { 'anchor':params.anchorSource });
