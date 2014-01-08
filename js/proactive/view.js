@@ -160,7 +160,10 @@
                 })
                 breadcrumb.append(removeTask)
             } else {
+                // selected-task class is used for copy/paste, delete operations, group task moving etc
                 $(".selected-task").removeClass("selected-task");
+                // active-task class is used to identify which task is currently shown in the properties view
+                $(".active-task").removeClass("active-task");
             }
 
             workflows.click(function () {
@@ -1149,8 +1152,11 @@
                 } else {
                     // selecting the current task
                     that.$el.addClass("selected-task");
-
                 }
+
+                $(".active-task").removeClass("active-task");
+                that.$el.addClass("active-task");
+
             })
 
 	    	this.$el.click(function(e) {
@@ -1624,14 +1630,6 @@
         }
     })
 
-    $('body').click(function(e) {
-
-        console.log("clearing all selected tasks", e)
-        if (e.isPropagationStopped()) {return;}
-
-        $(".selected-task").removeClass("selected-task");
-    })
-
     // submitting job by pressing enter
     $('#scheduler-connect-modal').on( 'keypress', function( e ) {
         if( e.keyCode === 13 ) {
@@ -1857,6 +1855,16 @@
                     undoManager.redo();
                 }
             });
+
+            $('body').click(function(e) {
+
+                console.log("clearing all selected tasks", e)
+                if (e.isPropagationStopped()) {return;}
+
+                $(".selected-task").removeClass("selected-task");
+                copied = false;
+            })
+
         });
     })();
 
