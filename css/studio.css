@@ -432,9 +432,8 @@ textarea{
 input {
 	max-width:90%;
     font-size: 13px !important;
-    /*margin-bottom: 2px !important;*/
     line-height: 23px !important;
-    height: 23px !important;
+    height: 30px !important;
     resize: none !important;
 }
 
