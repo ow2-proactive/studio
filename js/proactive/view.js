@@ -477,24 +477,31 @@
             console.log("Initializing Replicate Workflow")
             var taskInit = new TaskView();
             var taskRepl = new TaskView();
+            var taskMerge = new TaskView();
 
             var positionInit = {top: ui.offset.top, left: ui.offset.left};
             var positionRepl = {top: positionInit.top + 200, left: positionInit.left};
+            var positionMerge = {top: positionRepl.top + 200, left: positionRepl.left};
 
             var renderingInit = this.addView(taskInit, positionInit);
             var renderingRepl = this.addView(taskRepl, positionRepl);
+            var renderingMerge = this.addView(taskMerge, positionMerge);
 
             this.model.addTask(renderingInit.model);
             this.model.addTask(renderingRepl.model);
+            this.model.addTask(renderingMerge.model);
 
             var endpointInit = taskInit.addSourceEndPoint('replicate')
             var endpointRepl = taskRepl.addTargetEndPoint('replicate')
 
             var endpointDepInit = taskInit.addSourceEndPoint('dependency')
             var endpointDepRepl = taskRepl.addTargetEndPoint('dependency')
+            var endpointDepReplSource = taskRepl.addSourceEndPoint('dependency')
+            var endpointDepMerge = renderingMerge.addTargetEndPoint('dependency')
 
             jsPlumb.connect({source:endpointInit, target:endpointRepl, overlays:taskInit.overlays()});
             jsPlumb.connect({source:endpointDepInit, target:endpointDepRepl, overlays:taskInit.overlays()});
+            jsPlumb.connect({source:endpointDepReplSource, target:endpointDepMerge, overlays:taskRepl.overlays()});
 
             this.model.trigger('change');
         },
