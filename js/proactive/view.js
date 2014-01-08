@@ -565,7 +565,8 @@
                             });
                         });
                         jsPlumb.repaint(items);
-                    }
+                    },
+                    containment: "#workflow-designer"
                 }
             )
 

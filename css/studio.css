@@ -30,6 +30,9 @@ footer {
     min-width: 320px;
     overflow:auto;
     resize: horizontal;
+    z-index: 100;
+    position: relative;
+    background-color: #ffffff;
 }
 
 .navbar {
