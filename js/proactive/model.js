@@ -358,11 +358,11 @@
 	Task = SchemaModel.extend({
 		schema: {
 			"Task Name" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->name', "data-tab":"Execution"}},
-			"Type": {type: 'Radio', fieldAttrs: {},
+			"Type": {type: 'TaskTypeRadioEditor', fieldAttrs: {}, fieldClass: 'task-type',
 					options: [
 				          {val: "ScriptExecutable", label: "Script"},
-				          {val: "NativeExecutable", label: "Native Command"},
-				          {val: "JavaExecutable", label: "Java Class"}]},
+				          {val: "NativeExecutable", label: "Native"},
+				          {val: "JavaExecutable", label: "Java"}]},
 			"Parameters" : {type: 'NestedModel', model: ScriptExecutable},
 			"Description": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':['description->#cdata-section', 'description->#text']}},
 			"Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder':'@attributes->maxNumberOfExecution'}}, 

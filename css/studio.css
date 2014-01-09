@@ -516,6 +516,7 @@ div[name="Selection Scripts"] {
 ul[name="Type"] {
 	list-style-type:none;
 	margin-left:0px;
+	margin-bottom:0px;
 }
 ul[name="Type"] {
 	padding-left:0px;
@@ -547,7 +548,46 @@ input[type="checkbox"] {
     height:13px !important;
 }
 
-.dragActive { 
+.task-type input {
+    /* hide radio button */
+    position: absolute;
+    left: -9999px;
+}
+
+.task-type li {
+    width: 80px;
+    display: inline-block;
+}
+
+.task-type li label {
+    background-size: 30px;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    padding-left: 34px;
+    padding-top: 10px;
+    margin: 2px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.task-type input:checked + label {
+    font-weight: bold !important;
+    opacity: 1.0;
+}
+
+.JavaExecutable {
+    background-image: url("../img/java.png");
+}
+
+.NativeExecutable {
+    background-image: url("../img/command.png");
+}
+
+.ScriptExecutable {
+    background-image: url("../img/script.png");
+}
+
+.dragActive {
 	border:2px solid orange; 
 }
 .dropHover { 

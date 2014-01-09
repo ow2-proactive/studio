@@ -1344,6 +1344,31 @@
         }
 	});
 
+    Backbone.Form.editors.TaskTypeRadioEditor = Backbone.Form.editors.Radio.extend({
+        /** A simple override to add a class to the label */
+        _arrayToHtml: function (array) {
+            var html = [];
+            var self = this;
+
+            _.each(array, function (option, index) {
+                var itemHtml = '<li>';
+                if (_.isObject(option)) {
+                    var val = (option.val || option.val === 0) ? option.val : '';
+                    itemHtml += ('<input type="radio" name="' + self.getName() + '" value="' + val + '" id="' + self.id + '-' + index + '" />');
+                    itemHtml += ('<label class="' + val + '" for="' + self.id + '-' + index + '">' + option.label + '</label>');
+                }
+                else {
+                    itemHtml += ('<input type="radio" name="' + self.getName() + '" value="' + option + '" id="' + self.id + '-' + index + '" />');
+                    itemHtml += ('<label class="' + val + '" for="' + self.id + '-' + index + '">' + option + '</label>');
+                }
+                itemHtml += '</li>';
+                html.push(itemHtml);
+            });
+
+            return html.join('');
+        }
+    });
+
 	JavaExecutableXmlView = Backbone.View.extend({
         render: function() {
             var model = this.model;
