@@ -923,7 +923,14 @@
         controlFlows: {"dependency":true, "if":false, "replicate":false, "loop":false},
 
 		initialize: function() {
-			if (!this.model) this.model = new Task();
+			if (!this.model) {
+                // creating a default task model
+                this.model = new Task();
+                var script = new Script()
+                script.set("Script", "print(java.lang.System.getProperty('pas.task.name'))");
+                script.set("Engine", "javascript");
+                this.model.get("Parameters").set("Script", script)
+            }
 			this.modelType = this.model.get("Type");
 	        this.model.on("change:Task Name", this.updateTaskName, this);
 	        this.model.on("change:Type", this.changeTaskType, this);
