@@ -553,8 +553,8 @@
 
             var that = this;
   			var rendering = view.render();
-    		rendering.$el.offset(position);
     		this.zoomArea.append(rendering.$el);
+    		rendering.$el.offset(position);
 
             view.addSourceEndPoint('dependency')
             var initLeftOffset = [], initTopOffset = [];
