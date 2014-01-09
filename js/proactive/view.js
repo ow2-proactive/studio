@@ -1,36 +1,36 @@
-(function($){
+(function ($) {
 
-	Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
+    Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
 
-	PaletteView = Backbone.View.extend({
-		initialize: function() {
+    PaletteView = Backbone.View.extend({
+        initialize: function () {
             this.render();
         },
-        render: function() {
-        	var taskWidget = $(
-        			'<span class="label draggable ui-draggable job-element" title="Computational task">'+
-        			'<img src="img/gears.png" width="40px">Task</span>');
+        render: function () {
+            var taskWidget = $(
+                '<span class="label draggable ui-draggable job-element" title="Computational task">' +
+                    '<img src="img/gears.png" width="40px">Task</span>');
 
             var ifWidget = $(
-                '<span class="label draggable ui-draggable job-element control-flow control-flow-if" title="If Control">'+
+                '<span class="label draggable ui-draggable job-element control-flow control-flow-if" title="If Control">' +
                     '<img src="img/gears.png" width="20px">If</span>');
 
             var loopWidget = $(
-                '<span class="label draggable ui-draggable job-element control-flow control-flow-loop" title="Loop Control">'+
+                '<span class="label draggable ui-draggable job-element control-flow control-flow-loop" title="Loop Control">' +
                     '<img src="img/gears.png" width="20px">Loop</span>');
 
             var replicateWidget = $(
-                '<span class="label draggable ui-draggable  job-element control-flow control-flow-replicate" title="Replicate Control">'+
+                '<span class="label draggable ui-draggable  job-element control-flow control-flow-replicate" title="Replicate Control">' +
                     '<img src="img/gears.png" width="20px">Replicate</span>');
 
             this.$el.append(taskWidget).append(replicateWidget).append(ifWidget).append(loopWidget);
 
-        	$(".draggable").draggable({helper: "clone"});
-	    }	
-	});
-	
-	PropertiesView = Backbone.View.extend({
-        listWorkflows: function() {
+            $(".draggable").draggable({helper: "clone"});
+        }
+    });
+
+    PropertiesView = Backbone.View.extend({
+        listWorkflows: function () {
 
             var breadcrumb = $('<ul class="breadcrumb"></ul>');
             var workflows = $('<li class="active"><span>Workflows</span></li>');
@@ -38,7 +38,7 @@
 
             var newWorkflow = $('<button type="button" class="btn btn-success btn-small create-workflow-button">Create Workflow</button>')
 
-            newWorkflow.click(function() {
+            newWorkflow.click(function () {
 
                 var jobModel = new Job();
                 var jobName = jobModel.get("Job Name");
@@ -66,15 +66,15 @@
                 table.append('<thead><tr><th>#</th><th>Name</th><th>Actions</th></tr></thead>');
                 table.append(rows);
 
-                for (var i=workflows.length-1; i>=0; i--) {
+                for (var i = workflows.length - 1; i >= 0; i--) {
                     var rowClass = "";
                     if (i == selectedWorkflow) rowClass = "success";
-                    rows.append('<tr data-id="'+i+'" class="'+rowClass+'"><td>'+(i+1)+'</td><td title="Click to edit">'+workflows[i].name+'</td><td><button type="button" class="btn btn-info btn-mini btn-clone">Clone</button> <button type="button" class="btn btn-danger btn-mini btn-remove">Remove</button></td></tr>')
+                    rows.append('<tr data-id="' + i + '" class="' + rowClass + '"><td>' + (i + 1) + '</td><td title="Click to edit">' + workflows[i].name + '</td><td><button type="button" class="btn btn-info btn-mini btn-clone">Clone</button> <button type="button" class="btn btn-danger btn-mini btn-remove">Remove</button></td></tr>')
                 }
 
                 propertiesView.$el.append(table);
 
-                table.find('.btn-clone').click(function() {
+                table.find('.btn-clone').click(function () {
                     event.preventDefault();
                     event.stopPropagation();
 
@@ -85,7 +85,7 @@
                         propertiesView.listWorkflows();
                     }
                 })
-                table.find('.btn-remove').click(function(event) {
+                table.find('.btn-remove').click(function (event) {
                     event.preventDefault();
                     event.stopPropagation();
 
@@ -96,7 +96,7 @@
                         propertiesView.listWorkflows();
                     }
                 })
-                table.find('tr').click(function() {
+                table.find('tr').click(function () {
                     var workflowIndex = $(this).attr('data-id');
                     if (workflowIndex) {
                         projects.setSelectWorkflowIndex(workflowIndex);
@@ -111,32 +111,32 @@
 
             return false;
         }
-	});
+    });
 
-	ViewWatchingModelChange = Backbone.View.extend({
-		initialize: function() {
-	        this.model.on("change", this.render, this);
+    ViewWatchingModelChange = Backbone.View.extend({
+        initialize: function () {
+            this.model.on("change", this.render, this);
             this.render();
         }
-	});
-	
-	ViewWithProperties = ViewWatchingModelChange.extend({
-        render: function() {
-        	var that = this;
-        	if (this.element) this.$el = this.element;
-        	
-        	this.$el.unbind('click');
+    });
 
-        	this.$el.click(function (event) {
-        		event.stopPropagation();
+    ViewWithProperties = ViewWatchingModelChange.extend({
+        render: function () {
+            var that = this;
+            if (this.element) this.$el = this.element;
+
+            this.$el.unbind('click');
+
+            this.$el.click(function (event) {
+                event.stopPropagation();
                 that.renderForm()
             });
-            this.$el.dblclick(function() {
+            this.$el.dblclick(function () {
                 event.stopPropagation();
             })
 
             return this;
-	    },
+        },
 
         renderForm: function () {
             var that = this
@@ -253,28 +253,28 @@
                 return fileName;
             })
         },
-        clearTextSelection : function() {
-            if(document.selection && document.selection.empty) {
+        clearTextSelection: function () {
+            if (document.selection && document.selection.empty) {
                 document.selection.empty();
-            } else if(window.getSelection) {
+            } else if (window.getSelection) {
                 var sel = window.getSelection();
                 sel.removeAllRanges();
             }
         }
-	})
+    })
 
 
-	WorkflowView = ViewWithProperties.extend({
-		zoomArea: $("<div></div>"),
+    WorkflowView = ViewWithProperties.extend({
+        zoomArea: $("<div></div>"),
         taskViews: [],
-		initialize: function() {
-			this.constructor.__super__.initialize.apply(this);
-			var that = this;
-			
-			this.$el.droppable({
-				accept: ".job-element",
+        initialize: function () {
+            this.constructor.__super__.initialize.apply(this);
+            var that = this;
+
+            this.$el.droppable({
+                accept: ".job-element",
                 drop: function (event, ui) {
-                    undoManager.runWithDisabled(function() {
+                    undoManager.runWithDisabled(function () {
                         var elem = $(ui.draggable);
                         if (!elem.hasClass('control-flow')) {
                             that.createTask(ui)
@@ -287,24 +287,24 @@
                         }
                     });
                 }
-			});
+            });
 
-            this.$el.dblclick(function(event) {
+            this.$el.dblclick(function (event) {
                 that.clearTextSelection();
 
                 console.log("Creating task", event);
-                that.createTask({offset:{top:event.clientY, left:event.clientX}});
+                that.createTask({offset: {top: event.clientY, left: event.clientX}});
             })
 
             this.initJsPlumb();
             this.$el.html(this.zoomArea);
             this.model.on("change:Job Name", this.updateJobName, this);
         },
-        initJsPlumb: function() {
+        initJsPlumb: function () {
             var that = this;
 
             function duplicateConnections(connection) {
-                return _.filter(jsPlumb.getAllConnections(), function(c) {
+                return _.filter(jsPlumb.getAllConnections(), function (c) {
                     return connection.target == c.target &&
                         connection.source == c.source &&
                         connection.scope == c.scope &&
@@ -314,8 +314,8 @@
 
             function detachDuplicateConnections(connection) {
                 var duplicates = duplicateConnections(connection);
-                if(duplicates.length > 0) {
-                    _.each(duplicates, function(connection) {
+                if (duplicates.length > 0) {
+                    _.each(duplicates, function (connection) {
                         jsPlumb.detach(connection, {fireEvent: false})
                     });
                     removeUnconnectedTargetEndpoints();
@@ -326,8 +326,8 @@
             }
 
             function removeUnconnectedTargetEndpoints() {
-                jsPlumb.selectEndpoints().each(function(ep) {
-                    if(ep.connections.length == 0 && !ep.isSource) {
+                jsPlumb.selectEndpoints().each(function (ep) {
+                    if (ep.connections.length == 0 && !ep.isSource) {
                         jsPlumb.deleteEndpoint(ep)
                     }
                 })
@@ -335,38 +335,38 @@
 
             jsPlumb.unbind();
 
-			jsPlumb.bind("connection", function(connection) {
-                if(detachDuplicateConnections(connection.connection)) {
+            jsPlumb.bind("connection", function (connection) {
+                if (detachDuplicateConnections(connection.connection)) {
                     return;
                 }
                 connection.sourceEndpoint.addClass("connected")
                 connection.targetEndpoint.addClass("connected")
-				var source = connection.source;
-				var target = connection.target;
+                var source = connection.source;
+                var target = connection.target;
                 if ($(target).data("view")) {
                     var targetModel = $(target).data("view").model;
                     var sourceModel = $(source).data("view").model;
-                    if (connection.connection.scope=='dependency') {
+                    if (connection.connection.scope == 'dependency') {
                         targetModel.addDependency(sourceModel);
                     } else {
                         sourceModel.setControlFlow(connection.connection.scope, targetModel);
                     }
                 }
-			});
-			
-			jsPlumb.bind('connectionDetached', function(connection) {
-                if (connection.connection.scope!='dependency') {
+            });
+
+            jsPlumb.bind('connectionDetached', function (connection) {
+                if (connection.connection.scope != 'dependency') {
                     connection.sourceEndpoint.removeClass("connected")
                 }
                 connection.targetEndpoint.removeClass("connected")
 
-				var source = connection.source;
-				var target = connection.target;
+                var source = connection.source;
+                var target = connection.target;
 
                 if ($(target).data("view")) {
                     var sourceModel = $(source).data("view").model;
                     var targetModel = $(target).data("view").model;
-                    if (connection.connection.scope=='dependency') {
+                    if (connection.connection.scope == 'dependency') {
                         targetModel.removeDependency(sourceModel);
                     } else {
                         if (!$(target).data("view").removing) {
@@ -375,11 +375,11 @@
                         sourceModel.removeControlFlow(connection.connection.scope, targetModel);
                     }
                 }
-			});
+            });
 
             // showing target endpoints
-            jsPlumb.bind('connectionDrag', function(connection) {
-                $('.task').each(function(i, task) {
+            jsPlumb.bind('connectionDrag', function (connection) {
+                $('.task').each(function (i, task) {
                     if ($(task).attr('id') != connection.sourceId) {
                         $(task).data('view').addTargetEndPoint(connection.scope);
                     }
@@ -387,18 +387,18 @@
                 jsPlumb.repaintEverything()
             });
 
-            jsPlumb.bind('connectionDragStop', function(connection) {
+            jsPlumb.bind('connectionDragStop', function (connection) {
                 removeUnconnectedTargetEndpoints()
 
                 if (!connection.target) {
                     // creating a task where drag stopped
-                    var sourcePoints = jsPlumb.getEndpoints($("#"+connection.sourceId));
+                    var sourcePoints = jsPlumb.getEndpoints($("#" + connection.sourceId));
                     for (var i in sourcePoints) {
                         if (sourcePoints[i].scope == connection.scope) {
                             var sourceView = $("#" + connection.sourceId).data('view')
-                            var newTask = that.createTask({offset:{top:that.mouseup.top, left:that.mouseup.left}});
+                            var newTask = that.createTask({offset: {top: that.mouseup.top, left: that.mouseup.left}});
                             var endpointDep = newTask.addTargetEndPoint(connection.scope)
-                            jsPlumb.connect({source:sourcePoints[i], target:endpointDep, overlays: sourceView.overlays()});
+                            jsPlumb.connect({source: sourcePoints[i], target: endpointDep, overlays: sourceView.overlays()});
 
                             break;
                         }
@@ -407,23 +407,23 @@
                 }
             });
 
-            this.$el.mouseup(function(event) {
+            this.$el.mouseup(function (event) {
                 that.mouseup = {top: event.clientY, left: event.clientX};
             })
 
 
-            jsPlumb.bind("click", function(connection, originalEvent) {
+            jsPlumb.bind("click", function (connection, originalEvent) {
                 if (originalEvent.isPropagationStopped()) return false;
-				var source = connection.source;
-				var target = connection.target;
+                var source = connection.source;
+                var target = connection.target;
 
                 console.log("click on the ", connection)
-				jsPlumb.detach(connection);
-				removeUnconnectedTargetEndpoints()
-			});
+                jsPlumb.detach(connection);
+                removeUnconnectedTargetEndpoints()
+            });
 
         },
-        createTask: function(ui) {
+        createTask: function (ui) {
             var offset = this.$el.offset();
 
             console.log("Initializing TaskView")
@@ -437,7 +437,7 @@
 
             return view;
         },
-        createIfWorkflow: function(ui) {
+        createIfWorkflow: function (ui) {
             var offset = this.$el.offset();
 
             console.log("Initializing If Workflow")
@@ -466,13 +466,13 @@
             var endpointElse = renderingElse.addTargetEndPoint('if')
             var endpointContinuation = renderingContinuation.addTargetEndPoint('if')
 
-            jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:taskIf.overlays()});
-            jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:taskIf.overlays()});
-            jsPlumb.connect({source:endpointIf, target:endpointContinuation, overlays:taskIf.overlays()});
+            jsPlumb.connect({source: endpointIf, target: endpointTarget, overlays: taskIf.overlays()});
+            jsPlumb.connect({source: endpointIf, target: endpointElse, overlays: taskIf.overlays()});
+            jsPlumb.connect({source: endpointIf, target: endpointContinuation, overlays: taskIf.overlays()});
 
             this.model.trigger('change');
         },
-        createLoopWorkflow: function(ui) {
+        createLoopWorkflow: function (ui) {
             var offset = this.$el.offset();
 
             console.log("Initializing Loop Workflow")
@@ -494,8 +494,8 @@
             var endpointDepDo = taskDo.addSourceEndPoint('dependency')
             var endpointDepWhile = taskWhile.addTargetEndPoint('dependency')
 
-            jsPlumb.connect({source:endpointDepDo, target:endpointDepWhile, overlays:taskWhile.overlays()});
-            jsPlumb.connect({source:endpointWhile, target:endpointDo, overlays:taskWhile.overlays()});
+            jsPlumb.connect({source: endpointDepDo, target: endpointDepWhile, overlays: taskWhile.overlays()});
+            jsPlumb.connect({source: endpointWhile, target: endpointDo, overlays: taskWhile.overlays()});
 
             taskDo.model.set("Block", "start")
             taskWhile.model.set("Block", "end")
@@ -504,7 +504,7 @@
 
             this.model.trigger('change');
         },
-        createReplicationWorkflow: function(ui) {
+        createReplicationWorkflow: function (ui) {
             var offset = this.$el.offset();
 
             console.log("Initializing Replicate Workflow")
@@ -532,29 +532,29 @@
             var endpointDepReplSource = taskRepl.addSourceEndPoint('dependency')
             var endpointDepMerge = renderingMerge.addTargetEndPoint('dependency')
 
-            jsPlumb.connect({source:endpointInit, target:endpointRepl, overlays:taskInit.overlays()});
-            jsPlumb.connect({source:endpointDepInit, target:endpointDepRepl, overlays:taskInit.overlays()});
-            jsPlumb.connect({source:endpointDepReplSource, target:endpointDepMerge, overlays:taskRepl.overlays()});
+            jsPlumb.connect({source: endpointInit, target: endpointRepl, overlays: taskInit.overlays()});
+            jsPlumb.connect({source: endpointDepInit, target: endpointDepRepl, overlays: taskInit.overlays()});
+            jsPlumb.connect({source: endpointDepReplSource, target: endpointDepMerge, overlays: taskRepl.overlays()});
 
             this.model.trigger('change');
         },
-	    updateJobName: function() {
+        updateJobName: function () {
 //	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))
-	    	$("#breadcrumb-job-name").text(this.model.get("Job Name"))			
-	    },
-	    clean: function() {
-	    	this.zoomArea.empty();
-	    	jsPlumb.reset()
+            $("#breadcrumb-job-name").text(this.model.get("Job Name"))
+        },
+        clean: function () {
+            this.zoomArea.empty();
+            jsPlumb.reset()
             this.initJsPlumb()
-	    },
+        },
         initLeftOffset: [],
         initTopOffset: [],
-        addView: function(view, position) {
+        addView: function (view, position) {
 
             var that = this;
-  			var rendering = view.render();
-    		this.zoomArea.append(rendering.$el);
-    		rendering.$el.offset(position);
+            var rendering = view.render();
+            this.zoomArea.append(rendering.$el);
+            rendering.$el.offset(position);
 
             view.addSourceEndPoint('dependency')
             var initLeftOffset = [], initTopOffset = [];
@@ -613,11 +613,11 @@
             )
 
             this.taskViews.push(view);
-    		
+
             rendering.$el.data("view", view);
-			return rendering;
+            return rendering;
         },
-        removeView: function(view) {
+        removeView: function (view) {
 
             view.removing = true;
             var endPoints = jsPlumb.getEndpoints(view.$el)
@@ -634,17 +634,17 @@
             jsPlumb.remove(view.$el);
 
             index = this.taskViews.indexOf(view);
-            if (index!=-1) {
+            if (index != -1) {
                 this.taskViews.splice(index, 1);
             }
 
             this.$el.click();
         },
-        import: function(json, autoLayout) {
+        import: function (json, autoLayout) {
             this.importNoReset(json, autoLayout);
             undoManager.reset()
         },
-        importNoReset: function(json, autoLayout) {
+        importNoReset: function (json, autoLayout) {
 
             this.taskViews = [];
 
@@ -664,16 +664,16 @@
             jsPlumb.unbind();
 
             var task2View = {};
-            $.each(jobModel.tasks, function(i, task) {
-                var view = new TaskView({model:task});
-                that.addView(view, {top:0, left:0});
+            $.each(jobModel.tasks, function (i, task) {
+                var view = new TaskView({model: task});
+                that.addView(view, {top: 0, left: 0});
                 task2View[task.get('Task Name')] = view;
             })
 
             //adding dependencies after all views exist
-            $.each(jobModel.tasks, function(i, task) {
+            $.each(jobModel.tasks, function (i, task) {
                 if (task.dependencies) {
-                    $.each(task.dependencies, function(i, dep) {
+                    $.each(task.dependencies, function (i, dep) {
                         if (task2View[dep.get('Task Name')]) {
                             var taskView = task2View[dep.get('Task Name')];
                             taskView.addDependency(task2View[task.get('Task Name')])
@@ -711,40 +711,40 @@
             // regenerating the form
             this.$el.click();
         },
-        autoLayout: function() {
-        	var nodes = [];
-        	var taskWidth = 0;
-        	$(".task").each(function(i, task) {
-        		var t = $(task);
-        		nodes.push({id:t.attr('id'), width:t.width(), height:t.height()})
-        		taskWidth = t.width();
-        	})
-        	var edges = [];
+        autoLayout: function () {
+            var nodes = [];
+            var taskWidth = 0;
+            $(".task").each(function (i, task) {
+                var t = $(task);
+                nodes.push({id: t.attr('id'), width: t.width(), height: t.height()})
+                taskWidth = t.width();
+            })
+            var edges = [];
 
-        	$.each(jsPlumb.getAllConnections(), function(i, con) {
-        		edges.push({sourceId:con.source.id, targetId:con.target.id})
-        	})
-        	// computing layout with dagre 
-        	dagre.layout().nodes(nodes).edges(edges).nodeSep(50).rankSep(100).run();
-        	
-        	var containerPosition = $('#workflow-designer').position();
-        	// finding max left offset and top offset to center the graph
-        	var maxLeft = 0, maxTop = 0;
-        	$.each(nodes, function(i, node) {
-        		if (node.dagre.x > maxLeft) maxLeft = node.dagre.x;
-        		if (node.dagre.y > maxTop) maxTop = node.dagre.y;
-        	})
-        	
-        	var leftOffset = $('#workflow-designer').width() - maxLeft < 0? 0 : ($('#workflow-designer').width() - maxLeft)/2 - taskWidth;
-        	var topOffset = $('#workflow-designer').height() - maxTop < 0? 0 : ($('#workflow-designer').height() - maxTop)/2 + 50;
-        	
-        	$.each(nodes, function(i, node) {
-        		var pos = {}; 
-        		if (node.dagre.x) pos.left = node.dagre.x + containerPosition.left + leftOffset;
-        		if (node.dagre.x) pos.top = node.dagre.y + containerPosition.top + topOffset;
-        		$("#"+node.dagre.id).offset(pos)
-        	}) 
-    		jsPlumb.repaintEverything();
+            $.each(jsPlumb.getAllConnections(), function (i, con) {
+                edges.push({sourceId: con.source.id, targetId: con.target.id})
+            })
+            // computing layout with dagre
+            dagre.layout().nodes(nodes).edges(edges).nodeSep(50).rankSep(100).run();
+
+            var containerPosition = $('#workflow-designer').position();
+            // finding max left offset and top offset to center the graph
+            var maxLeft = 0, maxTop = 0;
+            $.each(nodes, function (i, node) {
+                if (node.dagre.x > maxLeft) maxLeft = node.dagre.x;
+                if (node.dagre.y > maxTop) maxTop = node.dagre.y;
+            })
+
+            var leftOffset = $('#workflow-designer').width() - maxLeft < 0 ? 0 : ($('#workflow-designer').width() - maxLeft) / 2 - taskWidth;
+            var topOffset = $('#workflow-designer').height() - maxTop < 0 ? 0 : ($('#workflow-designer').height() - maxTop) / 2 + 50;
+
+            $.each(nodes, function (i, node) {
+                var pos = {};
+                if (node.dagre.x) pos.left = node.dagre.x + containerPosition.left + leftOffset;
+                if (node.dagre.x) pos.top = node.dagre.y + containerPosition.top + topOffset;
+                $("#" + node.dagre.id).offset(pos)
+            })
+            jsPlumb.repaintEverything();
         },
         restoreLayoutFromOffsets: function (offsets) {
             $('.task').each(function () {
@@ -756,7 +756,7 @@
             })
             jsPlumb.repaintEverything();
         },
-        restoreLayout: function() {
+        restoreLayout: function () {
             var offsets = projects.getOffsetsFromLocalStorage();
             if (offsets) {
                 this.restoreLayoutFromOffsets(offsets);
@@ -765,41 +765,41 @@
             }
         },
         zoom: 1,
-        setZoom: function(zoom) {
-        	if (zoom) this.zoom = zoom;
-        	
+        setZoom: function (zoom) {
+            if (zoom) this.zoom = zoom;
+
             var p = [ "-webkit-", "-moz-", "-ms-", "-o-", "" ],
-            s = "scale(" + this.zoom + ")";
+                s = "scale(" + this.zoom + ")";
 
             for (var i = 0; i < p.length; i++)
-            	this.zoomArea.css(p[i] + "transform", s);
+                this.zoomArea.css(p[i] + "transform", s);
 
             jsPlumb.setZoom(this.zoom);
         },
-        zoomIn: function() {
-    		if (this.zoom < 2) {
-    			this.zoom += 0.3;
-    			this.setZoom(this.zoom)
-    		}
+        zoomIn: function () {
+            if (this.zoom < 2) {
+                this.zoom += 0.3;
+                this.setZoom(this.zoom)
+            }
         },
-        zoomOut: function() {
-    		if (this.zoom > 0.4) {
-    			this.zoom -= 0.3;
-    			this.setZoom(this.zoom)
-    		}
+        zoomOut: function () {
+            if (this.zoom > 0.4) {
+                this.zoom -= 0.3;
+                this.setZoom(this.zoom)
+            }
         },
-        getTaskViewByName: function(name) {
-            return _.find(this.taskViews, function(view) {
+        getTaskViewByName: function (name) {
+            return _.find(this.taskViews, function (view) {
                 return (name === view.model.get("Task Name"));
             })
         },
-        copyPasteTasks: function(tasks) {
+        copyPasteTasks: function (tasks) {
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
 
             var newTaskViews = {};
-            $.each(tasks, function(i, t) {
+            $.each(tasks, function (i, t) {
                 var task = $(t);
                 var taskView = task.data("view");
 
@@ -820,25 +820,25 @@
                 }
 
                 var suffix = 2;
-                var newTaskName = newTaskModel.get("Task Name")+suffix;
+                var newTaskName = newTaskModel.get("Task Name") + suffix;
                 while (jobModel.getTaskByName(newTaskName)) {
                     suffix += 1;
-                    newTaskName = newTaskModel.get("Task Name")+suffix
+                    newTaskName = newTaskModel.get("Task Name") + suffix
                 }
 
                 newTaskModel.set("Task Name", newTaskName)
                 jobModel.addTask(newTaskModel);
 
-                var newTaskView = new TaskView({model:newTaskModel});
-                workflowView.addView(newTaskView, {top:taskView.$el.offset().top+100, left:taskView.$el.offset().left+100});
+                var newTaskView = new TaskView({model: newTaskModel});
+                workflowView.addView(newTaskView, {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100});
 
                 newTaskViews[taskView.model.get("Task Name")] = newTaskView;
             })
             // process dependencies
-            $.each(newTaskViews, function(name, taskView) {
+            $.each(newTaskViews, function (name, taskView) {
                 if (taskView.model.dependencies) {
                     var newDependencies = [];
-                    $.each(taskView.model.dependencies, function(i, task) {
+                    $.each(taskView.model.dependencies, function (i, task) {
                         var copiedTaskView = newTaskViews[task.get("Task Name")];
                         if (copiedTaskView) {
                             newDependencies.push(copiedTaskView.model)
@@ -849,7 +849,7 @@
                 }
             })
             // process control flows
-            $.each(newTaskViews, function(oldTaskName, taskView) {
+            $.each(newTaskViews, function (oldTaskName, taskView) {
                 var task = taskView.model;
                 if (task.controlFlow) {
                     if (task.controlFlow.if) {
@@ -885,45 +885,45 @@
 
             this.initJsPlumb();
         },
-        getOpenAccordions: function() {
+        getOpenAccordions: function () {
             var result = {job: this.openedAccordion};
-            $.each(this.taskViews, function(i, taskView) {
+            $.each(this.taskViews, function (i, taskView) {
                 var taskName = taskView.model.get("Task Name");
                 result[taskName] = taskView.openedAccordion;
             });
             return result;
         },
-        restoreOpenAccordions: function(openAccordions) {
+        restoreOpenAccordions: function (openAccordions) {
             if (openAccordions.job) {
                 this.openedAccordion = openAccordions.job;
             }
             var that = this;
-            $.each(openAccordions, function(taskName, accordion) {
+            $.each(openAccordions, function (taskName, accordion) {
                 var taskView = that.getTaskViewByName(taskName);
                 if (taskView && accordion) {
                     taskView.openedAccordion = accordion;
                 }
             })
         },
-        getActiveTask: function() {
+        getActiveTask: function () {
             return $("#breadcrumb-task-name").text();
         },
-        restoreActiveTask: function(taskName) {
-            $("span.name").each(function(i, el) {
+        restoreActiveTask: function (taskName) {
+            $("span.name").each(function (i, el) {
                 if ($(el).text() === taskName) {
                     $(el).click()
                 }
             })
         }
-	});
+    });
 
     TaskView = ViewWithProperties.extend({
 
         icons: {"JavaExecutable": "img/java.png", "NativeExecutable": "img/command.png", "ScriptExecutable": "img/script.png"},
-        controlFlows: {"dependency":true, "if":false, "replicate":false, "loop":false},
+        controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
-		initialize: function() {
-			if (!this.model) {
+        initialize: function () {
+            if (!this.model) {
                 // creating a default task model
                 this.model = new Task();
                 var script = new Script()
@@ -931,50 +931,50 @@
                 script.set("Engine", "javascript");
                 this.model.get("Parameters").set("Script", script)
             }
-			this.modelType = this.model.get("Type");
-	        this.model.on("change:Task Name", this.updateTaskName, this);
-	        this.model.on("change:Type", this.changeTaskType, this);
+            this.modelType = this.model.get("Type");
+            this.model.on("change:Task Name", this.updateTaskName, this);
+            this.model.on("change:Type", this.changeTaskType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
 
             this.model.on("invalid", this.setInvalid, this);
 
-			this.element = $('<div class="task"><a class="task-name"><img src="'
-                +this.icons[this.modelType]+'" width="20px">&nbsp;<span class="name">'
-                +this.model.get("Task Name")+'</span></a></div>');
+            this.element = $('<div class="task"><a class="task-name"><img src="'
+                + this.icons[this.modelType] + '" width="20px">&nbsp;<span class="name">'
+                + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
         },
 
-        updateTaskName: function() {
-        	this.element.find(".name").text(this.model.get("Task Name"))
-	    	$("#breadcrumb-task-name").text(this.model.get("Task Name"))
-	    },
+        updateTaskName: function () {
+            this.element.find(".name").text(this.model.get("Task Name"))
+            $("#breadcrumb-task-name").text(this.model.get("Task Name"))
+        },
 
-        setInvalid : function() {
+        setInvalid: function () {
             this.$el.addClass("invalid-task")
         },
 
-        changeTaskType: function() {
-        	var executableType = this.model.get("Type");
-        	if (this.modelType && this.modelType != executableType) {
-            	var executable = new window[executableType]();
-            	this.model.schema = $.extend(true, {}, this.model.schema);
+        changeTaskType: function () {
+            var executableType = this.model.get("Type");
+            if (this.modelType && this.modelType != executableType) {
+                var executable = new window[executableType]();
+                this.model.schema = $.extend(true, {}, this.model.schema);
                 // TODO beautify
-            	if (executableType == "JavaExecutable") {
-                	this.model.schema['Parameters'] = {type: 'NestedModel', model: JavaExecutable};
-            	} else if (executableType == "NativeExecutable") {
-                	this.model.schema['Parameters'] = {type: 'NestedModel', model: NativeExecutable};
-            	} else {
-                	this.model.schema['Parameters'] = {type: 'NestedModel', model: ScriptExecutable};
-            	}
-            	this.$el.find("img").attr('src', this.icons[executableType])
-            	this.model.set({"Parameters" : executable});
-            	this.$el.click();
-        	}
-        	this.modelType = executableType;
-	    },
-        controlFlowChanged: function(model, valu, handler) {
+                if (executableType == "JavaExecutable") {
+                    this.model.schema['Parameters'] = {type: 'NestedModel', model: JavaExecutable};
+                } else if (executableType == "NativeExecutable") {
+                    this.model.schema['Parameters'] = {type: 'NestedModel', model: NativeExecutable};
+                } else {
+                    this.model.schema['Parameters'] = {type: 'NestedModel', model: ScriptExecutable};
+                }
+                this.$el.find("img").attr('src', this.icons[executableType])
+                this.model.set({"Parameters": executable});
+                this.$el.click();
+            }
+            this.modelType = executableType;
+        },
+        controlFlowChanged: function (model, valu, handler) {
             var fromFormChange = handler.error; // its defined when form was changed
             var control = this.model.get("Control Flow");
             if (fromFormChange && control && control != 'none') {
@@ -982,45 +982,49 @@
                 $('.target-endpoint:not(.connected)').remove();
 
                 this.model.controlFlow = {};
-                $.each(jsPlumb.getEndpoints(this.$el), function(i, endPoint) {
-                    if (endPoint.scope!='dependency') jsPlumb.deleteEndpoint(endPoint)
+                $.each(jsPlumb.getEndpoints(this.$el), function (i, endPoint) {
+                    if (endPoint.scope != 'dependency') jsPlumb.deleteEndpoint(endPoint)
                 })
 
                 this.addSourceEndPoint(control)
                 jsPlumb.repaintEverything();
             }
         },
-        showBlockInTask: function() {
+        showBlockInTask: function () {
             var block = this.model.get("Block");
             if (block && block != 'none') {
                 if (block == 'start') this.element.removeClass('block-end').addClass('block-start');
                 else this.element.removeClass('block-start').addClass('block-end');
             } else {
-                 this.element.removeClass('block-end').removeClass('block-start');
+                this.element.removeClass('block-end').removeClass('block-start');
             }
         },
-	    showOrHideForkEnvironment: function() {
-			var executable = this.model.get("Parameters");
-			if (executable) {
-				var forkEnvTitle = "Fork Environment";
-				var forkEnvDiv = propertiesView.$el.find('[placeholder="forkEnvironment"]')
+        showOrHideForkEnvironment: function () {
+            var executable = this.model.get("Parameters");
+            if (executable) {
+                var forkEnvTitle = "Fork Environment";
+                var forkEnvDiv = propertiesView.$el.find('[placeholder="forkEnvironment"]')
                 if (typeof(executable.toJSON) != "undefined") {
                     executable = executable.toJSON();
                 }
-				if (executable[forkEnvTitle]==undefined) { return; }
+                if (executable[forkEnvTitle] == undefined) {
+                    return;
+                }
 
-				if (executable[forkEnvTitle]=="true") {
-					forkEnvDiv.nextAll("div").show();
-				} else {
-					forkEnvDiv.nextAll("div").hide();
-				}
-			}        	
-	    },
-        overlays: function() {
-            var arrowCommon = { foldback:0.7, fillStyle:"gray", width:14 };
-            return [[ "Arrow", { location:0.7 }, { foldback:0.7, fillStyle:"gray", width:14 } ]];
+                if (executable[forkEnvTitle] == "true") {
+                    forkEnvDiv.nextAll("div").show();
+                } else {
+                    forkEnvDiv.nextAll("div").hide();
+                }
+            }
         },
-        showControlFlowScript: function(label, evn) {
+        overlays: function () {
+            var arrowCommon = { foldback: 0.7, fillStyle: "gray", width: 14 };
+            return [
+                [ "Arrow", { location: 0.7 }, { foldback: 0.7, fillStyle: "gray", width: 14 } ]
+            ];
+        },
+        showControlFlowScript: function (label, evn) {
             evn.stopPropagation()
 
             var labelElem = $(label.canvas);
@@ -1028,58 +1032,64 @@
             var model = this.model.controlFlow[modelType];
             if (!model) return;
 
-            var modelView = new ViewWithProperties({el:labelElem, model:model.model})
+            var modelView = new ViewWithProperties({el: labelElem, model: model.model})
             modelView.render();
             modelView.$el.click();
         },
-        endpointsParams : function(type) {
+        endpointsParams: function (type) {
             var that = this;
             if (type == 'if') {
                 var params = {
-                    color:'#00f', anchorSource:'BottomLeft', anchorTarget:'TopLeft', scope:"if",
+                    color: '#00f', anchorSource: 'BottomLeft', anchorTarget: 'TopLeft', scope: "if",
                     overlays: [
-                        [ "Arrow", { location:0.7 }, { foldback:0.7, fillStyle:"gray", width:14 } ],
+                        [ "Arrow", { location: 0.7 }, { foldback: 0.7, fillStyle: "gray", width: 14 } ],
                         [ "Label", {
-                            label: function() {
+                            label: function () {
                                 var ifModel = that.model.controlFlow['if'];
-                                if (!ifModel || ifModel&&!ifModel.model ) return 'if'
+                                if (!ifModel || ifModel && !ifModel.model) return 'if'
                                 else if (!ifModel['else']) return 'else'
                                 else if (!ifModel['continuation']) return 'continuation'
                                 else return "";
                             },
-                            cssClass:"l1 component label",
-                            events: {'click': function(label, evn) { that.showControlFlowScript(label, evn)}}
+                            cssClass: "l1 component label",
+                            events: {'click': function (label, evn) {
+                                that.showControlFlowScript(label, evn)
+                            }}
                         }]
                     ]
                 }
                 return params;
             } else {
                 var endpointTypes = {
-                    'dependency':{
-                        color:'#666', anchorSource:'BottomCenter', anchorTarget:'TopCenter', scope:"dependency",
+                    'dependency': {
+                        color: '#666', anchorSource: 'BottomCenter', anchorTarget: 'TopCenter', scope: "dependency",
                         overlays: [
-                            [ "Arrow", { location:0.7 }, { foldback:0.7, fillStyle:"gray", width:14 } ]
+                            [ "Arrow", { location: 0.7 }, { foldback: 0.7, fillStyle: "gray", width: 14 } ]
                         ]
                     },
-                    'loop':{
-                        color:'#316b31', anchorSource:'TopRight', anchorTarget:'BottomRight', scope:"loop",
+                    'loop': {
+                        color: '#316b31', anchorSource: 'TopRight', anchorTarget: 'BottomRight', scope: "loop",
                         overlays: [
-                            [ "Arrow", { location:0.7 }, { foldback:0.7, fillStyle:"gray", width:14 } ],
+                            [ "Arrow", { location: 0.7 }, { foldback: 0.7, fillStyle: "gray", width: 14 } ],
                             [ "Label", {
                                 label: 'loop',
-                                cssClass:"l1 component label",
-                                events: {'click': function(label, evn) { that.showControlFlowScript(label, evn)}}
+                                cssClass: "l1 component label",
+                                events: {'click': function (label, evn) {
+                                    that.showControlFlowScript(label, evn)
+                                }}
                             }]
                         ]
                     },
-                    'replicate':{
-                        color:'rgba(229,219,61,0.5)', anchorSource:[0.8, 1, 0, 1], anchorTarget:[0.8, 0], scope:"replicate",
+                    'replicate': {
+                        color: 'rgba(229,219,61,0.5)', anchorSource: [0.8, 1, 0, 1], anchorTarget: [0.8, 0], scope: "replicate",
                         overlays: [
-                            [ "Arrow", { location:0.7 }, { foldback:0.7, fillStyle:"gray", width:14 } ],
+                            [ "Arrow", { location: 0.7 }, { foldback: 0.7, fillStyle: "gray", width: 14 } ],
                             [ "Label", {
                                 label: 'replicate',
-                                cssClass:"l1 component label",
-                                events: {'click': function(label, evn) { that.showControlFlowScript(label, evn)}}
+                                cssClass: "l1 component label",
+                                events: {'click': function (label, evn) {
+                                    that.showControlFlowScript(label, evn)
+                                }}
                             }]
                         ]
                     }
@@ -1088,47 +1098,48 @@
                 return endpointTypes[type];
             }
         },
-        addSourceEndPoint: function(type) {
+        addSourceEndPoint: function (type) {
             var that = this;
             var params = this.endpointsParams(type);
 
             var sourceEndpoint = {
-                paintStyle:{ width:15, height:15, fillStyle:params.color },
-                connectorStyle : { strokeStyle:params.color },
-                connectorOverlays:params.overlays,
-                cssClass:"source-endpoint " + params.scope + "-source-endpoint " + (params.scope=="dependency"?"connected":""),
-                scope:params.scope,
-                isSource:true,
+                paintStyle: { width: 15, height: 15, fillStyle: params.color },
+                connectorStyle: { strokeStyle: params.color },
+                connectorOverlays: params.overlays,
+                cssClass: "source-endpoint " + params.scope + "-source-endpoint " + (params.scope == "dependency" ? "connected" : ""),
+                scope: params.scope,
+                isSource: true,
                 maxConnections: type == 'if' ? 3 : type == 'loop' || type == 'replicate' ? 1 : -1
             };
 
-            return jsPlumb.addEndpoint(that.$el, sourceEndpoint, { 'anchor':params.anchorSource });
+            return jsPlumb.addEndpoint(that.$el, sourceEndpoint, { 'anchor': params.anchorSource });
         },
-        addTargetEndPoint: function(type) {
+        addTargetEndPoint: function (type) {
             var that = this;
             var params = this.endpointsParams(type);
 
             function alreadyHasSuchEndpoint() {
-                return _.some(jsPlumb.getEndpoints(that.$el), function(point) {
+                return _.some(jsPlumb.getEndpoints(that.$el), function (point) {
                     return point.isTarget && point.scope == params.scope;
                 })
             }
+
             if (alreadyHasSuchEndpoint()) {
                 return;
             }
 
             var targetEndpoint = {
-                paintStyle:{ width:15, height:15, fillStyle:params.color },
-                connectorStyle : { strokeStyle:params.color },
-                scope:params.scope,
-                cssClass:"target-endpoint " + params.scope + "-target-endpoint",
-                dropOptions:{ hoverClass:"hover", activeClass:"active" },
-                isTarget:true,
-                maxConnections:(type=='dependency'?-1:1)
+                paintStyle: { width: 15, height: 15, fillStyle: params.color },
+                connectorStyle: { strokeStyle: params.color },
+                scope: params.scope,
+                cssClass: "target-endpoint " + params.scope + "-target-endpoint",
+                dropOptions: { hoverClass: "hover", activeClass: "active" },
+                isTarget: true,
+                maxConnections: (type == 'dependency' ? -1 : 1)
             };
-            return jsPlumb.addEndpoint(that.$el, targetEndpoint, { 'anchor':params.anchorTarget });
+            return jsPlumb.addEndpoint(that.$el, targetEndpoint, { 'anchor': params.anchorTarget });
         },
-        getSourceEndPoint: function(type) {
+        getSourceEndPoint: function (type) {
             var endpoints = jsPlumb.getEndpoints(this.$el);
 
             for (i in endpoints) {
@@ -1138,7 +1149,7 @@
                 }
             }
         },
-        getTargetEndPoint: function(type) {
+        getTargetEndPoint: function (type) {
             var endpoints = jsPlumb.getEndpoints(this.$el);
 
             for (i in endpoints) {
@@ -1148,7 +1159,7 @@
                 }
             }
         },
-        addDependency: function(dependencyView) {
+        addDependency: function (dependencyView) {
             var sourceEndPoint = this.getSourceEndPoint("dependency")
             if (!sourceEndPoint) {
                 sourceEndPoint = this.addSourceEndPoint("dependency")
@@ -1158,9 +1169,9 @@
                 targetEndPoint = dependencyView.addTargetEndPoint("dependency")
             }
 
-            jsPlumb.connect({source:sourceEndPoint, target:targetEndPoint, overlays:this.overlays()});
+            jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, overlays: this.overlays()});
         },
-        addIf: function(ifFlow, views) {
+        addIf: function (ifFlow, views) {
             var endpointIf = this.addSourceEndPoint('if')
 
             if (ifFlow.task) {
@@ -1168,7 +1179,7 @@
                 if (taskTarget) {
                     var endpointTarget = taskTarget.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'if';
-                    jsPlumb.connect({source:endpointIf, target:endpointTarget, overlays:this.overlays()});
+                    jsPlumb.connect({source: endpointIf, target: endpointTarget, overlays: this.overlays()});
                     endpointIf.connectorOverlays[1][1].label = 'else';
                 }
             }
@@ -1177,7 +1188,7 @@
                 if (taskElse) {
                     var endpointElse = taskElse.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'else';
-                    jsPlumb.connect({source:endpointIf, target:endpointElse, overlays:this.overlays()});
+                    jsPlumb.connect({source: endpointIf, target: endpointElse, overlays: this.overlays()});
                     endpointIf.connectorOverlays[1][1].label = 'continuation';
                 }
             }
@@ -1186,27 +1197,27 @@
                 if (taskContinuation) {
                     var endpointContinuation = taskContinuation.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'continuation';
-                    jsPlumb.connect({source:endpointIf, target:endpointContinuation, overlays:this.overlays()});
+                    jsPlumb.connect({source: endpointIf, target: endpointContinuation, overlays: this.overlays()});
                     endpointIf.connectorOverlays[1][1].label = '';
                 }
             }
         },
-        addReplicate: function(view) {
+        addReplicate: function (view) {
             if (!view) return;
             var endpointSource = this.addSourceEndPoint('replicate')
             var endpointTarget = view.addTargetEndPoint('replicate')
-            jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:this.overlays()});
+            jsPlumb.connect({source: endpointSource, target: endpointTarget, overlays: this.overlays()});
         },
-        addLoop: function(view) {
+        addLoop: function (view) {
             if (!view) return;
             var endpointSource = this.addSourceEndPoint('loop')
             var endpointTarget = view.addTargetEndPoint('loop')
-            jsPlumb.connect({source:endpointSource, target:endpointTarget, overlays:this.overlays()});
+            jsPlumb.connect({source: endpointSource, target: endpointTarget, overlays: this.overlays()});
         },
-	    render: function() {
-	    	var that = this;
-	    	ViewWithProperties.prototype.render.call(this);
-            this.$el.mousedown(function(e) {
+        render: function () {
+            var that = this;
+            ViewWithProperties.prototype.render.call(this);
+            this.$el.mousedown(function (e) {
                 if (!e.ctrlKey && !that.$el.hasClass("selected-task")) {
                     $(".selected-task").removeClass("selected-task");
                 }
@@ -1224,44 +1235,44 @@
 
             })
 
-	    	this.$el.click(function(e) {
+            this.$el.click(function (e) {
                 e.stopPropagation();
 
-	    		that.form.on('Parameters:change', function(f, task) {
-	    			that.form.commit();
-	    			that.showOrHideForkEnvironment();
-	    		})
+                that.form.on('Parameters:change', function (f, task) {
+                    that.form.commit();
+                    that.showOrHideForkEnvironment();
+                })
 
                 that.showOrHideForkEnvironment();
-	    		$('select[name=Library]').click(e);
-	    	})
-	    	return this;
-	    },
-        commitForm: function() {
+                $('select[name=Library]').click(e);
+            })
+            return this;
+        },
+        commitForm: function () {
             this.form.commit();
         }
-	});
+    });
 
-	JobXmlView = Backbone.View.extend({
-		initialize: function() {
-			var that = this;
-			$('#workflow-xml-tab').on('shown', function (e) {
-				that.render();
-			})
+    JobXmlView = Backbone.View.extend({
+        initialize: function () {
+            var that = this;
+            $('#workflow-xml-tab').on('shown', function (e) {
+                that.render();
+            })
         },
-        xml: function(jModel) {
+        xml: function (jModel) {
             var that = this;
             var job = jModel.toJSON();
 
             var tasks = [];
             if (jModel.tasks) {
-                $.each(jModel.tasks, function(i, task) {
-                    var view = new TaskXmlView({model:task, jobView:that}).render();
+                $.each(jModel.tasks, function (i, task) {
+                    var view = new TaskXmlView({model: task, jobView: that}).render();
                     tasks.push(view.$el.text());
                 });
             }
 
-            var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks':tasks});
+            var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks': tasks});
 
             // beautifying the job xml - removing multiple spaces
             jobRendering = jobRendering.replace(/ {2,}/g, ' ');
@@ -1270,86 +1281,86 @@
             // indenting using vkbeautify
             return vkbeautify.xml(jobRendering.trim());
         },
-        generateXml: function() {
+        generateXml: function () {
             var that = this;
             return this.xml(this.model)
         },
-        generateHtml: function() {
+        generateHtml: function () {
             var content = $("#workflow-designer").html();
             var url = document.URL;
             var hashPos = url.indexOf("#");
-            if (hashPos!=-1) url = url.substr(0, hashPos);
-            if (url.charAt(url.length-1)=='/') url = url.substr(0, url.length-1);
+            if (hashPos != -1) url = url.substr(0, hashPos);
+            if (url.charAt(url.length - 1) == '/') url = url.substr(0, url.length - 1);
 
             var width = $("#workflow-designer").get(0).scrollWidth;
             var height = $("#workflow-designer").get(0).scrollHeight;
 
             var html = _.template($('#workflow-view-template').html(),
-                {'url':url, 'content': content, 'width': width, 'height': height});
+                {'url': url, 'content': content, 'width': width, 'height': height});
 
             // replacing all images paths
-            html = html.replace(/img\//g, url+"/img/");
+            html = html.replace(/img\//g, url + "/img/");
             return html;
         },
-        render: function() {
-        	// indenting using vkbeautify
-        	this.$el.empty()
-        	var pre = $('<pre class="brush:xml;toolbar:false;" id="workflow-xml"></pre>');
+        render: function () {
+            // indenting using vkbeautify
+            this.$el.empty()
+            var pre = $('<pre class="brush:xml;toolbar:false;" id="workflow-xml"></pre>');
             this.generatedXml = vkbeautify.xml(this.generateXml())
-        	pre.text(this.generatedXml)
-        	this.$el.append(pre);
-        	SyntaxHighlighter.highlight();
+            pre.text(this.generatedXml)
+            this.$el.append(pre);
+            SyntaxHighlighter.highlight();
 
-        	return this;
-	    }
-	});
+            return this;
+        }
+    });
 
-	TaskXmlView = Backbone.View.extend({
-        render: function() {
-        	var executableType = this.model.get("Type");
-        	var executableView = new window[executableType+"XmlView"]({model:this.model.get("Parameters")});
-        	var executable = executableView.render().$el.text();
+    TaskXmlView = Backbone.View.extend({
+        render: function () {
+            var executableType = this.model.get("Type");
+            var executableView = new window[executableType + "XmlView"]({model: this.model.get("Parameters")});
+            var executable = executableView.render().$el.text();
 
-        	var selectionScripts=[];
-        	if (this.model.get("Selection Scripts")) {
-            	$.each(this.model.get("Selection Scripts"), function(i, script) {
-            		var view = new TemplateView({model:script, template:"#script-template"}).render();
-            		selectionScripts.push(view.$el.text());
-            	})
-        	}
-        	
-        	var preScript = new TemplateView({model:this.model.get("Pre Script"), template:"#script-template"}).render().$el.text();
-        	var postScript = new TemplateView({model:this.model.get("Post Script"), template:"#script-template"}).render().$el.text();
-        	var cleanScript = new TemplateView({model:this.model.get("Clean Script"), template:"#script-template"}).render().$el.text();
+            var selectionScripts = [];
+            if (this.model.get("Selection Scripts")) {
+                $.each(this.model.get("Selection Scripts"), function (i, script) {
+                    var view = new TemplateView({model: script, template: "#script-template"}).render();
+                    selectionScripts.push(view.$el.text());
+                })
+            }
+
+            var preScript = new TemplateView({model: this.model.get("Pre Script"), template: "#script-template"}).render().$el.text();
+            var postScript = new TemplateView({model: this.model.get("Post Script"), template: "#script-template"}).render().$el.text();
+            var cleanScript = new TemplateView({model: this.model.get("Clean Script"), template: "#script-template"}).render().$el.text();
 
             var that = this;
             if (this.model.controlFlow) {
-                $.each(['if', 'loop', 'replicate'], function(i, control) {
+                $.each(['if', 'loop', 'replicate'], function (i, control) {
                     if (that.model.controlFlow[control]) {
                         var controlModel = that.model.controlFlow[control].model;
                         if (controlModel && controlModel.get('Script')) {
                             that.model.controlFlow[control].script =
-                                new TemplateView({model: controlModel.get('Script'), template:"#script-template"}).render().$el.text();
+                                new TemplateView({model: controlModel.get('Script'), template: "#script-template"}).render().$el.text();
                             return false;
                         }
                     }
                 })
             }
 
-        	var taskTemplate = _.template($("#task-template").html(),
-        			{'task': this.model.toJSON(), 
-        			'selectionScripts': selectionScripts,
-        			'preScript': preScript.trim(),
-        			'postScript': postScript.trim(),
-        			'cleanScript': cleanScript.trim(),
-        			'dependencies': this.model.dependencies,
+            var taskTemplate = _.template($("#task-template").html(),
+                {'task': this.model.toJSON(),
+                    'selectionScripts': selectionScripts,
+                    'preScript': preScript.trim(),
+                    'postScript': postScript.trim(),
+                    'cleanScript': cleanScript.trim(),
+                    'dependencies': this.model.dependencies,
                     'controlFlow': this.model.controlFlow,
-        			'executable':executable});
+                    'executable': executable});
 
-        	this.$el.text(taskTemplate);
-        	return this;
+            this.$el.text(taskTemplate);
+            return this;
         }
-	});
+    });
 
     Backbone.Form.editors.TaskTypeRadioEditor = Backbone.Form.editors.Radio.extend({
         /** A simple override to add a class to the label */
@@ -1376,83 +1387,83 @@
         }
     });
 
-	JavaExecutableXmlView = Backbone.View.extend({
-        render: function() {
+    JavaExecutableXmlView = Backbone.View.extend({
+        render: function () {
             var model = this.model;
             if (typeof(this.model.toJSON) != "undefined") {
                 model = this.model.toJSON();
             }
-        	var script = undefined;
-        	if (model["Environment Script"]) {
-        		script = new TemplateView({model:model["Environment Script"], template:"#script-template"}).render().$el.text();
-        		script = script.trim();
-        	}
-        	var template = _.template($("#java-executable-template").html(), {model: model, 'script': script});
-        	this.$el.text(template);
-        	return this;
+            var script = undefined;
+            if (model["Environment Script"]) {
+                script = new TemplateView({model: model["Environment Script"], template: "#script-template"}).render().$el.text();
+                script = script.trim();
+            }
+            var template = _.template($("#java-executable-template").html(), {model: model, 'script': script});
+            this.$el.text(template);
+            return this;
         }
-	});
+    });
 
-	NativeExecutableXmlView = Backbone.View.extend({
-        render: function() {
-        	var model = this.model;
+    NativeExecutableXmlView = Backbone.View.extend({
+        render: function () {
+            var model = this.model;
             if (typeof(this.model.toJSON) != "undefined") {
                 model = this.model.toJSON();
             }
             var script = undefined;
-        	if (model["Or Dynamic Command"]) {
-        		script = new TemplateView({model:model["Or Dynamic Command"], template:"#script-template"}).render().$el.text();
-        		script = script.trim();
-        	}
-        	var template = _.template($("#native-executable-template").html(), {model: model, 'script': script});
-        	this.$el.text(template);
-        	return this;
+            if (model["Or Dynamic Command"]) {
+                script = new TemplateView({model: model["Or Dynamic Command"], template: "#script-template"}).render().$el.text();
+                script = script.trim();
+            }
+            var template = _.template($("#native-executable-template").html(), {model: model, 'script': script});
+            this.$el.text(template);
+            return this;
         }
-	});
-	
-	ScriptExecutableXmlView = Backbone.View.extend({
-        render: function() {
+    });
+
+    ScriptExecutableXmlView = Backbone.View.extend({
+        render: function () {
             var script = this.model["Script"];
             if (typeof(this.model.get) != "undefined" && this.model.get("Script")) {
                 script = this.model.get("Script").toJSON();
             }
-        	var scriptView = new TemplateView({model:script, template:"#script-template"}).render().$el.text();
-        	var template = _.template($("#script-executable-template").html(), {'script': scriptView});
-        	this.$el.text(template);
-        	return this;
+            var scriptView = new TemplateView({model: script, template: "#script-template"}).render().$el.text();
+            var template = _.template($("#script-executable-template").html(), {'script': scriptView});
+            this.$el.text(template);
+            return this;
         }
-	});
+    });
 
-	TemplateView = Backbone.View.extend({
-        render: function() {
-        	if (this.model) {
+    TemplateView = Backbone.View.extend({
+        render: function () {
+            if (this.model) {
 
                 if (typeof(this.model.toJSON) != "undefined" && this.model) {
                     this.model = this.model.toJSON();
                 }
 
-            	var template = _.template($(this.options.template).html(), {'model': this.model});
-            	this.$el.text(template);
-        	}
-        	return this;
+                var template = _.template($(this.options.template).html(), {'model': this.model});
+                this.$el.text(template);
+            }
+            return this;
         }
-	});
+    });
 
     LoginView = Backbone.View.extend({
-        initialize: function() {
+        initialize: function () {
             this.render();
         },
-        login: function() {
+        login: function () {
             var that = this;
             var form = $('<form><input type="text" id="studio-user" class="span2 nav-login form-control  pull-left" placeholder="user"><input type="password" id="studio-pass" class="span2 nav-login form-control pull-left" placeholder="password"></form>')
             var buttonLogin = $('<button class="btn btn-small menu-button pull-left" data-toggle="dropdown">Login</button>');
             form.append(buttonLogin);
 
-            buttonLogin.click(function() {
+            buttonLogin.click(function () {
                 StudioClient.login({
-                    user:$("#studio-user").val(),
-                    pass:$("#studio-pass").val()
-                }, function() {
+                    user: $("#studio-user").val(),
+                    pass: $("#studio-pass").val()
+                }, function () {
                     // on success
                     form.remove();
                     that.$el.html(that.logout());
@@ -1467,22 +1478,22 @@
 
             return form;
         },
-        logout: function() {
+        logout: function () {
             var that = this;
             var buttonLogout = $('<button class="btn btn-small menu-button" style="margin-bottom:5px" data-toggle="dropdown">Logout</button>');
-            var menu = $('<form class="navbar-search pull-right menu-form">Logged in as <b>'+localStorage["user"]+'</b></form>');
+            var menu = $('<form class="navbar-search pull-right menu-form">Logged in as <b>' + localStorage["user"] + '</b></form>');
             menu.append(buttonLogout);
 
-            buttonLogout.click(function() {
+            buttonLogout.click(function () {
                 localStorage.removeItem("sessionId");
                 that.$el.html(that.login());
             })
 
             return menu;
         },
-        render: function() {
+        render: function () {
             var that = this;
-            StudioClient.isConnected(function() {
+            StudioClient.isConnected(function () {
                 // logged in successfully - show user name
                 console.log("Logged in");
                 that.$el.html(that.logout());
@@ -1493,7 +1504,7 @@
                     workflowView.import(workflowJson);
                 }
 
-            }, function() {
+            }, function () {
                 // failed to login - show login form
                 console.log("Login Required")
                 that.$el.html(that.login());
@@ -1507,23 +1518,24 @@
         var redoStates = [];
         var enabled = true;
         return {
-            save: function() {
+            save: function () {
                 if (!enabled) return;
                 var state = {xml: xmlView.generateXml(),
-                             offsets: getOffsetsFromDOM(),
-                             accordions: workflowView.getOpenAccordions(),
-                             activeTask: workflowView.getActiveTask()};
+                    offsets: getOffsetsFromDOM(),
+                    accordions: workflowView.getOpenAccordions(),
+                    activeTask: workflowView.getActiveTask()};
                 this._saveIfDifferent(state);
             },
-            undo: function() {
+            undo: function () {
                 if (undoStates.length <= 1) {
                     StudioClient.alert("No further undo data", "");
                     return
-                };
+                }
+                ;
                 this._move(undoStates, redoStates);
                 this._restoreLastState();
             },
-            redo: function() {
+            redo: function () {
                 if (redoStates.length == 0) {
                     StudioClient.alert("No further redo data", "");
                     return;
@@ -1531,7 +1543,7 @@
                 this._move(redoStates, undoStates)
                 this._restoreLastState();
             },
-            runWithDisabled: function(runnable) {
+            runWithDisabled: function (runnable) {
                 this._disable()
                 try {
                     runnable()
@@ -1540,28 +1552,28 @@
                     this.save()
                 }
             },
-            reset: function() {
+            reset: function () {
                 undoStates = []
                 redoStates = []
                 this.save()
             },
-            _saveIfDifferent: function(state) {
+            _saveIfDifferent: function (state) {
                 var oldState = undoStates[undoStates.length - 1]
                 if (JSON.stringify(state) !== JSON.stringify(oldState)) {
                     undoStates.push(state)
                     redoStates = [];
                 }
             },
-            _move: function(from, to) {
+            _move: function (from, to) {
                 var e = from.pop()
                 if (e) {
                     to.push(e);
                 }
             },
-            _restoreLastState: function() {
+            _restoreLastState: function () {
                 var state = undoStates[undoStates.length - 1];
                 if (state) {
-                    this.runWithDisabled(function() {
+                    this.runWithDisabled(function () {
                         var json = xmlToJson(parseXml(state.xml))
                         workflowView.importNoReset(json, false);
                         workflowView.restoreLayoutFromOffsets(state.offsets)
@@ -1570,25 +1582,25 @@
                     })
                 }
             },
-            _disable: function() {
+            _disable: function () {
                 enabled = false;
             },
-            _enable: function() {
+            _enable: function () {
                 enabled = true;
             }
         }
     })();
 
     var projects = new Projects();
-	var jobModel = new Job();
+    var jobModel = new Job();
 
-	var palleteView = undefined;
-	var workflowView = undefined;
-	var propertiesView = undefined;
-	var xmlView = undefined;
+    var palleteView = undefined;
+    var workflowView = undefined;
+    var propertiesView = undefined;
+    var xmlView = undefined;
     var loginView = undefined;
 
-    jsPlumb.bind("ready", function() {
+    jsPlumb.bind("ready", function () {
 
         palleteView = new PaletteView({el: $("#palette-container")});
         workflowView = new WorkflowView({el: $("#workflow-designer"), model: jobModel});
@@ -1600,12 +1612,12 @@
         // FIX for Firefox that ignores height 100%
         var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
         if (is_firefox) {
-            $("#workflow-designer").height($("#body-container").height()-10)
-            $("#properties-container").height($("#body-container").height()-10)
-            $(window).resize(function() {
+            $("#workflow-designer").height($("#body-container").height() - 10)
+            $("#properties-container").height($("#body-container").height() - 10)
+            $(window).resize(function () {
                 console.log("resize")
-                $("#workflow-designer").height($("#body-container").height()-10)
-                $("#properties-container").height($("#body-container").height()-10)
+                $("#workflow-designer").height($("#body-container").height() - 10)
+                $("#properties-container").height($("#body-container").height() - 10)
             })
         }
 
@@ -1622,68 +1634,70 @@
         workflowView.$el.click();
     })
 
-	$("#import-button").click(function() {
-		$('#import-file').click();
-	})
+    $("#import-button").click(function () {
+        $('#import-file').click();
+    })
 
-	$('#import-file').change(function(env) {
-		var files = env.target.files;
-		if (files.length > 0) {
-			var file = files[0];
-			if (!file.type.match('text/xml')) {
-				return;
-			}
-			var reader = new FileReader();
-			reader.onloadend = function(evt) {
-				
-				if (evt.target.readyState == FileReader.DONE) {
+    $('#import-file').change(function (env) {
+        var files = env.target.files;
+        if (files.length > 0) {
+            var file = files[0];
+            if (!file.type.match('text/xml')) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onloadend = function (evt) {
+
+                if (evt.target.readyState == FileReader.DONE) {
                     var json = xmlToJson(parseXml(evt.target.result))
                     workflowView.import(json, true);
                 }
-			}
-			reader.readAsBinaryString(file);						
-		}
-	})
+            }
+            reader.readAsBinaryString(file);
+        }
+    })
 
-	$("#export-button").click(function() {
-		xmlView.render();
-		$('#xml-view-modal').modal();
-	})
-	
-	$("#layout-button").click(function() {
-		workflowView.autoLayout();
-	});
-	$("#zoom-in-button").click(function() {
-		workflowView.zoomIn();
-	});
-	$("#zoom-out-button").click(function() {
-		workflowView.zoomOut();		
-	});
-	$("#zoom-reset-button").click(function() {
-		workflowView.setZoom(1);		
-	});
-	
-	$("#submit-button").click(function() {
+    $("#export-button").click(function () {
+        xmlView.render();
+        $('#xml-view-modal').modal();
+    })
 
-        StudioClient.isConnected(function() {
+    $("#layout-button").click(function () {
+        workflowView.autoLayout();
+    });
+    $("#zoom-in-button").click(function () {
+        workflowView.zoomIn();
+    });
+    $("#zoom-out-button").click(function () {
+        workflowView.zoomOut();
+    });
+    $("#zoom-reset-button").click(function () {
+        workflowView.setZoom(1);
+    });
+
+    $("#submit-button").click(function () {
+
+        StudioClient.isConnected(function () {
             // submitting
             xmlView.render();
 
             var button = $(this);
             var xml = "";
             // make it in this ugly way to have a right line number for the xml in case of error
-            $('#workflow-xml .container').find('.line').each(function(i,line) { xml += $(line).text().trim()+"\n"; })
+            $('#workflow-xml .container').find('.line').each(function (i, line) {
+                xml += $(line).text().trim() + "\n";
+            })
 
             var htmlVisualization = xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization)
-        }, function() {
+        }, function () {
             // ask to login first
             $('#scheduler-connect-modal').modal();
         })
 
-	});
+    });
 
-    $("#clear-button").click(function() {
+    $("#clear-button").click(function () {
         console.log("Removing the workflow");
         localStorage.removeItem('job-model');
         jobModel = new Job();
@@ -1695,24 +1709,24 @@
         workflowView.$el.click();
     });
 
-    $("#save-button").click(function() {
+    $("#save-button").click(function () {
         save_workflow_to_storage();
     });
 
-    $("#download-xml-button").click(function() {
+    $("#download-xml-button").click(function () {
         console.log("Saving xml");
         var jobName = jobModel.get("Job Name")
         var blob = new Blob([xmlView.generatedXml]);
-        saveAs(blob, jobName+".xml")
+        saveAs(blob, jobName + ".xml")
     })
 
     // removing a task by del
-    $('body').keyup(function(e){
+    $('body').keyup(function (e) {
         if (e.keyCode == 46) {
             // del pressed
             var selectedTask = $(".selected-task");
             if (selectedTask.length > 0) {
-                selectedTask.each(function(i, t) {
+                selectedTask.each(function (i, t) {
                     var taskView = $(t).data('view');
                     workflowView.removeView(taskView);
                 })
@@ -1721,19 +1735,19 @@
     })
 
     // submitting job by pressing enter
-    $('#scheduler-connect-modal').on( 'keypress', function( e ) {
-        if( e.keyCode === 13 ) {
+    $('#scheduler-connect-modal').on('keypress', function (e) {
+        if (e.keyCode === 13) {
             e.preventDefault();
             $("#submit-button-dialog").click();
         }
-    } );
+    });
 
-    $('#script-save-modal').on( 'keypress', function( e ) {
-        if( e.keyCode === 13 ) {
+    $('#script-save-modal').on('keypress', function (e) {
+        if (e.keyCode === 13) {
             e.preventDefault();
             $("#script-save-button").click();
         }
-    } );
+    });
 
     function save_workflow_to_storage() {
         projects.saveCurrentWorkflow(jobModel.get("Job Name"), xmlView.generateXml(), getOffsetsFromDOM());
@@ -1741,7 +1755,7 @@
 
     function getOffsetsFromDOM() {
         return _.object(
-            _.map($('.task'), function(t) {
+            _.map($('.task'), function (t) {
                 var $t = $(t)
                 var taskName = $t.find("span.name").text()
                 var offset = $t.offset()
@@ -1756,16 +1770,16 @@
         StudioClient.validate(xmlView.generateXml(), jobModel);
     }
 
-    $("#validate-button").click(function() {
+    $("#validate-button").click(function () {
         StudioClient.resetLastValidationResult()
         validate_job();
     });
 
-    $("#undo-button").click(function() {
+    $("#undo-button").click(function () {
         undoManager.undo()
     });
 
-    $("#redo-button").click(function() {
+    $("#redo-button").click(function () {
         undoManager.redo()
     });
 
@@ -1816,7 +1830,7 @@
             StudioClient.saveScriptSynchronously(scriptName, content);
             getCurrentForm().commit();
         })
-        $(document).on("click", '.save-script-as', function() {
+        $(document).on("click", '.save-script-as', function () {
             var content = $(this).parents('form').find('textarea').val();
             var placeholder = $(this).parents('form').find("div[placeholder]").attr("placeholder");
             $("#script-save-modal").modal()
@@ -1844,12 +1858,12 @@
             $("#set-script-content").data("editor", editor);
             return false;
         })
-        $('#full-edit-modal').on('shown.bs.modal', function() {
+        $('#full-edit-modal').on('shown.bs.modal', function () {
             $(".CodeMirror").height($(".code-editor-container").height())
             $("#set-script-content").data("editor").refresh()
         })
 
-        $("#set-script-content").click(function() {
+        $("#set-script-content").click(function () {
             var editor = $("#set-script-content").data("editor");
             editor.save()
             $(this).data("area").val($("#full-edit-modal-script-content").val());
@@ -1857,26 +1871,26 @@
     })();
 
     (function jobClassPathManagement() {
-        $(document).on("click", '.choose-job-classpath', function() {
+        $(document).on("click", '.choose-job-classpath', function () {
             var inputFile = $(this).parents("li").find("input[type='file']");
             inputFile.click();
 
             inputFile.unbind("change");
-            inputFile.change(function(env) {
+            inputFile.change(function (env) {
 
-                if ($(this)[0].files.length==0) {
+                if ($(this)[0].files.length == 0) {
                     // no files selected
                     return;
                 }
 
                 var selectedFileName = undefined;
                 var data = new FormData();
-                jQuery.each($(this)[0].files, function(i, file) {
+                jQuery.each($(this)[0].files, function (i, file) {
                     data.append(file.name, file);
                     selectedFileName = file.name;
                 });
 
-                StudioClient.uploadBinaryFile(data, function(fullPath) {
+                StudioClient.uploadBinaryFile(data, function (fullPath) {
                     if (selectedFileName) {
 
                         var fullJobClassPath = inputFile.parents("li").find("input[name='Job Classpath']");
@@ -1891,45 +1905,46 @@
                             propertiesView.$el.data('form').commit();
                         }
                     }
-                }, function() {
+                }, function () {
                     // TODO hide loading icon
                 });
             })
         })
 
-        $(document).on('click', 'input[name="Class"]', function() {
+        $(document).on('click', 'input[name="Class"]', function () {
             if (!classes) {
                 var classes = StudioClient.getClassesSynchronously();
                 $(this).autocomplete({
                     source: classes,
                     messages: {
                         noResults: '',
-                        results: function() {}
+                        results: function () {
+                        }
                     }
                 });
             }
         })
 
-        $(document).ready(function()
-        {
+        $(document).ready(function () {
             var ctrlDown = false;
             var ctrlKey = 17, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
             var copied = false;
 
-            $(document).keydown(function(e) {
+            $(document).keydown(function (e) {
                 if (e.keyCode == ctrlKey) ctrlDown = true;
-            }).keyup(function(e) {
-                if (e.keyCode == ctrlKey) ctrlDown = false;
-            });
+            }).keyup(function (e) {
+                    if (e.keyCode == ctrlKey) ctrlDown = false;
+                });
 
-            $(document).keydown(function(e) {
+            $(document).keydown(function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
                     console.log("copy");
                     copied = [];
-                    $(".selected-task").each(function(i, t) {
+                    $(".selected-task").each(function (i, t) {
                         copied.push(t);
                     })
-                };
+                }
+                ;
                 if (ctrlDown && e.keyCode == vKey) {
                     if (copied) {
                         console.log("paste");
@@ -1937,7 +1952,8 @@
                             workflowView.copyPasteTasks(copied);
                         }
                     }
-                };
+                }
+                ;
                 if (ctrlDown && e.keyCode == zKey) {
                     undoManager.undo();
                 }
@@ -1946,10 +1962,12 @@
                 }
             });
 
-            $('body').click(function(e) {
+            $('body').click(function (e) {
 
                 console.log("clearing all selected tasks", e)
-                if (e.isPropagationStopped()) {return;}
+                if (e.isPropagationStopped()) {
+                    return;
+                }
 
                 $(".selected-task").removeClass("selected-task");
                 copied = false;

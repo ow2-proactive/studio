@@ -5,7 +5,7 @@ var StudioClient = (function () {
     return {
 
         alert: function (caption, message, type) {
-            var text_escape = message.indexOf("<html>") ==-1 ? true: false;
+            var text_escape = message.indexOf("<html>") == -1 ? true : false;
 
             $.pnotify({
                 title: caption,
@@ -257,7 +257,7 @@ var StudioClient = (function () {
         listScripts: function () {
             console.log("Listing scripts")
             this.getScriptsSynchronosly();
-            return _.map(cachedScripts, function (script) {
+            return _.map(cachedScripts,function (script) {
                 return script.name;
             }).sort()
         },
@@ -269,7 +269,7 @@ var StudioClient = (function () {
             });
         },
 
-        uploadBinaryFile: function(data, success, error) {
+        uploadBinaryFile: function (data, success, error) {
             var that = this;
 
             $.ajax({
@@ -282,11 +282,11 @@ var StudioClient = (function () {
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                 },
-                success: function(data){
+                success: function (data) {
                     console.log("Should not be there", data)
                     error();
                 },
-                error: function(data){
+                error: function (data) {
                     if (data.status == 200) {
                         console.log("Success", data);
                         that.alert("File uploaded", "File successfully uploaded", 'success');
@@ -299,7 +299,8 @@ var StudioClient = (function () {
                             if (err.errorMessage) {
                                 reason = err.errorMessage;
                             }
-                        } catch (e) {}
+                        } catch (e) {
+                        }
 
                         that.alert("Cannot upload a file", reason, 'error');
                         error();
@@ -308,7 +309,7 @@ var StudioClient = (function () {
             });
         },
 
-        getClassesSynchronously: function() {
+        getClassesSynchronously: function () {
             if (!localStorage['sessionId']) return;
             var that = this;
 
@@ -379,7 +380,7 @@ var StudioClient = (function () {
                 that.lastResult = result;
             })
         },
-        resetLastValidationResult: function() {
+        resetLastValidationResult: function () {
             this.lastResult = undefined;
         },
         send_multipart_request: function (url, content, headers, callback) {
@@ -426,20 +427,20 @@ var StudioClient = (function () {
             request.send(multipart);
         },
 
-        setVisualization: function(jobId, visualization) {
+        setVisualization: function (jobId, visualization) {
             var that = this;
 
             $.ajax({
-                url: StudioREST + '/visualizations/'+jobId,
+                url: StudioREST + '/visualizations/' + jobId,
                 data: {visualization: visualization},
                 type: 'POST',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                 },
-                success: function(data){
+                success: function (data) {
                     console.log("Success", data)
                 },
-                error: function(data){
+                error: function (data) {
                     console.log("Error", data);
                 }
             });

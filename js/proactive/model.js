@@ -1,93 +1,95 @@
-(function($){
+(function ($) {
 
-	// populates model according to the schema (xml import)
+    // populates model according to the schema (xml import)
     // it uses placeholder of the model schema to find values in xml
-	SchemaModel = Backbone.Model.extend({
-	
-		getValue: function(placeholder, obj) {
-			if (!placeholder) return;
-			placeholder = placeholder.split("->");
-			var val = obj;
-			for (i in placeholder) {
-				var ph = placeholder[i];
-				if (val[ph]) {
-					val = val[ph];
-				} else {
-					val = undefined;
-					break;
-				}
-			}
-			return val;
-		},
-		getListElementValue: function(listSchema, listElemObj) {
+    SchemaModel = Backbone.Model.extend({
 
-			if (listSchema.model) {
-				var model = new listSchema.model();
-				model.populateSchema(listElemObj)
-				return model.toJSON();
-			} else if (listSchema.subSchema) {
-				var model = new SchemaModel();
-				model.schema = listSchema.subSchema;
-				model.populateSchema(listElemObj)
-				return model.toJSON();
-			} else {
-				return this.getValue(listSchema.fieldAttrs.itemplaceholder, listElemObj);
-			}
-		},
-		populateSchema : function(obj) {
-			console.log("Populating", obj, this.schema)
-			var that = this;
-	
-			for (var prop in this.schema) {
-				if (this.schema[prop] && this.schema[prop].fieldAttrs && this.schema[prop].fieldAttrs.placeholder) {
-					
-					var placeholder = this.schema[prop].fieldAttrs.placeholder;
-					
-					if (this.schema[prop].type && this.schema[prop].type=='List') {
-						var list = []
-						this.set(prop, list);
-						var value = this.getValue(placeholder, obj);
-						if (value) {
-							if (!Array.isArray(value)) {
-								value = [value];
-							}
-							$.each(value, function(i,v) {
-								var listElemValue = that.getListElementValue(that.schema[prop], v)
-								if (listElemValue) {
-									list.push(listElemValue)
-									console.log("Adding to list", prop, listElemValue)									
-								}
-							})
-						}
-					} else {
+        getValue: function (placeholder, obj) {
+            if (!placeholder) return;
+            placeholder = placeholder.split("->");
+            var val = obj;
+            for (i in placeholder) {
+                var ph = placeholder[i];
+                if (val[ph]) {
+                    val = val[ph];
+                } else {
+                    val = undefined;
+                    break;
+                }
+            }
+            return val;
+        },
+        getListElementValue: function (listSchema, listElemObj) {
+
+            if (listSchema.model) {
+                var model = new listSchema.model();
+                model.populateSchema(listElemObj)
+                return model.toJSON();
+            } else if (listSchema.subSchema) {
+                var model = new SchemaModel();
+                model.schema = listSchema.subSchema;
+                model.populateSchema(listElemObj)
+                return model.toJSON();
+            } else {
+                return this.getValue(listSchema.fieldAttrs.itemplaceholder, listElemObj);
+            }
+        },
+        populateSchema: function (obj) {
+            console.log("Populating", obj, this.schema)
+            var that = this;
+
+            for (var prop in this.schema) {
+                if (this.schema[prop] && this.schema[prop].fieldAttrs && this.schema[prop].fieldAttrs.placeholder) {
+
+                    var placeholder = this.schema[prop].fieldAttrs.placeholder;
+
+                    if (this.schema[prop].type && this.schema[prop].type == 'List') {
+                        var list = []
+                        this.set(prop, list);
+                        var value = this.getValue(placeholder, obj);
+                        if (value) {
+                            if (!Array.isArray(value)) {
+                                value = [value];
+                            }
+                            $.each(value, function (i, v) {
+                                var listElemValue = that.getListElementValue(that.schema[prop], v)
+                                if (listElemValue) {
+                                    list.push(listElemValue)
+                                    console.log("Adding to list", prop, listElemValue)
+                                }
+                            })
+                        }
+                    } else {
                         var value = null;
                         if (!value && placeholder instanceof Array) {
                             for (ph in placeholder) {
                                 value = this.getValue(placeholder[ph], obj)
-                                if (value) {break;}
+                                if (value) {
+                                    break;
+                                }
                             }
                         } else {
                             var value = this.getValue(placeholder, obj);
                         }
                         if (value) {
                             if (typeof value === 'object') {
-                                if (this.schema[prop].type=="Select") {
+                                if (this.schema[prop].type == "Select") {
                                     // looking for a filed in the value matching select options
-                                    if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy=='checkpresence') {
+                                    if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy == 'checkpresence') {
                                         if (value) {
                                             console.log("Setting", prop, "from", placeholder, "to", "true")
                                             that.set(prop, "true")
                                         }
                                     } else {
-                                        $.each(this.schema[prop].options, function(i, option) {
+                                        $.each(this.schema[prop].options, function (i, option) {
                                             if (value[option] || value[option.val]) {
-                                                console.log("Setting", prop, "from", placeholder, "to", option.val?option.val:option)
-                                                that.set(prop, option.val?option.val:option)
+                                                console.log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
+                                                that.set(prop, option.val ? option.val : option)
                                                 return false;
                                             }
                                         });
                                     }
-                                } else if (this.schema[prop].type=="NestedModel") {
+                                } else if (this.schema[prop].type == "NestedModel") {
                                     var model = new this.schema[prop].model();
                                     console.log(model)
                                     model.populateSchema(value)
@@ -102,41 +104,41 @@
                                 that.set(prop, value)
                             }
                         }
-					}
-				}
-			}
-		}
-	});
+                    }
+                }
+            }
+        }
+    });
 
     var jobClasspathTemplate = _.template($('#job-classpath-template').html());
 
-	Job = SchemaModel.extend({
-		schema: {
+    Job = SchemaModel.extend({
+        schema: {
 //			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->projectName'}},
-			"Job Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->name'}},
-			"Description": {type:"Text", fieldAttrs: {'placeholder':['description->#cdata-section', 'description->#text']}},
-			"Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'jobClasspath->pathElement', 'itemplaceholder':'@attributes->path'}, itemTemplate: jobClasspathTemplate},
-			"Job Priority": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->priority'}, options:
-				["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
-			"Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'variables->variable'}, itemToString: inlineName , subSchema: {
-                "Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
-                "Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
+            "Job Name": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': '@attributes->name'}},
+            "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text']}},
+            "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path'}, itemTemplate: jobClasspathTemplate},
+            "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority'}, options: ["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
+            "Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'variables->variable'}, itemToString: inlineName, subSchema: {
+                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
+                "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab":"Generic Info", 'placeholder':'genericInformation->info'}, itemToString: inlineName, subSchema: {
-                "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
-                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
+            "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Generic Info", 'placeholder': 'genericInformation->info'}, itemToString: inlineName, subSchema: {
+                "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
+                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-			"Input Space Url": {type:"Text", fieldAttrs: {"data-tab":"File Transfer", 'placeholder':'inputSpace->@attributes->url'}},
-			"Output Space Url" : {type:"Text", fieldAttrs: {'placeholder':'outputSpace->@attributes->url'}},
-			"Global Space Url" : {type:"Text", fieldAttrs: {'placeholder':'globalSpace->@attributes->url'}},
-			"User Space Url" : {type:"Text", fieldAttrs: {'placeholder':'userSpace->@attributes->url'}},
-			"Max Number Of Executions For Task" : {type: 'Number', fieldAttrs: {"data-tab":"Error Handling", 'placeholder':'@attributes->maxNumberOfExecution'}},
-			"Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->cancelJobOnError'}, options: 
-				[{val:"true", label: "cancel job as soon as one task fails"}, {val:"false", label: "continue job execution when a task fails"}]},
-			"If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->restartTaskOnError'}, options:
-				["anywhere", "elsewhere"]}
-		},
-		initialize: function() {
+            "Input Space Url": {type: "Text", fieldAttrs: {"data-tab": "File Transfer", 'placeholder': 'inputSpace->@attributes->url'}},
+            "Output Space Url": {type: "Text", fieldAttrs: {'placeholder': 'outputSpace->@attributes->url'}},
+            "Global Space Url": {type: "Text", fieldAttrs: {'placeholder': 'globalSpace->@attributes->url'}},
+            "User Space Url": {type: "Text", fieldAttrs: {'placeholder': 'userSpace->@attributes->url'}},
+            "Max Number Of Executions For Task": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'placeholder': '@attributes->maxNumberOfExecution'}},
+            "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->cancelJobOnError'}, options: [
+                {val: "true", label: "cancel job as soon as one task fails"},
+                {val: "false", label: "continue job execution when a task fails"}
+            ]},
+            "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->restartTaskOnError'}, options: ["anywhere", "elsewhere"]}
+        },
+        initialize: function () {
 //            this.set({"Project Name": "Project"});
             this.set({"Job Name": "MyJob"});
             this.set({"Job Priority": "normal"});
@@ -144,24 +146,24 @@
             this.set({"Max Number Of Executions For Task": 1});
             this.set({"If An Error Occurs Restart Task": "anywhere"});
             this.tasks = [];
-            this.on("change", function(eventName, event) {
+            this.on("change", function (eventName, event) {
                 undoManager.save()
             });
 
         },
-		addTask: function(task) {
-			console.log("Adding task", task)
-			this.tasks.push(task)
-		},
-		removeTask: function(task) {
-			console.log("Removing task", task)
-			var index = this.tasks.indexOf(task)
-			if (index!=-1) this.tasks.splice(index, 1)
-			$.each(this.tasks, function(i, t) {
-				t.removeControlFlow(task);
-			})
-		},
-        getDependantTask: function(taskName) {
+        addTask: function (task) {
+            console.log("Adding task", task)
+            this.tasks.push(task)
+        },
+        removeTask: function (task) {
+            console.log("Removing task", task)
+            var index = this.tasks.indexOf(task)
+            if (index != -1) this.tasks.splice(index, 1)
+            $.each(this.tasks, function (i, t) {
+                t.removeControlFlow(task);
+            })
+        },
+        getDependantTask: function (taskName) {
             for (i in this.tasks) {
                 var task = this.tasks[i];
                 if (task.dependencies) {
@@ -184,56 +186,56 @@
                 }
             }
         },
-        populate : function(obj) {
-			this.populateSchema(obj);
-			var that = this;
-			if (obj.taskFlow && obj.taskFlow.task) {
-				
-				if (!Array.isArray(obj.taskFlow.task)) {
-					obj.taskFlow.task = [obj.taskFlow.task];
-				}
-				var name2Task = {};
-				$.each(obj.taskFlow.task, function(i, task) {
-					var taskModel = new Task();
-					if (task.javaExecutable) {
-						taskModel.schema['Parameters']['model'] = JavaExecutable;
-						taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'javaExecutable'}
-						taskModel.set({Parameters: new JavaExecutable()});
-						taskModel.set({Type: "JavaExecutable"});
-					} else if (task.nativeExecutable) {
-						taskModel.schema['Parameters']['model'] = NativeExecutable;
-						taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'nativeExecutable'}
-						taskModel.set({Parameters: new NativeExecutable()});
-						taskModel.set({Type: "NativeExecutable"});
-					} else if (task.scriptExecutable) {
-						taskModel.schema['Parameters']['model'] = ScriptExecutable;
-						taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'scriptExecutable'}
-						taskModel.set({Parameters: new ScriptExecutable()});
-						taskModel.set({Type: "ScriptExecutable"});
-					}
+        populate: function (obj) {
+            this.populateSchema(obj);
+            var that = this;
+            if (obj.taskFlow && obj.taskFlow.task) {
 
-					taskModel.populateSchema(task);
-					console.log("Pushing task", taskModel)
-					that.tasks.push(taskModel);
-					name2Task[taskModel.get("Task Name")] = taskModel;
-				});
-				// adding dependencies after all tasks are populated
-				$.each(obj.taskFlow.task, function(i, task) {
-					var taskModel = name2Task[task['@attributes']['name']]
-					if (taskModel && task.depends && task.depends.task) {
-						if (!Array.isArray(task.depends.task)) {
-							task.depends.task = [task.depends.task];
-						}
-						$.each(task.depends.task, function(i, dep) {
-							if (name2Task[dep['@attributes']['ref']]) {
-								var depTaskModel = name2Task[dep['@attributes']['ref']];
-								taskModel.addDependency(depTaskModel);
-							}
-						})
-					}
-				})
+                if (!Array.isArray(obj.taskFlow.task)) {
+                    obj.taskFlow.task = [obj.taskFlow.task];
+                }
+                var name2Task = {};
+                $.each(obj.taskFlow.task, function (i, task) {
+                    var taskModel = new Task();
+                    if (task.javaExecutable) {
+                        taskModel.schema['Parameters']['model'] = JavaExecutable;
+                        taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'javaExecutable'}
+                        taskModel.set({Parameters: new JavaExecutable()});
+                        taskModel.set({Type: "JavaExecutable"});
+                    } else if (task.nativeExecutable) {
+                        taskModel.schema['Parameters']['model'] = NativeExecutable;
+                        taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'nativeExecutable'}
+                        taskModel.set({Parameters: new NativeExecutable()});
+                        taskModel.set({Type: "NativeExecutable"});
+                    } else if (task.scriptExecutable) {
+                        taskModel.schema['Parameters']['model'] = ScriptExecutable;
+                        taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'scriptExecutable'}
+                        taskModel.set({Parameters: new ScriptExecutable()});
+                        taskModel.set({Type: "ScriptExecutable"});
+                    }
+
+                    taskModel.populateSchema(task);
+                    console.log("Pushing task", taskModel)
+                    that.tasks.push(taskModel);
+                    name2Task[taskModel.get("Task Name")] = taskModel;
+                });
+                // adding dependencies after all tasks are populated
+                $.each(obj.taskFlow.task, function (i, task) {
+                    var taskModel = name2Task[task['@attributes']['name']]
+                    if (taskModel && task.depends && task.depends.task) {
+                        if (!Array.isArray(task.depends.task)) {
+                            task.depends.task = [task.depends.task];
+                        }
+                        $.each(task.depends.task, function (i, dep) {
+                            if (name2Task[dep['@attributes']['ref']]) {
+                                var depTaskModel = name2Task[dep['@attributes']['ref']];
+                                taskModel.addDependency(depTaskModel);
+                            }
+                        })
+                    }
+                })
                 // adding controlFlows after all dependencies are set
-                $.each(obj.taskFlow.task, function(i, taskJson) {
+                $.each(obj.taskFlow.task, function (i, taskJson) {
                     var taskModel = name2Task[taskJson['@attributes']['name']]
                     if (taskJson.controlFlow) {
                         if (taskJson.controlFlow.if) {
@@ -252,171 +254,178 @@
                             branch.populateSchema(taskJson.controlFlow.loop);
                             var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
                             var targetTask = name2Task[loopTarget];
-                            taskModel.controlFlow = {'loop':{task: targetTask, model: branch}};
+                            taskModel.controlFlow = {'loop': {task: targetTask, model: branch}};
                         }
                     }
                 })
-				delete name2Task;
-			}
-		}
-	});
+                delete name2Task;
+            }
+        }
+    });
 
-	var scriptTemplate = _.template($('#script-form-template').html());
-	var serverScripts = function (callback) {
-		callback([""].concat(StudioClient.listScripts()));
-	}
+    var scriptTemplate = _.template($('#script-form-template').html());
+    var serverScripts = function (callback) {
+        callback([""].concat(StudioClient.listScripts()));
+    }
 
-	Script = SchemaModel.extend({
-		schema: {
+    Script = SchemaModel.extend({
+        schema: {
             "Library": {type: "Select", options: serverScripts},
             "Library Path": {type: "Hidden"},
-            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
-			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
-            "Or Path": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->path'}},
-            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
-            "Or Url": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->url'}}
-		},
+            "Script": {type: "TextArea", fieldAttrs: {'placeholder': ['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
+            "Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder': 'code->@attributes->language'}},
+            "Or Path": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->path'}},
+            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}},
+            "Or Url": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->url'}}
+        },
 
-		populateSchema: function(obj) {
-			SchemaModel.prototype.populateSchema.call(this, obj);
-			var path = this.get("Or Path");
+        populateSchema: function (obj) {
+            SchemaModel.prototype.populateSchema.call(this, obj);
+            var path = this.get("Or Path");
             if (path) {
                 var fileName = path.replace(/^.*[\\\/]/, '');
                 this.set("Library", fileName);
             }
-		}
-	});
+        }
+    });
 
-	SelectionScript = SchemaModel.extend({
-		// TODO inherit from Script - first attempt did not work because schema is shared - type appears in pre/post scripts as well
-		schema: {
+    SelectionScript = SchemaModel.extend({
+        // TODO inherit from Script - first attempt did not work because schema is shared - type appears in pre/post scripts as well
+        schema: {
             "Library": {type: "Select", options: serverScripts},
             "Library Path": {type: "Hidden"},
-            "Script": {type:"TextArea", fieldAttrs: {'placeholder':['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
-			"Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder':'code->@attributes->language'}},
-            "Or Path": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->path'}},
-            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'file->arguments->argument', 'itemplaceholder':'@attributes->value'}},
-            "Or Url": {type:"Hidden", fieldAttrs: {'placeholder':'file->@attributes->url'}},
-			"Type" : {type: 'Select', options: ["dynamic", "static"], fieldAttrs: {'placeholder':'@attributes->type'}}
-		},
+            "Script": {type: "TextArea", fieldAttrs: {'placeholder': ['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
+            "Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python"], fieldAttrs: {'placeholder': 'code->@attributes->language'}},
+            "Or Path": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->path'}},
+            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}},
+            "Or Url": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->url'}},
+            "Type": {type: 'Select', options: ["dynamic", "static"], fieldAttrs: {'placeholder': '@attributes->type'}}
+        },
 
-		populateSchema: function(obj) {
-			SchemaModel.prototype.populateSchema.call(this, obj);
-			var path = this.get("Or Path");
+        populateSchema: function (obj) {
+            SchemaModel.prototype.populateSchema.call(this, obj);
+            var path = this.get("Or Path");
             if (path) {
                 var fileName = path.replace(/^.*[\\\/]/, '');
                 this.set("Library", fileName);
             }
-		}
+        }
 
-	});
-	
-	JavaExecutable = SchemaModel.extend({
-		schema: {
-			"Class":{type:"Text", fieldAttrs: {'placeholder':'@attributes->class'}},
-			"Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'parameters->parameter'}, itemToString: inlineName, subSchema: {
-                "Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}},
-                "Value": {type:"Text", fieldAttrs: {'placeholder':'@attributes->value'}}
+    });
+
+    JavaExecutable = SchemaModel.extend({
+        schema: {
+            "Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->class'}},
+            "Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'parameters->parameter'}, itemToString: inlineName, subSchema: {
+                "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
+                "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}}
             }},
-			"Fork Environment": {type: 'Select', fieldAttrs: {'placeholder':'forkEnvironment', 'strategy':'checkpresence'}, 
-				options: [
-				          {val: "false", label: "Use the Proactive Node JVM"},
-				          {val: "true", label: "Fork a new JVM"}]},
-			"Java Home": {type:"Text", fieldAttrs: {'placeholder':'forkEnvironment->@attributes->javaHome'}},
-			"Jvm Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'forkEnvironment->jvmArgs->jvmArg', 'itemplaceholder':'@attributes->value'}},
-			"Working Dir": {type:"Text", fieldAttrs: {'placeholder':'forkEnvironment->@attributes->workingDir'}},
-			"Additional Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'forkEnvironment->additionalClasspath->pathElement', 'itemplaceholder':'@attributes->path'}},
-			"Environment Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'forkEnvironment->SystemEnvironment->variable'}, subSchema: {
-                "Name": {type:"Text", fieldAttrs: {'placeholder':'@attributes->name'}},
-                "Value": {type:"Text", fieldAttrs: {'placeholder':'@attributes->value'}},
-                "Append": {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->append'}},
-    			"Append Char" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->appendChar'}}
+            "Fork Environment": {type: 'Select', fieldAttrs: {'placeholder': 'forkEnvironment', 'strategy': 'checkpresence'},
+                options: [
+                    {val: "false", label: "Use the Proactive Node JVM"},
+                    {val: "true", label: "Fork a new JVM"}
+                ]},
+            "Java Home": {type: "Text", fieldAttrs: {'placeholder': 'forkEnvironment->@attributes->javaHome'}},
+            "Jvm Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'forkEnvironment->jvmArgs->jvmArg', 'itemplaceholder': '@attributes->value'}},
+            "Working Dir": {type: "Text", fieldAttrs: {'placeholder': 'forkEnvironment->@attributes->workingDir'}},
+            "Additional Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'forkEnvironment->additionalClasspath->pathElement', 'itemplaceholder': '@attributes->path'}},
+            "Environment Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'forkEnvironment->SystemEnvironment->variable'}, subSchema: {
+                "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
+                "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}},
+                "Append": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->append'}},
+                "Append Char": {type: "Text", fieldAttrs: {'placeholder': '@attributes->appendChar'}}
             }},
-			"Environment Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder':'forkEnvironment->envScript->script'}}
-		},
-		initialize: function() {
-	        this.set({"Fork Environment": "false"});
-	    }
-	});
+            "Environment Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'forkEnvironment->envScript->script'}}
+        },
+        initialize: function () {
+            this.set({"Fork Environment": "false"});
+        }
+    });
 
-	NativeExecutable = SchemaModel.extend({
-		schema: {
-			"Static Command":{type:"Text", fieldAttrs: {'placeholder':'staticCommand->@attributes->value'}},
-			"Working Folder": {type:"Text", fieldAttrs: {'placeholder':'staticCommand->@attributes->workingDir'}},
-			"Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder':'staticCommand->arguments->argument', 'itemplaceholder':'@attributes->value'}},
-			"Or Dynamic Command": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder':'dynamicCommand->generation->script'}},
-			"Working Dir": {type:"Text", fieldAttrs: {'placeholder':'dynamicCommand->@attributes->workingDir'}}
-		}
-	});
+    NativeExecutable = SchemaModel.extend({
+        schema: {
+            "Static Command": {type: "Text", fieldAttrs: {'placeholder': 'staticCommand->@attributes->value'}},
+            "Working Folder": {type: "Text", fieldAttrs: {'placeholder': 'staticCommand->@attributes->workingDir'}},
+            "Arguments": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'staticCommand->arguments->argument', 'itemplaceholder': '@attributes->value'}},
+            "Or Dynamic Command": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'dynamicCommand->generation->script'}},
+            "Working Dir": {type: "Text", fieldAttrs: {'placeholder': 'dynamicCommand->@attributes->workingDir'}}
+        }
+    });
 
-	ScriptExecutable = SchemaModel.extend({
-		schema: {
-			"Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder':'script'}}
-		}
-	});
+    ScriptExecutable = SchemaModel.extend({
+        schema: {
+            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'script'}}
+        }
+    });
 
-	Task = SchemaModel.extend({
-		schema: {
-			"Task Name" : {type:"Text", fieldAttrs: {'placeholder':'@attributes->name', "data-tab":"Execution"}},
-			"Type": {type: 'TaskTypeRadioEditor', fieldAttrs: {}, fieldClass: 'task-type',
-					options: [
-				          {val: "ScriptExecutable", label: "Script"},
-				          {val: "NativeExecutable", label: "Native"},
-				          {val: "JavaExecutable", label: "Java"}]},
-			"Parameters" : {type: 'NestedModel', model: ScriptExecutable},
-			"Description": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':['description->#cdata-section', 'description->#text']}},
-			"Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder':'@attributes->maxNumberOfExecution'}}, 
-			"Maximum Execution Time (hh:mm:ss)": {type:"Text", fieldAttrs: {'placeholder':'@attributes->walltime'}}, 
-			"Result Preview Class": {type:"Text", fieldAttrs: {'placeholder':'@attributes->resultPreviewClass'}}, 
-			"Run as me" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->runAsMe'}}, 
-			"Precious Result" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousResult'}},
-            "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->cancelJobOnError'}, options:
-                [{val:"true", label: "cancel job as soon as one task fails"}, {val:"false", label: "continue job execution when a task fails"}]},
-            "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder':'@attributes->restartTaskOnError'}, options:
-                ["anywhere", "elsewhere"]},
-			"Store Task Logs in a File" : {type:"Checkbox", fieldAttrs: {'placeholder':'@attributes->preciousLogs'}},
-			"Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'genericInformation->info'}, subSchema: {
-                "Property Name": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->name'} },
-                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder':'@attributes->value'} }
+    Task = SchemaModel.extend({
+        schema: {
+            "Task Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name', "data-tab": "Execution"}},
+            "Type": {type: 'TaskTypeRadioEditor', fieldAttrs: {}, fieldClass: 'task-type',
+                options: [
+                    {val: "ScriptExecutable", label: "Script"},
+                    {val: "NativeExecutable", label: "Native"},
+                    {val: "JavaExecutable", label: "Java"}
+                ]},
+            "Parameters": {type: 'NestedModel', model: ScriptExecutable},
+            "Description": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': ['description->#cdata-section', 'description->#text']}},
+            "Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder': '@attributes->maxNumberOfExecution'}},
+            "Maximum Execution Time (hh:mm:ss)": {type: "Text", fieldAttrs: {'placeholder': '@attributes->walltime'}},
+            "Result Preview Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->resultPreviewClass'}},
+            "Run as me": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->runAsMe'}},
+            "Precious Result": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->preciousResult'}},
+            "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->cancelJobOnError'}, options: [
+                {val: "true", label: "cancel job as soon as one task fails"},
+                {val: "false", label: "continue job execution when a task fails"}
+            ]},
+            "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->restartTaskOnError'}, options: ["anywhere", "elsewhere"]},
+            "Store Task Logs in a File": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->preciousLogs'}},
+            "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'genericInformation->info'}, subSchema: {
+                "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
+                "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-			"Number of Nodes" : {type: 'Number', fieldAttrs: {"data-tab":"Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes'}},
-			"Topology": { type: 'Select', fieldAttrs: {'placeholder':'parallel->topology'}, options: ["none", "arbitrary", 
-			                                        {val: "bestProximity", label: "best proximity"},
-			                                        {val: "singleHost", label: "single host"}, 
-			                                        {val: "singleHostExclusive", label: "single host exclusive"}, 
-			                                        {val: "multipleHostsExclusive", label: "multiple host exclusive"}, 
-			                                        {val: "differentHostsExclusive", label: "different host exclusive"}]  },
-			"Or Topology Threshold Proximity": {type:"Number", fieldAttrs: {'placeholder':'parallel->topology->thresholdProximity->@attributes->threshold'}},
-			"Control Flow": {type: 'Select', options: ["none", "if", "replicate", "loop"], fieldAttrs: {"data-tab":"Control Flow"}},
-			"Block": {type: 'Select', options: ["none", {val:"start", label: "start block"}, {val:"end", label: "end block"}], fieldAttrs: {"placeholder":"controlFlow->@attributes->block"}},
-			"Selection Scripts": {type: 'List', itemType: 'NestedModel', model: SelectionScript, itemToString: function() {return "Selection Script"}, fieldAttrs: {"data-tab":"Selection Scripts", 'placeholder':'selection->script'}},
-            "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab":"Pre Script", 'placeholder':'pre->script'}},
-            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab":"Post Script", 'placeholder':'post->script'}},
-            "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab":"Clean Script", 'placeholder':'cleaning->script'}},
-			"Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab":"File Transfer", 'placeholder':'inputFiles->files'}, subSchema: {
-                "Excludes": {type:"Text", fieldAttrs: {'placeholder':'@attributes->excludes'}},
-                "Includes": {type:"Text", fieldAttrs: {'placeholder':'@attributes->includes'}},
+            "Number of Nodes": {type: 'Number', fieldAttrs: {"data-tab": "Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes'}},
+            "Topology": { type: 'Select', fieldAttrs: {'placeholder': 'parallel->topology'}, options: ["none", "arbitrary",
+                {val: "bestProximity", label: "best proximity"},
+                {val: "singleHost", label: "single host"},
+                {val: "singleHostExclusive", label: "single host exclusive"},
+                {val: "multipleHostsExclusive", label: "multiple host exclusive"},
+                {val: "differentHostsExclusive", label: "different host exclusive"}]  },
+            "Or Topology Threshold Proximity": {type: "Number", fieldAttrs: {'placeholder': 'parallel->topology->thresholdProximity->@attributes->threshold'}},
+            "Control Flow": {type: 'Select', options: ["none", "if", "replicate", "loop"], fieldAttrs: {"data-tab": "Control Flow"}},
+            "Block": {type: 'Select', options: ["none", {val: "start", label: "start block"}, {val: "end", label: "end block"}], fieldAttrs: {"placeholder": "controlFlow->@attributes->block"}},
+            "Selection Scripts": {type: 'List', itemType: 'NestedModel', model: SelectionScript, itemToString: function () {
+                return "Selection Script"
+            }, fieldAttrs: {"data-tab": "Selection Scripts", 'placeholder': 'selection->script'}},
+            "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre Script", 'placeholder': 'pre->script'}},
+            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script'}},
+            "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Clean Script", 'placeholder': 'cleaning->script'}},
+            "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "File Transfer", 'placeholder': 'inputFiles->files'}, subSchema: {
+                "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
+                "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
                 "Access Mode": {type: 'Select',
-                	fieldAttrs: {'placeholder':'@attributes->accessMode'},
-                	options: ["transferFromInputSpace", "transferFromOutputSpace", "transferFromGlobalSpace", "transferFromUserSpace", "none"]},
+                    fieldAttrs: {'placeholder': '@attributes->accessMode'},
+                    options: ["transferFromInputSpace", "transferFromOutputSpace", "transferFromGlobalSpace", "transferFromUserSpace", "none"]},
             }},
-			"Output Files": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder':'outputFiles->files'}, subSchema: {
-                "Excludes": {type:"Text", fieldAttrs: {'placeholder':'@attributes->excludes'}},
-                "Includes": {type:"Text", fieldAttrs: {'placeholder':'@attributes->includes'}},
+            "Output Files": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'outputFiles->files'}, subSchema: {
+                "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
+                "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
                 "Access Mode": {type: 'Select',
-                	fieldAttrs: {'placeholder':'@attributes->accessMode'},
-                	options: ["transferToOutputSpace", "transferToGlobalSpace", "transferToUserSpace", "none"]}
+                    fieldAttrs: {'placeholder': '@attributes->accessMode'},
+                    options: ["transferToOutputSpace", "transferToGlobalSpace", "transferToUserSpace", "none"]}
             }}
-		},
+        },
 
-		initialize: function() {
-			if (!Task.counter) {Task.counter = 0}
+        initialize: function () {
+            if (!Task.counter) {
+                Task.counter = 0
+            }
 
-			this.schema = $.extend(true, {}, this.schema);
-			
+            this.schema = $.extend(true, {}, this.schema);
+
             this.set({"Type": "ScriptExecutable"});
             this.set({"Parameters": new ScriptExecutable()});
-			this.set({"Task Name": "Task"+(++Task.counter)});
+            this.set({"Task Name": "Task" + (++Task.counter)});
             this.set({"Maximum Number of Execution": 1});
             this.set({"Run as me": false});
             this.set({"Precious Result": false});
@@ -426,31 +435,31 @@
             this.set({"Number of Nodes": 1});
 
             this.controlFlow = {};
-            this.on("change", function(eventName, event) {
+            this.on("change", function (eventName, event) {
                 undoManager.save()
             });
         },
 
-        addDependency: function(task) {
+        addDependency: function (task) {
             if (!this.dependencies) this.dependencies = [];
 
             index = this.dependencies.indexOf(task);
-            if (index==-1) {
+            if (index == -1) {
                 this.dependencies.push(task)
                 this.trigger("change")
                 console.log("Adding dependency to", this, "from", task)
             }
         },
-        removeDependency: function(task) {
+        removeDependency: function (task) {
             index = this.dependencies.indexOf(task);
-            if (index!=-1) {
+            if (index != -1) {
                 this.dependencies.splice(index, 1);
                 this.trigger("change")
                 console.log("Removing dependency", task, "from", this)
             }
         },
-		setControlFlow: function(controlFlowType, task) {
-            if (controlFlowType=='if') {
+        setControlFlow: function (controlFlowType, task) {
+            if (controlFlowType == 'if') {
                 if (this.controlFlow['if'] && this.controlFlow['if'].task) {
                     if (this.controlFlow['if']['else']) {
                         controlFlowType = 'continuation';
@@ -460,33 +469,39 @@
                 }
             }
 
-            if (this['set'+controlFlowType]) this['set'+controlFlowType](task);
-		},
-		removeControlFlow: function(controlFlowType, task) {
-            if (this['remove'+controlFlowType]) this['remove'+controlFlowType](task);
+            if (this['set' + controlFlowType]) this['set' + controlFlowType](task);
         },
-        setif: function(task) {
-            if (!task) {return;}
+        removeControlFlow: function (controlFlowType, task) {
+            if (this['remove' + controlFlowType]) this['remove' + controlFlowType](task);
+        },
+        setif: function (task) {
+            if (!task) {
+                return;
+            }
             this.set({'Control Flow': 'if'});
-            if (!this.controlFlow['if'])  {
-                this.controlFlow = {'if':{}}
+            if (!this.controlFlow['if']) {
+                this.controlFlow = {'if': {}}
             }
 
             this.controlFlow['if'].task = task;
             this.controlFlow['if'].model = new BranchWithScript();
             console.log('Adding if branch', this.controlFlow['if'], 'to', this)
         },
-        setelse: function(task) {
-            if (!task) {return;}
-            this.controlFlow['if']['else'] = {task:task};
+        setelse: function (task) {
+            if (!task) {
+                return;
+            }
+            this.controlFlow['if']['else'] = {task: task};
             console.log('Adding else branch', this.controlFlow['if']['else'], 'to', this)
         },
-        setcontinuation: function(task) {
-            if (!task) {return;}
-            this.controlFlow['if']['continuation'] = {task:task};
+        setcontinuation: function (task) {
+            if (!task) {
+                return;
+            }
+            this.controlFlow['if']['continuation'] = {task: task};
             console.log('Adding continuation branch', this.controlFlow['if']['continuation'], 'to', this)
         },
-        removeif: function(task) {
+        removeif: function (task) {
             this.set({'Control Flow': 'none'});
             if (this.controlFlow['if'].task == task) {
                 console.log('Removing IF')
@@ -501,76 +516,76 @@
             }
             console.log('Removing if branch', this.controlFlow, task)
         },
-        setloop: function(task) {
+        setloop: function (task) {
             console.log('Adding loop')
             this.set({'Control Flow': 'loop'});
-            this.controlFlow = {'loop':{task:task, model: new BranchWithScript()}}
+            this.controlFlow = {'loop': {task: task, model: new BranchWithScript()}}
         },
-        removeloop: function(controlFlow, task) {
+        removeloop: function (controlFlow, task) {
             console.log('Removing loop')
             this.set({'Control Flow': 'none'});
             delete this.controlFlow['loop']
         },
-        setreplicate: function(task) {
+        setreplicate: function (task) {
             console.log('Adding replicate')
             this.set({'Control Flow': 'replicate'});
-            this.controlFlow = {'replicate':{model: new BranchWithScript()}}
+            this.controlFlow = {'replicate': {model: new BranchWithScript()}}
         },
-        removereplicate: function(controlFlow, task) {
+        removereplicate: function (controlFlow, task) {
             console.log('Removing replicate')
             this.set({'Control Flow': 'none'});
             delete this.controlFlow['replicate']
         }
-	});
+    });
 
     BranchWithScript = SchemaModel.extend({
         schema: {
-            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder':'script'}}
+            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'script'}}
         }
     });
 
-	function inlineName(prop) {
-		var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
-		return name;
-	}
+    function inlineName(prop) {
+        var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
+        return name;
+    }
 
     Projects = Backbone.Model.extend({
-        supports_html5_storage: function() {
+        supports_html5_storage: function () {
             try {
                 return 'localStorage' in window && window['localStorage'] !== null;
             } catch (e) {
                 return false;
             }
         },
-        init: function() {
+        init: function () {
             if (this.supports_html5_storage() && !localStorage["workflows"]) {
                 localStorage["workflows"] = "[]";
             }
         },
-        addEmptyWorkflow: function(name, xml) {
+        addEmptyWorkflow: function (name, xml) {
             if (this.supports_html5_storage() && localStorage["workflows"]) {
 
                 var localJobs = JSON.parse(localStorage["workflows"]);
-                var workflow = {'name':name, 'xml':xml,
-                    metadata:JSON.stringify({
-                            created_at:new Date().getTime(),
-                            updated_at:new Date().getTime()
+                var workflow = {'name': name, 'xml': xml,
+                    metadata: JSON.stringify({
+                        created_at: new Date().getTime(),
+                        updated_at: new Date().getTime()
                     })};
                 var id = StudioClient.createWorkflowSynchronously(workflow);
                 if (id) workflow.id = id;
 
                 localJobs.push(workflow);
-                localStorage["workflow-selected"] = localJobs.length-1;
+                localStorage["workflow-selected"] = localJobs.length - 1;
                 localStorage["workflows"] = JSON.stringify(localJobs);
             }
         },
-        getWorkFlows: function() {
+        getWorkFlows: function () {
             if (this.supports_html5_storage() && localStorage["workflows"]) {
                 return JSON.parse(localStorage["workflows"])
             }
             return [];
         },
-        getCurrentWorkFlowAsJson: function() {
+        getCurrentWorkFlowAsJson: function () {
             if (this.supports_html5_storage() && localStorage["workflows"] && localStorage["workflow-selected"] != undefined) {
                 var selectedIndex = localStorage["workflow-selected"];
                 if (!localStorage["workflows"]) return;
@@ -578,7 +593,7 @@
                 var localJobs = JSON.parse(localStorage["workflows"]);
 
                 if (!localJobs[selectedIndex] && localJobs.length > 0) {
-                    selectedIndex = localJobs.length-1;
+                    selectedIndex = localJobs.length - 1;
                     localStorage["workflow-selected"] = selectedIndex;
                     console.log("Selected index out of range - selecting the latest workflow");
                 }
@@ -588,7 +603,7 @@
                 }
             }
         },
-        saveCurrentWorkflow: function(name, workflowXml, offsets) {
+        saveCurrentWorkflow: function (name, workflowXml, offsets) {
             if (this.supports_html5_storage() && workflowXml) {
 
                 if (!localStorage["workflows"]) {
@@ -617,18 +632,18 @@
                 }
             }
         },
-        setSelectWorkflowIndex: function(index) {
+        setSelectWorkflowIndex: function (index) {
             if (this.supports_html5_storage()) {
                 localStorage["workflow-selected"] = index;
             }
 
         },
-        getSelectWorkflowIndex: function() {
+        getSelectWorkflowIndex: function () {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 return localStorage["workflow-selected"]
             }
         },
-        removeWorkflow: function(index) {
+        removeWorkflow: function (index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 var localJobs = JSON.parse(localStorage['workflows']);
                 var workflow = localJobs[index];
@@ -636,12 +651,12 @@
                 localStorage['workflows'] = JSON.stringify(localJobs);
 
                 if (localJobs.length <= localStorage["workflow-selected"]) {
-                    localStorage['workflow-selected'] = localJobs.length-1;
+                    localStorage['workflow-selected'] = localJobs.length - 1;
                 }
                 StudioClient.removeWorkflow(workflow.id);
             }
         },
-        cloneWorkflow: function(index) {
+        cloneWorkflow: function (index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 var localJobs = JSON.parse(localStorage['workflows']);
                 var workflow = localJobs[index];
@@ -652,10 +667,10 @@
                 localStorage['workflows'] = JSON.stringify(localJobs);
             }
         },
-        updatedAt: function(workflow) {
+        updatedAt: function (workflow) {
             return JSON.parse(workflow.metadata).updated_at;
         },
-        sync: function() {
+        sync: function () {
             if (this.supports_html5_storage()) {
                 if (!this.remoteJobs) {
                     // TODO loading indicator
@@ -697,7 +712,7 @@
                 }
             }
         },
-        getOffsetsFromLocalStorage: function() {
+        getOffsetsFromLocalStorage: function () {
             if (this.supports_html5_storage()) {
                 var selectedIndex = localStorage["workflow-selected"];
                 var localJobs = JSON.parse(localStorage['workflows']);
