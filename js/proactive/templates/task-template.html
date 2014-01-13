@@ -1,0 +1,114 @@
+<task name="<%=task["Task Name"]%>"
+    <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>" <% } %>
+    <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
+    <% if (task["Cancel Job On Error Policy"]=='true') { %>cancelJobOnError="<%=task["Cancel Job On Error Policy"]%>" <% } %>
+    <% if (task["Precious Result"]=='true') { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
+    <% if (task["Run as me"]) { %>runAsMe="<%=task["Run as me"]%>" <% } %>
+    <% if (task["If An Error Occurs Restart Task"] && task["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= task["If An Error Occurs Restart Task"]%>" <% } %>
+
+    <%if (task["Maximum Execution Time (hh:mm:ss)"]){%>
+        walltime="<%=task["Maximum Execution Time (hh:mm:ss)"]%>"
+    <%}%>
+    <%if (task["Result Preview Class"]){%>
+        resultPreviewClass="<%=task["Result Preview Class"]%>"
+    <%}%>>
+
+    <% if (task["Description"] && task["Description"].length>0) { %>
+    <description> <![CDATA[ <%= task["Description"]%> ]]> </description>
+    <% } %>
+
+    <% if (task["Generic Info"] && task["Generic Info"].length>0) { %>
+    <genericInformation>
+    <% _.each(task["Generic Info"], function(gi) { %>
+            <info name="<%=gi["Property Name"]%>" value="<%=gi["Property Value"]%>"/>
+    <% }) %>
+    </genericInformation>
+    <% } %>
+
+    <% if (dependencies && dependencies.length > 0) { %>
+    <depends>
+    <% _.each(dependencies, function(dep) { %>
+            <task ref="<%=dep.get("Task Name")%>"/>
+    <% }) %>
+    </depends>
+    <% } %>
+
+    <% if (task["Input Files"] && task["Input Files"].length>0) { %>
+    <inputFiles>
+    <% _.each(task["Input Files"], function(file) { %>
+            <files <%if (file["Excludes"]&&file["Excludes"].length>0) {%>excludes="<%=file["Excludes"]%>"<% } %> <%if (file["Includes"]&&file["Includes"].length>0) {%>includes="<%=file["Includes"]%>"<% } %> accessMode="<%=file["Access Mode"]%>"/>
+    <% }) %>
+    </inputFiles>
+    <% } %>
+
+    <% if (task["Number of Nodes"] && task["Number of Nodes"]>1) { %>
+    <parallel numberOfNodes="<%=task["Number of Nodes"]%>">
+
+    <% if (task["Topology"]&&task["Topology"]!="none") { %>
+        <topology><<%=task["Topology"]%>/></topology>
+    <% } else if (task["Or Topology Threshold Proximity"]&&task["Or Topology Threshold Proximity"]>0) { %>
+        <topology><thresholdProximity threshold="<%=task["Or Topology Threshold Proximity"]%>"/></topology>
+    <% }%>
+    </parallel>
+    <% }%>
+
+    <% if (task["Selection Scripts"] && task["Selection Scripts"].length>0) { %>
+        <selection>
+        <% _.each(selectionScripts, function(script) { %>
+                <%=script%>
+        <% }) %>
+        </selection>
+    <% } %>
+
+    <% if (preScript && preScript.length>0) { %>
+    <% print("<pre"+">") %>
+        <%=preScript%>
+    <% print("</pre"+">") %>
+    <% } %>
+
+    <%=executable%>
+
+    <% if (controlFlow && controlFlow['if']) { %>
+    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
+    <if <% if (controlFlow['if']&&controlFlow['if'].task){ %>target="<%=controlFlow['if'].task.get('Task Name')%>"<%}%>
+        <% if (controlFlow['if']['else']&&controlFlow['if']['else'].task){ %>else="<%=controlFlow['if']['else'].task.get('Task Name')%>"<%}%>
+        <% if (controlFlow['if']['continuation']&&controlFlow['if']['continuation'].task){ %>continuation="<%=controlFlow['if']['continuation'].task.get('Task Name')%>"<%}%>>
+        <%=controlFlow['if'].script%>
+    </if>
+    </controlFlow>
+    <% } else if (controlFlow && controlFlow['loop']) { %>
+    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
+    <loop <% if (controlFlow['loop'].task){ %>target="<%=controlFlow['loop'].task.get('Task Name')%>"<%}%>>
+    <%=controlFlow['loop'].script%>
+    </loop>
+    </controlFlow>
+    <% } else if (controlFlow && controlFlow['replicate']) { %>
+    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>><replicate>
+    <%=controlFlow['replicate'].script%>
+    </replicate></controlFlow>
+    <% } else if (task["Block"] && task["Block"]!='none') { %>
+    <controlFlow block="<%=task["Block"]%>">
+    </controlFlow>
+    <% } %>
+
+    <% if (postScript && postScript.length>0) { %>
+    <post>
+        <%=postScript%>
+    </post>
+    <% } %>
+
+    <% if (cleanScript && cleanScript.length>0) { %>
+    <cleaning>
+        <%=cleanScript%>
+    </cleaning>
+    <% } %>
+
+    <% if (task["Output Files"] && task["Output Files"].length>0) { %>
+    <outputFiles>
+    <% _.each(task["Output Files"], function(file) { %>
+            <files <%if (file["Excludes"]&&file["Excludes"].length>0) {%>excludes="<%=file["Excludes"]%>"<%}%> <%if (file["Includes"]&&file["Includes"].length>0) {%>includes="<%=file["Includes"]%>"<%}%> accessMode="<%=file["Access Mode"]%>"/>
+    <% }) %>
+    </outputFiles>
+    <% } %>
+</task>
+

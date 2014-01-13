@@ -47,4 +47,7 @@
         $(".job-view").click();
     })
 
+    tpl.loadTemplates(['header', 'wine-details', 'wine-list-item', 'start'], function () {
+
+    });
 })();

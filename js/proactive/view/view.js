@@ -1272,7 +1272,7 @@
                 });
             }
 
-            var jobRendering = _.template($("#job-template").html(), {'job': job, 'tasks': tasks});
+            var jobRendering = _.template(Template.get("job-template"), {'job': job, 'tasks': tasks});
 
             // beautifying the job xml - removing multiple spaces
             jobRendering = jobRendering.replace(/ {2,}/g, ' ');
@@ -1295,7 +1295,7 @@
             var width = $("#workflow-designer").get(0).scrollWidth;
             var height = $("#workflow-designer").get(0).scrollHeight;
 
-            var html = _.template($('#workflow-view-template').html(),
+            var html = _.template(Template.get('workflow-view-template'),
                 {'url': url, 'content': content, 'width': width, 'height': height});
 
             // replacing all images paths
@@ -1324,14 +1324,14 @@
             var selectionScripts = [];
             if (this.model.get("Selection Scripts")) {
                 $.each(this.model.get("Selection Scripts"), function (i, script) {
-                    var view = new TemplateView({model: script, template: "#script-template"}).render();
+                    var view = new TemplateView({model: script, template: "script-template"}).render();
                     selectionScripts.push(view.$el.text());
                 })
             }
 
-            var preScript = new TemplateView({model: this.model.get("Pre Script"), template: "#script-template"}).render().$el.text();
-            var postScript = new TemplateView({model: this.model.get("Post Script"), template: "#script-template"}).render().$el.text();
-            var cleanScript = new TemplateView({model: this.model.get("Clean Script"), template: "#script-template"}).render().$el.text();
+            var preScript = new TemplateView({model: this.model.get("Pre Script"), template: "script-template"}).render().$el.text();
+            var postScript = new TemplateView({model: this.model.get("Post Script"), template: "script-template"}).render().$el.text();
+            var cleanScript = new TemplateView({model: this.model.get("Clean Script"), template: "script-template"}).render().$el.text();
 
             var that = this;
             if (this.model.controlFlow) {
@@ -1340,14 +1340,14 @@
                         var controlModel = that.model.controlFlow[control].model;
                         if (controlModel && controlModel.get('Script')) {
                             that.model.controlFlow[control].script =
-                                new TemplateView({model: controlModel.get('Script'), template: "#script-template"}).render().$el.text();
+                                new TemplateView({model: controlModel.get('Script'), template: "script-template"}).render().$el.text();
                             return false;
                         }
                     }
                 })
             }
 
-            var taskTemplate = _.template($("#task-template").html(),
+            var taskTemplate = _.template(Template.get("task-template"),
                 {'task': this.model.toJSON(),
                     'selectionScripts': selectionScripts,
                     'preScript': preScript.trim(),
@@ -1395,10 +1395,10 @@
             }
             var script = undefined;
             if (model["Environment Script"]) {
-                script = new TemplateView({model: model["Environment Script"], template: "#script-template"}).render().$el.text();
+                script = new TemplateView({model: model["Environment Script"], template: "script-template"}).render().$el.text();
                 script = script.trim();
             }
-            var template = _.template($("#java-executable-template").html(), {model: model, 'script': script});
+            var template = _.template(Template.get("java-executable-template"), {model: model, 'script': script});
             this.$el.text(template);
             return this;
         }
@@ -1412,10 +1412,10 @@
             }
             var script = undefined;
             if (model["Or Dynamic Command"]) {
-                script = new TemplateView({model: model["Or Dynamic Command"], template: "#script-template"}).render().$el.text();
+                script = new TemplateView({model: model["Or Dynamic Command"], template: "script-template"}).render().$el.text();
                 script = script.trim();
             }
-            var template = _.template($("#native-executable-template").html(), {model: model, 'script': script});
+            var template = _.template(Template.get("native-executable-template"), {model: model, 'script': script});
             this.$el.text(template);
             return this;
         }
@@ -1427,8 +1427,8 @@
             if (typeof(this.model.get) != "undefined" && this.model.get("Script")) {
                 script = this.model.get("Script").toJSON();
             }
-            var scriptView = new TemplateView({model: script, template: "#script-template"}).render().$el.text();
-            var template = _.template($("#script-executable-template").html(), {'script': scriptView});
+            var scriptView = new TemplateView({model: script, template: "script-template"}).render().$el.text();
+            var template = _.template(Template.get("script-executable-template"), {'script': scriptView});
             this.$el.text(template);
             return this;
         }
@@ -1442,7 +1442,7 @@
                     this.model = this.model.toJSON();
                 }
 
-                var template = _.template($(this.options.template).html(), {'model': this.model});
+                var template = _.template(Template.get(this.options.template), {'model': this.model});
                 this.$el.text(template);
             }
             return this;

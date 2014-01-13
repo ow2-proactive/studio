@@ -110,7 +110,7 @@
         }
     });
 
-    var jobClasspathTemplate = _.template($('#job-classpath-template').html());
+    var jobClasspathTemplate = _.template(Template.get('job-classpath-template'));
 
     Job = SchemaModel.extend({
         schema: {
@@ -263,7 +263,7 @@
         }
     });
 
-    var scriptTemplate = _.template($('#script-form-template').html());
+    var scriptTemplate = _.template(Template.get('script-form-template'));
     var serverScripts = function (callback) {
         callback([""].concat(StudioClient.listScripts()));
     }
@@ -636,7 +636,6 @@
             if (this.supports_html5_storage()) {
                 localStorage["workflow-selected"] = index;
             }
-
         },
         getSelectWorkflowIndex: function () {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
+    name="<%= job["Job Name"]%>"
+    priority="<%= job["Job Priority"]%>"
+    cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
+    <% if (job["Max Number Of Executions For Task"]&&parseInt(job["Max Number Of Executions For Task"])>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>" <% } %>
+    <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
+
+    <% if (job["Local Variables"] && job["Local Variables"].length>0) { %>
+    <variables>
+    <% _.each(job["Local Variables"], function(variable) { %>
+            <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable["Value"])%>"/>
+    <% }) %>
+    </variables>
+    <% } %>
+
+    <% if (job["Description"] && job["Description"].length>0) { %>
+    <description> <![CDATA[ <%= job["Description"]%> ]]> </description>
+    <% } %>
+
+    <% if (job["Job Classpath"] && job["Job Classpath"].length>0) { %>
+    <jobClasspath>
+    <% _.each(job["Job Classpath"], function(cp) { %>
+        <pathElement path="<%=cp%>"/>
+    <% }) %>
+    </jobClasspath>
+    <% } %>
+
+    <% if (job["Generic Info"] && job["Generic Info"].length>0) { %>
+    <genericInformation>
+    <% _.each(job["Generic Info"], function(gi) { %>
+            <info name="<%=gi["Property Name"]%>" value="<%=gi["Property Value"]%>"/>
+    <% }) %>
+    </genericInformation>
+    <% } %>
+
+    <% if (job["Input Space Url"] && job["Input Space Url"].length>0) { %>
+    <inputSpace url="<%= job["Input Space Url"]%>"/>
+    <% } %>
+    <% if (job["Output Space Url"] && job["Output Space Url"].length>0) { %>
+    <outputSpace url="<%= job["Output Space Url"]%>"/>
+    <% } %>
+    <% if (job["Global Space Url"] && job["Global Space Url"].length>0) { %>
+    <globalSpace url="<%= job["Global Space Url"]%>"/>
+    <% } %>
+    <% if (job["User Space Url"] && job["User Space Url"].length>0) { %>
+    <userSpace url="<%= job["User Space Url"]%>"/>
+    <% } %>
+
+    <taskFlow>
+        <% _.each(tasks, function(task) { %>
+                <%=task%>
+        <% }) %>
+    </taskFlow>
+</job>
