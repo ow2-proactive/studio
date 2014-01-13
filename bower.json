@@ -1,0 +1,24 @@
+{
+  "name": "studio",
+  "private": true,
+  "dependencies": {
+    "modernizr": "~2.6.2",
+    "jquery": "~2.0.3",
+    "jsplumb": "~1.5.5",
+    "backbone-forms": "~0.14.0",
+    "FileSaver": "*",
+    "pines-notify": "~1.2.0",
+    "vkbeautify.0.99.00.beta": "https://vkbeautify.googlecode.com/files/vkbeautify.0.99.00.beta.js",
+    "dagre": "./app/scripts/dagre.min.js",
+    "syntaxhighlighter": "alexgorbatchev/syntaxhighlighter",
+    "codemirror": "~3.20.0",
+    "underscore": "~1.5.2",
+    "backbone": "~1.0.0",
+    "bootstrap": "~3.0.3",
+    "jquery-ui-touch-punch": "*",
+    "jquery-ui": "~1.10.3",
+    "jquery-mousewheel": "~3.1.9",
+    "xml2json": "./app/scripts/xml2json.js"
+  },
+  "devDependencies": {}
+}

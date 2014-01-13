@@ -1,0 +1,259 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ProActive Workflow Studio</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <!-- endbower -->
+        <link href="bower_components/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+        <link href="bower_components/pines-notify/jquery.pnotify.default.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/pines-notify/jquery.pnotify.default.icons.css" rel="stylesheet" type="text/css" />
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+
+        <body data-library="jquery" style="zoom: 1;">
+
+        <div class="navbar navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="vertical-align:middle"><img src="images/proactive_32.png" style="height:24px"> ProActive Studio <span class="release-status">beta</span></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a id="save-button" href="#" class="pointer"><i class="glyphicon glyphicon-hdd"></i> Save</a></li>
+                    <li><a id="submit-button" href="#" class="pointer"><i class="glyphicon glyphicon-share "></i> Execute</a></li>
+                    <li class="divider"></li>
+                    <li><a id="import-button" href="#" class="pointer"><i class="glyphicon glyphicon-import"></i> Import</a></li>
+                    <li><a id="export-button" href="#" class="pointer"><i class="glyphicon glyphicon-eye-open "></i> View Source</a></li>
+                    <li><a id="validate-button" href="#" class="pointer"><i class="glyphicon glyphicon-ok "></i> Check</a></li>
+                    <li><a id="clear-button" href="#" class="pointer"><i class="glyphicon glyphicon-repeat "></i> Clear</a></li>
+                    <li><a id="undo-button" href="#" class="pointer"><i class="glyphicon glyphicon-arrow-left "></i> Undo</a></li>
+                    <li><a id="redo-button" href="#" class="pointer"><i class="glyphicon glyphicon-arrow-right "></i> Redo</a></li>
+                </ul>
+                <ul class="nav navbar-nav nav navbar-right">
+                    <li id="login-view"></li>
+                </ul>
+            </div>
+        </div>
+
+        <table id="body-container" style="min-width:100%;height:100%">
+            <tr>
+                <td style="min-width:300px;width:25%; resizable:horizontal; padding-left:10px; padding-right:10px">
+                    <div id="properties-container"></div>
+                </td>
+                <td style="width:75%; padding-right:10px">
+                    <div id="workflow-designer"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table id="tools-table">
+            <tr><td style="padding-right:20px">
+                <div id="palette-container"></div>
+            </td><td>
+                <div id="tools-panel">
+                    <div class="btn-group">
+                        <button id="layout-button" type="button" class="btn" title="Layout"><i class="glyphicon glyphicon-align-center"></i></button>
+                        <!--
+                      <button id="zoom-reset-button" type="button" class="btn" title="Zoom in"><i class="icon-screenshot"></i></button>
+                      <button id="zoom-in-button" type="button" class="btn" title="Zoom in"><i class="icon-plus"></i></button>
+                      <button id="zoom-out-button" type="button" class="btn" title="Zoom out"><i class="icon-minus"></i></button>
+                      -->
+                    </div>
+                </div>
+            </td></tr>
+        </table>
+
+        <input type="file" id="import-file" style="display:none"/>
+        <input type="file" id="import-file" style="display:none"/>
+
+        <div id="scheduler-connect-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Scheduler Login Required</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Workflow XML</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        <div id="workflow-xml-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="full-edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="width:90%;height:90%">
+                <div class="modal-content" style="height: 100%;">
+                    <table style="min-height:100%;width:100%">
+                        <tr><td style="height:80px">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3>Script Editor</h3>
+                            </div>
+                        </td></tr>
+                        <tr class="code-editor-container"><td style="height:99%;min-height:99%;vertical-align: top;">
+                            <textarea id="full-edit-modal-script-content" class="form-control" style="width:100%;height:100%"></textarea>
+                        </td></tr>
+                        <tr><td style="height:80px">
+                            <div class="modal-footer">
+                                <button id="set-script-content" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Done</button>
+                            </div>
+                        </td></tr>
+                    </table>
+                    <!--<div class="modal-body" style="height: 70%;">-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+
+        <div id="script-save-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <label>Script name (*.groovy, *.js, *.py, *.rb):</label>
+                        <input data-name="name" type="text" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="script-save-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': '&quot;',
+                "'": '&#39;',
+                "/": '&#x2F;'
+            };
+
+            function escapeHtml(string) {
+                return String(string).replace(/[&<>"'\/]/g, function (s) {
+                    return entityMap[s];
+                });
+            }
+        </script>
+
+        </body>
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/jquery.js"></script>
+        <script src="bower_components/FileSaver/FileSaver.js"></script>
+        <script src="bower_components/vkbeautify.0.99.00.beta/index.js"></script>
+        <script src="bower_components/dagre/index.js"></script>
+        <script src="bower_components/codemirror/lib/codemirror.js"></script>
+        <script src="bower_components/underscore/underscore.js"></script>
+        <script src="bower_components/backbone/backbone.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+        <script src="bower_components/jquery-mousewheel/jquery.mousewheel.js"></script>
+        <script src="bower_components/xml2json/index.js"></script>
+        <!-- endbower -->
+        <script src="bower_components/backbone-forms/distribution/backbone-forms.js"></script>
+        <script src="bower_components/backbone-forms/distribution/editors/list.js"></script>
+        <script src="bower_components/backbone-forms/distribution/adapters/backbone.bootstrap-modal.js"></script>
+
+        <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+        <script src="bower_components/jsplumb/dist/js/jquery.jsPlumb-1.5.5.js"></script>
+
+        <script src="bower_components/syntaxhighlighter/scripts/XRegExp.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shCore.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+
+        <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+        <script src="bower_components/codemirror/addon/comment/comment.js"></script>
+        <script src="bower_components/codemirror/addon/edit/matchbrackets.js"></script>
+
+        <script src="bower_components/pines-notify/jquery.pnotify.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <script src="scripts/proactive/rest/studio-client.js"></script>
+        <script src="scripts/proactive/template.js"></script>
+
+        <script src="scripts/proactive/model/utils.js"></script>
+        <script src="scripts/proactive/model/SchemaModel.js"></script>
+        <script src="scripts/proactive/model/Script.js"></script>
+        <script src="scripts/proactive/model/SelectionScript.js"></script>
+        <script src="scripts/proactive/model/BranchWithScript.js"></script>
+        <script src="scripts/proactive/model/JavaExecutable.js"></script>
+        <script src="scripts/proactive/model/NativeExecutable.js"></script>
+        <script src="scripts/proactive/model/Project.js"></script>
+        <script src="scripts/proactive/model/ScriptExecutable.js"></script>
+        <script src="scripts/proactive/model/Task.js"></script>
+        <script src="scripts/proactive/model/Job.js"></script>
+
+        <script src="scripts/proactive/view/xml/JavaExecutableXmlView.js"></script>
+        <script src="scripts/proactive/view/xml/JobXmlView.js"></script>
+        <script src="scripts/proactive/view/xml/NativeExecutableXmlView.js"></script>
+        <script src="scripts/proactive/view/xml/ScriptExecutableXmlView.js"></script>
+        <script src="scripts/proactive/view/xml/TaskXmlView.js"></script>
+        <script src="scripts/proactive/view/ViewWatchingModelChange.js"></script>
+        <script src="scripts/proactive/view/ViewWithProperties.js"></script>
+        <script src="scripts/proactive/view/LoginView.js"></script>
+        <script src="scripts/proactive/view/PaletteView.js"></script>
+        <script src="scripts/proactive/view/PropertiesView.js"></script>
+        <script src="scripts/proactive/view/TaskView.js"></script>
+        <script src="scripts/proactive/view/TemplateView.js"></script>
+        <script src="scripts/proactive/view/WorkflowView.js"></script>
+        <script src="scripts/proactive/view/utils.js"></script>
+
+        <script src="scripts/proactive/jsplumb.js"></script>
+        <script src="scripts/proactive/app.js"></script>
+        <script src="scripts/proactive/config.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
