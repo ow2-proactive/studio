@@ -1,0 +1,595 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ProActive Workflow Studio</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <!-- endbower -->
+        <link href="bower_components/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+
+        <link href="bower_components/pines-notify/jquery.pnotify.default.css" rel="stylesheet" type="text/css" />
+        <link href="bower_components/pines-notify/jquery.pnotify.default.icons.css" rel="stylesheet" type="text/css" />
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+
+        <body data-library="jquery" style="zoom: 1;">
+
+        <div class="navbar navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="vertical-align:middle"><img src="images/proactive_32.png" style="height:24px"> ProActive Studio <span class="release-status">beta</span></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a id="save-button" href="#" class="pointer"><i class="glyphicon glyphicon-hdd"></i> Save</a></li>
+                    <li><a id="submit-button" href="#" class="pointer"><i class="glyphicon glyphicon-share "></i> Execute</a></li>
+                    <li class="divider"></li>
+                    <li><a id="import-button" href="#" class="pointer"><i class="glyphicon glyphicon-import"></i> Import</a></li>
+                    <li><a id="export-button" href="#" class="pointer"><i class="glyphicon glyphicon-eye-open "></i> View Source</a></li>
+                    <li><a id="validate-button" href="#" class="pointer"><i class="glyphicon glyphicon-ok "></i> Check</a></li>
+                    <li><a id="clear-button" href="#" class="pointer"><i class="glyphicon glyphicon-repeat "></i> Clear</a></li>
+                    <li><a id="undo-button" href="#" class="pointer"><i class="glyphicon glyphicon-arrow-left "></i> Undo</a></li>
+                    <li><a id="redo-button" href="#" class="pointer"><i class="glyphicon glyphicon-arrow-right "></i> Redo</a></li>
+                </ul>
+                <ul class="nav navbar-nav nav navbar-right">
+                    <li id="login-view"></li>
+                </ul>
+            </div>
+        </div>
+
+        <table id="body-container" style="min-width:100%;height:100%">
+            <tr>
+                <td style="min-width:300px;width:25%; resizable:horizontal; padding-left:10px; padding-right:10px">
+                    <div id="properties-container"></div>
+                </td>
+                <td style="width:75%; padding-right:10px">
+                    <div id="workflow-designer"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table id="tools-table">
+            <tr><td style="padding-right:20px">
+                <div id="palette-container"></div>
+            </td><td>
+                <div id="tools-panel">
+                    <div class="btn-group">
+                        <button id="layout-button" type="button" class="btn" title="Layout"><i class="glyphicon glyphicon-align-center"></i></button>
+                        <!--
+                      <button id="zoom-reset-button" type="button" class="btn" title="Zoom in"><i class="icon-screenshot"></i></button>
+                      <button id="zoom-in-button" type="button" class="btn" title="Zoom in"><i class="icon-plus"></i></button>
+                      <button id="zoom-out-button" type="button" class="btn" title="Zoom out"><i class="icon-minus"></i></button>
+                      -->
+                    </div>
+                </div>
+            </td></tr>
+        </table>
+
+        <input type="file" id="import-file" style="display:none"/>
+        <input type="file" id="import-file" style="display:none"/>
+
+        <div id="scheduler-connect-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Scheduler Login Required</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Workflow XML</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        <div id="workflow-xml-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="full-edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="width:90%;height:90%">
+                <div class="modal-content" style="height: 100%;">
+                    <table style="min-height:100%;width:100%">
+                        <tr><td style="height:80px">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3>Script Editor</h3>
+                            </div>
+                        </td></tr>
+                        <tr class="code-editor-container"><td style="height:99%;min-height:99%;vertical-align: top;">
+                            <textarea id="full-edit-modal-script-content" class="form-control" style="width:100%;height:100%"></textarea>
+                        </td></tr>
+                        <tr><td style="height:80px">
+                            <div class="modal-footer">
+                                <button id="set-script-content" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Done</button>
+                            </div>
+                        </td></tr>
+                    </table>
+                    <!--<div class="modal-body" style="height: 70%;">-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+
+        <div id="script-save-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <label>Script name (*.groovy, *.js, *.py, *.rb):</label>
+                        <input data-name="name" type="text" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button id="script-save-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': '&quot;',
+                "'": '&#39;',
+                "/": '&#x2F;'
+            };
+
+            function escapeHtml(string) {
+                return String(string).replace(/[&<>"'\/]/g, function (s) {
+                    return entityMap[s];
+                });
+            }
+        </script>
+
+        <script type="text/template" class="template" id="job-template">
+            <?xml version="1.0" encoding="UTF-8"?>
+            <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
+                 xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
+                 name="<%= job["Job Name"]%>"
+            priority="<%= job["Job Priority"]%>"
+            cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
+            <% if (job["Max Number Of Executions For Task"]&&parseInt(job["Max Number Of Executions For Task"])>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>" <% } %>
+            <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
+
+            <% if (job["Local Variables"] && job["Local Variables"].length>0) { %>
+            <variables>
+                <% _.each(job["Local Variables"], function(variable) { %>
+                <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable["Value"])%>"/>
+                <% }) %>
+            </variables>
+            <% } %>
+
+            <% if (job["Description"] && job["Description"].length>0) { %>
+            <description> <![CDATA[ <%= job["Description"]%> ]]> </description>
+            <% } %>
+
+            <% if (job["Job Classpath"] && job["Job Classpath"].length>0) { %>
+            <jobClasspath>
+                <% _.each(job["Job Classpath"], function(cp) { %>
+                <pathElement path="<%=cp%>"/>
+                <% }) %>
+            </jobClasspath>
+            <% } %>
+
+            <% if (job["Generic Info"] && job["Generic Info"].length>0) { %>
+            <genericInformation>
+                <% _.each(job["Generic Info"], function(gi) { %>
+                <info name="<%=gi["Property Name"]%>" value="<%=gi["Property Value"]%>"/>
+                <% }) %>
+            </genericInformation>
+            <% } %>
+
+            <% if (job["Input Space Url"] && job["Input Space Url"].length>0) { %>
+            <inputSpace url="<%= job["Input Space Url"]%>"/>
+            <% } %>
+            <% if (job["Output Space Url"] && job["Output Space Url"].length>0) { %>
+            <outputSpace url="<%= job["Output Space Url"]%>"/>
+            <% } %>
+            <% if (job["Global Space Url"] && job["Global Space Url"].length>0) { %>
+            <globalSpace url="<%= job["Global Space Url"]%>"/>
+            <% } %>
+            <% if (job["User Space Url"] && job["User Space Url"].length>0) { %>
+            <userSpace url="<%= job["User Space Url"]%>"/>
+            <% } %>
+
+            <taskFlow>
+                <% _.each(tasks, function(task) { %>
+                <%=task%>
+                <% }) %>
+            </taskFlow>
+            </job>
+        </script>
+
+        <script type="text/template" class="template" id="task-template">
+            <task name="<%=task["Task Name"]%>"
+            <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>" <% } %>
+            <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
+            <% if (task["Cancel Job On Error Policy"]=='true') { %>cancelJobOnError="<%=task["Cancel Job On Error Policy"]%>" <% } %>
+            <% if (task["Precious Result"]=='true') { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
+            <% if (task["Run as me"]) { %>runAsMe="<%=task["Run as me"]%>" <% } %>
+            <% if (task["If An Error Occurs Restart Task"] && task["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= task["If An Error Occurs Restart Task"]%>" <% } %>
+
+            <%if (task["Maximum Execution Time (hh:mm:ss)"]){%>
+            walltime="<%=task["Maximum Execution Time (hh:mm:ss)"]%>"
+            <%}%>
+            <%if (task["Result Preview Class"]){%>
+            resultPreviewClass="<%=task["Result Preview Class"]%>"
+            <%}%>>
+
+            <% if (task["Description"] && task["Description"].length>0) { %>
+            <description> <![CDATA[ <%= task["Description"]%> ]]> </description>
+            <% } %>
+
+            <% if (task["Generic Info"] && task["Generic Info"].length>0) { %>
+            <genericInformation>
+                <% _.each(task["Generic Info"], function(gi) { %>
+                <info name="<%=gi["Property Name"]%>" value="<%=gi["Property Value"]%>"/>
+                <% }) %>
+            </genericInformation>
+            <% } %>
+
+            <% if (dependencies && dependencies.length > 0) { %>
+            <depends>
+                <% _.each(dependencies, function(dep) { %>
+                <task ref="<%=dep.get("Task Name")%>"/>
+                <% }) %>
+            </depends>
+            <% } %>
+
+            <% if (task["Input Files"] && task["Input Files"].length>0) { %>
+            <inputFiles>
+                <% _.each(task["Input Files"], function(file) { %>
+                <files <%if (file["Excludes"]&&file["Excludes"].length>0) {%>excludes="<%=file["Excludes"]%>"<% } %> <%if (file["Includes"]&&file["Includes"].length>0) {%>includes="<%=file["Includes"]%>"<% } %> accessMode="<%=file["Access Mode"]%>"/>
+                <% }) %>
+            </inputFiles>
+            <% } %>
+
+            <% if (task["Number of Nodes"] && task["Number of Nodes"]>1) { %>
+            <parallel numberOfNodes="<%=task["Number of Nodes"]%>">
+
+            <% if (task["Topology"]&&task["Topology"]!="none") { %>
+            <topology><<%=task["Topology"]%>/></topology>
+            <% } else if (task["Or Topology Threshold Proximity"]&&task["Or Topology Threshold Proximity"]>0) { %>
+            <topology><thresholdProximity threshold="<%=task["Or Topology Threshold Proximity"]%>"/></topology>
+            <% }%>
+            </parallel>
+            <% }%>
+
+            <% if (task["Selection Scripts"] && task["Selection Scripts"].length>0) { %>
+            <selection>
+                <% _.each(selectionScripts, function(script) { %>
+                <%=script%>
+                <% }) %>
+            </selection>
+            <% } %>
+
+            <% if (preScript && preScript.length>0) { %>
+            <% print("<pre"+">") %>
+            <%=preScript%>
+            <% print("</pre"+">") %>
+            <% } %>
+
+            <%=executable%>
+
+            <% if (controlFlow && controlFlow['if']) { %>
+            <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
+            <if <% if (controlFlow['if']&&controlFlow['if'].task){ %>target="<%=controlFlow['if'].task.get('Task Name')%>"<%}%>
+            <% if (controlFlow['if']['else']&&controlFlow['if']['else'].task){ %>else="<%=controlFlow['if']['else'].task.get('Task Name')%>"<%}%>
+            <% if (controlFlow['if']['continuation']&&controlFlow['if']['continuation'].task){ %>continuation="<%=controlFlow['if']['continuation'].task.get('Task Name')%>"<%}%>>
+            <%=controlFlow['if'].script%>
+            </if>
+            </controlFlow>
+            <% } else if (controlFlow && controlFlow['loop']) { %>
+            <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
+            <loop <% if (controlFlow['loop'].task){ %>target="<%=controlFlow['loop'].task.get('Task Name')%>"<%}%>>
+            <%=controlFlow['loop'].script%>
+            </loop>
+            </controlFlow>
+            <% } else if (controlFlow && controlFlow['replicate']) { %>
+            <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>><replicate>
+                <%=controlFlow['replicate'].script%>
+            </replicate></controlFlow>
+            <% } else if (task["Block"] && task["Block"]!='none') { %>
+            <controlFlow block="<%=task["Block"]%>">
+            </controlFlow>
+            <% } %>
+
+            <% if (postScript && postScript.length>0) { %>
+            <post>
+                <%=postScript%>
+            </post>
+            <% } %>
+
+            <% if (cleanScript && cleanScript.length>0) { %>
+            <cleaning>
+                <%=cleanScript%>
+            </cleaning>
+            <% } %>
+
+            <% if (task["Output Files"] && task["Output Files"].length>0) { %>
+            <outputFiles>
+                <% _.each(task["Output Files"], function(file) { %>
+                <files <%if (file["Excludes"]&&file["Excludes"].length>0) {%>excludes="<%=file["Excludes"]%>"<%}%> <%if (file["Includes"]&&file["Includes"].length>0) {%>includes="<%=file["Includes"]%>"<%}%> accessMode="<%=file["Access Mode"]%>"/>
+                <% }) %>
+            </outputFiles>
+            <% } %>
+            </task>
+        </script>
+
+        <script type="text/template" class="template" id="script-template-short">
+            <% if (model["Script"] && model["Script"].length>0) { %>
+            <% print("<sc"+"ript") %> <% if (model["Type"]) { %>type="<%=model["Type"]%>" <% } %>>
+            <code language="<%=model["Engine"]%>"><![CDATA[<%=model["Script"] %>]]></code>
+            <% print("</sc"+"ript>") %>
+            <% } %>
+        </script>
+
+        <script type="text/template" class="template" id="script-template-0">
+            <% if (model["Or Path"]&&model["Or Path"].length>0 || model["Or Url"]&&model["Or Url"].length>0 || model["Script"]&&model["Script"].length>0) { %>
+            <% print("<sc"+"ript") %> <% if (model["Type"]) { %>type="<%=model["Type"]%>" <% } %>>
+            <% if (model["Script"] && model["Script"].length>0) {%>
+            <code language="<%=model["Engine"]%>">
+            <![CDATA[
+            <%= model["Script"] %>
+            ]]>
+            </code>
+            <% } else { %>
+            <% if (model["Or Path"] && model["Or Path"].length>0) { %>
+            <file path="<%=model["Or Path"]%>">
+            <% } else if (model["Or Url"] && model["Or Url"].length>0) {%>
+            <file url="<%=model["Or Url"]%>">
+            <% }%>
+
+            <% if (model["Arguments"] && model["Arguments"].length>0) { %>
+            <arguments>
+                <% _.each(model["Arguments"], function(arg) { %>
+                <argument value="<%=arg%>"/>
+                <% }) %>
+            </arguments>
+            <% }%>
+            </file>
+            <% } %>
+            <% print("</sc"+"ript>") %>
+            <% } %>
+        </script>
+
+        <script type="text/template" class="template" id="script-template">
+            <% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0) { %>
+            <% print("<sc"+"ript") %> <% if (model["Type"]) { %>type="<%=model["Type"]%>" <% } %>>
+            <% if (model["Script"] && model["Script"].length>0 && !model["Library Path"]) {%>
+            <code language="<%=model["Engine"]%>">
+            <![CDATA[
+            <%= model["Script"] %>
+            ]]>
+            </code>
+            <% } else { %>
+            <% if (model["Library Path"] && model["Library Path"].length>0) { %>
+            <file path="<%=model["Library Path"]%>">
+            <% }%>
+
+            <% if (model["Arguments"] && model["Arguments"].length>0) { %>
+            <arguments>
+                <% _.each(model["Arguments"], function(arg) { %>
+                <argument value="<%=arg%>"/>
+                <% }) %>
+            </arguments>
+            <% }%>
+            <% if (model["Library Path"] && model["Library Path"].length>0) { %>
+            </file>
+            <% }%>
+            <% } %>
+            <% print("</sc"+"ript>") %>
+            <% } %>
+        </script>
+
+        <script type="text/template" class="template" id="java-executable-template">
+            <javaExecutable class="<%=model["Class"]%>">
+            <% if (model["Fork Environment"]=="true") { %>
+            <forkEnvironment <% if(model["Java Home"]&&model["Java Home"].length>0) {%> javaHome="<%=model["Java Home"]%>"<%}%> <% if(model["Working Dir"]&&model["Working Dir"].length>0) {%>workingDir="<%=model["Working Dir"]%>"<%}%>>
+            <% if (model["Environment Variables"] && model["Environment Variables"].length>0) { %>
+            <SystemEnvironment>
+                <% _.each(model["Environment Variables"], function(arg) { %>
+                <variable name="<%=arg["Name"]%>" value="<%=arg["Value"]%>" append="<%=arg["Append"]%>" appendChar="<%=arg["Append Char"]%>" />
+                <% }) %>
+            </SystemEnvironment>
+            <% } %>
+            <% if (model["Jvm Arguments"] && model["Jvm Arguments"].length>0) { %>
+            <jvmArgs>
+                <% _.each(model["Jvm Arguments"], function(arg) { %>
+                <jvmArg value="<%=arg%>"/>
+                <% }) %>
+            </jvmArgs>
+            <% } %>
+            <% if (model["Additional Classpath"] && model["Additional Classpath"].length>0) { %>
+            <additionalClasspath>
+                <% _.each(model["Additional Classpath"], function(arg) { %>
+                <pathElement path="<%=arg%>"/>
+                <% }) %>
+            </additionalClasspath>
+            <% } %>
+
+            <% if (script && script.length>0) { %>
+            <envScript>
+                <%=script%>
+            </envScript>
+            <% } %>
+            </forkEnvironment>
+            <% } %>
+            <% if (model["Application Parameters"] && model["Application Parameters"].length>0) { %>
+            <parameters>
+                <% _.each(model["Application Parameters"], function(par) { %>
+                <parameter name="<%=par["Name"]%>" value="<%=par["Value"]%>"/>
+                <% }) %>
+            </parameters>
+            <% } %>
+            </javaExecutable>
+
+        </script>
+
+        <script type="text/template" class="template" id="native-executable-template">
+            <nativeExecutable>
+
+                <% if (model["Static Command"] && model["Static Command"].length>0 || !script) { %>
+                <staticCommand value="<%-model["Static Command"]%>" <% if (model["Working Folder"] && model["Working Folder"].length>0) { %>workingDir="<%=model["Working Folder"]%>"<% } %>>
+                <% if (model["Arguments"] && model["Arguments"].length>0) { %>
+                <arguments>
+                    <% _.each(model["Arguments"], function(arg) { %>
+                    <argument value="<%-arg%>"/>
+                    <% }) %>
+                </arguments>
+                <% } %>
+                </staticCommand>
+
+                <% } else { %>
+
+                <dynamicCommand <% if (model["Working Dir"] && model["Working Dir"].length>0) { %>workingDir="<%=model["Working Dir"]%>"<% } %>>
+                <generation>
+                    <%=script%>
+                </generation>
+                </dynamicCommand>
+                <% } %>
+
+            </nativeExecutable>
+        </script>
+
+        <script type="text/template" class="template" id="script-executable-template">
+            <scriptExecutable>
+                <%=script%>
+            </scriptExecutable>
+        </script>
+
+        <script type="text/template" class="template" id="script-form-template">
+            <div class="control-group field-<%= key %>">
+                <label class="control-label" for="<%= editorId %>"><%= title %></label>
+                <div class="controls">
+                    <span data-editor></span>
+                    <div style="width:90%">
+                        <div class="help-inline" data-error></div>
+                        <div class="help-block"><%= help %></div>
+                        <button type="button" class="save-script">Save</button>
+                        <button type="button" class="save-script-as">Save as...</button>
+                        <a href=""#" class="edit-full-screen glyphicon glyphicon-edit pull-right"></a>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" class="template" id="job-classpath-template">
+            <li class="clearfix">
+                <div class="pull-left visible-job-classpath" data-editor>
+                </div>
+                <div class="pull-left" data-editor style="display:none">
+                </div>
+                <button type="button" class="btn bbf-del btn-choose-file choose-job-classpath"><i class="glyphicon glyphicon-folder-open"></i></button>
+                <button type="button" class="btn bbf-del" data-action="remove">&times;</button>
+                <input type="file" name="file" style="display:none"/>
+            </li>
+        </script>
+
+        <script type="text/template" class="template" id="workflow-view-template">
+            <html>
+            <head>
+                <link rel="stylesheet" href="<%= url %>/css/studio-standalone.css">
+                <style>
+                    #workflow-designer {
+                        left:0 !important;
+                        top:0 !important;
+                        width:<%= width %>px;
+                        height:<%= height %>px;
+                    }
+                </style>
+            </head>
+            <body>
+            <%= content %>
+            </body>
+            </html>
+        </script>
+
+        </body>
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/jquery.js"></script>
+        <script src="bower_components/FileSaver/FileSaver.js"></script>
+        <script src="bower_components/vkbeautify.0.99.00.beta/index.js"></script>
+        <script src="bower_components/dagre/index.js"></script>
+        <script src="bower_components/codemirror/lib/codemirror.js"></script>
+        <script src="bower_components/underscore/underscore.js"></script>
+        <script src="bower_components/backbone/backbone.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+        <script src="bower_components/jquery-mousewheel/jquery.mousewheel.js"></script>
+        <script src="bower_components/xml2json/index.js"></script>
+        <!-- endbower -->
+        <script src="bower_components/backbone-forms/distribution/backbone-forms.js"></script>
+        <script src="bower_components/backbone-forms/distribution/editors/list.js"></script>
+        <script src="bower_components/backbone-forms/distribution/adapters/backbone.bootstrap-modal.js"></script>
+
+        <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
+        <script src="bower_components/jsplumb/dist/js/jquery.jsPlumb-1.5.5.js"></script>
+
+        <script src="bower_components/syntaxhighlighter/scripts/XRegExp.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shCore.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+
+        <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+        <script src="bower_components/codemirror/addon/comment/comment.js"></script>
+        <script src="bower_components/codemirror/addon/edit/matchbrackets.js"></script>
+
+        <script src="bower_components/pines-notify/jquery.pnotify.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <script src="scripts/proactive/app-config.js"></script>
+        <script src="scripts/proactive/studio-client.js"></script>
+        <script src="scripts/proactive/model.js"></script>
+        <script src="scripts/proactive/view.js"></script>
+        <script src="scripts/proactive/studio.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
