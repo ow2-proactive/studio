@@ -1,6 +1,15 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'proactive/rest/studio-client'
+    ],
 
-    LoginView = Backbone.View.extend({
+    function ($, Backbone, StudioClient) {
+
+    "use strict";
+
+    return Backbone.View.extend({
         initialize: function () {
             this.render();
         },
@@ -62,6 +71,6 @@
             })
             return this;
         }
-    });
+    })
 
-})(jQuery)
+})

@@ -1,18 +1,37 @@
-(function ($) {
-    var jobClasspathTemplate = _.template(Template.get('job-classpath-template'));
+define(
+    [
+        'backbone',
+        'proactive/model/SchemaModel',
+        'text!proactive/templates/job-classpath-template.html',
+        'proactive/model/Task',
+        'proactive/model/ScriptExecutable',
+        'proactive/model/NativeExecutable',
+        'proactive/model/JavaExecutable',
+        'proactive/model/BranchWithScript',
+        'proactive/model/utils',
 
-    Job = SchemaModel.extend({
+        'proactive/view/utils/undo' // TODO remove
+    ],
+
+    // TODO REMOVE undoManager dependency - comes from view
+    function (Backbone, SchemaModel, tpl, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager) {
+
+    "use strict";
+
+    var jobClasspathTemplate = _.template(tpl);
+
+    return SchemaModel.extend({
         schema: {
 //			"Project Name": {type:"Text", fieldAttrs: {"data-tab":"General Parameters", 'placeholder':'@attributes->projectName'}},
             "Job Name": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': '@attributes->name'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text']}},
             "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path'}, itemTemplate: jobClasspathTemplate},
             "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority'}, options: ["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
-            "Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'variables->variable'}, itemToString: inlineName, subSchema: {
+            "Local Variables": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'variables->variable'}, itemToString: Utils.inlineName, subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-            "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Generic Info", 'placeholder': 'genericInformation->info'}, itemToString: inlineName, subSchema: {
+            "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Generic Info", 'placeholder': 'genericInformation->info'}, itemToString: Utils.inlineName, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
@@ -53,10 +72,10 @@
             })
         },
         getDependantTask: function (taskName) {
-            for (i in this.tasks) {
+            for (var i in this.tasks) {
                 var task = this.tasks[i];
                 if (task.dependencies) {
-                    for (j in task.dependencies) {
+                    for (var j in task.dependencies) {
                         var dep = task.dependencies[j];
                         if (taskName == dep.get('Task Name')) {
                             return task.get('Task Name');
@@ -68,7 +87,7 @@
             return;
         },
         getTaskByName: function (taskName) {
-            for (i in this.tasks) {
+            for (var i in this.tasks) {
                 var task = this.tasks[i];
                 if (taskName == task.get('Task Name')) {
                     return task;
@@ -147,8 +166,7 @@
                         }
                     }
                 })
-                delete name2Task;
             }
         }
-    });
-})(jQuery);
+    })
+})

@@ -1,14 +1,21 @@
-(function ($) {
+define(
+    [
+        'backbone'
+    ],
 
-    // populates model according to the schema (xml import)
+    function (Backbone) {
+
+    "use strict";
+
+        // populates model according to the schema (xml import)
     // it uses placeholder of the model schema to find values in xml
-    SchemaModel = Backbone.Model.extend({
+    var SchemaModel = Backbone.Model.extend({
 
         getValue: function (placeholder, obj) {
             if (!placeholder) return;
             placeholder = placeholder.split("->");
             var val = obj;
-            for (i in placeholder) {
+            for (var i in placeholder) {
                 var ph = placeholder[i];
                 if (val[ph]) {
                     val = val[ph];
@@ -62,7 +69,7 @@
                     } else {
                         var value = null;
                         if (!value && placeholder instanceof Array) {
-                            for (ph in placeholder) {
+                            for (var ph in placeholder) {
                                 value = this.getValue(placeholder[ph], obj)
                                 if (value) {
                                     break;
@@ -108,5 +115,6 @@
                 }
             }
         }
-    });
-})(jQuery);
+    })
+    return SchemaModel;
+})

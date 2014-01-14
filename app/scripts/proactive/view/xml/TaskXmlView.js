@@ -1,9 +1,24 @@
-(function ($) {
+define(
+    [
+        'require',
+        'jquery',
+        'backbone',
+        'text!proactive/templates/task-template.html',
+        'proactive/view/TemplateView',
+        'proactive/view/xml/JavaExecutableXmlView',
+        'proactive/view/xml/NativeExecutableXmlView',
+        'proactive/view/xml/ScriptExecutableXmlView'
 
-    TaskXmlView = Backbone.View.extend({
+    ],
+    function (require, $, Backbone, TaskTemplate, TemplateView) {
+
+    "use strict";
+
+    return Backbone.View.extend({
         render: function () {
             var executableType = this.model.get("Type");
-            var executableView = new window[executableType + "XmlView"]({model: this.model.get("Parameters")});
+            var executableViewType = require('proactive/view/xml/' + executableType + "XmlView");
+            var executableView = new executableViewType({model: this.model.get("Parameters")});
             var executable = executableView.render().$el.text();
 
             var selectionScripts = [];
@@ -32,7 +47,7 @@
                 })
             }
 
-            var taskTemplate = _.template(Template.get("task-template"),
+            var taskTemplate = _.template(TaskTemplate,
                 {'task': this.model.toJSON(),
                     'selectionScripts': selectionScripts,
                     'preScript': preScript.trim(),
@@ -45,6 +60,6 @@
             this.$el.text(taskTemplate);
             return this;
         }
-    });
+    })
 
-})(jQuery)
+})

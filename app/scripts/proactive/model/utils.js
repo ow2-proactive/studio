@@ -1,5 +1,9 @@
+define(function (require) {
 
-function inlineName(prop) {
-    var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
-    return name;
-}
+    return {
+        inlineName: function(prop) {
+            var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
+            return name;
+        }
+    }
+})

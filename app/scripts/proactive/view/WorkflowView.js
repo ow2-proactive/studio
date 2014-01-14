@@ -1,6 +1,18 @@
-(function ($) {
+define(
+    [
+        'dagre',
+        'proactive/model/Job',
+        'proactive/view/ViewWithProperties',
+        'proactive/view/TaskView',
+        'proactive/view/utils/undo',
+        'proactive/view/dom'
+    ],
 
-    WorkflowView = ViewWithProperties.extend({
+    function (d, Job, ViewWithProperties, TaskView, undoManager) {
+
+    "use strict";
+
+    return ViewWithProperties.extend({
         zoomArea: $("<div></div>"),
         taskViews: [],
         initialize: function () {
@@ -365,11 +377,11 @@
                 }
             }
 
-            jobModel.removeTask(view.model);
+            this.model.removeTask(view.model);
             view.$el.remove();
             jsPlumb.remove(view.$el);
 
-            index = this.taskViews.indexOf(view);
+            var index = this.taskViews.indexOf(view);
             if (index != -1) {
                 this.taskViews.splice(index, 1);
             }
@@ -384,13 +396,12 @@
 
             this.taskViews = [];
 
-            jobModel = new Job();
-            jobModel.populate(json.job)
+            console.log("Changing job model from", this.model);
+            this.model = new Job();
+            this.model.populate(json.job)
 
             var that = this;
             this.clean();
-            console.log("Changing job model from", this.model);
-            this.model = jobModel;
             console.log("To", this.model);
 
             this.model.on("change:Job Name", this.updateJobName, this);
@@ -399,14 +410,14 @@
             jsPlumb.unbind();
 
             var task2View = {};
-            $.each(jobModel.tasks, function (i, task) {
+            $.each(this.model.tasks, function (i, task) {
                 var view = new TaskView({model: task});
                 that.addView(view, {top: 0, left: 0});
                 task2View[task.get('Task Name')] = view;
             })
 
             //adding dependencies after all views exist
-            $.each(jobModel.tasks, function (i, task) {
+            $.each(this.model.tasks, function (i, task) {
                 if (task.dependencies) {
                     $.each(task.dependencies, function (i, dep) {
                         if (task2View[dep.get('Task Name')]) {
@@ -424,7 +435,7 @@
                     }
                     if (task.controlFlow.replicate) {
                         var taskReplicateView = task2View[task.get('Task Name')];
-                        var taskDepView = task2View[jobModel.getDependantTask(task.get('Task Name'))];
+                        var taskDepView = task2View[that.model.getDependantTask(task.get('Task Name'))];
                         taskReplicateView.addReplicate(taskDepView);
                     }
                     if (task.controlFlow.loop) {
@@ -437,7 +448,7 @@
             })
 
             this.initJsPlumb();
-            jobModel.trigger('change');
+            this.model.trigger('change');
             if (autoLayout) {
                 this.autoLayout()
             } else {
@@ -652,4 +663,4 @@
         }
     });
 
-})(jQuery)
+})

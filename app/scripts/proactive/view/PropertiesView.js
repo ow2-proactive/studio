@@ -1,6 +1,15 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'proactive/model/Job'
+    ],
 
-    PropertiesView = Backbone.View.extend({
+    function ($, Backbone, Job) {
+
+    "use strict";
+
+    return Backbone.View.extend({
         listWorkflows: function () {
 
             var that = this;
@@ -84,6 +93,6 @@
 
             return false;
         }
-    });
+    })
 
-})(jQuery)
+})

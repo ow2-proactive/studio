@@ -1,10 +1,21 @@
-(function ($) {
-    var scriptTemplate = _.template(Template.get('script-form-template'));
+define(
+    [
+        'backbone',
+        'proactive/model/SchemaModel',
+        'text!proactive/templates/script-form-template.html',
+        'proactive/rest/studio-client'
+    ],
+
+    function (Backbone, SchemaModel, tpl, StudioClient) {
+
+    "use strict";
+
+    var scriptTemplate = _.template(tpl);
     var serverScripts = function (callback) {
         callback([""].concat(StudioClient.listScripts()));
     }
 
-    Script = SchemaModel.extend({
+    return SchemaModel.extend({
         schema: {
             "Library": {type: "Select", options: serverScripts},
             "Library Path": {type: "Hidden"},
@@ -23,5 +34,5 @@
                 this.set("Library", fileName);
             }
         }
-    });
-})(jQuery);
+    })
+})

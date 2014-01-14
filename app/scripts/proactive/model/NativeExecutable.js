@@ -1,5 +1,15 @@
-(function ($) {
-    NativeExecutable = SchemaModel.extend({
+define(
+    [
+        'backbone',
+        'proactive/model/SchemaModel',
+        'proactive/model/Script'
+    ],
+
+    function (Backbone, SchemaModel, Script) {
+
+        "use strict";
+
+        return SchemaModel.extend({
         schema: {
             "Static Command": {type: "Text", fieldAttrs: {'placeholder': 'staticCommand->@attributes->value'}},
             "Working Folder": {type: "Text", fieldAttrs: {'placeholder': 'staticCommand->@attributes->workingDir'}},
@@ -7,5 +17,5 @@
             "Or Dynamic Command": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'dynamicCommand->generation->script'}},
             "Working Dir": {type: "Text", fieldAttrs: {'placeholder': 'dynamicCommand->@attributes->workingDir'}}
         }
-    });
-})(jQuery);
+    })
+})

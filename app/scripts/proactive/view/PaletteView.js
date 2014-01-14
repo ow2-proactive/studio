@@ -1,6 +1,14 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone'
+    ],
 
-    PaletteView = Backbone.View.extend({
+    function ($, Backbone) {
+
+        "use strict";
+
+        return Backbone.View.extend({
         initialize: function () {
             this.render();
         },
@@ -22,9 +30,7 @@
                     '<img src="images/gears.png" width="20px">Replicate</span>');
 
             this.$el.append(taskWidget).append(replicateWidget).append(ifWidget).append(loopWidget);
-
-            $(".draggable").draggable({helper: "clone"});
         }
-    });
+    })
 
-})(jQuery)
+})

@@ -1,51 +1,77 @@
-// simple concept of an app. TODO use require.js in the future
-var StudioApp = {
+define(
+    [
+        'jquery',
+        'jsplumb',
+        'jqueryUI',
+        'proactive/model/Project',
+        'proactive/model/Job',
+        'proactive/view/PaletteView',
+        'proactive/view/WorkflowView',
+        'proactive/view/xml/JobXmlView',
+        'proactive/view/LoginView',
+        'proactive/view/PropertiesView',
+        'proactive/jsplumb'
+    ],
 
-    projects : new Projects(),
-    jobModel : new Job(),
+    function ($, jsPlumb, ui, Projects, Job, PaletteView, WorkflowView, JobXmlView, LoginView, PropertiesView) {
 
-    palleteView : undefined,
-    workflowView : undefined,
-    propertiesView : undefined,
-    xmlView : undefined,
-    loginView : undefined,
+    "use strict";
 
-    init: function() {
-        var that = this;
+    // simple concept of an app. TODO use require.js in the future
+    return {
 
-        jsPlumb.bind("ready", function () {
+        models : {
+            projects : new Projects(),
+            jobModel : new Job()
+        },
 
-            that.palleteView = new PaletteView({el: $("#palette-container")});
-            that.workflowView = new WorkflowView({el: $("#workflow-designer"), model: that.jobModel, projects: that.projects});
-            that.xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: that.jobModel});
-            that.propertiesView = new PropertiesView({el: $("#properties-container"), projects: that.projects, workflowView: that.workflowView, xmlView: that.xmlView});
-            that.loginView = new LoginView({el: $("#login-view"), projects: that.projects, workflowView: that.workflowView});
+        views : {
+            palleteView : undefined,
+            workflowView : undefined,
+            propertiesView : undefined,
+            xmlView : undefined,
+            loginView : undefined
+        },
 
-            that.projects.init();
+        init: function() {
+            var that = this;
 
-            var workflowJson = that.projects.getCurrentWorkFlowAsJson()
-            if (workflowJson) {
-                that.workflowView.import(workflowJson);
-                // TODO change the way how we updated the model in xmlView
-                that.xmlView.model = that.workflowView.model;
-            } else {
-                var jobXml = that.xmlView.xml(that.jobModel);
-                var jobName = that.jobModel.get("Job Name")
-                that.projects.addEmptyWorkflow(jobName, jobXml);
-            }
-            that.workflowView.$el.click();
-        })
-    },
+            jsPlumb.bind("ready", function () {
+                console.log("Initializing the studio")
 
-    clear: function() {
-        var job = new Job();
-        this.jobModel = job;
-        this.workflowView.model = job;
-        this.xmlView.model = job;
+                that.views.palleteView = new PaletteView({el: $("#palette-container")});
+                that.views.workflowView = new WorkflowView({el: $("#workflow-designer"), model: that.models.jobModel, projects: that.models.projects});
+                that.views.xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: that.models.jobModel});
+                that.views.propertiesView = new PropertiesView({el: $("#properties-container"), projects: that.models.projects, workflowView: that.views.workflowView, xmlView: that.views.xmlView});
+                that.views.loginView = new LoginView({el: $("#login-view"), projects: that.models.projects, workflowView: that.views.workflowView});
 
-        this.workflowView.clean();
-        this.jobModel.trigger('change');
+                that.models.projects.init();
+
+                var workflowJson = that.models.projects.getCurrentWorkFlowAsJson()
+                if (workflowJson) {
+                    that.views.workflowView.import(workflowJson);
+                    // TODO change the way how we updated the model in xmlView
+                    that.views.xmlView.model = that.views.workflowView.model;
+                } else {
+                    var jobXml = that.views.xmlView.xml(that.models.jobModel);
+                    var jobName = that.models.jobModel.get("Job Name")
+                    that.models.projects.addEmptyWorkflow(jobName, jobXml);
+                }
+
+                $(".draggable").draggable({helper: "clone"});
+
+                that.views.workflowView.$el.click();
+            })
+        },
+
+        clear: function() {
+            var job = new Job();
+            this.models.jobModel = job;
+            this.views.workflowView.model = job;
+            this.views.xmlView.model = job;
+            this.views.workflowView.clean();
+
+            this.models.jobModel.trigger('change');
+        }
     }
-}
-
-StudioApp.init();
+})

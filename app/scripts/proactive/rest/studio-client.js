@@ -1,4 +1,13 @@
-var StudioClient = (function () {
+define(
+    [
+        'jquery',
+        'proactive/config',
+        'pnotify'
+    ],
+
+    function ($, config) {
+
+    "use strict";
 
     var cachedScripts;
 
@@ -25,7 +34,7 @@ var StudioClient = (function () {
 
             $.ajax({
                 type: "POST",
-                url: StudioApp.config.restApiUrl + "/login",
+                url: config.restApiUrl + "/login",
                 data: {username: creds['user'], password: creds['pass']},
                 success: function (data) {
                     // ProActive Studio login request return invalid json with status code 200
@@ -34,7 +43,7 @@ var StudioClient = (function () {
                 error: function (data) {
                     // even id successful we are here
                     if (data.status == 200) {
-                        that.alert("Connected", "Successfully connected to ProActive Studio at " + StudioApp.config.restApiUrl, 'success');
+                        that.alert("Connected", "Successfully connected to ProActive Studio at " + config.restApiUrl, 'success');
                         console.log("Session ID is " + data.responseText)
                         localStorage['sessionId'] = data.responseText;
                         localStorage['user'] = creds['user'];
@@ -53,7 +62,7 @@ var StudioClient = (function () {
             if (localStorage['sessionId']) {
                 $.ajax({
                     type: "GET",
-                    url: StudioApp.config.restApiUrl + "/connected",
+                    url: config.restApiUrl + "/connected",
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                     },
@@ -88,7 +97,7 @@ var StudioClient = (function () {
             var that = this;
             $.ajax({
                 type: "GET",
-                url: StudioApp.config.restApiUrl + "/workflows",
+                url: config.restApiUrl + "/workflows",
                 async: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
@@ -117,7 +126,7 @@ var StudioClient = (function () {
             console.log("Creating workflow on the server", workflow)
             $.ajax({
                 type: "POST",
-                url: StudioApp.config.restApiUrl + "/workflows",
+                url: config.restApiUrl + "/workflows",
                 async: false,
                 data: workflow,
                 beforeSend: function (xhr) {
@@ -148,7 +157,7 @@ var StudioClient = (function () {
             console.log("Updating workflow on the server", id, workflow)
             $.ajax({
                 type: "POST",
-                url: StudioApp.config.restApiUrl + "/workflows/" + id,
+                url: config.restApiUrl + "/workflows/" + id,
                 'async': async,
                 data: workflow,
                 beforeSend: function (xhr) {
@@ -176,7 +185,7 @@ var StudioClient = (function () {
             console.log("Deleting workflow on the server", id)
             $.ajax({
                 type: "DELETE",
-                url: StudioApp.config.restApiUrl + "/workflows/" + id,
+                url: config.restApiUrl + "/workflows/" + id,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
                 },
@@ -200,7 +209,7 @@ var StudioClient = (function () {
             console.log("Getting scripts")
             $.ajax({
                 type: "GET",
-                url: StudioApp.config.restApiUrl + "/scripts",
+                url: config.restApiUrl + "/scripts",
                 async: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
@@ -227,7 +236,7 @@ var StudioClient = (function () {
 
             $.ajax({
                 type: "POST",
-                url: StudioApp.config.restApiUrl + "/scripts/" + name,
+                url: config.restApiUrl + "/scripts/" + name,
                 data: {name: name, content: content},
                 async: false,
                 beforeSend: function (xhr) {
@@ -273,7 +282,7 @@ var StudioClient = (function () {
             var that = this;
 
             $.ajax({
-                url: StudioApp.config.restApiUrl + '/classes',
+                url: config.restApiUrl + '/classes',
                 data: data,
                 cache: false,
                 contentType: false,
@@ -317,7 +326,7 @@ var StudioClient = (function () {
             var classes = undefined;
             $.ajax({
                 type: "GET",
-                url: StudioApp.config.restApiUrl + "/classes",
+                url: config.restApiUrl + "/classes",
                 async: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('sessionid', localStorage['sessionId'])
@@ -337,7 +346,7 @@ var StudioClient = (function () {
             if (!localStorage['sessionId']) return;
 
             var that = this;
-            that.send_multipart_request(StudioApp.config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['sessionId']}, function (result) {
+            that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['sessionId']}, function (result) {
                 if (result.errorMessage) {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
                 } else if (result.id) {
@@ -353,7 +362,7 @@ var StudioClient = (function () {
             if (!localStorage['sessionId']) return;
 
             var that = this;
-            that.send_multipart_request(StudioApp.config.restApiUrl + "/validate", jobXml, {}, function (result) {
+            that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
 
                 if (that.lastResult) {
 
@@ -372,7 +381,7 @@ var StudioClient = (function () {
                     that.alert("Invalid workflow", result.errorMessage, 'error');
                     if (result.taskName != null) {
                         var taskModel = jobModel.getTaskByName(result.taskName);
-                        taskModel.trigger("invalid")
+                        if (taskModel) taskModel.trigger("invalid")
                     }
                 } else {
                     that.alert("Workflow is valid", "It can be executed now", 'success');
@@ -431,7 +440,7 @@ var StudioClient = (function () {
             var that = this;
 
             $.ajax({
-                url: StudioApp.config.restApiUrl + '/visualizations/' + jobId,
+                url: config.restApiUrl + '/visualizations/' + jobId,
                 data: {visualization: visualization},
                 type: 'POST',
                 beforeSend: function (xhr) {
@@ -447,4 +456,4 @@ var StudioClient = (function () {
         }
     }
 
-})();
+})

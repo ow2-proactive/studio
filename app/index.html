@@ -186,72 +186,11 @@
 
         </body>
 
-        <!-- build:js scripts/vendor.js -->
-        <!-- bower:js -->
-        <script src="libs/jquery/jquery.js"></script>
-        <script src="libs/FileSaver/FileSaver.js"></script>
-        <script src="libs/vkbeautify.0.99.00.beta/index.js"></script>
-        <script src="libs/dagre/index.js"></script>
-        <script src="libs/codemirror/lib/codemirror.js"></script>
-        <script src="libs/underscore/underscore.js"></script>
-        <script src="libs/backbone/backbone.js"></script>
-        <script src="libs/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="libs/jquery-mousewheel/jquery.mousewheel.js"></script>
-        <script src="libs/xml2json/index.js"></script>
-        <!-- endbower -->
-        <script src="libs/backbone-forms/distribution/backbone-forms.js"></script>
-        <script src="libs/backbone-forms/distribution/editors/list.js"></script>
-        <script src="libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/XRegExp.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shCore.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script src="bower_components/syntaxhighlighter/scripts/shBrushJScript.js"></script>
 
-        <script src="libs/jquery-ui/ui/jquery-ui.js"></script>
-        <script src="libs/jsplumb/dist/js/jquery.jsPlumb-1.5.5.js"></script>
-
-        <script src="libs/syntaxhighlighter/scripts/XRegExp.js"></script>
-        <script src="libs/syntaxhighlighter/scripts/shCore.js"></script>
-        <script src="libs/syntaxhighlighter/scripts/shBrushXml.js"></script>
-        <script src="libs/syntaxhighlighter/scripts/shBrushJScript.js"></script>
-
-        <script src="libs/codemirror/mode/javascript/javascript.js"></script>
-        <script src="libs/codemirror/addon/comment/comment.js"></script>
-        <script src="libs/codemirror/addon/edit/matchbrackets.js"></script>
-
-        <script src="libs/pines-notify/jquery.pnotify.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:js scripts/main.js -->
-        <script src="scripts/proactive/rest/studio-client.js"></script>
-        <script src="scripts/proactive/template.js"></script>
-
-        <script src="scripts/proactive/model/utils.js"></script>
-        <script src="scripts/proactive/model/SchemaModel.js"></script>
-        <script src="scripts/proactive/model/Script.js"></script>
-        <script src="scripts/proactive/model/SelectionScript.js"></script>
-        <script src="scripts/proactive/model/BranchWithScript.js"></script>
-        <script src="scripts/proactive/model/JavaExecutable.js"></script>
-        <script src="scripts/proactive/model/NativeExecutable.js"></script>
-        <script src="scripts/proactive/model/Project.js"></script>
-        <script src="scripts/proactive/model/ScriptExecutable.js"></script>
-        <script src="scripts/proactive/model/Task.js"></script>
-        <script src="scripts/proactive/model/Job.js"></script>
-
-        <script src="scripts/proactive/view/xml/JavaExecutableXmlView.js"></script>
-        <script src="scripts/proactive/view/xml/JobXmlView.js"></script>
-        <script src="scripts/proactive/view/xml/NativeExecutableXmlView.js"></script>
-        <script src="scripts/proactive/view/xml/ScriptExecutableXmlView.js"></script>
-        <script src="scripts/proactive/view/xml/TaskXmlView.js"></script>
-        <script src="scripts/proactive/view/ViewWatchingModelChange.js"></script>
-        <script src="scripts/proactive/view/ViewWithProperties.js"></script>
-        <script src="scripts/proactive/view/LoginView.js"></script>
-        <script src="scripts/proactive/view/PaletteView.js"></script>
-        <script src="scripts/proactive/view/PropertiesView.js"></script>
-        <script src="scripts/proactive/view/TaskView.js"></script>
-        <script src="scripts/proactive/view/TemplateView.js"></script>
-        <script src="scripts/proactive/view/WorkflowView.js"></script>
-        <script src="scripts/proactive/view/utils.js"></script>
-
-        <script src="scripts/proactive/jsplumb.js"></script>
-        <script src="scripts/proactive/app.js"></script>
-        <script src="scripts/proactive/config.js"></script>
-        <!-- endbuild -->
+        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
 </body>
 </html>

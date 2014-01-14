@@ -1,10 +1,20 @@
-(function ($) {
-    var scriptTemplate = _.template(Template.get('script-form-template'));
+define(
+    [
+        'backbone',
+        'proactive/model/SchemaModel',
+        'text!proactive/templates/script-form-template.html'
+    ],
+
+    function (Backbone, SchemaModel, tpl) {
+
+    "use strict";
+
+    var scriptTemplate = _.template(tpl);
     var serverScripts = function (callback) {
         callback([""].concat(StudioClient.listScripts()));
     }
 
-    SelectionScript = SchemaModel.extend({
+    return SchemaModel.extend({
         // TODO inherit from Script - first attempt did not work because schema is shared - type appears in pre/post scripts as well
         schema: {
             "Library": {type: "Select", options: serverScripts},
@@ -26,5 +36,5 @@
             }
         }
 
-    });
-})(jQuery);
+    })
+})

@@ -1,6 +1,15 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'proactive/view/ViewWatchingModelChange'
+    ],
 
-    ViewWithProperties = ViewWatchingModelChange.extend({
+    function ($, Backbone, ViewWatchingModelChange) {
+
+    "use strict";
+
+    return ViewWatchingModelChange.extend({
 
         render: function () {
             var that = this;
@@ -20,6 +29,9 @@
         },
 
         renderForm: function () {
+
+            var StudioApp = require('StudioApp');
+
             var that = this
             that.clearTextSelection();
 
@@ -30,7 +42,8 @@
             var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
             var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a></li>');
             breadcrumb.append(workflows)
-            breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.jobModel.get("Job Name") + '</span></li>')
+            breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Job Name") + '</span></li>')
+
             if (that.model.get("Task Name")) {
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
 
@@ -48,11 +61,11 @@
             }
 
             workflows.click(function () {
-                return StudioApp.propertiesView.listWorkflows();
+                return StudioApp.views.propertiesView.listWorkflows();
             })
 
             that.form = form;
-            StudioApp.propertiesView.$el.data('form', form);
+            StudioApp.views.propertiesView.$el.data('form', form);
 
             form.on('change', function (f, changed) {
                 form.commit();
@@ -111,8 +124,8 @@
 
                 })
 
-                StudioApp.propertiesView.$el.html(breadcrumb);
-                StudioApp.propertiesView.$el.append(accordion);
+                StudioApp.views.propertiesView.$el.html(breadcrumb);
+                StudioApp.views.propertiesView.$el.append(accordion);
 
                 // saving expanded accordion
                 $('[data-toggle="collapse"]').click(function () {
@@ -122,8 +135,8 @@
                     }
                 })
             } else {
-                StudioApp.propertiesView.$el.html(breadcrumb);
-                StudioApp.propertiesView.$el.append(form.$el);
+                StudioApp.views.propertiesView.$el.html(breadcrumb);
+                StudioApp.views.propertiesView.$el.append(form.$el);
             }
 
             // showinf only file names in job classpath
@@ -144,4 +157,4 @@
         }
     })
 
-})(jQuery)
+})

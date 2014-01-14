@@ -1,7 +1,14 @@
-/*
- *  This file contains the JS that handles the first init of jsPlumb library
- */
-(function () {
+define(
+    [
+        'jquery',
+        'backbone',
+        'jsplumb'
+    ],
+
+    function ($, Backbone, jsPlumb) {
+
+    "use strict";
+
     var color = "gray";
 
     jsPlumb.importDefaults({
@@ -46,4 +53,4 @@
     $("#project-name").click(function () {
         $(".job-view").click();
     })
-})();
+});

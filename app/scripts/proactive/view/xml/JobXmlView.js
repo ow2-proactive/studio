@@ -1,6 +1,22 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'vkbeautify',
+        'proactive/view/xml/TaskXmlView',
+        'text!proactive/templates/job-template.html',
+        'text!proactive/templates/workflow-view-template.html'
+//        'XRegExp',
+//        'shCore',
+//        'shBrushXml',
+//        'shBrushJScript'
+    ],
 
-    JobXmlView = Backbone.View.extend({
+    function ($, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate) {
+
+    "use strict";
+
+    return Backbone.View.extend({
         initialize: function () {
             var that = this;
             $('#workflow-xml-tab').on('shown', function (e) {
@@ -19,7 +35,7 @@
                 });
             }
 
-            var jobRendering = _.template(Template.get("job-template"), {'job': job, 'tasks': tasks});
+            var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks});
 
             // beautifying the job xml - removing multiple spaces
             jobRendering = jobRendering.replace(/ {2,}/g, ' ');
@@ -42,7 +58,7 @@
             var width = $("#workflow-designer").get(0).scrollWidth;
             var height = $("#workflow-designer").get(0).scrollHeight;
 
-            var html = _.template(Template.get('workflow-view-template'),
+            var html = _.template(WorkflowTemplate,
                 {'url': url, 'content': content, 'width': width, 'height': height});
 
             // replacing all images paths
@@ -60,6 +76,6 @@
 
             return this;
         }
-    });
+    })
 
-})(jQuery)
+})

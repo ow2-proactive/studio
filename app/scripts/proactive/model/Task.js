@@ -1,5 +1,23 @@
-(function ($) {
-    Task = SchemaModel.extend({
+define(
+    [
+        'backbone',
+        'proactive/model/SchemaModel',
+        'text!proactive/templates/job-classpath-template.html',
+        'proactive/model/ScriptExecutable',
+        'proactive/model/NativeExecutable',
+        'proactive/model/JavaExecutable',
+        'proactive/model/Script',
+        'proactive/model/SelectionScript',
+        'proactive/model/BranchWithScript',
+        'proactive/view/utils/undo'
+    ],
+
+    // TODO REMOVE undoManager dependency - comes from view
+    function (Backbone, SchemaModel, tpl, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript, BranchWithScript, undoManager) {
+
+    "use strict";
+
+    var Task = SchemaModel.extend({
         schema: {
             "Task Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name', "data-tab": "Execution"}},
             "Type": {type: 'TaskTypeRadioEditor', fieldAttrs: {}, fieldClass: 'task-type',
@@ -84,7 +102,7 @@
         addDependency: function (task) {
             if (!this.dependencies) this.dependencies = [];
 
-            index = this.dependencies.indexOf(task);
+            var index = this.dependencies.indexOf(task);
             if (index == -1) {
                 this.dependencies.push(task)
                 this.trigger("change")
@@ -92,7 +110,7 @@
             }
         },
         removeDependency: function (task) {
-            index = this.dependencies.indexOf(task);
+            var index = this.dependencies.indexOf(task);
             if (index != -1) {
                 this.dependencies.splice(index, 1);
                 this.trigger("change")
@@ -177,5 +195,7 @@
             this.set({'Control Flow': 'none'});
             delete this.controlFlow['replicate']
         }
-    });
-})(jQuery);
+    })
+
+    return Task;
+})

@@ -1,4 +1,20 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'proactive/view/utils/undo',
+        'proactive/rest/studio-client',
+        'xml2json',
+        'backboneForms',
+        'backboneFormsEditor',
+        'backboneFormsAdapter',
+        'StudioApp',
+        'bootstrap'
+    ],
+
+    function ($, Backbone, undoManager, StudioClient, xml2json) {
+
+    "use strict";
 
     Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
 
@@ -27,85 +43,6 @@
         }
     });
 
-    undoManager = (function () {
-        var undoStates = [];
-        var redoStates = [];
-        var enabled = true;
-        return {
-            save: function () {
-                if (!enabled) return;
-                var state = {xml: StudioApp.xmlView.generateXml(),
-                    offsets: getOffsetsFromDOM(),
-                    accordions: StudioApp.workflowView.getOpenAccordions(),
-                    activeTask: StudioApp.workflowView.getActiveTask()};
-                this._saveIfDifferent(state);
-            },
-            undo: function () {
-                if (undoStates.length <= 1) {
-                    StudioClient.alert("No further undo data", "");
-                    return
-                }
-                ;
-                this._move(undoStates, redoStates);
-                this._restoreLastState();
-            },
-            redo: function () {
-                if (redoStates.length == 0) {
-                    StudioClient.alert("No further redo data", "");
-                    return;
-                }
-                this._move(redoStates, undoStates)
-                this._restoreLastState();
-            },
-            runWithDisabled: function (runnable) {
-                this._disable()
-                try {
-                    runnable()
-                } finally {
-                    this._enable()
-                    this.save()
-                }
-            },
-            reset: function () {
-                undoStates = []
-                redoStates = []
-                this.save()
-            },
-            _saveIfDifferent: function (state) {
-                var oldState = undoStates[undoStates.length - 1]
-                if (JSON.stringify(state) !== JSON.stringify(oldState)) {
-                    undoStates.push(state)
-                    redoStates = [];
-                }
-            },
-            _move: function (from, to) {
-                var e = from.pop()
-                if (e) {
-                    to.push(e);
-                }
-            },
-            _restoreLastState: function () {
-                var state = undoStates[undoStates.length - 1];
-                if (state) {
-                    this.runWithDisabled(function () {
-                        var json = xmlToJson(parseXml(state.xml))
-                        StudioApp.workflowView.importNoReset(json, false);
-                        StudioApp.workflowView.restoreLayoutFromOffsets(state.offsets)
-                        StudioApp.workflowView.restoreOpenAccordions(state.accordions)
-                        StudioApp.workflowView.restoreActiveTask(state.activeTask)
-                        StudioApp.xmlView.model = StudioApp.workflowView.model;
-                    })
-                }
-            },
-            _disable: function () {
-                enabled = false;
-            },
-            _enable: function () {
-                enabled = true;
-            }
-        }
-    })();
-
     $("#import-button").click(function () {
         $('#import-file').click();
     })
@@ -121,9 +58,10 @@
             reader.onloadend = function (evt) {
 
                 if (evt.target.readyState == FileReader.DONE) {
-                    var json = xmlToJson(parseXml(evt.target.result))
-                    StudioApp.workflowView.import(json, true);
-                    StudioApp.xmlView.model = StudioApp.workflowView.model;
+                    var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result))
+                    var StudioApp = require('StudioApp');
+                    StudioApp.views.workflowView.import(json, true);
+                    StudioApp.views.xmlView.model = StudioApp.views.workflowView.model;
                 }
             }
             reader.readAsBinaryString(file);
@@ -131,28 +69,29 @@
     })
 
     $("#export-button").click(function () {
-        StudioApp.xmlView.render();
+        require('StudioApp').views.xmlView.render();
         $('#xml-view-modal').modal();
     })
 
     $("#layout-button").click(function () {
-        StudioApp.workflowView.autoLayout();
+        require('StudioApp').views.workflowView.autoLayout();
     });
     $("#zoom-in-button").click(function () {
-        StudioApp.workflowView.zoomIn();
+        require('StudioApp').workflowView.zoomIn();
     });
     $("#zoom-out-button").click(function () {
-        StudioApp.workflowView.zoomOut();
+        require('StudioApp').views.workflowView.zoomOut();
     });
     $("#zoom-reset-button").click(function () {
-        StudioApp.workflowView.setZoom(1);
+        require('StudioApp').views.workflowView.setZoom(1);
     });
 
     $("#submit-button").click(function () {
 
         StudioClient.isConnected(function () {
             // submitting
-            StudioApp.xmlView.render();
+            var StudioApp = require('StudioApp');
+            StudioApp.views.xmlView.render();
 
             var button = $(this);
             var xml = "";
@@ -161,7 +100,7 @@
                 xml += $(line).text().trim() + "\n";
             })
 
-            var htmlVisualization = StudioApp.xmlView.generateHtml();
+            var htmlVisualization = StudioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization)
         }, function () {
             // ask to login first
@@ -173,8 +112,9 @@
     $("#clear-button").click(function () {
         console.log("Removing the workflow");
         localStorage.removeItem('job-model');
+        var StudioApp = require('StudioApp');
         StudioApp.clear();
-        StudioApp.workflowView.$el.click();
+        StudioApp.views.workflowView.$el.click();
     });
 
     $("#save-button").click(function () {
@@ -183,8 +123,9 @@
 
     $("#download-xml-button").click(function () {
         console.log("Saving xml");
-        var jobName = StudioApp.jobModel.get("Job Name")
-        var blob = new Blob([StudioApp.xmlView.generatedXml]);
+        var StudioApp = require('StudioApp');
+        var jobName = StudioApp.models.jobModel.get("Job Name")
+        var blob = new Blob([StudioApp.views.xmlView.generatedXml]);
         saveAs(blob, jobName + ".xml")
     })
 
@@ -196,7 +137,7 @@
             if (selectedTask.length > 0) {
                 selectedTask.each(function (i, t) {
                     var taskView = $(t).data('view');
-                    StudioApp.workflowView.removeView(taskView);
+                    require('StudioApp').views.workflowView.removeView(taskView);
                 })
             }
         }
@@ -218,24 +159,16 @@
     });
 
     function save_workflow_to_storage() {
-        StudioApp.projects.saveCurrentWorkflow(StudioApp.jobModel.get("Job Name"), StudioApp.xmlView.generateXml(), getOffsetsFromDOM());
-    }
-
-    function getOffsetsFromDOM() {
-        return _.object(
-            _.map($('.task'), function (t) {
-                var $t = $(t)
-                var taskName = $t.find("span.name").text()
-                var offset = $t.offset()
-                return [taskName, offset]
-            })
-        )
+        var StudioApp = require('StudioApp');
+        StudioApp.models.projects.saveCurrentWorkflow(
+            StudioApp.models.jobModel.get("Job Name"), StudioApp.views.xmlView.generateXml(), undoManager.getOffsetsFromDOM());
     }
 
     function validate_job() {
         console.log("Validating");
         $(".invalid-task").removeClass("invalid-task");
-        StudioClient.validate(StudioApp.xmlView.generateXml(), StudioApp.jobModel);
+        var StudioApp = require('StudioApp');
+        StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
     }
 
     $("#validate-button").click(function () {
@@ -258,20 +191,20 @@
             var form = $(this).parents('form')
             var textarea = form.find('textarea');
             var libraryPath = form.find('input[name="Library Path"]');
-            var arguments = form.find('div[placeholder="file->arguments->argument"]');
+            var fileArguments = form.find('div[placeholder="file->arguments->argument"]');
             var engine = form.find('div[placeholder="code->@attributes->language"]')
             var saveButton = form.find('button.save-script')
             if (!scriptName) {
                 textarea.val('');
                 libraryPath.val('');
-                arguments.hide();
+                fileArguments.hide();
                 engine.show();
                 saveButton.attr("disabled", true);
             } else {
                 var script = StudioClient.getScript(scriptName);
                 textarea.val(script.content);
                 libraryPath.val(script.absolutePath);
-                arguments.show();
+                fileArguments.show();
                 engine.hide();
                 saveButton.attr("disabled", false);
             }
@@ -280,11 +213,11 @@
 
         function getCurrentTaskView() {
             var taskName = $("#properties-container").find('#breadcrumb-task-name').text();
-            return StudioApp.workflowView.getTaskViewByName(taskName)
+            return require('StudioApp').views.workflowView.getTaskViewByName(taskName)
         }
 
         function getCurrentForm() {
-            return StudioApp.propertiesView.$el.data('form')
+            return require('StudioApp').views.propertiesView.$el.data('form')
         }
 
         $(document).on("click", 'select[name="Library"]', loadSelectedScript)
@@ -369,8 +302,9 @@
                         shortJobClassPath.val(fileName);
                         shortJobClassPath.attr('readonly', true);
 
-                        if (StudioApp.propertiesView.$el.data('form')) {
-                            StudioApp.propertiesView.$el.data('form').commit();
+                        var StudioApp = require('StudioApp');
+                        if (StudioApp.views.propertiesView.$el.data('form')) {
+                            StudioApp.views.propertiesView.$el.data('form').commit();
                         }
                     }
                 }, function () {
@@ -417,7 +351,7 @@
                     if (copied) {
                         console.log("paste");
                         if (copied) {
-                            StudioApp.workflowView.copyPasteTasks(copied);
+                            require('StudioApp').views.workflowView.copyPasteTasks(copied);
                         }
                     }
                 }
@@ -461,4 +395,4 @@
     // validating job periodically
     setInterval(validate_job, 30000);
 
-})(jQuery)
+})

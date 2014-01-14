@@ -1,6 +1,20 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'proactive/model/Task',
+        'proactive/model/Script',
+        'proactive/view/ViewWithProperties',
+        'proactive/model/NativeExecutable',
+        'proactive/model/JavaExecutable',
+        'proactive/model/ScriptExecutable'
+    ],
 
-    TaskView = ViewWithProperties.extend({
+    function ($, Backbone, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
+
+    "use strict";
+
+    return ViewWithProperties.extend({
 
         icons: {"JavaExecutable": "images/java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
@@ -39,23 +53,25 @@
         },
 
         changeTaskType: function () {
-            var executableType = this.model.get("Type");
-            if (this.modelType && this.modelType != executableType) {
-                var executable = new window[executableType]();
+            var executableTypeStr = this.model.get("Type");
+            if (this.modelType && this.modelType != executableTypeStr) {
+                var executableType = require('proactive/model/'+executableTypeStr);
+                var executable = new executableType();
+
                 this.model.schema = $.extend(true, {}, this.model.schema);
                 // TODO beautify
-                if (executableType == "JavaExecutable") {
+                if (executableTypeStr == "JavaExecutable") {
                     this.model.schema['Parameters'] = {type: 'NestedModel', model: JavaExecutable};
-                } else if (executableType == "NativeExecutable") {
+                } else if (executableTypeStr == "NativeExecutable") {
                     this.model.schema['Parameters'] = {type: 'NestedModel', model: NativeExecutable};
                 } else {
                     this.model.schema['Parameters'] = {type: 'NestedModel', model: ScriptExecutable};
                 }
-                this.$el.find("img").attr('src', this.icons[executableType])
+                this.$el.find("img").attr('src', this.icons[executableTypeStr])
                 this.model.set({"Parameters": executable});
                 this.$el.click();
             }
-            this.modelType = executableType;
+            this.modelType = executableTypeStr;
         },
         controlFlowChanged: function (model, valu, handler) {
             var fromFormChange = handler.error; // its defined when form was changed
@@ -225,7 +241,7 @@
         getSourceEndPoint: function (type) {
             var endpoints = jsPlumb.getEndpoints(this.$el);
 
-            for (i in endpoints) {
+            for (var i in endpoints) {
                 var ep = endpoints[i];
                 if (ep.scope == type && ep.isSource) {
                     return ep;
@@ -235,7 +251,7 @@
         getTargetEndPoint: function (type) {
             var endpoints = jsPlumb.getEndpoints(this.$el);
 
-            for (i in endpoints) {
+            for (var i in endpoints) {
                 var ep = endpoints[i];
                 if (ep.scope == type && ep.isTarget) {
                     return ep;
@@ -334,6 +350,6 @@
         commitForm: function () {
             this.form.commit();
         }
-    });
+    })
 
-})(jQuery)
+})

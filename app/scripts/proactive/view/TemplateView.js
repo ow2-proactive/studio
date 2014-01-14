@@ -1,6 +1,15 @@
-(function ($) {
+define(
+    [
+        'jquery',
+        'backbone',
+        'text!proactive/templates/script-template.html'
+    ],
 
-    TemplateView = Backbone.View.extend({
+    function ($, Backbone) {
+
+        "use strict";
+
+        return Backbone.View.extend({
         render: function () {
             if (this.model) {
 
@@ -8,11 +17,12 @@
                     this.model = this.model.toJSON();
                 }
 
-                var template = _.template(Template.get(this.options.template), {'model': this.model});
+                var tpl = require('text!proactive/templates/'+this.options.template+'.html')
+                var template = _.template(tpl, {'model': this.model});
                 this.$el.text(template);
             }
             return this;
         }
-    });
+    })
 
-})(jQuery)
+})

@@ -1,8 +1,19 @@
-(function ($) {
-    JavaExecutable = SchemaModel.extend({
+define(
+    [
+        'backbone',
+        'proactive/model/SchemaModel',
+        'proactive/model/Script',
+        'proactive/model/utils'
+    ],
+
+    function (Backbone, SchemaModel, Script, Utils) {
+
+    "use strict";
+
+    return SchemaModel.extend({
         schema: {
             "Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->class'}},
-            "Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'parameters->parameter'}, itemToString: inlineName, subSchema: {
+            "Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'parameters->parameter'}, itemToString: Utils.inlineName, subSchema: {
                 "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
                 "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}}
             }},
@@ -26,5 +37,5 @@
         initialize: function () {
             this.set({"Fork Environment": "false"});
         }
-    });
-})(jQuery);
+    })
+})

@@ -1,6 +1,15 @@
-(function ($) {
+define(
+    [
+        'backbone',
+        'xml2json',
+        'proactive/rest/studio-client'
+    ],
 
-    Projects = Backbone.Model.extend({
+    function (Backbone, xml2json, StudioClient) {
+
+    "use strict";
+
+    return Backbone.Model.extend({
         supports_html5_storage: function () {
             try {
                 return 'localStorage' in window && window['localStorage'] !== null;
@@ -50,7 +59,7 @@
                 }
 
                 if (localJobs[selectedIndex]) {
-                    return xmlToJson(parseXml(localJobs[selectedIndex].xml))
+                    return xml2json.xmlToJson(xml2json.parseXml(localJobs[selectedIndex].xml))
                 }
             }
         },
@@ -137,7 +146,7 @@
                         var localJobs = JSON.parse(localStorage['workflows']);
                         var reload = false;
 
-                        for (i in localJobs) {
+                        for (var i in localJobs) {
                             var localJob = localJobs[i];
                             if (!localJob.id) {
                                 // creating new job
@@ -173,4 +182,4 @@
 
     })
 
-})(jQuery);
+})
