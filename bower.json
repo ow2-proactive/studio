@@ -10,7 +10,7 @@
     "FileSaver": "*",
     "pines-notify": "~1.2.0",
     "vkbeautify.0.99.00.beta": "https://vkbeautify.googlecode.com/files/vkbeautify.0.99.00.beta.js",
-    "dagre": "./app/scripts/dagre.min.js",
+    "dagre": "./app/scripts/thirdparties/dagre.min.js",
     "syntaxhighlighter": "alexgorbatchev/syntaxhighlighter",
     "codemirror": "~3.20.0",
     "underscore": "~1.5.2",
@@ -19,7 +19,7 @@
     "jquery-ui-touch-punch": "*",
     "jquery-ui": "~1.10.3",
     "jquery-mousewheel": "~3.1.9",
-    "xml2json": "./app/scripts/xml2json.js"
+    "xml2json": "./app/scripts/thirdparties/xml2json.js"
   },
   "devDependencies": {}
 }
