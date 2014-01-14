@@ -1,3 +1,14 @@
+Setup
+===================
+
+You need npm installed (Node.js).
+
+Run these commands to setup your dev environment:
+
+    npm install -g grunt-cli bower
+    npm install
+    bower install
+
 nginx setup for development
 ===========================
 
