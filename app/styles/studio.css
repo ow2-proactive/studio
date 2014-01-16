@@ -14,6 +14,10 @@ footer {
 }
 
 #workflow-designer {
+    height: 100%;
+}
+
+#workflow-designer-outer {
     overflow: auto;
     border-radius: 5px;
     background-color:#eaedef;
@@ -43,9 +47,10 @@ footer {
 
 #tools-table {
     position: absolute;
-    top: 80px;
-    left: 30%;
-    margin-left: 300px;
+    top: 30px;
+    left:30%;
+    right:30%;
+    margin: 0 auto;
 }
 
 #palette-container p {

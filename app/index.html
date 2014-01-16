@@ -68,26 +68,26 @@
                     <div id="properties-container"></div>
                 </td>
                 <td style="width:75%; padding-right:10px">
-                    <div id="workflow-designer"></div>
+                    <div id="workflow-designer-outer">
+                        <table id="tools-table">
+                            <tr>
+                                <td style="padding-right:20px">
+                                    <div id="palette-container"></div>
+                                </td>
+                                <td>
+                                    <div id="tools-panel">
+                                        <div class="btn-group">
+                                            <button id="layout-button" type="button" class="btn" title="Layout"><i
+                                                    class="glyphicon glyphicon-align-center"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="workflow-designer"></div>
+                    </div>
                 </td>
             </tr>
-        </table>
-
-        <table id="tools-table">
-            <tr><td style="padding-right:20px">
-                <div id="palette-container"></div>
-            </td><td>
-                <div id="tools-panel">
-                    <div class="btn-group">
-                        <button id="layout-button" type="button" class="btn" title="Layout"><i class="glyphicon glyphicon-align-center"></i></button>
-                        <!--
-                      <button id="zoom-reset-button" type="button" class="btn" title="Zoom in"><i class="icon-screenshot"></i></button>
-                      <button id="zoom-in-button" type="button" class="btn" title="Zoom in"><i class="icon-plus"></i></button>
-                      <button id="zoom-out-button" type="button" class="btn" title="Zoom out"><i class="icon-minus"></i></button>
-                      -->
-                    </div>
-                </div>
-            </td></tr>
         </table>
 
         <input type="file" id="import-file" style="display:none"/>

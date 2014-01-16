@@ -473,7 +473,8 @@ define(
             // computing layout with dagre
             dagre.layout().nodes(nodes).edges(edges).nodeSep(50).rankSep(100).run();
 
-            var containerPosition = $('#workflow-designer').position();
+            var workflowDesigner = $('#workflow-designer-outer')
+            var containerPosition = workflowDesigner.position();
             // finding max left offset and top offset to center the graph
             var maxLeft = 0, maxTop = 0;
             $.each(nodes, function (i, node) {
@@ -481,8 +482,8 @@ define(
                 if (node.dagre.y > maxTop) maxTop = node.dagre.y;
             })
 
-            var leftOffset = $('#workflow-designer').width() - maxLeft < 0 ? 0 : ($('#workflow-designer').width() - maxLeft) / 2 - taskWidth;
-            var topOffset = $('#workflow-designer').height() - maxTop < 0 ? 0 : ($('#workflow-designer').height() - maxTop) / 2 + 50;
+            var leftOffset = workflowDesigner.width() - maxLeft < 0 ? 0 : (workflowDesigner.width() - maxLeft) / 2 - taskWidth;
+            var topOffset = workflowDesigner.height() - maxTop < 0 ? 100 : (workflowDesigner.height() - maxTop) / 2 + 50;
 
             $.each(nodes, function (i, node) {
                 var pos = {};
