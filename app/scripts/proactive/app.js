@@ -17,7 +17,6 @@ define(
 
     "use strict";
 
-    // simple concept of an app. TODO use require.js in the future
     return {
 
         models : {
