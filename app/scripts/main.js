@@ -13,9 +13,15 @@ require.config({
             ],
             exports: 'Backbone'
         },
-        bootstrap: {
-            deps: ['jquery'],
-            exports: 'jquery'
+        backboneFormsEditor: {
+            deps: [
+                'backboneForms'
+            ]
+        },
+        backboneFormsAdapter: {
+            deps: [
+                'backboneForms'
+            ]
         }
     },
     paths: {
@@ -44,19 +50,8 @@ require.config({
     }
 });
 
-// right order for backbone forms
-// TODO find a way to do it better
-require(['underscore', 'backbone'], function() {
-    require(['backboneForms'], function(c,d) {
-        require(['backboneFormsEditor', 'backboneFormsAdapter'],function() {
-            require(['StudioApp'],
-
-                function(StudioApp) {
-                    StudioApp.init()
-                }
-
-            );
-        })
-    })
-})
-
+require(['StudioApp'],
+    function (StudioApp) {
+        StudioApp.init();
+    }
+);
