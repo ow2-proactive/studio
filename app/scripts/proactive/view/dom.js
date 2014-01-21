@@ -271,6 +271,11 @@ define(
             var editor = $("#set-script-content").data("editor");
             editor.save()
             $(this).data("area").val($("#full-edit-modal-script-content").val());
+
+            var StudioApp = require('StudioApp');
+            // propagating changes to the model
+            var form = StudioApp.views.propertiesView.$el.data('form')
+            form.commit();
         })
     })();
 
