@@ -23,6 +23,11 @@ require.config({
                 'jquery'
             ]
         },
+        pnotify: {
+            deps: [
+                'jquery'
+            ]
+        },
         backboneFormsEditor: {
             deps: [
                 'backboneForms'
