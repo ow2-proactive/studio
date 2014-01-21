@@ -2,10 +2,11 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'text!proactive/templates/script-form-template.html'
+        'text!proactive/templates/script-form-template.html',
+        'proactive/rest/studio-client'
     ],
 
-    function (Backbone, SchemaModel, tpl) {
+    function (Backbone, SchemaModel, tpl, StudioClient) {
 
     "use strict";
 
