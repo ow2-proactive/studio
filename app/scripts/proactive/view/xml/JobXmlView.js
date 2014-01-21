@@ -5,11 +5,10 @@ define(
         'vkbeautify',
         'proactive/view/xml/TaskXmlView',
         'text!proactive/templates/job-template.html',
-        'text!proactive/templates/workflow-view-template.html'
-//        'XRegExp',
-//        'shCore',
-//        'shBrushXml',
-//        'shBrushJScript'
+        'text!proactive/templates/workflow-view-template.html',
+        'shCore',
+        'shBrushXml',
+        'shBrushJScript'
     ],
 
     function ($, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate) {

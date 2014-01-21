@@ -33,8 +33,26 @@ require.config({
                 'backboneForms'
             ]
         },
-        codemirror :{
+        codemirror: {
             exports: "CodeMirror"
+        },
+        shCore: {
+            deps: ["XRegExp"],
+            init: function() {
+                return {
+                    SyntaxHighlighter: SyntaxHighlighter
+                };
+            }
+        },
+        shBrushXml: {
+            deps: [
+                "shCore"
+            ]
+        },
+        shBrushJScript: {
+            deps: [
+                "shCore"
+            ]
         }
     },
     paths: {
@@ -54,10 +72,10 @@ require.config({
         codemirror: '../libs/codemirror/lib/codemirror',
         jsplumb : '../libs/jsplumb/dist/js/jquery.jsPlumb-1.5.5',
         xml2json: 'thirdparties/xml2json',
-//        XRegExp: '../libs/syntaxhighlighter/scripts/XRegExp',
-//        shCore: '../libs/syntaxhighlighter/scripts/shCore',
-//        shBrushXml: '../libs/syntaxhighlighter/scripts/shBrushXml',
-//        shBrushJScript: '../libs/syntaxhighlighter/scripts/shBrushJScript',
+        XRegExp: '../libs/syntaxhighlighter/scripts/XRegExp',
+        shCore: '../libs/syntaxhighlighter/scripts/shCore',
+        shBrushXml: '../libs/syntaxhighlighter/scripts/shBrushXml',
+        shBrushJScript: '../libs/syntaxhighlighter/scripts/shBrushJScript',
 
         StudioApp: 'proactive/app'
     }
