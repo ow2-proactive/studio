@@ -58,7 +58,10 @@ require.config({
             deps: [
                 "shCore"
             ]
-        }
+        },
+        codemirrorJs: { deps: [ 'codemirror' ]},
+        codemirrorComment: { deps: [ 'codemirror' ]},
+        codemirrorMB: { deps: [ 'codemirror' ]}
     },
     paths: {
         jquery: '../libs/jquery/jquery',
@@ -75,6 +78,9 @@ require.config({
         pnotify : '../libs/pines-notify/jquery.pnotify',
         fileSaver : '../libs/FileSaver/FileSaver',
         codemirror: '../libs/codemirror/lib/codemirror',
+        codemirrorJs: '../libs/codemirror/mode/javascript/javascript',
+        codemirrorComment: '../libs/codemirror/addon/comment/comment',
+        codemirrorMB: '../libs/codemirror/addon/edit/matchbrackets',
         jsplumb : '../libs/jsplumb/dist/js/jquery.jsPlumb-1.5.5',
         xml2json: 'thirdparties/xml2json',
         XRegExp: '../libs/syntaxhighlighter/scripts/XRegExp',
