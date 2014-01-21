@@ -13,6 +13,16 @@ require.config({
             ],
             exports: 'Backbone'
         },
+        jsplumb: {
+            deps: [
+                'jquery'
+            ]
+        },
+        jqueryUI: {
+            deps: [
+                'jquery'
+            ]
+        },
         backboneFormsEditor: {
             deps: [
                 'backboneForms'

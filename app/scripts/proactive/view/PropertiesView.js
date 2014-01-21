@@ -58,7 +58,7 @@ define(
 
                 this.$el.append(table);
 
-                table.find('.btn-clone').click(function () {
+                table.find('.btn-clone').click(function (event) {
                     event.preventDefault();
                     event.stopPropagation();
 
