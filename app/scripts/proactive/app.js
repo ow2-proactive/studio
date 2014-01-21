@@ -48,9 +48,7 @@ define(
 
                 var workflowJson = that.models.projects.getCurrentWorkFlowAsJson()
                 if (workflowJson) {
-                    that.views.workflowView.import(workflowJson);
-                    // TODO change the way how we updated the model in xmlView
-                    that.views.xmlView.model = that.views.workflowView.model;
+                    that.import(workflowJson)
                 } else {
                     var jobXml = that.views.xmlView.xml(that.models.jobModel);
                     var jobName = that.models.jobModel.get("Job Name")
@@ -63,6 +61,17 @@ define(
             })
         },
 
+        import: function(json) {
+            console.log("Changing the current job model from", this.model);
+            this.models.jobModel = new Job();
+            this.models.jobModel.populate(json.job)
+            console.log("To", this.models.jobModel);
+
+            this.views.workflowView.model = this.models.jobModel;
+            this.views.xmlView.model = this.models.jobModel;
+
+            this.views.workflowView.import();
+        },
         clear: function() {
             var job = new Job();
             this.models.jobModel = job;

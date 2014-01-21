@@ -31,7 +31,8 @@ define(
 
                     var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
                     if (workflowJson) {
-                        that.options.workflowView.import(workflowJson);
+                        var StudioApp = require('StudioApp');
+                        StudioApp.import(json)
                     }
                 })
             })
@@ -61,7 +62,8 @@ define(
 
                 var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
                 if (workflowJson) {
-                    that.options.workflowView.import(workflowJson);
+                    var StudioApp = require('StudioApp');
+                    StudioApp.import(json)
                 }
 
             }, function () {

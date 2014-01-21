@@ -61,8 +61,7 @@ define(
                 if (evt.target.readyState == FileReader.DONE) {
                     var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result))
                     var StudioApp = require('StudioApp');
-                    StudioApp.views.workflowView.import(json, true);
-                    StudioApp.views.xmlView.model = StudioApp.views.workflowView.model;
+                    StudioApp.import(json)
                 }
             }
             reader.readAsBinaryString(file);

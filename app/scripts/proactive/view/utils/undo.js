@@ -87,7 +87,8 @@ define(
 
                 this.runWithDisabled(function () {
                     var json = xml2json.xmlToJson(xml2json.parseXml(state.xml))
-                    StudioApp.views.workflowView.importNoReset(json, false);
+                    StudioApp.importviews.workflowView.importNoReset(json, false);
+
                     StudioApp.views.workflowView.restoreLayoutFromOffsets(state.offsets)
                     StudioApp.views.workflowView.restoreOpenAccordions(state.accordions)
                     StudioApp.views.workflowView.restoreActiveTask(state.activeTask)

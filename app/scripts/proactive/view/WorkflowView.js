@@ -388,21 +388,16 @@ define(
 
             this.$el.click();
         },
-        import: function (json, autoLayout) {
-            this.importNoReset(json, autoLayout);
+        import: function () {
+            this.importNoReset();
             undoManager.reset()
         },
-        importNoReset: function (json, autoLayout) {
+        importNoReset: function () {
 
             this.taskViews = [];
 
-            console.log("Changing job model from", this.model);
-            this.model = new Job();
-            this.model.populate(json.job)
-
             var that = this;
             this.clean();
-            console.log("To", this.model);
 
             this.model.on("change:Job Name", this.updateJobName, this);
 
@@ -449,11 +444,7 @@ define(
 
             this.initJsPlumb();
             this.model.trigger('change');
-            if (autoLayout) {
-                this.autoLayout()
-            } else {
-                this.restoreLayout();
-            }
+            this.restoreLayout();
             // regenerating the form
             this.$el.click();
         },

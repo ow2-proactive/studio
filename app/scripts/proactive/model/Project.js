@@ -102,6 +102,14 @@ define(
                 return localStorage["workflow-selected"]
             }
         },
+        getSavedWorkflowCount: function () {
+            if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
+                var localJobs = JSON.parse(localStorage['workflows']);
+                return localJobs.length;
+            }
+
+            return 0;
+        },
         removeWorkflow: function (index) {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {
                 var localJobs = JSON.parse(localStorage['workflows']);

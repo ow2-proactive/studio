@@ -21,16 +21,18 @@ define(
             var newWorkflow = $('<button type="button" class="btn btn-success btn-small create-workflow-button">Create Workflow</button>')
 
             newWorkflow.click(function () {
-
                 var jobModel = new Job();
                 var jobName = jobModel.get("Job Name");
+                jobName += (that.options.projects.getSavedWorkflowCount()+1);
+                jobModel.set("Job Name", jobName);
 
                 var jobXml = that.options.xmlView.xml(jobModel);
                 that.options.projects.addEmptyWorkflow(jobName, jobXml);
 
                 var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
                 if (workflowJson) {
-                    that.options.workflowView.import(workflowJson);
+                    var StudioApp = require('StudioApp');
+                    StudioApp.import(workflowJson)
                 }
 
                 that.listWorkflows();
@@ -84,7 +86,8 @@ define(
                         that.options.projects.setSelectWorkflowIndex(workflowIndex);
                         var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
                         if (workflowJson) {
-                            that.options.workflowView.import(workflowJson);
+                            var StudioApp = require('StudioApp');
+                            StudioApp.import(workflowJson)
                         }
                     }
                     that.listWorkflows();
