@@ -22,6 +22,9 @@ require.config({
             deps: [
                 'backboneForms'
             ]
+        },
+        codemirror :{
+            exports: "CodeMirror"
         }
     },
     paths: {

@@ -5,6 +5,7 @@ define(
         'proactive/view/utils/undo',
         'proactive/rest/studio-client',
         'xml2json',
+        'codemirror',
         'backboneForms',
         'backboneFormsEditor',
         'backboneFormsAdapter',
@@ -12,7 +13,7 @@ define(
         'bootstrap'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror) {
 
     "use strict";
 
