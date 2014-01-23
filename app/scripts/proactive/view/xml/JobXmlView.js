@@ -6,12 +6,11 @@ define(
         'proactive/view/xml/TaskXmlView',
         'text!proactive/templates/job-template.html',
         'text!proactive/templates/workflow-view-template.html',
-        'shCore',
-        'shBrushXml',
-        'shBrushJScript'
+        'codemirror',
+        'codemirrorXml'
     ],
 
-    function ($, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate) {
+    function ($, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate, CodeMirror) {
 
     "use strict";
 
@@ -67,12 +66,21 @@ define(
         render: function () {
             // indenting using vkbeautify
             this.$el.empty()
-            var pre = $('<pre class="brush:xml;toolbar:false;" id="workflow-xml"></pre>');
+            var codeDiv = $('<div class="code" id="workflow-xml">');
             this.generatedXml = vkbeautify.xml(this.generateXml())
-            pre.text(this.generatedXml)
-            this.$el.append(pre);
-            SyntaxHighlighter.highlight();
+            this.$el.append(codeDiv);
 
+            var highlightedXml = CodeMirror(codeDiv[0], {
+                value: this.generatedXml,
+                mode: 'xml',
+                lineNumbers: true,
+                readOnly: true
+            });
+
+            $('#xml-view-modal').on('shown.bs.modal', function (e) {
+                // need to explicitly call refresh when div is shown otherwise codemirror is not visible
+                highlightedXml.refresh();
+            })
             return this;
         }
     })

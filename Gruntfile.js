@@ -258,22 +258,48 @@ module.exports = function (grunt) {
         //     dist: {}
         // },
 
+
+        requirejs: {
+            compile: {
+                options: {
+                    baseUrl: './app/scripts/',
+                    mainConfigFile: 'app/scripts/main.js',
+                    out: 'dist/scripts/main.js',
+                    removeCombined: false,
+                    name: 'main',
+                    generateSourceMaps: true,
+                    preserveLicenseComments: false,
+                    optimize: "uglify2"
+                }
+            }
+        },
+
         // Copies remaining files to places other tasks can use
         copy: {
             dist: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= yeoman.app %>',
-                    dest: '<%= yeoman.dist %>',
-                    src: [
-                        '*.{ico,png,txt}',
-                        '.htaccess',
-                        'images/{,*/}*.webp',
-                        '{,*/}*.html',
-                        'styles/fonts/{,*/}*.*'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: '<%= yeoman.app %>',
+                        dest: '<%= yeoman.dist %>',
+                        src: [
+                            '*.{ico,png,txt}',
+                            '.htaccess',
+                            'images/{,*/}*.webp',
+                            '{,*/}*.html',
+                            'libs/requirejs/{,*/}*.js',
+                            'libs/pines-notify/jquery*.css',
+                            'scripts/proactive/templates/*.html',
+                        ]
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['<%= yeoman.app %>/libs/bootstrap/dist/fonts/*.*'],
+                        dest: '<%= yeoman.dist %>/fonts/'
+                    }
+                ]
             },
             styles: {
                 expand: true,
@@ -356,10 +382,8 @@ module.exports = function (grunt) {
         'autoprefixer',
         'concat',
         'cssmin',
-        'uglify',
+        'requirejs',
         'copy:dist',
-        'modernizr',
-        'rev',
         'usemin',
         'htmlmin'
     ]);

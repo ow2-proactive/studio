@@ -15,8 +15,6 @@
         <link rel="stylesheet" href="libs/codemirror/lib/codemirror.css" />
         <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css" />
         <!-- endbower -->
-        <link href="libs/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css" />
-        <link href="libs/syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
 
         <link href="libs/pines-notify/jquery.pnotify.default.css" rel="stylesheet" type="text/css" />
         <link href="libs/pines-notify/jquery.pnotify.default.icons.css" rel="stylesheet" type="text/css" />
@@ -24,16 +22,15 @@
         <!-- build:css(.tmp) styles/studio.css -->
         <link rel="stylesheet" href="styles/studio.css">
         <!-- endbuild -->
-        <script src="libs/modernizr/modernizr.js"></script>
 
     </head>
-    <body>
+<body data-library="jquery" style="zoom: 1;">
         <!--[if lt IE 10]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
 
-        <body data-library="jquery" style="zoom: 1;">
+
 
         <div class="navbar navbar-fixed-top" role="navigation">
             <div class="navbar-header">
@@ -97,7 +94,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">Scheduler Login Required</h3>
+                        <h3>Scheduler Login Required</h3>
                     </div>
                     <div class="modal-body">
                         <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
@@ -114,7 +111,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="myModalLabel">Workflow XML</h3>
+                        <h3>Workflow XML</h3>
                     </div>
                     <div class="modal-body" style="height:100%">
                         <div id="workflow-xml-container"></div>
@@ -182,8 +179,6 @@
                 });
             }
         </script>
-
-        </body>
 
         <script data-main="scripts/main" src="libs/requirejs/require.js"></script>
 </body>

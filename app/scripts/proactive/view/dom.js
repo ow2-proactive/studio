@@ -9,8 +9,8 @@ define(
         'codemirrorJs',
         'codemirrorComment',
         'codemirrorMB',
-        'backboneForms',
-        'backboneFormsEditor',
+        'backbone-forms',
+        'list',
         'backboneFormsAdapter',
         'StudioApp',
         'bootstrap'

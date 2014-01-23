@@ -28,38 +28,16 @@ require.config({
                 'jquery'
             ]
         },
-        backboneFormsEditor: {
-            deps: [
-                'backboneForms'
-            ]
-        },
         backboneFormsAdapter: {
             deps: [
-                'backboneForms'
+                'backbone-forms'
             ]
         },
         codemirror: {
             exports: "CodeMirror"
         },
-        shCore: {
-            deps: ["XRegExp"],
-            init: function() {
-                return {
-                    SyntaxHighlighter: SyntaxHighlighter
-                };
-            }
-        },
-        shBrushXml: {
-            deps: [
-                "shCore"
-            ]
-        },
-        shBrushJScript: {
-            deps: [
-                "shCore"
-            ]
-        },
         codemirrorJs: { deps: [ 'codemirror' ]},
+        codemirrorXml: { deps: [ 'codemirror' ]},
         codemirrorComment: { deps: [ 'codemirror' ]},
         codemirrorMB: { deps: [ 'codemirror' ]}
     },
@@ -67,8 +45,8 @@ require.config({
         jquery: '../libs/jquery/jquery',
         jqueryUI: '../libs/jquery-ui/ui/jquery-ui',
         backbone: '../libs/backbone/backbone',
-        backboneForms: '../libs/backbone-forms/distribution.amd/backbone-forms',
-        backboneFormsEditor: '../libs/backbone-forms/distribution/editors/list',
+        'backbone-forms': '../libs/backbone-forms/distribution.amd/backbone-forms',
+        list: '../libs/backbone-forms/distribution.amd/editors/list',
         backboneFormsAdapter: '../libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         underscore: '../libs/underscore/underscore',
         bootstrap: '../libs/bootstrap/dist/js/bootstrap',
@@ -79,14 +57,11 @@ require.config({
         fileSaver : '../libs/FileSaver/FileSaver',
         codemirror: '../libs/codemirror/lib/codemirror',
         codemirrorJs: '../libs/codemirror/mode/javascript/javascript',
+        codemirrorXml: '../libs/codemirror/mode/xml/xml',
         codemirrorComment: '../libs/codemirror/addon/comment/comment',
         codemirrorMB: '../libs/codemirror/addon/edit/matchbrackets',
         jsplumb : '../libs/jsplumb/dist/js/jquery.jsPlumb-1.5.5',
         xml2json: 'thirdparties/xml2json',
-        XRegExp: '../libs/syntaxhighlighter/scripts/XRegExp',
-        shCore: '../libs/syntaxhighlighter/scripts/shCore',
-        shBrushXml: '../libs/syntaxhighlighter/scripts/shBrushXml',
-        shBrushJScript: '../libs/syntaxhighlighter/scripts/shBrushJScript',
 
         StudioApp: 'proactive/app'
     }
