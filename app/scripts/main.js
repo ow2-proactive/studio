@@ -61,6 +61,7 @@ require.config({
         codemirrorComment: '../libs/codemirror/addon/comment/comment',
         codemirrorMB: '../libs/codemirror/addon/edit/matchbrackets',
         jsplumb : '../libs/jsplumb/dist/js/jquery.jsPlumb-1.5.5',
+        filesaver: '../libs/FileSaver/FileSaver',
         xml2json: 'thirdparties/xml2json',
 
         StudioApp: 'proactive/app'

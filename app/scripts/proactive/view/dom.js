@@ -13,7 +13,8 @@ define(
         'list',
         'backboneFormsAdapter',
         'StudioApp',
-        'bootstrap'
+        'bootstrap',
+        'filesaver'
     ],
 
     function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror) {
