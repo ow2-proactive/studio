@@ -81,7 +81,7 @@ define(
         require('StudioApp').views.workflowView.autoLayout();
     });
     $("#zoom-in-button").click(function () {
-        require('StudioApp').workflowView.zoomIn();
+        require('StudioApp').views.workflowView.zoomIn();
     });
     $("#zoom-out-button").click(function () {
         require('StudioApp').views.workflowView.zoomOut();

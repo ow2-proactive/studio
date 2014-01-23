@@ -49,7 +49,7 @@ define(
 
                 var removeTask = $('<a href="#" class="glyphicon glyphicon-trash pull-right" title="Remove task"></a>');
                 removeTask.click(function () {
-                    workflowView.removeView(that);
+                    StudioApp.views.workflowView.removeView(that);
                     return false;
                 })
                 breadcrumb.append(removeTask)
