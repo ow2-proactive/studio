@@ -27,7 +27,7 @@ define(
 
         save: function () {
 
-            var StudioApp   = require('StudioApp');
+            var StudioApp = require('StudioApp');
 
             if (!enabled) return;
             var state = {xml: StudioApp.views.xmlView.generateXml(),
@@ -39,9 +39,8 @@ define(
         undo: function () {
             if (undoStates.length <= 1) {
                 StudioClient.alert("No further undo data", "");
-                return
+                return;
             }
-            ;
             this._move(undoStates, redoStates);
             this._restoreLastState();
         },
@@ -87,7 +86,7 @@ define(
 
                 this.runWithDisabled(function () {
                     var json = xml2json.xmlToJson(xml2json.parseXml(state.xml))
-                    StudioApp.importviews.workflowView.importNoReset(json, false);
+                    StudioApp.importNoReset(json);
 
                     StudioApp.views.workflowView.restoreLayoutFromOffsets(state.offsets)
                     StudioApp.views.workflowView.restoreOpenAccordions(state.accordions)
