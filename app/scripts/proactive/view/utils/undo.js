@@ -44,6 +44,11 @@ define(
             this._move(undoStates, redoStates);
             this._restoreLastState();
         },
+        undoIfEnabled: function () {
+            if (enabled) {
+                this.undo();
+            }
+        },
         redo: function () {
             if (redoStates.length == 0) {
                 StudioClient.alert("No further redo data", "");
@@ -51,6 +56,11 @@ define(
             }
             this._move(redoStates, undoStates)
             this._restoreLastState();
+        },
+        redoIfEnabled: function () {
+            if (enabled) {
+                this.redo();
+            }
         },
         runWithDisabled: function (runnable) {
             this._disable()

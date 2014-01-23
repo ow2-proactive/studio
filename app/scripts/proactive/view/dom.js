@@ -187,7 +187,16 @@ define(
         undoManager.redo()
     });
 
-    (function scriptManagement() {
+        $(document).on('focus', "*", function () {
+            undoManager._disable();
+        });
+
+        $(document).on('focusout', function () {
+            undoManager._enable();
+            undoManager.save();
+        });
+
+        (function scriptManagement() {
 
         function loadSelectedScript() {
             var scriptName = $(this).find(":selected").text();
@@ -365,10 +374,10 @@ define(
                 }
                 ;
                 if (ctrlDown && e.keyCode == zKey) {
-                    undoManager.undo();
+                    undoManager.undoIfEnabled();
                 }
                 if (ctrlDown && e.keyCode == yKey) {
-                    undoManager.redo();
+                    undoManager.redoIfEnabled();
                 }
             });
 
