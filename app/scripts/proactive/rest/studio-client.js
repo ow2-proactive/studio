@@ -264,7 +264,6 @@ define(
         },
 
         listScripts: function () {
-            console.log("Listing scripts")
             this.getScriptsSynchronosly();
             return _.map(cachedScripts,function (script) {
                 return script.name;
