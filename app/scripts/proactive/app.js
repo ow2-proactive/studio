@@ -60,8 +60,7 @@ define(
                 that.views.workflowView.$el.click();
             })
         },
-
-        import: function(json) {
+        _replaceJobModel: function (json) {
             console.log("Changing the current job model from", this.model);
             this.models.jobModel = new Job();
             this.models.jobModel.populate(json.job)
@@ -69,8 +68,14 @@ define(
 
             this.views.workflowView.model = this.models.jobModel;
             this.views.xmlView.model = this.models.jobModel;
-
+        },
+        import: function(json) {
+            this._replaceJobModel(json);
             this.views.workflowView.import();
+        },
+        importNoReset: function (json) {
+            this._replaceJobModel(json);
+            this.views.workflowView.importNoReset();
         },
         clear: function() {
             var job = new Job();
