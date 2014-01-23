@@ -270,6 +270,15 @@ define(
             });
             $('#full-edit-modal').modal('show');
             $("#set-script-content").data("editor", editor);
+
+            var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+            if (is_firefox) {
+                var table = $('#full-edit-modal table');
+                var firstCol = table.find("td:first")
+                var lastCol = table.find("td:last")
+                $(".code-editor-container").height($("#full-edit-modal").height()*0.8 - firstCol.height() - lastCol.height())
+            }
+
             return false;
         })
         $('#full-edit-modal').on('shown.bs.modal', function () {
