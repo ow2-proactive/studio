@@ -79,7 +79,6 @@ module.exports = function (grunt) {
                     port: 9001,
                     base: [
                         '.tmp',
-                        'test',
                         '<%= yeoman.app %>'
                     ]
                 }
@@ -340,8 +339,36 @@ module.exports = function (grunt) {
         }
     });
 
+grunt.registerTask('test:integration', 'Run the full app and check for errors', function () {
+    var phantomjs = require('grunt-lib-phantomjs').init(grunt);
 
-    grunt.registerTask('serve', function (target) {
+    phantomjs.on('test.ok', function(msg) {
+        grunt.log.writeln(msg);
+        phantomjs.halt();
+    });
+
+    phantomjs.on('test.fail', function(msg) {
+        grunt.fail.warn(msg);
+        phantomjs.halt();
+    });
+
+    // This task is async.
+    var done = this.async();
+
+    phantomjs.spawn('http://127.0.0.1:9001', {
+        // Additional PhantomJS options.
+        options: {
+            phantomScript: 'test/integration_test.js'
+        },
+        // Complete the task when done.
+        done: function (err) {
+            done(err);
+        }
+    });
+});
+
+
+grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
@@ -371,7 +398,8 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'connect:test',
-            'mocha'
+            'test:integration'
+//            'mocha'
         ]);
     });
 
