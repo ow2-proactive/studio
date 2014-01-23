@@ -35,7 +35,7 @@ define(
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-            "Input Space Url": {type: "Text", fieldAttrs: {"data-tab": "File Transfer", 'placeholder': 'inputSpace->@attributes->url'}},
+            "Input Space Url": {type: "Text", fieldAttrs: {"data-tab": "Data Management", 'placeholder': 'inputSpace->@attributes->url'}},
             "Output Space Url": {type: "Text", fieldAttrs: {'placeholder': 'outputSpace->@attributes->url'}},
             "Global Space Url": {type: "Text", fieldAttrs: {'placeholder': 'globalSpace->@attributes->url'}},
             "User Space Url": {type: "Text", fieldAttrs: {'placeholder': 'userSpace->@attributes->url'}},

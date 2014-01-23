@@ -59,7 +59,7 @@ define(
             "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre Script", 'placeholder': 'pre->script'}},
             "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script'}},
             "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Clean Script", 'placeholder': 'cleaning->script'}},
-            "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "File Transfer", 'placeholder': 'inputFiles->files'}, subSchema: {
+            "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Data Management", 'placeholder': 'inputFiles->files'}, subSchema: {
                 "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
                 "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
                 "Access Mode": {type: 'Select',

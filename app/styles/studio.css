@@ -435,7 +435,7 @@ button[data-action=remove] { margin-bottom:10px }
 textarea{
 	min-width:90%;
     max-width:90%;
-	height:200px;
+	min-height:200px !important;
 }
 
 input {
