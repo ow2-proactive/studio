@@ -98,11 +98,13 @@ define(
             StudioApp.views.xmlView.render();
 
             var button = $(this);
-            var xml = "";
-            // make it in this ugly way to have a right line number for the xml in case of error
-            $('#workflow-xml .container').find('.line').each(function (i, line) {
-                xml += $(line).text().trim() + "\n";
-            })
+            var xml = StudioApp.views.xmlView.generateXml()
+
+//            var xml = "";
+//            // make it in this ugly way to have a right line number for the xml in case of error
+//            $('#workflow-xml .container').find('.line').each(function (i, line) {
+//                xml += $(line).text().trim() + "\n";
+//            })
 
             var htmlVisualization = StudioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization)
