@@ -261,7 +261,9 @@ define(
             $("#set-script-content").data("area", textarea);
             $("#full-edit-modal-script-content").val(content);
             var editor = CodeMirror.fromTextArea($("#full-edit-modal-script-content").get(0), {
-                lineNumbers: true
+                lineNumbers: true,
+                mode: "javascript"
+
             });
             $('#full-edit-modal').modal('show');
             $("#set-script-content").data("editor", editor);
