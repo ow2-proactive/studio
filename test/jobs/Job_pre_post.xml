@@ -12,18 +12,30 @@
 			<description>Testing the pre and post scripts.</description>
 			<pre>
 				<script>
-					<file path="${HOME}/set.js"> </file>
+					<code language="javascript">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</pre>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.PropertyTask"> </javaExecutable>
 			<post>
 				<script>
-					<file path="${HOME}/unset.js"> </file>
+					<code language="javascript">
+					<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</post>
 			<cleaning>
 				<script>
-					<file path="${HOME}/clean.js"> </file>
+					<code language="javascript">
+					<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</cleaning>
 		</task>

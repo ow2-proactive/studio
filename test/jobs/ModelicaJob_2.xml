@@ -15,7 +15,11 @@
             <selection>
                 <!-- This job descriptor works only on windows -->
 				<script type="static">
-					<file path="${pa.scheduler.home}/samples/scripts/selection/checkWindows.js"> </file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
             <nativeExecutable>

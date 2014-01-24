@@ -1,9 +1,9 @@
-describe("Jobs Import / Export", function() {
+define(['proactive/view/xml/JobXmlView', 'proactive/model/Job', 'proactive/view/utils/undo',
+    'xml2json', 'prettydiff'
+],
+    function(JobXmlView, Job, undoManager, xml2json, prettydiff) {
 
-    var jobModel = new Job();
-    var workflowView = new WorkflowView({el: $("#workflow-designer"), model: jobModel});
-    var propertiesView = new PropertiesView({el: $("#properties-container")});
-    var xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: jobModel});
+return describe("Jobs Import / Export", function() {
 
     var readFromServer = function(fileName) {
         console.log("Reading " + httpServer+fileName);
@@ -15,16 +15,28 @@ describe("Jobs Import / Export", function() {
         }).responseText;
     }
 
+    window.localStorage.clear()
 
+    var pathArr = location.pathname.split( '/' );
+    var path = '';
+    for (var i=0; i<pathArr.length-2; i++) {
+        path += pathArr[i] + '/';
+    }
+    var httpServer = location.protocol + "//" + location.host + path;//"http://localhost:8000/";
 
-    var jobList = $(readFromServer('tests/jobs/'));
-    jobList.find('a').each(function(i, jobHtml) {
+    var jobList = $(readFromServer('/test/jobs/'));
+    jobList.find('[href*=".xml"]').each(function(i, jobHtml) {
         var jobName = $(jobHtml).text()
+        console.log(undoManager)
+        undoManager._disable()
+        var xmlView = new JobXmlView()
+        var jobModel = new Job()
+
         if (jobName.indexOf('..')!=-1) {return};
 
         describe(jobName, function() {
 
-            var path = '/tests/jobs/'+jobName;
+            var path = '/test/jobs/'+jobName;
             var originalJobXml = undefined;
             var generatedXml = undefined;
 
@@ -39,12 +51,13 @@ describe("Jobs Import / Export", function() {
                     // remove description without cdata
                     originalJobXml = originalJobXml.replace(/<description>\s*\w.*<\/description>/g, '');
                     originalJobXml = originalJobXml.replace(/<javaExecutable (.*)\s+\/>/g, "<javaExecutable $1> </javaExecutable>");
+                    // we dropped this field
+                    originalJobXml = originalJobXml.replace(/ projectName=\"\w*\"/g, '');
 
                     try {
-                        var json = xmlToJson(parseXml(originalJobXml))
-                        workflowView.import(json);
-                        jobModel = workflowView.model;
-                        xmlView.model = workflowView.model;
+                        var json = xml2json.xmlToJson(xml2json.parseXml(originalJobXml))
+                        jobModel.populate(json.job)
+
                     } catch (e) {
                         console.log(e.stack);
                         throw e;
@@ -56,6 +69,7 @@ describe("Jobs Import / Export", function() {
             it("should be possible to export without exceptions", function() {
                 var f = function() {
                     try {
+                        xmlView.model = jobModel;
                         generatedXml = xmlView.generateXml()
                     } catch (e) {
                         console.log(e.stack);
@@ -83,7 +97,6 @@ describe("Jobs Import / Export", function() {
                 generatedXml = generatedXml.replace(/\n+/g, ' ')
                 generatedXml = generatedXml.replace(/\s+/g, ' ')
                 generatedXml = generatedXml.replace(/></g, '> <')
-
 
                 console.log("old: ", originalJobXml)
                 console.log("new: ", generatedXml)
@@ -114,4 +127,5 @@ describe("Jobs Import / Export", function() {
 
     jobList.remove();
 
+});
 });

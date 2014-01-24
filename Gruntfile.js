@@ -78,8 +78,7 @@ module.exports = function (grunt) {
                 options: {
                     port: 9001,
                     base: [
-                        '.tmp',
-                        '<%= yeoman.app %>'
+                        '.'
                     ]
                 }
             },
@@ -121,17 +120,27 @@ module.exports = function (grunt) {
             ]
         },
 
-
-        // Mocha testing framework configuration options
-        mocha: {
+        jasmine: {
             all: {
+                src: 'test/spec/*.js',
+//                specs: 'test/spec/*.js',
                 options: {
-                    run: true,
-                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
+                    host: 'http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/',
+                    keepRunner: true,
+                    template: require('grunt-template-jasmine-requirejs'),
+                    templateOptions: {
+                        requireConfigFile: 'app/scripts/main.js',
+                        requireConfig: {
+                            baseUrl: 'app/scripts',
+                            paths: {
+                                prettydiff: '../../test/libs/prettydiff/prettydiff'
+                            }
+                        }
+                    }
                 }
+
             }
         },
-
 
         // Add vendor prefixed styles
         autoprefixer: {
@@ -289,7 +298,7 @@ module.exports = function (grunt) {
                             '{,*/}*.html',
                             'libs/requirejs/{,*/}*.js',
                             'libs/pines-notify/jquery*.css',
-                            'scripts/proactive/templates/*.html',
+                            'scripts/proactive/templates/*.html'
                         ]
                     },
                     {
@@ -355,7 +364,7 @@ grunt.registerTask('test:integration', 'Run the full app and check for errors', 
     // This task is async.
     var done = this.async();
 
-    phantomjs.spawn('http://127.0.0.1:9001', {
+    phantomjs.spawn('http://127.0.0.1:9001/app/', {
         // Additional PhantomJS options.
         options: {
             phantomScript: 'test/integration_test.js'
@@ -398,8 +407,8 @@ grunt.registerTask('serve', function (target) {
 
         grunt.task.run([
             'connect:test',
+            'jasmine',
             'test:integration'
-//            'mocha'
         ]);
     });
 

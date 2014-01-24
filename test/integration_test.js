@@ -1,7 +1,5 @@
 var fs = require('fs');
 
-var testSelector = "#palette-container";
-
 var tmpfile = phantom.args[0];
 var url = phantom.args[1];
 
@@ -24,7 +22,7 @@ function waitFor(testFx, onReady, timeOutMillis) {
                 if(!condition) {
                     // If condition still not fulfilled (timeout but condition is 'false')
                     console.log("'waitFor()' timeout");
-                    sendMessage('test.fail', 'Could not load page, check manually');
+                    sendMessage('test.fail', 'Could not load page, check manually ' + url);
                 } else {
                     // Condition fulfilled (timeout and/or condition is 'true')
                     console.log("'waitFor()' finished in " + (new Date().getTime() - start) + "ms.");
@@ -43,11 +41,11 @@ page.open(url, function (status) {
         console.log("Unable to access network at " + url);
         sendMessage('test.fail', 'Unable to access page (' + url + ', is connect:test running?');
     } else {
-        // Wait for 'signin-dropdown' to be visible
+        // Wait for palette to be visible
         waitFor(function() {
             // Check in the page if a specific element is now visible
             return page.evaluate(function() {
-                return $(testSelector).is(":visible");
+                return $("#palette-container").is(":visible");
             });
         }, function() {
             console.log("The page is displayed properly");

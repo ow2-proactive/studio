@@ -11,15 +11,6 @@
 	<taskFlow>
 		<task name="task1">
 			<description>Task 1</description>
-			<selection>
-				<script type="static">
-					<file path="${WORK_DIR}/checkHostName.js">
-					<arguments>
-						<argument value="NON_EXISTING_HOST"/>
-					</arguments>
-					</file>
-				</script>
-			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
 				<parameters>
 					<parameter name="sleepTime" value="1"/>

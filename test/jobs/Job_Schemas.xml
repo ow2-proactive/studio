@@ -256,22 +256,7 @@
                     ]]> </code>
                 </script>
             </selection>
-            <pre>
-                <script>
-                    <file path="${HOME}/set.js"> </file>
-                </script>
-            </pre>
             <javaExecutable class="org.ow2.proactive.scheduler.examples.PropertyTask"> </javaExecutable>
-            <post>
-                <script>
-                    <file path="${HOME}/unset.js"> </file>
-                </script>
-            </post>
-            <cleaning>
-                <script>
-                    <file path="${HOME}/clean.js"> </file>
-                </script>
-            </cleaning>
         </task>
 
         <!-- Tests static and dynamic commands -->

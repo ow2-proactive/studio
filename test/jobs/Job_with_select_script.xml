@@ -12,11 +12,11 @@
 			<description>Parallel Tasks - Task 1</description>
 			<selection>
 				<script type="static">
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -30,11 +30,11 @@
 			<description>Parallel Tasks - Task 2</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -48,11 +48,11 @@
 			<description>Parallel Tasks - Task 3</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -67,11 +67,11 @@
 			<description>Parallel Tasks - Task 4</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -86,11 +86,11 @@
 			<description>Parallel Tasks - Task 5</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -105,11 +105,11 @@
 			<description>Parallel Tasks - Task 6</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -124,11 +124,11 @@
 			<description>Parallel Tasks - Task 7</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
@@ -142,11 +142,11 @@
 			<description>Parallel Tasks - Task 8</description>
 			<selection>
 				<script>
-					<file path="${HOME}/host_selection.js">
-					<arguments>
-						<argument value="${EXCLUSION_STRING}"/>
-					</arguments>
-					</file>
+					<code language="js">
+						<![CDATA[
+						print('hello')
+						]]>
+					</code>
 				</script>
 			</selection>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">

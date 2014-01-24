@@ -7,7 +7,8 @@ define(
         'text!proactive/templates/job-template.html',
         'text!proactive/templates/workflow-view-template.html',
         'codemirror',
-        'codemirrorXml'
+        'codemirrorXml',
+        'proactive/view/utils/escapeHtml'
     ],
 
     function ($, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate, CodeMirror) {

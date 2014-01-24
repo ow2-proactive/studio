@@ -26,10 +26,9 @@ define(
         },
 
         save: function () {
+            if (!this.enabled) return;
 
             var StudioApp = require('StudioApp');
-
-            if (!enabled) return;
             var state = {xml: StudioApp.views.xmlView.generateXml(),
                 offsets: this.getOffsetsFromDOM(),
                 accordions: StudioApp.views.workflowView.getOpenAccordions(),

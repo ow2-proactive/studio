@@ -163,23 +163,6 @@
             </div>
         </div>
 
-        <script>
-            var entityMap = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': '&quot;',
-                "'": '&#39;',
-                "/": '&#x2F;'
-            };
-
-            function escapeHtml(string) {
-                return String(string).replace(/[&<>"'\/]/g, function (s) {
-                    return entityMap[s];
-                });
-            }
-        </script>
-
         <script data-main="scripts/main" src="libs/requirejs/require.js"></script>
 </body>
 </html>
