@@ -98,12 +98,7 @@ define(
             StudioApp.views.xmlView.render();
 
             var button = $(this);
-            var xml = "";
-            // make it in this ugly way to have a right line number for the xml in case of error
-            $('#workflow-xml .container').find('.line').each(function (i, line) {
-                xml += $(line).text().trim() + "\n";
-            })
-
+            var xml = StudioApp.views.xmlView.generateXml()
             var htmlVisualization = StudioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization)
         }, function () {
@@ -266,7 +261,9 @@ define(
             $("#set-script-content").data("area", textarea);
             $("#full-edit-modal-script-content").val(content);
             var editor = CodeMirror.fromTextArea($("#full-edit-modal-script-content").get(0), {
-                lineNumbers: true
+                lineNumbers: true,
+                mode: "javascript"
+
             });
             $('#full-edit-modal').modal('show');
             $("#set-script-content").data("editor", editor);

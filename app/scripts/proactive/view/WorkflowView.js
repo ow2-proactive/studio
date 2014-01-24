@@ -407,6 +407,7 @@ define(
             var task2View = {};
             $.each(this.model.tasks, function (i, task) {
                 var view = new TaskView({model: task});
+
                 that.addView(view, {top: 0, left: 0});
                 task2View[task.get('Task Name')] = view;
             })
@@ -485,12 +486,28 @@ define(
             jsPlumb.repaintEverything();
         },
         restoreLayoutFromOffsets: function (offsets) {
+            var that = this;
+
             $('.task').each(function () {
                 var taskName = $(this).find("span.name").text()
                 var offset = offsets[taskName]
+                var autolayout = false;
+
                 if (offset) {
+                    if (offset.left==0 && offset.top==0) {
+                        autolayout = true;
+                    }
                     $(this).offset(offset)
+                } else {
+                    autolayout = true;
                 }
+
+                if (autolayout) {
+                    console.log("ERROR: enforce autolayout because of invalid offsets")
+                    that.autoLayout();
+                    return false;
+                }
+
             })
             jsPlumb.repaintEverything();
         },
