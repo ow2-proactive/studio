@@ -277,7 +277,10 @@ module.exports = function (grunt) {
                     name: 'main',
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
-                    optimize: "uglify2"
+                    optimize: "uglify2",
+                    paths: {
+                        "proactive/config": "empty:"
+                    }
                 }
             }
         },
@@ -298,7 +301,8 @@ module.exports = function (grunt) {
                             '{,*/}*.html',
                             'libs/requirejs/{,*/}*.js',
                             'libs/pines-notify/jquery*.css',
-                            'scripts/proactive/templates/*.html'
+                            'scripts/proactive/templates/*.html',
+                            'scripts/proactive/config.js'
                         ]
                     },
                     {
