@@ -388,7 +388,7 @@ define(
                 }
             });
 
-            $('body').click(function (e) {
+            $('body').mousedown(function (e) {
 
                 console.log("clearing all selected tasks", e)
                 if (e.isPropagationStopped()) {

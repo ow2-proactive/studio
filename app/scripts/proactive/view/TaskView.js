@@ -332,6 +332,8 @@ define(
                 $(".active-task").removeClass("active-task");
                 that.$el.addClass("active-task");
 
+                e.stopPropagation();
+
             })
 
             this.$el.click(function (e) {
