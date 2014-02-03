@@ -345,7 +345,7 @@ define(
                 })
 
                 that.showOrHideForkEnvironment();
-                $('select[name=Library]').click(e);
+                $('select[name=Library]').click();
             })
             return this;
         },

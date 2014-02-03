@@ -202,12 +202,15 @@ define(
             var fileArguments = form.find('div[placeholder="file->arguments->argument"]');
             var engine = form.find('div[placeholder="code->@attributes->language"]')
             var saveButton = form.find('button.save-script')
-            if (!scriptName) {
-                textarea.val('');
+            var saveAsButton = form.find('button.save-script-as');
+            if (scriptName === "--inline--") {
                 libraryPath.val('');
                 fileArguments.hide();
                 engine.show();
                 saveButton.attr("disabled", true);
+                StudioClient.isConnected(function () {}, function () {
+                    saveAsButton.attr("disabled", true);
+                });
             } else {
                 var script = StudioClient.getScript(scriptName);
                 textarea.val(script.content);

@@ -12,7 +12,7 @@ define(
 
     var scriptTemplate = _.template(tpl);
     var serverScripts = function (callback) {
-        callback([""].concat(StudioClient.listScripts()));
+        callback(["--inline--"].concat(StudioClient.listScripts()));
     }
 
     return SchemaModel.extend({
