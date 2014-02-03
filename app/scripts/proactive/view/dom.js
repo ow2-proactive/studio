@@ -203,6 +203,7 @@ define(
             var engine = form.find('div[placeholder="code->@attributes->language"]')
             var saveButton = form.find('button.save-script')
             var saveAsButton = form.find('button.save-script-as');
+            var select = $("select[name=Library]");
             if (scriptName === "--inline--") {
                 libraryPath.val('');
                 fileArguments.hide();
@@ -210,6 +211,7 @@ define(
                 saveButton.attr("disabled", true);
                 StudioClient.isConnected(function () {}, function () {
                     saveAsButton.attr("disabled", true);
+                    select.attr("disabled", true);
                 });
             } else {
                 var script = StudioClient.getScript(scriptName);
@@ -418,8 +420,8 @@ define(
     }
 
     // saving job xml every min to local store
-    setInterval(save_workflow_to_storage, 10000);
+    //setInterval(save_workflow_to_storage, 10000);
     // validating job periodically
-    setInterval(validate_job, 30000);
+    //setInterval(validate_job, 30000);
 
 })
