@@ -43,7 +43,7 @@ define(
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-            "Number of Nodes": {type: 'Number', fieldAttrs: {"data-tab": "Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes'}},
+            "Number of Nodes": {type: 'Text', fieldAttrs: {"data-tab": "Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes'}},
             "Topology": { type: 'Select', fieldAttrs: {'placeholder': 'parallel->topology'}, options: ["none", "arbitrary",
                 {val: "bestProximity", label: "best proximity"},
                 {val: "singleHost", label: "single host"},
