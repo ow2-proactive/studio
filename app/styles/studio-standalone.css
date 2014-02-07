@@ -30,7 +30,7 @@
 
 .task {
 	overflow:hidden;
-	white-space: nowrap; 
+	white-space: nowrap;
 	text-overflow:ellipsis;
     background-color:white;
     border:1px solid #346789;
@@ -40,10 +40,10 @@
     -moz-box-shadow: 2px 2px 19px #e0e0e0;
     -moz-border-radius:0.5em;
     border-radius:5px;
-    width:90px;
-    height:35px;
-	line-height:35px;
-    position:absolute;    
+    width:80px;
+    height:30px;
+    line-height:30px;
+    position:absolute;
     color:black;
     padding:5px;
     font-size:10px;
