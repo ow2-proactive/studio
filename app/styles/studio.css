@@ -416,7 +416,10 @@ ANALOGIC SCHEME
 }
 
 
-button[data-action=remove] { margin-bottom:10px }
+button[data-action=remove] {
+    margin-bottom:10px;
+    padding-top:10px;
+}
 
 .syntaxhighlighter {
 	max-height:350px;
