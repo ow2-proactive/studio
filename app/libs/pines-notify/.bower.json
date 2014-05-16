@@ -1,0 +1,14 @@
+{
+  "name": "pines-notify",
+  "homepage": "https://github.com/sciactive/pnotify",
+  "version": "1.2.0",
+  "_release": "1.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.2.0",
+    "commit": "31b082e746a419ccc87018759e83d5a069651159"
+  },
+  "_source": "git://github.com/sciactive/pnotify.git",
+  "_target": "~1.2.0",
+  "_originalSource": "pines-notify"
+}

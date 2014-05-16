@@ -1,0 +1,7 @@
+{
+  "name": "xml2json",
+  "main": "index.js",
+  "_source": "/home/sdolgov/proactive/repos/studio/app/scripts/thirdparties/xml2json.js",
+  "_target": "*",
+  "_originalSource": "./app/scripts/thirdparties/xml2json.js"
+}

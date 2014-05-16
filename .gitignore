@@ -1,10 +1,9 @@
 node_modules
-dist
+/dist
 .tmp
 .sass-cache
-app/bower_components
-test/bower_components
-app/libs
-test/libs
+/app/bower_components
+/test/bower_components
+/test/libs
 _SpecRunner.html
 .grunt
