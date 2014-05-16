@@ -1,0 +1,7 @@
+{
+  "name": "dagre",
+  "main": "index.js",
+  "_source": "/home/sdolgov/proactive/repos/studio/app/scripts/thirdparties/dagre.min.js",
+  "_target": "*",
+  "_originalSource": "./app/scripts/thirdparties/dagre.min.js"
+}
