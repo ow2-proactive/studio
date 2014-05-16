@@ -23,6 +23,15 @@ task packageDist(type: Zip) {
     from 'dist'
 }
 
+task packageDev(type: Zip) {
+    from 'app'
+    classifier 'dev'
+}
+
 artifacts {
-    archives packageDist
+    if (file('dist').exists()) {
+        archives packageDist, packageDev
+    } else {
+        archives packageDev
+    }
 }
