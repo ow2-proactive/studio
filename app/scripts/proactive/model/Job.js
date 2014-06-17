@@ -23,6 +23,7 @@ define(
     return SchemaModel.extend({
         schema: {
             "Job Name": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': '@attributes->name'}},
+            "Project": {type: "Text", fieldAttrs: {'placeholder': '@attributes->projectName'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text']}},
             "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path'}, itemTemplate: jobClasspathTemplate},
             "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority'}, options: ["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
