@@ -397,6 +397,7 @@ define(
                 $('body').mousedown(function (e) {
 
                     console.log("clearing all selected tasks", e)
+
                     if (e.isPropagationStopped()) {
                         return;
                     }
@@ -404,7 +405,6 @@ define(
                     $(".selected-task").removeClass("selected-task");
                     copied = false;
                 })
-
             });
         })();
 
@@ -423,7 +423,6 @@ define(
         // adding form-control classes to new input elements aftere clicking on "add"
         // button in forms
         $(document).on('click', 'button[data-action="add"]', function () {
-            console.log("!!! here")
             $('input').addClass("form-control");
         })
 

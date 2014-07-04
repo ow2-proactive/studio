@@ -21,6 +21,7 @@ define(
                 text: message,
                 type: type,
                 text_escape: text_escape,
+                closer: true,
                 opacity: .8,
                 width: '20%',
                 history: false

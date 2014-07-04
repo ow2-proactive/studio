@@ -179,6 +179,24 @@ define(
                 }
             }
         },
+        saveOffsetsToLocalStorage: function (offsets) {
+            if (this.supports_html5_storage()) {
+                var selectedIndex = localStorage["workflow-selected"];
+                var localJobs = JSON.parse(localStorage['workflows']);
+
+                var meta = null;
+                if (!localJobs[selectedIndex].metadata) {
+                    meta = {};
+                } else {
+                    meta = JSON.parse(localJobs[selectedIndex].metadata);
+                }
+
+                meta.offsets = offsets;
+
+                localJobs[selectedIndex].metadata = JSON.stringify(meta);
+                localStorage["workflows"] = JSON.stringify(localJobs);
+            }
+        },
         getOffsetsFromLocalStorage: function () {
             if (this.supports_html5_storage()) {
                 var selectedIndex = localStorage["workflow-selected"];

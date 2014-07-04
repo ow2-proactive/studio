@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="urn:proactive:jobdescriptor:3.2"
+ xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
+ name="Job"
+ priority="normal"
+ cancelJobOnError="false">
+    <taskFlow>
+        <task name="Task10">
+            <scriptExecutable>
+                <script >
+                    <code language="javascript">
+                        <![CDATA[
+print(java.lang.System.getProperty('pas.task.name'))
+]]>
+                    </code>
+                </script>
+            </scriptExecutable>
+            <controlFlow >
+                <replicate>
+                    <script >
+                        <code language="javascript">
+                            <![CDATA[
+runs=2
+]]>
+                        </code>
+                    </script>
+                </replicate>
+            </controlFlow>
+        </task>
+        <task name="Task11">
+            <depends>
+                <task ref="Task10"/>
+            </depends>
+            <scriptExecutable>
+                <script >
+                    <code language="javascript">
+                        <![CDATA[
+print(java.lang.System.getProperty('pas.task.name'))
+]]>
+                    </code>
+                </script>
+            </scriptExecutable>
+        </task>
+        <task name="Task12">
+            <depends>
+                <task ref="Task11"/>
+            </depends>
+            <scriptExecutable>
+                <script >
+                    <code language="javascript">
+                        <![CDATA[
+print(java.lang.System.getProperty('pas.task.name'))
+]]>
+                    </code>
+                </script>
+            </scriptExecutable>
+        </task>
+    </taskFlow>
+</job>

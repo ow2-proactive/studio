@@ -77,6 +77,11 @@ define(
             this._replaceJobModel(json);
             this.views.workflowView.importNoReset();
         },
+        merge: function(json, elem) {
+            this.models.jobModel.populate(json.job, true)
+            this.views.workflowView.layoutNewElements(elem);
+            this.views.workflowView.importNoReset();
+        },
         clear: function() {
             var job = new Job();
             this.models.jobModel = job;

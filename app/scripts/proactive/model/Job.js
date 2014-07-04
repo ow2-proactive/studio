@@ -94,8 +94,8 @@ define(
                 }
             }
         },
-        populate: function (obj) {
-            this.populateSchema(obj);
+        populate: function (obj, merging) {
+            this.populateSchema(obj, merging);
             var that = this;
             if (obj.taskFlow && obj.taskFlow.task) {
 
@@ -123,9 +123,20 @@ define(
                     }
 
                     taskModel.populateSchema(task);
+
+                    // check for unique task name to keep the job valid
+                    var originalName = taskModel.get("Task Name");
+                    if (merging && that.getTaskByName(taskModel.get("Task Name"))) {
+                        var counter = 2;
+                        while (that.getTaskByName(taskModel.get("Task Name") + counter)) {
+                            counter++;
+                        }
+                        taskModel.set({"Task Name": originalName + counter});
+                    }
                     console.log("Pushing task", taskModel)
                     that.tasks.push(taskModel);
                     name2Task[taskModel.get("Task Name")] = taskModel;
+                    name2Task[originalName] = taskModel;
                 });
                 // adding dependencies after all tasks are populated
                 $.each(obj.taskFlow.task, function (i, task) {

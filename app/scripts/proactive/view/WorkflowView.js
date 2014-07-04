@@ -5,10 +5,12 @@ define(
         'proactive/view/ViewWithProperties',
         'proactive/view/TaskView',
         'proactive/view/utils/undo',
-        'proactive/view/dom'
+        'proactive/view/dom',
+        'xml2json',
+        'pnotify'
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager) {
+    function (d, Job, ViewWithProperties, TaskView, undoManager, dom, xml2json) {
 
     "use strict";
 
@@ -24,14 +26,28 @@ define(
                 drop: function (event, ui) {
                     undoManager.runWithDisabled(function () {
                         var elem = $(ui.draggable);
-                        if (!elem.hasClass('control-flow')) {
+
+                        if (elem.hasClass('task-menu')) {
                             that.createTask(ui)
-                        } else if (elem.hasClass('control-flow-if')) {
-                            that.createIfWorkflow(ui)
-                        } else if (elem.hasClass('control-flow-loop')) {
-                            that.createLoopWorkflow(ui)
-                        } else if (elem.hasClass('control-flow-replicate')) {
-                            that.createReplicationWorkflow(ui)
+                        } else {
+                            console.log("Creating", elem.data("templateName"), elem.data("templateUrl"));
+                            $.ajax({
+                                type: "GET",
+                                dataType:"text",
+                                url: elem.data("templateUrl"),
+                                success: function (data) {
+                                    //console.log(data)
+                                    var json = xml2json.xmlToJson(xml2json.parseXml(data))
+                                    //console.log(json)
+                                    var StudioApp = require('StudioApp');
+
+                                    StudioApp.merge(json, ui)
+                                },
+                                error: function (data) {
+                                    console.log("Cannot retrieve the template", data)
+                                    that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
+                                }
+                            });
                         }
                     });
                 }
@@ -171,6 +187,19 @@ define(
             });
 
         },
+        alert: function (caption, message, type) {
+            var text_escape = message.indexOf("<html>") == -1 ? true : false;
+
+            $.pnotify({
+                title: caption,
+                text: message,
+                type: type,
+                text_escape: text_escape,
+                opacity: .8,
+                width: '20%',
+                history: false
+            });
+        },
         createTask: function (ui) {
             var offset = this.$el.offset();
 
@@ -184,107 +213,6 @@ define(
             this.model.trigger('change');
 
             return view;
-        },
-        createIfWorkflow: function (ui) {
-            var offset = this.$el.offset();
-
-            console.log("Initializing If Workflow")
-            var taskIf = new TaskView();
-            var taskTarget = new TaskView();
-            var taskElse = new TaskView();
-            var taskContinuation = new TaskView();
-
-            var positionIf = {top: ui.offset.top, left: ui.offset.left};
-            var positionTarget = {top: positionIf.top + 200, left: positionIf.left - 150};
-            var positionElse = {top: positionTarget.top, left: positionTarget.left + 150};
-            var positionContinuation = {top: positionTarget.top, left: positionElse.left + 150};
-
-            var renderingIf = this.addView(taskIf, positionIf);
-            var renderingTarget = this.addView(taskTarget, positionTarget);
-            var renderingElse = this.addView(taskElse, positionElse);
-            var renderingContinuation = this.addView(taskContinuation, positionContinuation);
-
-            this.model.addTask(renderingIf.model);
-            this.model.addTask(renderingTarget.model);
-            this.model.addTask(renderingElse.model);
-            this.model.addTask(renderingContinuation.model);
-
-            var endpointIf = taskIf.addSourceEndPoint('if')
-            var endpointTarget = taskTarget.addTargetEndPoint('if')
-            var endpointElse = renderingElse.addTargetEndPoint('if')
-            var endpointContinuation = renderingContinuation.addTargetEndPoint('if')
-
-            jsPlumb.connect({source: endpointIf, target: endpointTarget, overlays: taskIf.overlays()});
-            jsPlumb.connect({source: endpointIf, target: endpointElse, overlays: taskIf.overlays()});
-            jsPlumb.connect({source: endpointIf, target: endpointContinuation, overlays: taskIf.overlays()});
-
-            this.model.trigger('change');
-        },
-        createLoopWorkflow: function (ui) {
-            var offset = this.$el.offset();
-
-            console.log("Initializing Loop Workflow")
-            var taskDo = new TaskView();
-            var taskWhile = new TaskView();
-
-            var positionDo = {top: ui.offset.top, left: ui.offset.left};
-            var positionWhile = {top: positionDo.top + 200, left: positionDo.left};
-
-            var renderingDo = this.addView(taskDo, positionDo);
-            var renderingWhile = this.addView(taskWhile, positionWhile);
-
-            this.model.addTask(renderingDo.model);
-            this.model.addTask(renderingWhile.model);
-
-            var endpointDo = taskDo.addTargetEndPoint('loop')
-            var endpointWhile = taskWhile.addSourceEndPoint('loop')
-
-            var endpointDepDo = taskDo.addSourceEndPoint('dependency')
-            var endpointDepWhile = taskWhile.addTargetEndPoint('dependency')
-
-            jsPlumb.connect({source: endpointDepDo, target: endpointDepWhile, overlays: taskWhile.overlays()});
-            jsPlumb.connect({source: endpointWhile, target: endpointDo, overlays: taskWhile.overlays()});
-
-            taskDo.model.set("Block", "start")
-            taskWhile.model.set("Block", "end")
-            taskDo.showBlockInTask()
-            taskWhile.showBlockInTask()
-
-            this.model.trigger('change');
-        },
-        createReplicationWorkflow: function (ui) {
-            var offset = this.$el.offset();
-
-            console.log("Initializing Replicate Workflow")
-            var taskInit = new TaskView();
-            var taskRepl = new TaskView();
-            var taskMerge = new TaskView();
-
-            var positionInit = {top: ui.offset.top, left: ui.offset.left};
-            var positionRepl = {top: positionInit.top + 200, left: positionInit.left};
-            var positionMerge = {top: positionRepl.top + 200, left: positionRepl.left};
-
-            var renderingInit = this.addView(taskInit, positionInit);
-            var renderingRepl = this.addView(taskRepl, positionRepl);
-            var renderingMerge = this.addView(taskMerge, positionMerge);
-
-            this.model.addTask(renderingInit.model);
-            this.model.addTask(renderingRepl.model);
-            this.model.addTask(renderingMerge.model);
-
-            var endpointInit = taskInit.addSourceEndPoint('replicate')
-            var endpointRepl = taskRepl.addTargetEndPoint('replicate')
-
-            var endpointDepInit = taskInit.addSourceEndPoint('dependency')
-            var endpointDepRepl = taskRepl.addTargetEndPoint('dependency')
-            var endpointDepReplSource = taskRepl.addSourceEndPoint('dependency')
-            var endpointDepMerge = renderingMerge.addTargetEndPoint('dependency')
-
-            jsPlumb.connect({source: endpointInit, target: endpointRepl, overlays: taskInit.overlays()});
-            jsPlumb.connect({source: endpointDepInit, target: endpointDepRepl, overlays: taskInit.overlays()});
-            jsPlumb.connect({source: endpointDepReplSource, target: endpointDepMerge, overlays: taskRepl.overlays()});
-
-            this.model.trigger('change');
         },
         updateJobName: function () {
 //	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))
@@ -477,6 +405,7 @@ define(
             var leftOffset = workflowDesigner.width() - maxLeft < 0 ? 0 : (workflowDesigner.width() - maxLeft) / 2 - taskWidth;
             var topOffset = workflowDesigner.height() - maxTop < 0 ? 100 : (workflowDesigner.height() - maxTop) / 2 + 50;
 
+            console.log("!!!!auto", nodes, edges)
             $.each(nodes, function (i, node) {
                 var pos = {};
                 if (node.dagre.x) pos.left = node.dagre.x + containerPosition.left + leftOffset;
@@ -484,6 +413,64 @@ define(
                 $("#" + node.dagre.id).offset(pos)
             })
             jsPlumb.repaintEverything();
+        },
+        layoutNewElements: function (uiWithInitialOffset) {
+            var offsets = this.options.projects.getOffsetsFromLocalStorage();
+            if (!offsets) offsets = {};
+            var elemWithInitialOffset = $(uiWithInitialOffset.draggable);
+
+            // finding task that are not layouted
+            var nodes = [];
+            $.each(this.model.tasks, function (i, task) {
+                var taskName = task.get("Task Name");
+                var offset = offsets[taskName];
+                if (!offset || (offset && offset.left==0 && offset.top==0)) {
+                    //nodes.push({id: taskName, task: task, width: elemWithInitialOffset.width(), height: elemWithInitialOffset.height()});
+                    nodes.push({id: taskName, task: task, width: 78, height: 28});
+                }
+            })
+
+            var edges = [];
+
+            $.each(nodes, function (i, node) {
+                var task = node.task;
+
+                if (task.dependencies) {
+                    $.each(task.dependencies, function (i, dep) {
+                        edges.push({sourceId: dep.get("Task Name"), targetId: task.get("Task Name")})
+                    })
+                }
+                if (task.controlFlow) {
+                    if (task.controlFlow.if) {
+                        if (task.controlFlow.if.task) {
+                            edges.push({sourceId: task.get("Task Name"), targetId: task.controlFlow.if.task.get("Task Name")})
+                        }
+                        if (task.controlFlow.if.else && task.controlFlow.if.else.task) {
+                            edges.push({sourceId: task.get("Task Name"), targetId: task.controlFlow.if.else.task.get("Task Name")})
+                        }
+                        if (task.controlFlow.if.continuation && task.controlFlow.if.continuation.task) {
+                            edges.push({sourceId: task.get("Task Name"), targetId: task.controlFlow.if.continuation.task.get("Task Name")})
+                        }
+                    }
+                    // replicate and loop control flows require dependencies
+                    // so they will be layouted correctly
+                }
+            });
+
+            // computing layout with dagre
+            dagre.layout().nodes(nodes).edges(edges).nodeSep(50).rankSep(100).run();
+
+            var leftOffset = uiWithInitialOffset.offset.left-(elemWithInitialOffset.width()/2)+50;
+            var topOffset = uiWithInitialOffset.offset.top-10;
+
+            $.each(nodes, function (i, node) {
+                var pos = {};
+                if (node.dagre.x) pos.left = node.dagre.x + leftOffset;
+                if (node.dagre.x) pos.top = node.dagre.y + topOffset;
+                offsets[node.dagre.id] = pos;
+            })
+
+            this.options.projects.saveOffsetsToLocalStorage(offsets);
         },
         restoreLayoutFromOffsets: function (offsets) {
             var that = this;

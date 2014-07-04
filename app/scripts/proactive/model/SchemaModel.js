@@ -41,7 +41,7 @@ define(
                 return this.getValue(listSchema.fieldAttrs.itemplaceholder, listElemObj);
             }
         },
-        populateSchema: function (obj) {
+        populateSchema: function (obj, merging) {
             console.log("Populating", obj, this.schema)
             var that = this;
 
@@ -106,9 +106,13 @@ define(
                                     console.log("Should no be here", prop, value);
                                 }
                             } else {
-                                console.log("Setting", prop, "from", placeholder, "to", value)
-                                value = value.trim()
-                                that.set(prop, value)
+                                if (merging && that.get(prop)) {
+                                    // do not override existing value when merging
+                                } else {
+                                    console.log("Setting", prop, "from", placeholder, "to", value)
+                                    value = value.trim()
+                                    that.set(prop, value)
+                                }
                             }
                         }
                     }

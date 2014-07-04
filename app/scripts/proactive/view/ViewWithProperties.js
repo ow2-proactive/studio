@@ -19,6 +19,7 @@ define(
 
             this.$el.click(function (event) {
                 event.stopPropagation();
+                $(".dropdown").removeClass('open');
                 that.renderForm()
             });
             this.$el.dblclick(function () {
