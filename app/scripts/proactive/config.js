@@ -1,6 +1,6 @@
 define(function (require) {
     return {
-        restApiUrl: 'http://localhost:8080/rest/rest/studio',
+        restApiUrl: '/rest/rest/studio',
         templates: {
             'Basic blocks': {
                 "Script Task": 'templates/sleep.xml',
