@@ -46,7 +46,7 @@ define(
                     if (data.status == 200) {
                         that.alert("Connected", "Successfully connected to ProActive Studio at " + config.restApiUrl, 'success');
                         console.log("Session ID is " + data.responseText)
-                        localStorage['sessionId'] = data.responseText;
+                        localStorage['pa.session'] = data.responseText;
                         localStorage['user'] = creds['user'];
                         return onSuccess();
                     } else {
@@ -58,14 +58,37 @@ define(
             });
         },
 
+        logout: function () {
+            var that = this;
+            localStorage.removeItem("pa.session");
+            $.ajax({
+                type: "PUT",
+                url: config.restApiUrl + "/logout",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                },
+                success: function (data) {
+                    console.log("Logged out")
+                },
+                error: function (data) {
+                    console.log("Failed to logout", data)
+                }
+            });
+        },
+
+        /* check if session is opened from here or from another tab (scheduler/rm portals) */
+        isLoggedIn: function () {
+            return localStorage['pa.session'] != null
+        },
+
         isConnected: function (success, fail) {
             var that = this;
-            if (localStorage['sessionId']) {
+            if (localStorage['pa.session']) {
                 $.ajax({
                     type: "GET",
                     url: config.restApiUrl + "/connected",
                     beforeSend: function (xhr) {
-                        xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                        xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                     },
                     success: function (data) {
                         if (data) {
@@ -73,13 +96,13 @@ define(
                             success()
                         } else {
                             console.log("Not connected to the studio", data)
-                            localStorage.removeItem('sessionId');
+                            localStorage.removeItem('pa.session');
                             fail()
                         }
                     },
                     error: function (data) {
                         console.log("Not connected to the studio", data)
-                        localStorage.removeItem('sessionId')
+                        localStorage.removeItem('pa.session')
                         fail()
                     }
                 });
@@ -90,7 +113,7 @@ define(
 
         getWorkflowsSynchronously: function () {
 
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
 
             var workflows = undefined;
             console.log("Getting workflows from the server")
@@ -101,7 +124,7 @@ define(
                 url: config.restApiUrl + "/workflows",
                 async: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     workflows = data;
@@ -119,7 +142,7 @@ define(
 
         createWorkflowSynchronously: function (workflow) {
 
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
             var that = this;
 
             var id = undefined;
@@ -131,7 +154,7 @@ define(
                 async: false,
                 data: workflow,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     if (data) {
@@ -152,7 +175,7 @@ define(
 
         updateWorkflow: function (id, workflow, async) {
 
-            if (!localStorage['sessionId'] || !id) return;
+            if (!localStorage['pa.session'] || !id) return;
             var that = this;
 
             console.log("Updating workflow on the server", id, workflow)
@@ -162,7 +185,7 @@ define(
                 'async': async,
                 data: workflow,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     if (data) {
@@ -180,7 +203,7 @@ define(
 
         removeWorkflow: function (id) {
 
-            if (!localStorage['sessionId'] || !id) return;
+            if (!localStorage['pa.session'] || !id) return;
             var that = this;
 
             console.log("Deleting workflow on the server", id)
@@ -188,7 +211,7 @@ define(
                 type: "DELETE",
                 url: config.restApiUrl + "/workflows/" + id,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     console.log("Workflow with id " + id + " deleted on the server", data)
@@ -204,7 +227,7 @@ define(
 
 
         getScriptsSynchronosly: function () {
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
             var that = this;
 
             console.log("Getting scripts")
@@ -213,7 +236,7 @@ define(
                 url: config.restApiUrl + "/scripts",
                 async: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     cachedScripts = data;
@@ -228,7 +251,7 @@ define(
 
         saveScriptSynchronously: function (name, content) {
 
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
             var that = this;
 
             var id = undefined;
@@ -241,7 +264,7 @@ define(
                 data: {name: name, content: content},
                 async: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     console.log("Should not be there", data)
@@ -289,7 +312,7 @@ define(
                 processData: false,
                 type: 'POST',
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     console.log("Should not be there", data)
@@ -319,7 +342,7 @@ define(
         },
 
         getClassesSynchronously: function () {
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
             var that = this;
 
             console.log("Getting classes list")
@@ -329,7 +352,7 @@ define(
                 url: config.restApiUrl + "/classes",
                 async: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     classes = data;
@@ -343,10 +366,10 @@ define(
         },
 
         submit: function (jobXml, visualization) {
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
 
             var that = this;
-            that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['sessionId']}, function (result) {
+            that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
                 if (result.errorMessage) {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
                 } else if (result.id) {
@@ -359,7 +382,7 @@ define(
         },
 
         validate: function (jobXml, jobModel) {
-            if (!localStorage['sessionId']) return;
+            if (!localStorage['pa.session']) return;
 
             var that = this;
             that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
@@ -444,7 +467,7 @@ define(
                 data: {visualization: visualization},
                 type: 'POST',
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('sessionid', localStorage['sessionId'])
+                    xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                 },
                 success: function (data) {
                     console.log("Success", data)
