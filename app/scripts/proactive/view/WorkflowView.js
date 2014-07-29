@@ -539,6 +539,10 @@ define(
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
 
+            var thizz = this;
+            var StudioApp = require('StudioApp');
+            var jobModel = StudioApp.models.jobModel;
+
             var newTaskViews = {};
             $.each(tasks, function (i, t) {
                 var task = $(t);
@@ -571,7 +575,7 @@ define(
                 jobModel.addTask(newTaskModel);
 
                 var newTaskView = new TaskView({model: newTaskModel});
-                workflowView.addView(newTaskView, {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100});
+                thizz.addView(newTaskView, {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100});
 
                 newTaskViews[taskView.model.get("Task Name")] = newTaskView;
             })
