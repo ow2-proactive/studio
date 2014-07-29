@@ -405,7 +405,6 @@ define(
             var leftOffset = workflowDesigner.width() - maxLeft < 0 ? 0 : (workflowDesigner.width() - maxLeft) / 2 - taskWidth;
             var topOffset = workflowDesigner.height() - maxTop < 0 ? 100 : (workflowDesigner.height() - maxTop) / 2 + 50;
 
-            console.log("!!!!auto", nodes, edges)
             $.each(nodes, function (i, node) {
                 var pos = {};
                 if (node.dagre.x) pos.left = node.dagre.x + containerPosition.left + leftOffset;
