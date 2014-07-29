@@ -26,7 +26,7 @@ define(
         },
 
         save: function () {
-            if (!this.enabled) return;
+            if (!enabled) return;
 
             var StudioApp = require('StudioApp');
             var state = {xml: StudioApp.views.xmlView.generateXml(),
