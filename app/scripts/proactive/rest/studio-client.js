@@ -50,8 +50,14 @@ define(
                         localStorage['user'] = creds['user'];
                         return onSuccess();
                     } else {
-                        var reason = data.responseText.length > 0 ? ": " + data.responseText : "";
-                        that.alert("Cannot connect", "Cannot connect to ProActive Studio " + reason, 'error');
+                        var reason = data.responseText.length > 0 ? data.responseText : "";
+                        try {
+                            var json = JSON.parse(reason);
+                            if (json.errorMessage) {
+                                reason = json.errorMessage;
+                            }
+                        } catch (e) {}
+                        that.alert("Cannot connect to ProActive Studio", reason, 'error');
                         console.log("Error", data)
                     }
                 }
