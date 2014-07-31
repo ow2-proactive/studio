@@ -33,7 +33,15 @@ print(java.lang.System.getProperty('pas.task.name'))
                 </script>
             </scriptExecutable>
             <controlFlow block="end" >
-                <loop target="Task1"></loop>
+                <loop target="Task1">
+                    <script >
+                        <code language="javascript">
+                            <![CDATA[
+loop = Math.random() < 0.1;
+]]>
+                        </code>
+                    </script>
+                </loop>
             </controlFlow>
         </task>
     </taskFlow>
