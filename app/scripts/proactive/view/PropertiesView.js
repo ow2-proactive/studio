@@ -53,7 +53,7 @@ define(
                 for (var i = workflows.length - 1; i >= 0; i--) {
                     var rowClass = "";
                     if (i == selectedWorkflow) rowClass = "success";
-                    rows.append('<tr data-id="' + i + '" class="' + rowClass + '"><td>' + (i + 1) + '</td><td title="Click to edit">' + workflows[i].name + '</td><td><button type="button" class="btn btn-info btn-mini btn-clone">Clone</button> <button type="button" class="btn btn-danger btn-mini btn-remove">Remove</button></td></tr>')
+                    rows.append('<tr data-id="' + i + '" class="' + rowClass + '"><td>' + (i + 1) + '</td><td title="Click to edit">' + workflows[i].name + '</td><td><button type="button" class="btn btn-success btn-mini btn-open">Open</button> <button type="button" class="btn btn-info btn-mini btn-clone">Clone</button> <button type="button" class="btn btn-danger btn-mini btn-remove">Remove</button></td></tr>')
                 }
 
                 this.$el.append(table);
