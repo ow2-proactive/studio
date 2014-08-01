@@ -20,7 +20,7 @@ Supported Browsers
 | Firefox 20+    | Blob          | Yes          | 800 MiB       | None         |
 | Firefox < 20   | data: URI     | No           | n/a           | [Blob.js](https://github.com/eligrey/Blob.js) |
 | Chrome         | Blob          | Yes          | 345 MiB       | None         |
-| Chrome for Android | Blob      | Yes          | ?             | None         |
+| Chrome for Android | Blob      | Yes          | 345 MiB       | None         |
 | IE 10+         | Blob          | Yes          | 600 MiB       | None         |
 | Opera 15+      | Blob          | Yes          | 345 MiB       | None         |
 | Opera < 15     | data: URI     | No           | n/a           | [Blob.js](https://github.com/eligrey/Blob.js) |
@@ -31,21 +31,19 @@ Feature detection is possible:
 
 ```js
 try {
-    var isFileSaverSupported = !!new Blob();
+    var isFileSaverSupported = !!new Blob;
 } catch (e) {}
 ```
 
 ### IE < 10
 
-It is possible to save HTML documents (and only HTML documents) in IE < 10 without Flash-based
-polyfills. See [sudodoki's comment](https://github.com/eligrey/FileSaver.js/issues/56#issuecomment-30917476)
-for more information on how to accomplish this.
+It is possible to save text files in IE < 10 without Flash-based polyfills.
+See [ChenWenBrian's `saveTextAs()`](https://github.com/ChenWenBrian/FileSaver.js#examples) for more details.
 
 ### Safari 6.1+
 
 Blobs may be opened instead of saved sometimes—you may have to direct your Safari users to manually
-press <kbd>⌘</kbd>+<kbd>S</kbd> to save the file after it is opened. Further information is available
-[on the issue tracker](https://github.com/eligrey/FileSaver.js/issues/12).
+press <kbd>⌘</kbd>+<kbd>S</kbd> to save the file after it is opened. Using the `application/octet-stream` MIME type to force downloads [can cause issues in Safari](https://github.com/eligrey/FileSaver.js/issues/12#issuecomment-47247096).
 
 Syntax
 ------
