@@ -64,14 +64,14 @@ define(
                 "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
                 "Access Mode": {type: 'Select',
                     fieldAttrs: {'placeholder': '@attributes->accessMode'},
-                    options: ["transferFromInputSpace", "transferFromOutputSpace", "transferFromGlobalSpace", "transferFromUserSpace", "none"]},
+                    options: ["transferFromUserSpace", "transferFromGlobalSpace", "transferFromInputSpace", "transferFromOutputSpace", "none"]}
             }},
             "Output Files": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'outputFiles->files'}, subSchema: {
                 "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
                 "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
                 "Access Mode": {type: 'Select',
                     fieldAttrs: {'placeholder': '@attributes->accessMode'},
-                    options: ["transferToOutputSpace", "transferToGlobalSpace", "transferToUserSpace", "none"]}
+                    options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]}
             }}
         },
 
