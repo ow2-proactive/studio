@@ -209,7 +209,7 @@
     background-position:4px 2px;
 }
 
-._jsPlumb_endpoint_connected {
+._jsPlumb_endpoint {
     /* otherwise the connecting circle stay visible in Scheduler portal */
     visibility: inherit !important;
 }
