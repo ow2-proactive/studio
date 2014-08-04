@@ -98,6 +98,11 @@ define(
 
                         var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
                         currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
+
+                        if (el.attr("data-help")) {
+                            console.log("!!!! here")
+                            accordionGroup.data("data-help", el.attr("data-help"));
+                        }
                         accordionGroup.append(currentAccordionGroup);
                         accordion.append(accordionGroup);
                         curLabel = el.attr("data-tab").replace(/ /g, '');
@@ -113,6 +118,17 @@ define(
                             curLabel = labelName;
                         }
                     })
+
+                    if (el.attr("data-help")) {
+                        var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-help")+"'></span>")
+                        help.tooltip();
+                        var addHelpAfter = el.find("label:first")
+                        if (addHelpAfter.length==0 && currentAccordionGroup) {
+                            addHelpAfter = accordion.find(".panel-heading:last a");
+                        }
+                        addHelpAfter.after(help);
+                    }
+
 
                     // modifying checkbox layout
                     var checkbox = el.find("input[type='checkbox']");

@@ -799,3 +799,9 @@ button {
         display: none;
     }
 }
+
+.help-sign {
+    margin-left:10px;
+    color:#5C96BC;
+    font-size: 12px;
+}
