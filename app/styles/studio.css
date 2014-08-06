@@ -805,3 +805,7 @@ button {
     color:#5C96BC;
     font-size: 12px;
 }
+
+.tooltip-inner {
+    text-align:left !important;
+}

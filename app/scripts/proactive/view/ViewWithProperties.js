@@ -100,8 +100,7 @@ define(
                         currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
 
                         if (el.attr("data-help")) {
-                            console.log("!!!! here")
-                            accordionGroup.data("data-help", el.attr("data-help"));
+                            accordionGroup.attr("data-help", el.attr("data-help"));
                         }
                         accordionGroup.append(currentAccordionGroup);
                         accordion.append(accordionGroup);
@@ -119,21 +118,12 @@ define(
                         }
                     })
 
-                    if (el.attr("data-help")) {
-                        var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-help")+"'></span>")
-                        help.tooltip();
-                        var addHelpAfter = el.find("label:first")
-                        if (addHelpAfter.length==0 && currentAccordionGroup) {
-                            addHelpAfter = accordion.find(".panel-heading:last a");
-                        }
-                        addHelpAfter.after(help);
-                    }
-
-
                     // modifying checkbox layout
                     var checkbox = el.find("input[type='checkbox']");
                     if (checkbox.length > 0) {
-                        el = el.find("label").addClass("checkbox").append(checkbox);
+                        var label = el.find("label");
+                        label.addClass("checkbox");
+                        checkbox.detach().appendTo(label);
                     }
 
                     if (currentAccordionGroup)
@@ -151,6 +141,29 @@ define(
                         that.openedAccordion = accordionBody.attr('id')
                     }
                 })
+
+                // adding help info
+                accordion.find("[data-help]").each(function() {
+                    var el = $(this);
+
+                    var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-help")+"'></span>")
+                    help.tooltip({html: true});
+                    var addHelpAfter = el.find("label:first")
+
+                    if (addHelpAfter.length==0) {
+                        addHelpAfter = el.parents(".panel").find(".panel-heading a");
+                    } else if (addHelpAfter.hasClass("checkbox")) {
+                        addHelpAfter = addHelpAfter.find("input:last");
+                    }
+                    // if already exist - remove it (see tricky case for control flows in tasks)
+                    var next = addHelpAfter.next();
+                    if (next && next.hasClass("help-sign")) {
+                        next.remove();
+                    }
+
+                    addHelpAfter.after(help);
+                })
+
             } else {
                 StudioApp.views.propertiesView.$el.html(breadcrumb);
                 StudioApp.views.propertiesView.$el.append(form.$el);
