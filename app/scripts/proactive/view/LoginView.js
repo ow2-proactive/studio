@@ -15,26 +15,28 @@ define(
             },
             login: function () {
                 var that = this;
-                var form = $('<form><input type="text" id="studio-user" class="span2 nav-login form-control  pull-left" placeholder="user"><input type="password" id="studio-pass" class="span2 nav-login form-control pull-left" placeholder="password"></form>')
+                var form = $('<form><input type="text" id="studio-user" class="span2 nav-login form-control  pull-left" placeholder="User" required><input type="password" id="studio-pass" class="span2 nav-login form-control pull-left" placeholder="Password" required></form>')
                 var buttonLogin = $('<button class="btn btn-small menu-button pull-left" data-toggle="dropdown">Login</button>');
                 form.append(buttonLogin);
 
                 buttonLogin.click(function () {
-                    StudioClient.login({
-                        user: $("#studio-user").val(),
-                        pass: $("#studio-pass").val()
-                    }, function () {
-                        // on success
-                        form.remove();
-                        that.$el.html(that.logout());
-                        that.options.projects.sync();
+                    if (form[0].checkValidity()) {
+                        StudioClient.login({
+                            user: $("#studio-user").val(),
+                            pass: $("#studio-pass").val()
+                        }, function () {
+                            // on success
+                            form.remove();
+                            that.$el.html(that.logout());
+                            that.options.projects.sync();
 
-                        var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
-                        if (workflowJson) {
-                            var StudioApp = require('StudioApp');
-                            StudioApp.import(workflowJson)
-                        }
-                    })
+                            var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
+                            if (workflowJson) {
+                                var StudioApp = require('StudioApp');
+                                StudioApp.import(workflowJson)
+                            }
+                        })
+                    }
                 })
 
                 return form;
