@@ -28,10 +28,10 @@ define(
                 ]},
             "Parameters": {type: 'NestedModel', model: ScriptExecutable},
             "Description": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': ['description->#cdata-section', 'description->#text'], "data-help":'A small textual description of what task does.'}},
-            "Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder': '@attributes->maxNumberOfExecution', "data-help":'Defines how many times tasks are allowed to be restarted.'}},
+            "Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder': '@attributes->maxNumberOfExecution', "data-help":'Defines how many times this task is allowed to be restarted.'}},
             "Maximum Execution Time (hh:mm:ss)": {type: "Text", fieldAttrs: {'placeholder': '@attributes->walltime', "data-help":'Task execution timeout. Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'}},
             "Result Preview Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->resultPreviewClass', "data-help":'A class that defines how the result of a task should be displayed in the Scheduler Web Interface.'}},
-            "Run as me": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->runAsMe', "data-help":'Executes the task under account that submits this job.'}},
+            "Run as me": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->runAsMe', "data-help":'Executes the task under your system account.'}},
             "Precious Result": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->preciousResult', "data-help":'Indicates if you want to save the result of this task in the job result.'}},
             "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->cancelJobOnError', "data-help":'Defines whether the job must continue when a user exception or error occurs during the job process.'}, options: [
                 {val: "true", label: "cancel job as soon as one task fails"},
@@ -39,11 +39,11 @@ define(
             ]},
             "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->restartTaskOnError', "data-help":'Defines whether tasks that have to be restarted will restart on an other computing node.'}, options: ["anywhere", "elsewhere"]},
             "Store Task Logs in a File": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->preciousLogs', "data-help":'Defines if all the task logs must be kept even if it produces a lot of output. Data spaces are required in this case.'}},
-            "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'genericInformation->info', "data-help":'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this job to a node with token \"rack1\".'}, subSchema: {
+            "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'genericInformation->info', "data-help":'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'}, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-            "Number of Nodes": {type: 'Text', fieldAttrs: {"data-tab": "Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes', "data-help":'Usually a task require 0 computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'}},
+            "Number of Nodes": {type: 'Text', fieldAttrs: {"data-tab": "Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes', "data-help":'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'}},
             "Topology": { type: 'Select', fieldAttrs: {'placeholder': 'parallel->topology', "data-help":'The topology of computing nodes in the network in terms of network latency.'}, options: ["none", "arbitrary",
                 {val: "bestProximity", label: "best proximity"},
                 {val: "singleHost", label: "single host"},
@@ -57,7 +57,7 @@ define(
                 return "Selection Script"
             }, fieldAttrs: {"data-tab": "Selection Scripts", 'placeholder': 'selection->script', "data-help":'A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'}},
             "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre Script", 'placeholder': 'pre->script', "data-help":'A script that is executed on computing node before executing the task. A script can be saved into a library when you are logged in.'}},
-            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script', "data-help":'A script that is executed on computing node after the task execution (is task if finished correctly). A script can be saved into a library when you are logged in.'}},
+            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script', "data-help":'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'}},
             "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Clean Script", 'placeholder': 'cleaning->script', "data-help":'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'}},
             "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Data Management", 'placeholder': 'inputFiles->files', "data-help":'Files from your user or global spaces that will be transferred to computing nodes automatically.'}, subSchema: {
                 "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
