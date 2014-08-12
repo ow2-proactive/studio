@@ -66,7 +66,6 @@ define(
 
         logout: function () {
             var that = this;
-            localStorage.removeItem("pa.session");
             $.ajax({
                 type: "PUT",
                 url: config.restApiUrl + "/logout",
@@ -80,6 +79,7 @@ define(
                     console.log("Failed to logout", data)
                 }
             });
+            localStorage.removeItem("pa.session");
         },
 
         /* check if session is opened from here or from another tab (scheduler/rm portals) */
