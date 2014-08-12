@@ -47,7 +47,7 @@ define(
                         that.alert("Connected", "Successfully connected to ProActive Studio at " + config.restApiUrl, 'success');
                         console.log("Session ID is " + data.responseText)
                         localStorage['pa.session'] = data.responseText;
-                        localStorage['user'] = creds['user'];
+                        localStorage['pa.login'] = creds['user'];
                         return onSuccess();
                     } else {
                         var reason = data.responseText.length > 0 ? data.responseText : "";
