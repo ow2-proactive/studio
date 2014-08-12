@@ -36,12 +36,10 @@ define(
 
             var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks});
 
-            // beautifying the job xml - removing multiple spaces
-            jobRendering = jobRendering.replace(/ {2,}/g, ' ');
             // removing multiple \n before closing xml element tag
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
             // indenting using vkbeautify
-            return vkbeautify.xml(jobRendering.trim());
+            return vkbeautify.xml(jobRendering.trim(), 2);
         },
         generateXml: function () {
             var that = this;
@@ -68,7 +66,7 @@ define(
             // indenting using vkbeautify
             this.$el.empty()
             var codeDiv = $('<div class="code" id="workflow-xml">');
-            this.generatedXml = vkbeautify.xml(this.generateXml())
+            this.generatedXml = vkbeautify.xml(this.generateXml(), 2)
             this.$el.append(codeDiv);
 
             var highlightedXml = CodeMirror(codeDiv[0], {
