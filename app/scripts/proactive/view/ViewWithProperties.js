@@ -76,6 +76,7 @@ define(
             form.$el.find("input").addClass("form-control");
             form.$el.find("select").addClass("form-control");
             form.$el.find("textarea").addClass("form-control");
+            form.$el.find("button").addClass("btn").addClass("btn-default");
 
             var tabs = form.$el.find("[data-tab]");
             if (tabs.length > 0) {
@@ -148,6 +149,7 @@ define(
 
                     var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-help")+"'></span>")
                     help.tooltip({html: true});
+
                     var addHelpAfter = el.find("label:first")
 
                     if (addHelpAfter.length==0) {
