@@ -222,7 +222,12 @@ define(
                     engine.hide();
                     saveButton.attr("disabled", false);
                 }
-                getCurrentForm().commit();
+                setTimeout(function() {
+                    // this method is called right after the form is created
+                    // in backbone in order to finish the form initialization they use "setTimeout (..., 0 )" method
+                    // so we commit the form in the same manner - otherwise it will not be initialized
+                    getCurrentForm().commit();
+                }, 0)
             }
 
             function getCurrentTaskView() {
