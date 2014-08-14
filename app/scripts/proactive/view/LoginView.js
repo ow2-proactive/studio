@@ -19,7 +19,7 @@ define(
                 var buttonLogin = $('<button class="btn btn-small menu-button pull-left" data-toggle="dropdown">Login</button>');
                 form.append(buttonLogin);
 
-                buttonLogin.click(function () {
+                buttonLogin.click(function (e) {
                     if (form[0].checkValidity()) {
                         StudioClient.login({
                             user: $("#studio-user").val(),
@@ -36,6 +36,8 @@ define(
                                 StudioApp.import(workflowJson)
                             }
                         })
+                    } else {
+                        e.stopPropagation()
                     }
                 })
 

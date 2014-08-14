@@ -809,3 +809,7 @@ button {
 .tooltip-inner {
     text-align:left !important;
 }
+
+.ui-pnotify {
+    top: 70px !important;
+}
