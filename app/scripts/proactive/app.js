@@ -2,7 +2,7 @@ define(
     [
         'jquery',
         'jsplumb',
-        'jqueryUI',
+        'jquery.ui.droppable',
         'proactive/model/Project',
         'proactive/model/Job',
         'proactive/view/PaletteView',
