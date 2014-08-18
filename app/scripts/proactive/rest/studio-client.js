@@ -47,7 +47,7 @@ define(
                 error: function (data) {
                     // even id successful we are here
                     if (data.status == 200) {
-                        that.alert("Connected", "Successfully connected to ProActive Studio at " + config.restApiUrl, 'success');
+                        that.alert("Connected", "Successfully connected", 'success');
                         console.log("Session ID is " + data.responseText)
                         localStorage['pa.session'] = data.responseText;
                         localStorage['pa.login'] = creds['user'];
@@ -382,7 +382,7 @@ define(
                 if (result.errorMessage) {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
                 } else if (result.id) {
-                    that.alert("Job submitted", "Successfully submitted " + result.readableName + " with id " + result.id, 'success');
+                    that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>Successfully submitted " + result.readableName + " with id " + result.id +"</a></html>", 'success');
                     that.setVisualization(result.id, visualization);
                 } else {
                     that.alert("Job submission", request.responseText, 'error');

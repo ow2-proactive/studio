@@ -118,6 +118,20 @@ define(
 
         $("#save-button").click(function () {
             save_workflow_to_storage();
+            new PNotify({
+                title: 'Saved',
+                text: 'Workflow has been saved',
+                type: 'success',
+                buttons: {
+                    closer: true,
+                    sticker: false,
+                },
+                opacity: .8,
+                width: '20%',
+                history: {
+                    history: false
+                }
+            });
         });
 
         $("#download-xml-button").click(function () {
