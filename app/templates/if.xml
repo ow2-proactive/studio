@@ -20,7 +20,11 @@ print(java.lang.System.getProperty('pas.task.name'))
             <controlFlow >
                 <if target="Task2"
  else="Task3"
- continuation="Task4"></if>
+ continuation="Task4"><script>
+                    <code language="javascript">
+                        branch = "if"; // or "else"
+                    </code>
+                </script></if>
             </controlFlow>
         </task>
         <task name="Task2">
