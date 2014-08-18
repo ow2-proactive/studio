@@ -7,7 +7,8 @@ define(
         'proactive/view/utils/undo',
         'proactive/view/dom',
         'xml2json',
-        'pnotify'
+        'pnotify.core',
+        'pnotify.buttons'
     ],
 
     function (d, Job, ViewWithProperties, TaskView, undoManager, dom, xml2json) {
@@ -190,14 +191,17 @@ define(
         alert: function (caption, message, type) {
             var text_escape = message.indexOf("<html>") == -1 ? true : false;
 
-            $.pnotify({
+            new Pnotify({
                 title: caption,
                 text: message,
                 type: type,
                 text_escape: text_escape,
                 opacity: .8,
                 width: '20%',
-                history: false
+                buttons: {
+                    closer: true,
+                    sticker: false
+                }
             });
         },
         createTask: function (ui) {

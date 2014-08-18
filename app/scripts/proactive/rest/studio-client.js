@@ -2,7 +2,8 @@ define(
     [
         'jquery',
         'proactive/config',
-        'pnotify'
+        'pnotify.core',
+        'pnotify.buttons'
     ],
 
     function ($, config) {
@@ -16,15 +17,17 @@ define(
         alert: function (caption, message, type) {
             var text_escape = message.indexOf("<html>") == -1 ? true : false;
 
-            $.pnotify({
+            new PNotify({
                 title: caption,
                 text: message,
                 type: type,
                 text_escape: text_escape,
-                closer: true,
+                buttons: {
+                    closer: true,
+                    sticker: false
+                },
                 opacity: .8,
-                width: '20%',
-                history: false
+                width: '20%'
             });
         },
 

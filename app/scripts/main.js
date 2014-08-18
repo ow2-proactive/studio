@@ -44,9 +44,9 @@ require.config({
                 'jquery.ui.draggable'
             ]
         },
-        pnotify: {
+        'pnotify.buttons': {
             deps: [
-                'jquery'
+                'pnotify.core'
             ]
         },
         backboneFormsAdapter: {
@@ -78,7 +78,8 @@ require.config({
         vkbeautify: '../libs/vkbeautify.0.99.00.beta/index',
         dagre: '../libs/dagre/index',
         text: '../libs/requirejs-text/text',
-        pnotify: '../libs/pines-notify/jquery.pnotify',
+        'pnotify.core': '../libs/pnotify/pnotify.core',
+        'pnotify.buttons': '../libs/pnotify/pnotify.buttons',
         fileSaver: '../libs/FileSaver/FileSaver',
         codemirror: '../libs/codemirror/lib/codemirror',
         codemirrorJs: '../libs/codemirror/mode/javascript/javascript',
