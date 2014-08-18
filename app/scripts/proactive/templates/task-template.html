@@ -1,5 +1,5 @@
 <task name="<%=task["Task Name"]%>"
-    <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>" <% } %>
+    <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>"<% } %>
     <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
     <% if (task["Cancel Job On Error Policy"]=='true') { %>cancelJobOnError="<%=task["Cancel Job On Error Policy"]%>" <% } %>
     <% if (task["Precious Result"]=='true') { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
@@ -69,7 +69,7 @@
     <%=executable%>
 
     <% if (controlFlow && controlFlow['if']) { %>
-    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
+    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>"<%}%>>
     <if <% if (controlFlow['if']&&controlFlow['if'].task){ %>target="<%=controlFlow['if'].task.get('Task Name')%>"<%}%>
         <% if (controlFlow['if']['else']&&controlFlow['if']['else'].task){ %>else="<%=controlFlow['if']['else'].task.get('Task Name')%>"<%}%>
         <% if (controlFlow['if']['continuation']&&controlFlow['if']['continuation'].task){ %>continuation="<%=controlFlow['if']['continuation'].task.get('Task Name')%>"<%}%>>
@@ -77,16 +77,16 @@
     </if>
     </controlFlow>
     <% } else if (controlFlow && controlFlow['loop']) { %>
-    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>>
+    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>"<%}%>>
     <loop <% if (controlFlow['loop'].task){ %>target="<%=controlFlow['loop'].task.get('Task Name')%>"<%}%>>
     <%=controlFlow['loop'].script%>
     </loop>
     </controlFlow>
     <% } else if (controlFlow && controlFlow['replicate']) { %>
-    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>" <%}%>><replicate>
+    <controlFlow <% if (task["Block"] && task["Block"]!='none') { %> block="<%=task["Block"]%>"<%}%>><replicate>
     <%=controlFlow['replicate'].script%>
     </replicate></controlFlow>
-    <% } else if (task["Block"] && task["Block"]!='none') { %>
+    <% } else if (task["Block"]) { %>
     <controlFlow block="<%=task["Block"]%>">
     </controlFlow>
     <% } %>
