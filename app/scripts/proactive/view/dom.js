@@ -49,6 +49,7 @@ define(
         });
 
         $("#import-button").click(function () {
+            $('#import-file').parent('form').trigger('reset');
             $('#import-file').click();
         })
 
