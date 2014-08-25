@@ -179,7 +179,6 @@ define(
         }
 
         function validate_job() {
-            console.log("Validating");
             $(".invalid-task").removeClass("invalid-task");
             var StudioApp = require('StudioApp');
             StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
@@ -416,7 +415,7 @@ define(
 
                 $('body').mousedown(function (e) {
 
-                    console.log("clearing all selected tasks", e)
+                    //console.log("clearing all selected tasks", e)
 
                     if (e.isPropagationStopped()) {
                         return;

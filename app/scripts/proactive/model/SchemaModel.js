@@ -42,7 +42,7 @@ define(
             }
         },
         populateSchema: function (obj, merging) {
-            console.log("Populating", obj, this.schema)
+//            console.log("Populating", obj, this.schema)
             var that = this;
 
             for (var prop in this.schema) {
@@ -62,7 +62,7 @@ define(
                                 var listElemValue = that.getListElementValue(that.schema[prop], v)
                                 if (listElemValue) {
                                     list.push(listElemValue)
-                                    console.log("Adding to list", prop, listElemValue)
+//                                    console.log("Adding to list", prop, listElemValue)
                                 }
                             })
                         }
@@ -84,13 +84,13 @@ define(
                                     // looking for a filed in the value matching select options
                                     if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy == 'checkpresence') {
                                         if (value) {
-                                            console.log("Setting", prop, "from", placeholder, "to", "true")
+//                                            console.log("Setting", prop, "from", placeholder, "to", "true")
                                             that.set(prop, "true")
                                         }
                                     } else {
                                         $.each(this.schema[prop].options, function (i, option) {
                                             if (value[option] || value[option.val]) {
-                                                console.log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
+//                                                console.log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
                                                 that.set(prop, option.val ? option.val : option)
                                                 return false;
                                             }
@@ -98,9 +98,8 @@ define(
                                     }
                                 } else if (this.schema[prop].type == "NestedModel") {
                                     var model = new this.schema[prop].model();
-                                    console.log(model)
                                     model.populateSchema(value)
-                                    console.log("Setting", prop, "from", placeholder, "to", model)
+//                                    console.log("Setting", prop, "from", placeholder, "to", model)
                                     that.set(prop, model)
                                 } else {
                                     console.log("Should no be here", prop, value);
@@ -109,7 +108,7 @@ define(
                                 if (merging && that.get(prop)) {
                                     // do not override existing value when merging
                                 } else {
-                                    console.log("Setting", prop, "from", placeholder, "to", value)
+//                                    console.log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
                                     that.set(prop, value)
                                 }

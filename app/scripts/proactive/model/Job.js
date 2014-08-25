@@ -133,7 +133,7 @@ define(
                         }
                         taskModel.set({"Task Name": originalName + counter});
                     }
-                    console.log("Pushing task", taskModel)
+                    console.log("Adding task to workflow", taskModel)
                     that.tasks.push(taskModel);
                     name2Task[taskModel.get("Task Name")] = taskModel;
                     name2Task[originalName] = taskModel;
