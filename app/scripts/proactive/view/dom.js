@@ -48,6 +48,11 @@ define(
             }
         });
 
+        Backbone.Form.editors.Text.prototype.setValue = function(value) {
+            this.previousValue = value;
+            this.$el.val(value);
+        }
+
         $("#import-button").click(function () {
             $('#import-file').parent('form').trigger('reset');
             $('#import-file').click();
