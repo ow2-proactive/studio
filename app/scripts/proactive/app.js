@@ -70,6 +70,7 @@ define(
             this.views.xmlView.model = this.models.jobModel;
         },
         import: function(json) {
+            console.log("Importing workflow");
             this._replaceJobModel(json);
             this.views.workflowView.import();
         },

@@ -142,6 +142,7 @@ define(
                 if (!this.remoteJobs) {
                     // TODO loading indicator
 
+                    console.log("Syncing workflows with the server")
                     this.remoteJobs = StudioClient.getWorkflowsSynchronously();
 
                     if (this.remoteJobs) {
@@ -178,6 +179,9 @@ define(
                     }
                 }
             }
+        },
+        logout: function() {
+            this.remoteJobs = undefined;
         },
         saveOffsetsToLocalStorage: function (offsets) {
             if (this.supports_html5_storage()) {

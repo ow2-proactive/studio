@@ -51,6 +51,7 @@ define(
 
                 buttonLogout.click(function () {
                     StudioClient.logout()
+                    that.options.projects.logout();
                     that.$el.html(that.login());
                 })
 
