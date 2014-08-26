@@ -74,6 +74,11 @@ define(
                 var selectedIndex = localStorage["workflow-selected"];
                 var localJobs = JSON.parse(localStorage['workflows']);
 
+                if (!localJobs[selectedIndex]) {
+                    // deleted the last workflow
+                    return;
+                }
+
                 var meta = JSON.parse(localJobs[selectedIndex].metadata);
 
                 if (localJobs[selectedIndex].name != name || localJobs[selectedIndex].xml != workflowXml || meta.offsets != offsets) {
