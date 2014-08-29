@@ -35,6 +35,7 @@ define(
                             $.ajax({
                                 type: "GET",
                                 dataType:"text",
+                                async: false,
                                 url: elem.data("templateUrl"),
                                 success: function (data) {
                                     //console.log(data)
@@ -205,8 +206,6 @@ define(
             });
         },
         createTask: function (ui) {
-            var offset = this.$el.offset();
-
             console.log("Initializing TaskView")
             var view = new TaskView();
 
@@ -493,7 +492,7 @@ define(
                 }
 
                 if (autolayout) {
-                    console.log("ERROR: enforce autolayout because of invalid offsets")
+                    console.log("ERROR: enforce autolayout because of invalid offsets", offsets)
                     that.autoLayout();
                     return false;
                 }
