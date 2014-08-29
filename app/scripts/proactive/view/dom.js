@@ -235,6 +235,8 @@ define(
                     });
                 } else {
                     var script = StudioClient.getScript(scriptName);
+                    if (!script) return;
+
                     textarea.val(script.content);
                     libraryPath.val(script.absolutePath);
                     fileArguments.show();
