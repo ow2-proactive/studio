@@ -2,10 +2,11 @@ define(
     [
         'jquery',
         'backbone',
-        'proactive/rest/studio-client'
+        'proactive/rest/studio-client',
+        'proactive/view/utils/undo'
     ],
 
-    function ($, Backbone, StudioClient) {
+    function ($, Backbone, StudioClient, undoManager) {
 
         "use strict";
 
@@ -28,6 +29,12 @@ define(
                             // on success
                             form.remove();
                             that.$el.html(that.logout());
+
+                            // saving the current workflow
+                            var StudioApp = require('StudioApp');
+                            StudioApp.models.projects.saveCurrentWorkflow(
+                                StudioApp.models.jobModel.get("Job Name"), StudioApp.views.xmlView.generateXml(), undoManager.getOffsetsFromDOM());
+
                             that.options.projects.sync();
 
                             var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()

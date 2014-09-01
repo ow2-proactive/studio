@@ -162,10 +162,15 @@ define(
 
                         for (var i in localJobs) {
                             var localJob = localJobs[i];
-                            if (!localJob.id) {
-                                // creating new job
-                                StudioClient.createWorkflowSynchronously(localJob)
-                                reload = true;
+                            if (!localJob.id && localJob.metadata) {
+                                // job without an id - never was saved on the server
+                                // save it if there is at least on task
+                                var metadata = JSON.parse(localJob.metadata);
+                                if (!$.isEmptyObject(metadata.offsets)) {
+                                    // job has tasks - creating new job on the server
+                                    StudioClient.createWorkflowSynchronously(localJob)
+                                    reload = true;
+                                }
                             } else if (!remoteJobIds[localJob.id]) {
                                 // job was removed from the server
                             } else if (this.updatedAt(localJob) > this.updatedAt(remoteJobIds[localJob.id])) {

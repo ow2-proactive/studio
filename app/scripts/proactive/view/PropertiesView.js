@@ -23,8 +23,8 @@ define(
             newWorkflow.click(function () {
                 var jobModel = new Job();
                 var jobName = jobModel.get("Job Name");
-                jobName += (that.options.projects.getSavedWorkflowCount()+1);
-                jobModel.set("Job Name", jobName);
+//                jobName += (that.options.projects.getSavedWorkflowCount()+1);
+//                jobModel.set("Job Name", jobName);
 
                 var jobXml = that.options.xmlView.xml(jobModel);
                 that.options.projects.addEmptyWorkflow(jobName, jobXml);
