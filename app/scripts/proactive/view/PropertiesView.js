@@ -92,6 +92,8 @@ define(
                     }
                     that.listWorkflows();
                 })
+            } else {
+                newWorkflow.click()
             }
 
             return false;
