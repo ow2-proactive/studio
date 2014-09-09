@@ -742,6 +742,7 @@ button {
 
 .active-task {
     border:2px solid #346789;
+    background-color: #E8E8E8;
 }
 
 .success > td {
