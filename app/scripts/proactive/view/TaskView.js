@@ -77,8 +77,6 @@ define(
             var fromFormChange = handler.error; // its defined when form was changed
             var control = this.model.get("Control Flow");
             if (fromFormChange && control && control != 'none') {
-                $('.source-endpoint:not(.connected)').remove();
-                $('.target-endpoint:not(.connected)').remove();
 
                 this.model.controlFlow = {};
                 $.each(jsPlumb.getEndpoints(this.$el), function (i, endPoint) {
