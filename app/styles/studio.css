@@ -1,7 +1,7 @@
 html,
 body {
     /*overflow-x: hidden; *//* Prevent scroll on narrow devices */
-    min-width :1100px;
+    min-width :1400px;
     min-height :100%;
     height :100%;
 }
@@ -38,11 +38,6 @@ footer {
     z-index: 100;
     position: relative;
     background-color: #ffffff;
-}
-
-.navbar {
-    min-width: 1100px;
-    margin-bottom: 0px;
 }
 
 #tools-table {
@@ -641,12 +636,6 @@ input[type="checkbox"] {
     margin-left:10px !important;
 }
 
-.menu-button {
-    margin-bottom: 10px;
-    margin-left: 15px;
-    margin-top: 0px !important;
-}
-
 .logged-user {
     padding-top:10px;
 }
@@ -736,17 +725,6 @@ li {
 #layout-button {
     font-size: 8px;
 }
-#login-view {
-    margin-right: 30px;
-    vertical-align: middle;
-}
-
-#login-view input {
-    margin-top:15px;
-}
-#login-view button {
-    margin-top:15px !important;
-}
 
 button {
     font-size: 12px !important;
@@ -812,4 +790,55 @@ button {
 
 .ui-pnotify {
     top: 70px !important;
+}
+
+.menu-button {
+    margin-left:10px;
+    margin-right:10px;
+}
+
+@media (max-width: 1400px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        overflow: auto;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        margin-left: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
+    .navbar-collapse .nav > .divider-vertical {
+        display:none;
+    }
+    .form-control {
+        display: block !important;
+    }
+}
+
+#navbar-fixed {
+    background-color: white;
 }

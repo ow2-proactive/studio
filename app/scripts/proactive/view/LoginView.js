@@ -16,8 +16,8 @@ define(
             },
             login: function () {
                 var that = this;
-                var form = $('<form><input type="text" id="studio-user" class="span2 nav-login form-control  pull-left" placeholder="User" required><input type="password" id="studio-pass" class="span2 nav-login form-control pull-left" placeholder="Password" required></form>')
-                var buttonLogin = $('<button class="btn btn-small menu-button pull-left" data-toggle="dropdown">Login</button>');
+                var form = $('<form class="navbar-form"><input type="text" id="studio-user" class="span2 nav-login form-control" placeholder="User" required><input type="password" id="studio-pass" class="span2 nav-login form-control" placeholder="Password" required></form>')
+                var buttonLogin = $('<button class="btn btn-small btn-default menu-button" data-toggle="dropdown">Login</button>');
                 form.append(buttonLogin);
 
                 buttonLogin.click(function (e) {
@@ -52,8 +52,8 @@ define(
             },
             logout: function () {
                 var that = this;
-                var buttonLogout = $('<button class="btn btn-small menu-button" data-toggle="dropdown">Logout</button>');
-                var menu = $('<form class="navbar-search pull-right menu-form">Logged in as <b>' + localStorage["pa.login"] + '</b></form>');
+                var buttonLogout = $('<button class="btn btn-small menu-button btn-default" data-toggle="dropdown">Logout</button>');
+                var menu = $('<form class="navbar-form">Logged in as <b>' + localStorage["pa.login"] + '</b></form>');
                 menu.append(buttonLogout);
 
                 buttonLogout.click(function () {
