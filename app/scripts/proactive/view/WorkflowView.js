@@ -297,27 +297,29 @@ define(
             return rendering;
         },
         removeView: function (view) {
-
-            view.removing = true;
-            var endPoints = jsPlumb.getEndpoints(view.$el)
-            for (var i in endPoints) {
-                try {
-                    jsPlumb.deleteEndpoint(endPoints[i]);
-                } catch (err) {
-                    console.log(err)
+            var thizz = this;
+            undoManager.runWithDisabled(function() {
+                view.removing = true;
+                var endPoints = jsPlumb.getEndpoints(view.$el)
+                for (var i in endPoints) {
+                    try {
+                        jsPlumb.deleteEndpoint(endPoints[i]);
+                    } catch (err) {
+                        console.log(err)
+                    }
                 }
-            }
 
-            this.model.removeTask(view.model);
-            view.$el.remove();
-            jsPlumb.remove(view.$el);
+                thizz.model.removeTask(view.model);
+                view.$el.remove();
+                jsPlumb.remove(view.$el);
 
-            var index = this.taskViews.indexOf(view);
-            if (index != -1) {
-                this.taskViews.splice(index, 1);
-            }
+                var index = thizz.taskViews.indexOf(view);
+                if (index != -1) {
+                    thizz.taskViews.splice(index, 1);
+                }
 
-            this.$el.click();
+                thizz.$el.click();
+            })
         },
         import: function () {
             this.importNoReset();
