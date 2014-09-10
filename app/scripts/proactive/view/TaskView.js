@@ -80,7 +80,19 @@ define(
 
                 this.model.controlFlow = {};
                 $.each(jsPlumb.getEndpoints(this.$el), function (i, endPoint) {
-                    if (endPoint.scope != 'dependency') jsPlumb.deleteEndpoint(endPoint)
+                    if (endPoint.scope != 'dependency') {
+                        var connectionDetached = false;
+                        if (endPoint.connections) {
+                            $.each(endPoint.connections, function(j, connection) {
+                                jsPlumb.detach(connection);
+                                connectionDetached = true;
+                            })
+                        }
+                        if (!connectionDetached) {
+                            // if an endpoint had a connection it will be already removed at this point
+                            jsPlumb.deleteEndpoint(endPoint)
+                        }
+                    }
                 })
 
                 this.addSourceEndPoint(control)

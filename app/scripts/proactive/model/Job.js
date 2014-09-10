@@ -173,6 +173,7 @@ define(
                             branch.populateSchema(taskJson.controlFlow.loop);
                             var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
                             var targetTask = name2Task[loopTarget];
+                            taskModel.set({'Control Flow': 'loop'});
                             taskModel.controlFlow = {'loop': {task: targetTask, model: branch}};
                         }
                     }
