@@ -53,7 +53,12 @@ define(
             this.$el.val(value);
         }
 
+        function closeCollapsedMenu() {
+            $('.navbar-collapse.in').collapse('hide');
+        }
+
         $("#import-button").click(function () {
+            closeCollapsedMenu();
             $('#import-file').parent('form').trigger('reset');
             $('#import-file').click();
         })
@@ -79,6 +84,7 @@ define(
         })
 
         $("#export-button").click(function () {
+            closeCollapsedMenu();
             require('StudioApp').views.xmlView.render();
             $('#xml-view-modal').modal();
         })
@@ -97,7 +103,7 @@ define(
         });
 
         $("#submit-button").click(function () {
-
+            closeCollapsedMenu();
             StudioClient.isConnected(function () {
                 // submitting
                 var StudioApp = require('StudioApp');
@@ -115,6 +121,7 @@ define(
         });
 
         $("#clear-button").click(function () {
+            closeCollapsedMenu();
             console.log("Removing the workflow");
             localStorage.removeItem('job-model');
             var StudioApp = require('StudioApp');
@@ -123,6 +130,7 @@ define(
         });
 
         $("#save-button").click(function () {
+            closeCollapsedMenu();
             save_workflow_to_storage();
             new PNotify({
                 title: 'Saved',
@@ -190,15 +198,18 @@ define(
         }
 
         $("#validate-button").click(function () {
+            closeCollapsedMenu();
             StudioClient.resetLastValidationResult()
             validate_job();
         });
 
         $("#undo-button").click(function () {
+            closeCollapsedMenu();
             undoManager.undo()
         });
 
         $("#redo-button").click(function () {
+            closeCollapsedMenu();
             undoManager.redo()
         });
 
