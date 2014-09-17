@@ -13,10 +13,13 @@ define(
         listWorkflows: function () {
 
             var that = this;
+            var StudioApp = require('StudioApp');
 
             var breadcrumb = $('<ul class="breadcrumb"></ul>');
             var workflows = $('<li class="active"><span>Workflows</span></li>');
             breadcrumb.append(workflows)
+            var selectedJob = $('<li class="active"><span><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
+            breadcrumb.append(selectedJob)
 
             var newWorkflow = $('<button type="button" class="btn btn-success btn-small create-workflow-button">Create Workflow</button>')
 
@@ -31,11 +34,13 @@ define(
 
                 var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
                 if (workflowJson) {
-                    var StudioApp = require('StudioApp');
                     StudioApp.import(workflowJson)
                 }
 
                 that.listWorkflows();
+            })
+            selectedJob.click(function () {
+                return $("#workflow-designer").click();
             })
 
             this.$el.html(breadcrumb);

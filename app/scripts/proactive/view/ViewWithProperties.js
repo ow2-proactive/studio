@@ -43,7 +43,8 @@ define(
             var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
             var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a></li>');
             breadcrumb.append(workflows)
-            breadcrumb.append('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Job Name") + '</span></li>')
+            var selectedJob = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
+            breadcrumb.append(selectedJob)
 
             if (that.model.get("Task Name")) {
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
@@ -63,6 +64,9 @@ define(
 
             workflows.click(function () {
                 return StudioApp.views.propertiesView.listWorkflows();
+            })
+            selectedJob.click(function () {
+                return $("#workflow-designer").click();
             })
 
             that.form = form;

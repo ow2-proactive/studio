@@ -219,7 +219,7 @@ define(
         },
         updateJobName: function () {
 //	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))
-            $("#breadcrumb-job-name").text(this.model.get("Job Name"))
+            $("#breadcrumb-selected-job").text(this.model.get("Job Name"))
         },
         clean: function () {
             this.zoomArea.empty();
