@@ -52,8 +52,8 @@ define(
             },
             logout: function () {
                 var that = this;
-                var buttonLogout = $('<button class="btn btn-small menu-button btn-default" data-toggle="dropdown">Logout</button>');
-                var menu = $('<form class="navbar-form">Logged in as <b>' + localStorage["pa.login"] + '</b></form>');
+                var buttonLogout = $('<button class="btn btn-small menu-button btn-default" data-toggle="dropdown">Logout <b>'+localStorage["pa.login"]+'</b></button>');
+                var menu = $('<form class="navbar-form"></form>');
                 menu.append(buttonLogout);
 
                 buttonLogout.click(function () {

@@ -763,7 +763,7 @@ button {
 }
 .navbar .divider-vertical {
     height: 50px;
-    margin: 0 9px;
+    margin: 0 5px;
     border-right: 1px solid #ffffff;
     border-left: 1px solid #f2f2f2;
 }
@@ -798,7 +798,7 @@ button {
     margin-right:10px;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1220px) {
     .navbar-header {
         float: none;
     }
@@ -842,4 +842,13 @@ button {
 
 #navbar-fixed {
     background-color: white;
+}
+
+#navbar-fixed a {
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.navbar-form {
+    padding-left: 5px !important;
 }
