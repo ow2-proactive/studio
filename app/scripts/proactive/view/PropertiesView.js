@@ -88,10 +88,12 @@ define(
                 table.find('tr').click(function () {
                     var workflowIndex = $(this).attr('data-id');
                     if (workflowIndex) {
+                        var StudioApp = require('StudioApp');
                         that.options.projects.setSelectWorkflowIndex(workflowIndex);
+                        StudioApp.setCurrentWorkflowUrl()
+
                         var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
                         if (workflowJson) {
-                            var StudioApp = require('StudioApp');
                             StudioApp.import(workflowJson)
                         }
                     }

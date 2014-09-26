@@ -45,12 +45,51 @@ define(
             }
             return [];
         },
-        getCurrentWorkFlowAsJson: function () {
+        getCurrentWorkFlowMeta: function () {
             if (this.supports_html5_storage() && localStorage["workflows"] && localStorage["workflow-selected"] != undefined) {
                 var selectedIndex = localStorage["workflow-selected"];
                 if (!localStorage["workflows"]) return;
 
                 var localJobs = JSON.parse(localStorage["workflows"]);
+
+                if (!localJobs[selectedIndex] && localJobs.length > 0) {
+                    selectedIndex = localJobs.length - 1;
+                    localStorage["workflow-selected"] = selectedIndex;
+                    console.log("Selected index out of range - selecting the latest workflow");
+                }
+
+                if (localJobs[selectedIndex]) {
+                    return JSON.parse(localJobs[selectedIndex].metadata)
+                }
+            }
+        },
+        getParameterByName: function (name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }        ,
+        getCurrentWorkFlowAsJson: function () {
+
+            var workflowRef = this.getParameterByName('ref');
+
+            if (this.supports_html5_storage() && localStorage["workflows"] && localStorage["workflow-selected"] != undefined) {
+                var selectedIndex = localStorage["workflow-selected"];
+                if (!localStorage["workflows"]) return;
+
+                var localJobs = JSON.parse(localStorage["workflows"]);
+                var metadata = JSON.parse(localJobs[selectedIndex].metadata);
+
+                if (workflowRef && metadata.reference != workflowRef) {
+                    for (var i in localJobs) {
+                        var metadata = JSON.parse(localJobs[i].metadata);
+                        if (metadata.reference == workflowRef) {
+                            console.log("Changing selected index to", i)
+                            selectedIndex = i;
+                            localStorage["workflow-selected"] = selectedIndex;
+                        }
+                    }
+                }
 
                 if (!localJobs[selectedIndex] && localJobs.length > 0) {
                     selectedIndex = localJobs.length - 1;
@@ -81,13 +120,23 @@ define(
 
                 var meta = JSON.parse(localJobs[selectedIndex].metadata);
 
-                if (localJobs[selectedIndex].name != name || localJobs[selectedIndex].xml != workflowXml || meta.offsets != offsets) {
+                var refUpdated = !meta.reference;
+                if (!meta.reference) {
+                    meta.reference = this.generateWorkflowReference(30)
+                }
+
+                if (localJobs[selectedIndex].name != name ||
+                    localJobs[selectedIndex].xml != workflowXml ||
+                    meta.offsets != offsets ||
+                    refUpdated )
+                {
 
                     localJobs[selectedIndex].name = name;
                     localJobs[selectedIndex].xml = workflowXml;
 
                     meta.offsets = offsets;
                     meta.updated_at = new Date().getTime();
+
                     localJobs[selectedIndex].metadata = JSON.stringify(meta);
 
                     localStorage['workflows'] = JSON.stringify(localJobs);
@@ -101,6 +150,11 @@ define(
             if (this.supports_html5_storage()) {
                 localStorage["workflow-selected"] = index;
             }
+        },
+        generateWorkflowReference: function (m) {
+            var m = m || 9, s = '', r = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            for (var i=0; i < m; i++) { s += r.charAt(Math.floor(Math.random()*r.length)); }
+            return s;
         },
         getSelectWorkflowIndex: function () {
             if (this.supports_html5_storage() && localStorage["workflow-selected"]) {

@@ -69,10 +69,20 @@ define(
             this.views.workflowView.model = this.models.jobModel;
             this.views.xmlView.model = this.models.jobModel;
         },
+        setCurrentWorkflowUrl: function() {
+            var meta = this.models.projects.getCurrentWorkFlowMeta()
+            var newUrl = "?ref="+meta.reference;
+            if (history) {
+                history.pushState({},"",newUrl);
+            } else {
+                document.location.search = newUrl;
+            }
+        },
         import: function(json) {
             console.log("Importing workflow");
             this._replaceJobModel(json);
             this.views.workflowView.import();
+            this.setCurrentWorkflowUrl()
         },
         importNoReset: function (json) {
             this._replaceJobModel(json);
