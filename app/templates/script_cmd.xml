@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns="urn:proactive:jobdescriptor:3.2"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
+     name="script_cmd" projectName="" priority="normal" cancelJobOnError="false">
+    <description>
+        A workflow that executes cmd in JVM.
+    </description>
+    <taskFlow>
+        <task name="simple_task">
+            <description>
+                The simplest task, ran by a cmd engine.
+            </description>
+            <scriptExecutable>
+                <script>
+                    <code language="cmd">
+                        <![CDATA[
+dir
+]]>
+                    </code>
+                </script>
+            </scriptExecutable>
+        </task>
+    </taskFlow>
+</job>

@@ -852,3 +852,10 @@ button {
 .navbar-form {
     padding-left: 5px !important;
 }
+
+.dropdown-header {
+    padding-top:10px;
+    color: #333; !important;
+    font-weight: bold;
+    font-size: 13px;
+}
