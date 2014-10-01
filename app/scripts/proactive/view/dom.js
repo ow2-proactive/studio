@@ -398,6 +398,7 @@ define(
                 var ctrlDown = false;
                 var ctrlKey = 17, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
                 var copied = false;
+                var pasteAllow = true;
 
                 $(document).keydown(function (e) {
                     if (e.keyCode == ctrlKey) ctrlDown = true;
@@ -415,11 +416,9 @@ define(
                     }
                     ;
                     if (ctrlDown && e.keyCode == vKey) {
-                        if (copied) {
+                        if (pasteAllow) {
                             console.log("paste");
-                            if (copied) {
-                                require('StudioApp').views.workflowView.copyPasteTasks(copied);
-                            }
+                            require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
                         }
                     }
                     ;
@@ -433,14 +432,17 @@ define(
 
                 $('body').mousedown(function (e) {
 
-                    //console.log("clearing all selected tasks", e)
-
                     if (e.isPropagationStopped()) {
                         return;
                     }
 
                     $(".selected-task").removeClass("selected-task");
-                    copied = false;
+                    pasteAllow = false;
+                })
+                $('#workflow-designer').mousedown(function (e) {
+                    pasteAllow = {left: e.pageX, top: e.pageY};
+                    e.stopPropagation();
+
                 })
             });
         })();

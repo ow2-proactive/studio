@@ -539,7 +539,7 @@ define(
                 return (name === view.model.get("Task Name"));
             })
         },
-        copyPasteTasks: function (tasks) {
+        copyPasteTasks: function (tasks, position) {
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
@@ -580,7 +580,10 @@ define(
                 jobModel.addTask(newTaskModel);
 
                 var newTaskView = new TaskView({model: newTaskModel});
-                thizz.addView(newTaskView, {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100});
+                if (!position.top) {
+                    position = {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100};
+                }
+                thizz.addView(newTaskView, position);
 
                 newTaskViews[taskView.model.get("Task Name")] = newTaskView;
             })

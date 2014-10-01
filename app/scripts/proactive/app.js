@@ -55,7 +55,7 @@ define(
                     that.models.projects.addEmptyWorkflow(jobName, jobXml);
                 }
 
-                $(".draggable").draggable({helper: "clone"});
+                $(".draggable").draggable({helper: "clone", scroll: true});
 
                 that.views.workflowView.$el.click();
             })
