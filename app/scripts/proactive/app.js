@@ -10,7 +10,8 @@ define(
         'proactive/view/xml/JobXmlView',
         'proactive/view/LoginView',
         'proactive/view/PropertiesView',
-        'proactive/jsplumb'
+        'proactive/jsplumb',
+        'jquery.ui.touch-punch'
     ],
 
     function ($, jsPlumb, ui, Projects, Job, PaletteView, WorkflowView, JobXmlView, LoginView, PropertiesView) {

@@ -44,6 +44,13 @@ require.config({
                 'jquery.ui.draggable'
             ]
         },
+        'jquery.ui.touch-punch': {
+            deps: [
+                'jquery.ui.core',
+                'jquery.ui.mouse',
+                'jquery.ui.widget'
+            ]
+        },
         'pnotify.buttons': {
             deps: [
                 'pnotify.core'
@@ -69,6 +76,7 @@ require.config({
         'jquery.ui.draggable': '../libs/jquery-ui/ui/jquery.ui.draggable',
         'jquery.ui.widget': '../libs/jquery-ui/ui/jquery.ui.widget',
         'jquery.ui.droppable': '../libs/jquery-ui/ui/jquery.ui.droppable',
+        'jquery.ui.touch-punch': '../libs/jquery-ui-touch-punch/jquery.ui.touch-punch',
         backbone: '../libs/backbone/backbone',
         'backbone-forms': '../libs/backbone-forms/distribution.amd/backbone-forms',
         list: '../libs/backbone-forms/distribution.amd/editors/list',

@@ -238,7 +238,7 @@ define(
             view.addSourceEndPoint('dependency')
             var initLeftOffset = [], initTopOffset = [];
 
-            jsPlumb.draggable(rendering.$el,
+            rendering.$el.draggable(
                 {
                     start: function (event, ui) {
                         var item = $(this);
@@ -287,10 +287,10 @@ define(
                         });
                         jsPlumb.repaint(items);
                     },
-                    containment: "#workflow-designer"
+                    containment: "#workflow-designer",
+                    scroll: true
                 }
             )
-
             this.taskViews.push(view);
 
             rendering.$el.data("view", view);
