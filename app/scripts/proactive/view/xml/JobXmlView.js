@@ -50,13 +50,27 @@ define(
             var url = document.URL;
             var hashPos = url.indexOf("#");
             if (hashPos != -1) url = url.substr(0, hashPos);
+            if (url.indexOf('?')!=-1) url = url.substr(0, url.indexOf('?'));
             if (url.charAt(url.length - 1) == '/') url = url.substr(0, url.length - 1);
 
             var width = $("#workflow-designer").get(0).scrollWidth;
             var height = $("#workflow-designer").get(0).scrollHeight;
 
+            var minLeft = width;
+            var minTop = height;
+            $("#workflow-designer").find(".task").each(function() {
+                if ($(this).position().left < minLeft) {
+                    minLeft = $(this).position().left;
+                }
+                if ($(this).position().top < minTop) {
+                    minTop = $(this).position().top;
+                }
+            })
+
+            var top = (-1*(minTop-50))+"px";
+            var left = (-1*(minLeft-100))+"px";
             var html = _.template(WorkflowTemplate,
-                {'url': url, 'content': content, 'width': width, 'height': height});
+                {'url': url, 'content': content, 'width': width, 'height': height, 'top': top, 'left':left});
 
             // replacing all images paths
             html = html.replace(/img\//g, url + "/images/");
