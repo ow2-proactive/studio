@@ -83,6 +83,10 @@ define(
                         console.log("Removing the workflow number ", workflowIndex)
                         that.options.projects.removeWorkflow(workflowIndex);
                         that.listWorkflows();
+                        var workflowJson = that.options.projects.getCurrentWorkFlowAsJson()
+                        if (workflowJson) {
+                            StudioApp.import(workflowJson)
+                        }
                     }
                 })
                 table.find('tr').click(function () {
