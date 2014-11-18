@@ -632,6 +632,11 @@ define(
         saveInitialState: function() {
             // saving the initial job
             undoManager.save(true);
+        },
+        remove: function() {
+            jsPlumb.unbind();
+            jsPlumb.deleteEveryEndpoint();
+            Backbone.View.prototype.remove.apply(this, arguments);
         }
 
     });
