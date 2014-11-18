@@ -23,29 +23,6 @@ define(
         Anchors: [ "BottomCenter", "TopCenter" ]
     });
 
-    jsPlumb.bind("ready", function () {
-        console.log("JsPlumb is ready");
-        // render mode
-        var resetRenderMode = function (desiredMode) {
-            var newMode = jsPlumb.setRenderMode(desiredMode);
-            $(".rmode").removeClass("selected");
-            $(".rmode[mode='" + newMode + "']").addClass("selected");
-
-            $(".rmode[mode='canvas']").attr("disabled", !jsPlumb.isCanvasAvailable());
-            $(".rmode[mode='svg']").attr("disabled", !jsPlumb.isSVGAvailable());
-            $(".rmode[mode='vml']").attr("disabled", !jsPlumb.isVMLAvailable());
-        };
-
-        $(".rmode").bind("click", function () {
-            var desiredMode = $(this).attr("mode");
-            if (jsPlumbDemo.reset) jsPlumbDemo.reset();
-            jsPlumb.reset();
-            resetRenderMode(desiredMode);
-        });
-
-        resetRenderMode(jsPlumb.SVG);
-    });
-
     $('.workflow-view').click(function (e) {
         e.preventDefault();
         $(this).tab('show');

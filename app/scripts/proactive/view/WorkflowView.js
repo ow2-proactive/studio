@@ -240,59 +240,7 @@ define(
             view.addSourceEndPoint('dependency')
             var initLeftOffset = [], initTopOffset = [];
 
-            rendering.$el.draggable(
-                {
-                    start: function (event, ui) {
-                        var item = $(this);
-                        var pos = item.position();
-                        var items = $(".selected-task");
-
-                        $.each(items || {}, function (key, value) {
-                            var elemPos = $(value).position();
-                            that.initLeftOffset[key] = elemPos.left - pos.left;
-                            that.initTopOffset[key] = elemPos.top - pos.top;
-                        });
-                        //  items.trigger("start");
-                        jsPlumb.repaint(items);
-                        jsPlumb.repaint(item);
-
-
-                    },
-                    drag: function (event, ui) {
-                        var item = $(this);
-                        var pos = ui.offset;
-                        var items = $(".selected-task");
-                        $.each(items || {}, function (key, value) {
-
-                            var oPos = {
-                                left: pos.left + that.initLeftOffset[key],
-                                top: pos.top + that.initTopOffset[key]
-                            }, oEl = $(value);
-
-                            oEl.offset(oPos);
-                            jsPlumb.repaint(oEl, oPos);
-                        });
-
-                        // repaint the dragging item, passing in position
-                        jsPlumb.repaint(item, pos);
-                    },
-                    stop: function (event, ui) {
-                        var item = $(this);
-                        var pos = $(this).offset();
-                        var items = $(".selected-task");
-
-                        $.each(items || {}, function (key, value) {
-                            $(value).offset({
-                                left: pos.left + that.initLeftOffset[key],
-                                top: pos.top + that.initTopOffset[key]
-                            });
-                        });
-                        jsPlumb.repaint(items);
-                    },
-                    containment: "#workflow-designer",
-                    scroll: true
-                }
-            )
+            jsPlumb.draggable(rendering.$el)
             this.taskViews.push(view);
 
             rendering.$el.data("view", view);
