@@ -18,6 +18,9 @@ define(
     return Backbone.View.extend({
         initialize: function () {
             var that = this;
+            this.$el = $("<div id='workflow-xml-container'></div>");
+            $("#workflow-xml-body").append(this.$el)
+
             $('#workflow-xml-tab').on('shown', function (e) {
                 that.render();
             })

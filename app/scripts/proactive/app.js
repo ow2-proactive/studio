@@ -3,26 +3,34 @@ define(
         'jquery',
         'jsplumb',
         'jquery.ui.droppable',
-        'proactive/model/Project',
         'proactive/model/Job',
+        'proactive/model/WorkflowCollection',
+        'proactive/model/TemplateCollection',
         'proactive/view/PaletteView',
         'proactive/view/WorkflowView',
+        'proactive/view/EmptyWorkflowView',
         'proactive/view/xml/JobXmlView',
         'proactive/view/LoginView',
-        'proactive/view/PropertiesView',
+        'proactive/view/LogoutView',
+        'proactive/view/WorkflowListView',
+        'xml2json',
+        'proactive/router',
+        'proactive/view/dom',
         'proactive/jsplumb',
-        'jquery.ui.touch-punch'
+        'jquery.ui.touch-punch',
     ],
 
-    function ($, jsPlumb, ui, Projects, Job, PaletteView, WorkflowView, JobXmlView, LoginView, PropertiesView) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, WorkflowListView, xml2json, StudioRouter, dom) {
 
     "use strict";
 
     return {
 
         models : {
-            projects : new Projects(),
-            jobModel : new Job()
+            jobModel : undefined, // TODO move it to workflow
+            currentWorkflow : undefined,
+            workflows: undefined,
+            templates: undefined
         },
 
         views : {
@@ -30,60 +38,73 @@ define(
             workflowView : undefined,
             propertiesView : undefined,
             xmlView : undefined,
-            loginView : undefined
+            loginView : undefined,
+            logoutView : undefined
         },
+
+        router: undefined,
 
         init: function() {
             var that = this;
 
             jsPlumb.bind("ready", function () {
                 console.log("Initializing the studio")
-
-                that.views.palleteView = new PaletteView({el: $("#palette-container")});
-                that.views.workflowView = new WorkflowView({el: $("#workflow-designer"), model: that.models.jobModel, projects: that.models.projects});
-                that.views.xmlView = new JobXmlView({el: $("#workflow-xml-container"), model: that.models.jobModel});
-                that.views.propertiesView = new PropertiesView({el: $("#properties-container"), projects: that.models.projects, workflowView: that.views.workflowView, xmlView: that.views.xmlView});
-                that.views.loginView = new LoginView({el: $("#login-view"), projects: that.models.projects, workflowView: that.views.workflowView});
-
-                that.models.projects.init();
-
-                var workflowJson = that.models.projects.getCurrentWorkFlowAsJson()
-                if (workflowJson) {
-                    that.import(workflowJson)
-                } else {
-                    var jobXml = that.views.xmlView.xml(that.models.jobModel);
-                    var jobName = that.models.jobModel.get("Job Name")
-                    that.models.projects.addEmptyWorkflow(jobName, jobXml);
-                }
-
-                $(".draggable").draggable({helper: "clone", scroll: true});
-
-                that.views.workflowView.$el.click();
+                that.views.loginView = new LoginView({app:that});
             })
+
         },
-        _replaceJobModel: function (json) {
-            console.log("Changing the current job model from", this.model);
+        login: function() {
+
+            this.models.workflows = new WorkflowCollection();
+            this.models.templates = new TemplateCollection();
+
+            this.views.palleteView = new PaletteView({templates: this.models.templates});
+            this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, workflows: this.models.workflows, templates: this.models.templates, app: this});
+            this.views.logoutView = new LogoutView({app: this});
+            this.views.workflowView = new EmptyWorkflowView();
+
+            this.router = new StudioRouter(this);
+        },
+        logout: function() {
+            var that = this;
+            $.each(this.models, function(i, model) {
+                if (model) {
+                    that.models[i] = undefined;
+                }
+            })
+            $.each(this.views, function(i, view) {
+                if (view) {
+                    view.remove()
+                    that.views[i] = undefined;
+                }
+            })
+            this.views.loginView = new LoginView({app:this});
+        },
+        import: function(workflow) {
+
+            this.closeWorkflow();
+
+            console.log("Importing workflow");
+
+            var jobXml = workflow.get('xml');
+
+            var json = xml2json.xmlToJson(xml2json.parseXml(jobXml));
             this.models.jobModel = new Job();
             this.models.jobModel.populate(json.job)
-            console.log("To", this.models.jobModel);
+            this.models.currentWorkflow = workflow;
+
+            this.views.workflowView = new WorkflowView({model: this.models.jobModel, app: this});
+            this.views.xmlView = new JobXmlView({model: this.models.jobModel});
+
+            this.views.workflowView.saveInitialState();
+        },
+        _replaceJobModel: function (json) {
+            console.log("Replacing the model");
+            this.models.jobModel = new Job();
+            this.models.jobModel.populate(json.job)
 
             this.views.workflowView.model = this.models.jobModel;
             this.views.xmlView.model = this.models.jobModel;
-        },
-        setCurrentWorkflowUrl: function() {
-            var meta = this.models.projects.getCurrentWorkFlowMeta()
-            var newUrl = "?ref="+meta.reference;
-            if (history) {
-                history.pushState({},"",newUrl);
-            } else {
-                document.location.search = newUrl;
-            }
-        },
-        import: function(json) {
-            console.log("Importing workflow");
-            this._replaceJobModel(json);
-            this.views.workflowView.import();
-            this.setCurrentWorkflowUrl()
         },
         importNoReset: function (json) {
             this._replaceJobModel(json);
@@ -94,14 +115,39 @@ define(
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
+        mergeXML: function(xml, elem) {
+            var json = xml2json.xmlToJson(xml2json.parseXml(xml))
+            this.merge(json, elem);
+        },
+        closeWorkflow: function() {
+            if (this.models.jobModel) {
+                this.models.jobModel.destroy()
+                this.models.jobModel = null;
+            }
+            if (this.views.workflowView) {
+                this.views.workflowView.remove();
+                this.views.workflowView = null;
+            }
+            if (this.views.xmlView) {
+                this.views.xmlView.remove();
+                this.views.xmlView = null;
+            }
+        },
+        emptyWorkflowView: function (save) {
+            if (save) {
+                dom.saveWorkflow();
+            }
+            this.closeWorkflow();
+            this.views.workflowView = new EmptyWorkflowView();
+        },
         clear: function() {
-            var job = new Job();
-            this.models.jobModel = job;
-            this.views.workflowView.model = job;
-            this.views.xmlView.model = job;
-            this.views.workflowView.clean();
-
-            this.models.jobModel.trigger('change');
+            var jobXml = new JobXmlView().xml(new Job());
+            var json = xml2json.xmlToJson(xml2json.parseXml(jobXml))
+            this.importNoReset(json);
+        },
+        isWorkflowOpen: function() {
+            return this.views.xmlView != null;
         }
+
     }
 })

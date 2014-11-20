@@ -21,6 +21,7 @@
         <link href="libs/pnotify/pnotify.buttons.css" rel="stylesheet" type="text/css" />
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/studio.css -->
+        <link rel="stylesheet" href="styles/login.css">
         <link rel="stylesheet" href="styles/studio.css">
         <!-- endbuild -->
 
@@ -41,9 +42,11 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a id="save-button" href="#" class="pointer" title="Save current workflow."><i
-                            class="glyphicon glyphicon-hdd"></i>
-                        Save</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="pointer dropdown-toggle" title="Save current workflow.">
+                            <span id="save-button"><i class="glyphicon glyphicon-hdd"></i> Save</span>
+                        </a>
+                    </li>
                     <li class="divider-vertical"></li>
                     <li><a id="import-button" href="#" class="pointer"
                            title="Import existing workflows (.xml files)."><i
@@ -71,7 +74,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li id="login-view" > </li>
+                    <li id="logout-view-container" > </li>
                 </ul>
             </div>
         </div>
@@ -85,8 +88,7 @@
                     <div id="workflow-designer-outer">
                         <table id="tools-table">
                             <tr>
-                                <td style="padding-right:20px">
-                                    <div id="palette-container"></div>
+                                <td id="palette-container" style="padding-right:20px">
                                 </td>
                                 <td>
                                     <div id="tools-panel">
@@ -98,7 +100,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <div id="workflow-designer"></div>
                     </div>
                 </td>
             </tr>
@@ -108,23 +109,6 @@
         <input type="file" id="import-file" style="display:none"/>
         </form>
 
-        <div id="scheduler-connect-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Scheduler Login Required</h3>
-                    </div>
-                    <div class="modal-body">
-                        <p>In order to submit jobs to the scheduler please login using your user name and password.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -132,11 +116,28 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3>Workflow XML</h3>
                     </div>
-                    <div class="modal-body" style="height:100%">
+                    <div id="workflow-xml-body" class="modal-body" style="height:100%">
                         <div id="workflow-xml-container"></div>
                     </div>
                     <div class="modal-footer">
                         <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Please open a workflow</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        In order to perform this action you need to choose an existing workflow or create a new one.
+                    </div>
+                    <div class="modal-footer">
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>

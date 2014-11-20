@@ -12,6 +12,14 @@ define(
         return Backbone.View.extend({
 
         initialize: function () {
+            this.$el = $("<div></div>")
+            $("#palette-container").append(this.$el)
+
+            this.options.templates.on('add', this.render, this);
+            this.options.templates.on('change', this.render, this);
+            this.options.templates.on('remove', this.render, this);
+            this.options.templates.on('reset', this.render, this);
+            this.options.templates.fetch();
             this.render();
         },
         createMenuFromConfig: function (template, menu) {
@@ -28,6 +36,7 @@ define(
                         menu.append(subMenu);
                         subMenu.data("templateName", property);
                         subMenu.data("templateUrl", template[property]);
+                        subMenu.draggable({helper: "clone", scroll: true})
                     }
                 }
             }
@@ -41,6 +50,8 @@ define(
             menu.find(".dropdown-toggle").dropdown();
         },
         render: function () {
+            this.$el.html('');
+            var that = this;
             var taskWidget = $(
                 '<span class="dropdown"><span class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="30px" type="button" >Task <span class="caret"></span></span></span>');
@@ -56,7 +67,27 @@ define(
             var templateWidget = $(
                 '<span class="dropdown"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Templates <span class="caret"></span></span></span>');
-            this.initMenu($(templateWidget), config.templates);
+
+            var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
+
+            $(templateWidget).append(menuContent)
+
+            this.options.templates.groupByProject(function (project, templates) {
+                var header = $('<li role="presentation" class="dropdown-header">'+project+'</li>');
+                menuContent.append(header);
+                _.each(templates, function(template) {
+                    if (template.get("name")) {
+                        var menuItem = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#">' + template.get("name") + '</a></li>');
+                        menuItem.tooltip();
+                        menuContent.append(menuItem);
+                        menuItem.data("templateName", template.get("name"));
+                        menuItem.data("templateId", template.get("id"));
+                        menuItem.draggable({helper: "clone", scroll: true});
+                    }
+                })
+            }, this);
+
+            $(templateWidget).find(".dropdown-toggle").dropdown();
 
             this.$el.append(taskWidget).append(controlWidget).append(templateWidget);
         }

@@ -25,10 +25,10 @@ define(
             )
         },
 
-        save: function () {
-            if (!enabled) return;
-
+        save: function (enforced) {
             var StudioApp = require('StudioApp');
+            if (!enforced && (!enabled || !StudioApp.isWorkflowOpen())) return;
+
             var state = {xml: StudioApp.views.xmlView.generateXml(),
                 offsets: this.getOffsetsFromDOM(),
                 accordions: StudioApp.views.workflowView.getOpenAccordions(),
@@ -100,7 +100,6 @@ define(
                     StudioApp.views.workflowView.restoreLayoutFromOffsets(state.offsets)
                     StudioApp.views.workflowView.restoreOpenAccordions(state.accordions)
                     StudioApp.views.workflowView.restoreActiveTask(state.activeTask)
-                    StudioApp.views.xmlView.model = StudioApp.views.workflowView.model;
                 })
             }
         },

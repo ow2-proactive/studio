@@ -1,0 +1,87 @@
+html,body {
+    height:100%;
+    min-height:100%;
+}
+
+.login-container {
+    text-align: center;
+    width:370px;
+    height:270px;
+    padding : 10px;
+
+    border-color: rgb(204, 204, 204);
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 5px 5px 5px #888888;
+
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+}
+
+.login-header-container {
+    margin-top: 10px;
+    background-color: rgb(240, 240, 240);
+    border-color: rgb(204, 204, 204);
+    border-style: solid;
+    border-width: 1px;
+}
+
+#login-form {
+    position: relative;
+}
+
+.login-header {
+    color: #003168;
+    font-weight: bold;
+    font-family: Arial, Verdana, sans-serif;
+    font-size: 13px;
+    width:100%;
+    text-align: left;
+    padding-top:10px;
+    padding-left:20px;
+    padding-bottom:20px;
+}
+
+.buttons-container {
+    padding-top:10px;
+    width:100%;
+    position: relative;
+    left:-85px;
+}
+
+.login-logo-image {
+    width: 349px;
+    height: 75px;
+}
+
+.login-font-normal {
+    font-weight: normal;
+}
+
+#login-view label {
+    font-weight: bold !important;
+    font-size: 12px;
+    color: #003168;
+    float: left;
+    width: 115px;
+    padding-top:5px !important;
+    padding-bottom:5px !important;
+}
+
+#login-view .form-group {
+    margin-bottom: 5px;
+}
+
+#login-view input {
+    height: 25px !important;
+}
+
+#login-view .controls {
+    position: relative;
+    left:-40px;
+}

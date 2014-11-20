@@ -5,22 +5,33 @@ define(
         'proactive/view/ViewWithProperties',
         'proactive/view/TaskView',
         'proactive/view/utils/undo',
-        'proactive/view/dom',
-        'xml2json',
         'pnotify.core',
         'pnotify.buttons'
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager, dom, xml2json) {
+    function (d, Job, ViewWithProperties, TaskView, undoManager) {
 
     "use strict";
 
     return ViewWithProperties.extend({
-        zoomArea: $("<div></div>"),
+        workFlowDesigner: $("<div id='workflow-designer'></div>"),
         taskViews: [],
         initialize: function () {
             this.constructor.__super__.initialize.apply(this);
             var that = this;
+
+            this.$el = this.workFlowDesigner;
+            $("#workflow-designer-outer").append(this.$el);
+
+            this.initJsPlumb();
+            this.$el.html(this.workFlowDesigner);
+            this.$el.dblclick(function (event) {
+                that.clearTextSelection();
+
+                console.log("Creating task", event);
+                that.createTask({offset: {top: event.clientY, left: event.clientX}});
+            })
+            this.model.on("change:Job Name", this.updateJobName, this);
 
             this.$el.droppable({
                 accept: ".job-element",
@@ -31,40 +42,32 @@ define(
                         if (elem.hasClass('task-menu')) {
                             that.createTask(ui)
                         } else {
-                            console.log("Creating", elem.data("templateName"), elem.data("templateUrl"));
-                            $.ajax({
-                                type: "GET",
-                                dataType:"text",
-                                async: false,
-                                url: elem.data("templateUrl"),
-                                success: function (data) {
-                                    //console.log(data)
-                                    var json = xml2json.xmlToJson(xml2json.parseXml(data))
-                                    //console.log(json)
-                                    var StudioApp = require('StudioApp');
-
-                                    StudioApp.merge(json, ui)
-                                },
-                                error: function (data) {
-                                    console.log("Cannot retrieve the template", data)
-                                    that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
-                                }
-                            });
+                            if (elem.data("templateUrl")) {
+                                console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
+                                $.ajax({
+                                    type: "GET",
+                                    dataType: "text",
+                                    async: false,
+                                    url: elem.data("templateUrl"),
+                                    success: function (data) {
+                                        that.options.app.mergeXML(data, ui);
+                                    },
+                                    error: function (data) {
+                                        console.log("Cannot retrieve the template", data)
+                                        that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
+                                    }
+                                });
+                            } else {
+                                console.log("Dropped element: ", elem.data("templateName"), elem.data("templateId"));
+                                var templateModel = that.options.app.models.templates.get({id: elem.data('templateId')})
+                                that.options.app.mergeXML(templateModel.get("xml"), ui);
+                            }
                         }
                     });
                 }
             });
 
-            this.$el.dblclick(function (event) {
-                that.clearTextSelection();
-
-                console.log("Creating task", event);
-                that.createTask({offset: {top: event.clientY, left: event.clientX}});
-            })
-
-            this.initJsPlumb();
-            this.$el.html(this.zoomArea);
-            this.model.on("change:Job Name", this.updateJobName, this);
+            this.importNoReset()
         },
         initJsPlumb: function () {
             var that = this;
@@ -221,7 +224,7 @@ define(
             $("#breadcrumb-selected-job").text(this.model.get("Job Name"))
         },
         clean: function () {
-            this.zoomArea.empty();
+            this.workFlowDesigner.empty();
             jsPlumb.reset()
             this.initJsPlumb()
         },
@@ -231,7 +234,7 @@ define(
 
             var that = this;
             var rendering = view.render();
-            this.zoomArea.append(rendering.$el);
+            this.workFlowDesigner.append(rendering.$el);
             rendering.$el.offset(position);
 
             view.addSourceEndPoint('dependency')
@@ -418,8 +421,15 @@ define(
             jsPlumb.repaintEverything();
         },
         layoutNewElements: function (uiWithInitialOffset) {
-            var offsets = this.options.projects.getOffsetsFromLocalStorage();
-            if (!offsets) offsets = {};
+
+            if (!uiWithInitialOffset) {
+                this.autoLayout()
+                return;
+            }
+
+            var app = this.options.app;
+            var workflow = app.models.currentWorkflow;
+            var offsets = workflow.getOffsets();
             var elemWithInitialOffset = $(uiWithInitialOffset.draggable);
 
             // finding task that are not layouted
@@ -466,14 +476,15 @@ define(
             var leftOffset = uiWithInitialOffset.offset.left-(elemWithInitialOffset.width()/2)+50;
             var topOffset = uiWithInitialOffset.offset.top-10;
 
+            var offsets = workflow.getOffsets();
             $.each(nodes, function (i, node) {
                 var pos = {};
                 if (node.dagre.x) pos.left = node.dagre.x + leftOffset;
                 if (node.dagre.x) pos.top = node.dagre.y + topOffset;
                 offsets[node.dagre.id] = pos;
             })
-
-            this.options.projects.saveOffsetsToLocalStorage(offsets);
+            app.models.currentWorkflow.setOffsets(offsets);
+            app.models.currentWorkflow.save({}, {wait: true});
         },
         restoreLayoutFromOffsets: function (offsets) {
             var that = this;
@@ -502,7 +513,10 @@ define(
             jsPlumb.repaintEverything();
         },
         restoreLayout: function () {
-            var offsets = this.options.projects.getOffsetsFromLocalStorage();
+            var app = this.options.app;
+            var workflow = app.models.currentWorkflow;
+            var offsets = workflow.getOffsets();
+
             if (offsets) {
                 this.restoreLayoutFromOffsets(offsets);
             } else {
@@ -517,7 +531,7 @@ define(
                 s = "scale(" + this.zoom + ")";
 
             for (var i = 0; i < p.length; i++)
-                this.zoomArea.css(p[i] + "transform", s);
+                this.workFlowDesigner.css(p[i] + "transform", s);
 
             jsPlumb.setZoom(this.zoom);
         },
@@ -666,7 +680,12 @@ define(
                     $(el).click()
                 }
             })
+        },
+        saveInitialState: function() {
+            // saving the initial job
+            undoManager.save(true);
         }
+
     });
 
 })

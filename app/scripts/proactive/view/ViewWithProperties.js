@@ -41,8 +41,13 @@ define(
             }).render();
 
             var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
-            var workflows = $('<li class="active"><a href="#" id="breadcrumb-list-workflows">Workflows</a></li>');
+
+            // TODO do not duplicate breadcrumbs (see another one in WorkflowListView)
+            var mode = StudioApp.views.propertiesView.mode;
+            var workflows = $('<li class="active"><span><a href="#" id="breadcrumb-list-workflows">' +
+                mode.charAt(0).toUpperCase() + mode.slice(1) + 's' + '</a></span></li>');
             breadcrumb.append(workflows)
+
             var selectedJob = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
             breadcrumb.append(selectedJob)
 
@@ -62,8 +67,9 @@ define(
                 $(".active-task").removeClass("active-task");
             }
 
-            workflows.click(function () {
-                return StudioApp.views.propertiesView.listWorkflows();
+            workflows.click(function (event) {
+                event.preventDefault();
+                return StudioApp.views.propertiesView.listCurrent();
             })
             selectedJob.click(function () {
                 return $("#workflow-designer").click();

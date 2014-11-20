@@ -57,13 +57,23 @@ define(
             $('.navbar-collapse.in').collapse('hide');
         }
 
-        $("#import-button").click(function () {
+        $("#import-button").click(function (event) {
+
+            event.preventDefault();
+            var studioApp = require('StudioApp');
+            if (!studioApp.models.currentWorkflow) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
             closeCollapsedMenu();
             $('#import-file').parent('form').trigger('reset');
             $('#import-file').click();
         })
 
         $('#import-file').change(function (env) {
+            var StudioApp = require('StudioApp');
+
             var files = env.target.files;
             if (files.length > 0) {
                 var file = files[0];
@@ -75,38 +85,55 @@ define(
 
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result))
-                        var StudioApp = require('StudioApp');
-                        StudioApp.import(json)
+                        StudioApp.merge(json, null)
                     }
                 }
                 reader.readAsBinaryString(file);
             }
         })
 
-        $("#export-button").click(function () {
+        $("#export-button").click(function (event) {
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
             closeCollapsedMenu();
-            require('StudioApp').views.xmlView.render();
+            StudioApp.views.xmlView.render();
             $('#xml-view-modal').modal();
         })
 
-        $("#layout-button").click(function () {
+        $("#layout-button").click(function (event) {
+            event.preventDefault();
             require('StudioApp').views.workflowView.autoLayout();
         });
-        $("#zoom-in-button").click(function () {
+        $("#zoom-in-button").click(function (event) {
+            event.preventDefault();
             require('StudioApp').views.workflowView.zoomIn();
         });
-        $("#zoom-out-button").click(function () {
+        $("#zoom-out-button").click(function (event) {
+            event.preventDefault();
             require('StudioApp').views.workflowView.zoomOut();
         });
-        $("#zoom-reset-button").click(function () {
+        $("#zoom-reset-button").click(function (event) {
+            event.preventDefault();
             require('StudioApp').views.workflowView.setZoom(1);
         });
 
-        $("#submit-button").click(function () {
+        $("#submit-button").click(function (event) {
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
             closeCollapsedMenu();
             StudioClient.isConnected(function () {
                 // submitting
-                var StudioApp = require('StudioApp');
                 StudioApp.views.xmlView.render();
 
                 var button = $(this);
@@ -115,30 +142,43 @@ define(
                 StudioClient.submit(xml, htmlVisualization)
             }, function () {
                 // ask to login first
-                $('#scheduler-connect-modal').modal();
+                StudioApp.views.loginView.render();
             })
 
         });
 
-        $("#clear-button").click(function () {
-            closeCollapsedMenu();
-            console.log("Removing the workflow");
-            localStorage.removeItem('job-model');
+        $("#clear-button").click(function (event) {
+            event.preventDefault();
+
             var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
+            closeCollapsedMenu();
+            console.log("Clearing the workflow");
             StudioApp.clear();
-            StudioApp.views.workflowView.$el.click();
         });
 
-        $("#save-button").click(function () {
+        $("#save-button").click(function (event) {
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
             closeCollapsedMenu();
-            save_workflow_to_storage();
+            save_workflow();
             new PNotify({
                 title: 'Saved',
                 text: 'Workflow has been saved',
                 type: 'success',
                 buttons: {
                     closer: true,
-                    sticker: false,
+                    sticker: false
                 },
                 opacity: .8,
                 width: '20%',
@@ -148,7 +188,9 @@ define(
             });
         });
 
-        $("#download-xml-button").click(function () {
+        $("#download-xml-button").click(function (event) {
+            event.preventDefault();
+
             console.log("Saving xml");
             var StudioApp = require('StudioApp');
             var jobName = StudioApp.models.jobModel.get("Job Name")
@@ -170,14 +212,6 @@ define(
             }
         })
 
-        // submitting job by pressing enter
-        $('#scheduler-connect-modal').on('keypress', function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-                $("#submit-button-dialog").click();
-            }
-        });
-
         $('#script-save-modal').on('keypress', function (e) {
             if (e.keyCode === 13) {
                 e.preventDefault();
@@ -185,30 +219,56 @@ define(
             }
         });
 
-        function save_workflow_to_storage() {
+        function save_workflow() {
             var StudioApp = require('StudioApp');
-            StudioApp.models.projects.saveCurrentWorkflow(
-                StudioApp.models.jobModel.get("Job Name"), StudioApp.views.xmlView.generateXml(), undoManager.getOffsetsFromDOM());
+            if (StudioApp.models.jobModel) {
+                StudioApp.views.propertiesView.saveCurrentWorkflow(
+                    StudioApp.models.jobModel.get("Job Name"), StudioApp.models.jobModel.get("Project"), StudioApp.views.xmlView.generateXml(), undoManager.getOffsetsFromDOM());
+            }
         }
 
         function validate_job() {
             $(".invalid-task").removeClass("invalid-task");
             var StudioApp = require('StudioApp');
-            StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+            if (StudioApp.isWorkflowOpen()) {
+                StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+            }
         }
 
-        $("#validate-button").click(function () {
+        $("#validate-button").click(function (event) {
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
             closeCollapsedMenu();
             StudioClient.resetLastValidationResult()
             validate_job();
         });
 
-        $("#undo-button").click(function () {
+        $("#undo-button").click(function (event) {
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
             closeCollapsedMenu();
             undoManager.undo()
         });
 
-        $("#redo-button").click(function () {
+        $("#redo-button").click(function (event) {
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (!StudioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
             closeCollapsedMenu();
             undoManager.redo()
         });
@@ -466,8 +526,12 @@ define(
         })
 
         // saving job xml every min to local store
-        setInterval(save_workflow_to_storage, 10000);
+        setInterval(save_workflow, 10000);
         // validating job periodically
         setInterval(validate_job, 30000);
 
-    })
+       return {
+           saveWorkflow: save_workflow
+       };
+
+    });
