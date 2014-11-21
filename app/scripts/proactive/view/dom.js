@@ -510,11 +510,11 @@ define(
         // FIX for Firefox that ignores height 100%
         var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
         if (is_firefox) {
-            $("#workflow-designer").height($("#body-container").height() - 10)
+            $("#workflow-designer-outer").height($("#body-container").height() - 10)
             $("#properties-container").height($("#body-container").height() - 10)
             $(window).resize(function () {
                 console.log("resize")
-                $("#workflow-designer").height($("#body-container").height() - 10)
+                $("#workflow-designer-outer").height($("#body-container").height() - 10)
                 $("#properties-container").height($("#body-container").height() - 10)
             })
         }
