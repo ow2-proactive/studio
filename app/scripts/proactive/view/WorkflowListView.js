@@ -137,8 +137,10 @@ define(['jquery',
                 if (this.mode === newMode) {
                     return;
                 }
+
                 var router = this.options.app.router;
-                require('StudioApp').emptyWorkflowView(true);
+                this.options.app.emptyWorkflowView(true);
+
                 if (this.mode === "workflow") {
                     router.navigate("templates", {trigger: true})
                 } else {

@@ -132,6 +132,7 @@ define(
                 this.views.xmlView.remove();
                 this.views.xmlView = null;
             }
+            this.models.currentWorkflow = null;
         },
         emptyWorkflowView: function (save) {
             if (save) {
