@@ -31,6 +31,7 @@ define(['jquery',
                 return this;
             },
             events: {
+                'click': 'open',
                 'click .btn-open': 'open',
                 'click .btn-clone': 'clone',
                 'click .btn-remove': 'destroy'
@@ -40,7 +41,8 @@ define(['jquery',
                 app.import(this.model);
                 app.router.navigate(this.options.mode+"s/" + this.model.get('id'));
             },
-            destroy: function () {
+            destroy: function (event) {
+                event.stopPropagation();
                 this.model.destroy()
                 var app = this.options.app;
 
@@ -49,7 +51,8 @@ define(['jquery',
                     app.router.navigate(this.options.mode+"s", {trigger: true})
                 }
             },
-            clone: function () {
+            clone: function (event) {
+                event.stopPropagation();
                 this.model.collection.create(this.model.clone().omit("id"), {wait: true});
             }
         });

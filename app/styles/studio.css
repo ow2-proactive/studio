@@ -901,3 +901,11 @@ li.success {
 #workflow-list-controls {
     padding-bottom: 10px;
 }
+
+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group-item * {
+    cursor: pointer;
+}
