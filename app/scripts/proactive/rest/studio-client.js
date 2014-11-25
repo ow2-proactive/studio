@@ -60,6 +60,11 @@ define(
                                 reason = json.errorMessage;
                             }
                         } catch (e) {}
+
+                        if (data.status == 404) {
+                            reason = "The studio rest server is not available at the following url: " + config.restApiUrl;
+                        }
+
                         that.alert("Cannot connect to ProActive Studio", reason, 'error');
                         console.log("Error", data)
                     }
