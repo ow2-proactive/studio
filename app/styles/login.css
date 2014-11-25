@@ -1,13 +1,13 @@
-html,body {
-    height:100%;
-    min-height:100%;
+html, body {
+    height: 100%;
+    min-height: 100%;
 }
 
 .login-container {
     text-align: center;
-    width:370px;
-    height:270px;
-    padding : 10px;
+    width: 370px;
+    height: 270px;
+    padding: 10px;
 
     border-color: rgb(204, 204, 204);
     border-style: solid;
@@ -15,7 +15,7 @@ html,body {
     box-shadow: 5px 5px 5px #888888;
 
     position: absolute;
-    top:0;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -40,18 +40,18 @@ html,body {
     font-weight: bold;
     font-family: Arial, Verdana, sans-serif;
     font-size: 13px;
-    width:100%;
+    width: 100%;
     text-align: left;
-    padding-top:10px;
-    padding-left:20px;
-    padding-bottom:20px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 20px;
 }
 
 .buttons-container {
-    padding-top:10px;
-    width:100%;
+    padding-top: 10px;
+    width: 100%;
     position: relative;
-    left:-85px;
+    left: -85px;
 }
 
 .login-logo-image {
@@ -69,8 +69,8 @@ html,body {
     color: #003168;
     float: left;
     width: 115px;
-    padding-top:5px !important;
-    padding-bottom:5px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
 }
 
 #login-view .form-group {
@@ -83,5 +83,5 @@ html,body {
 
 #login-view .controls {
     position: relative;
-    left:-40px;
+    left: -40px;
 }
