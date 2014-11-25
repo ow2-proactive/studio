@@ -41,7 +41,14 @@ define(
                     console.log("Logged in");
                     that.remove();
                     that.options.app.login();
-                    $('body').show();
+                    $('body').show( 0, function() {
+                        // FIX for Firefox that ignores height 100%
+                        var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+                        if (is_firefox) {
+                            $("#workflow-designer-outer").height($("#body-container").height() - 10)
+                            $("#properties-container").height($("#body-container").height() - 10)
+                        }
+                    });
                 }, function () {
                     // failed to login - show login form
                     console.log("Login Required")

@@ -519,7 +519,7 @@ define(
             })
         }
 
-        // adding form-control classes to new input elements aftere clicking on "add"
+        // adding form-control classes to new input elements after clicking on "add"
         // button in forms
         $(document).on('click', 'button[data-action="add"]', function () {
             $('input').addClass("form-control");
