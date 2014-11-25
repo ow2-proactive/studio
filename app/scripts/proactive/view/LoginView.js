@@ -41,11 +41,12 @@ define(
                     console.log("Logged in");
                     that.remove();
                     that.options.app.login();
+                    $('body').show();
                 }, function () {
                     // failed to login - show login form
                     console.log("Login Required")
                     that.$el = $(that.template())
-                    $('body').append(that.$el)
+                    $('body').append(that.$el).show();
                 })
 
                 return this;
