@@ -65,7 +65,7 @@ define(['jquery',
             },
             events: {
                 'click .create-workflow-button': 'createOne',
-                'click #select-mode': 'switchMode'
+                'change #select-mode': 'switchMode'
             },
             listenToCollection: function (success) {
                 this.stopListening();
