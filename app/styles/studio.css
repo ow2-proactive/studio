@@ -958,3 +958,11 @@ li.success {
 .list-group-item * {
     cursor: pointer;
 }
+
+
+#workflow-list label {
+    width:45%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
