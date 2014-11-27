@@ -877,7 +877,7 @@ li.success {
         display: none;
     }
 
-    .form-control {
+    .form-control:not(#select-mode) {
         display: block !important;
     }
 }
@@ -959,10 +959,14 @@ li.success {
     cursor: pointer;
 }
 
-
 #workflow-list label {
     width:45%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#select-mode {
+    display: inline;
+    width: auto;
 }
