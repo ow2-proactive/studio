@@ -82,7 +82,6 @@ define(
                 form.commit();
             })
 
-
             form.$el.find("input").addClass("form-control");
             form.$el.find("select").addClass("form-control");
             form.$el.find("textarea").addClass("form-control");
