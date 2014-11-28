@@ -31,7 +31,7 @@ define(
 
                         this.createMenuFromConfig(template[property], menu);
                     } else {
-                        var subMenu = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#">'+property+'</a></li>');
+                        var subMenu = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;">'+property+'</a></li>');
                         subMenu.tooltip();
                         menu.append(subMenu);
                         subMenu.data("templateName", property);
@@ -77,7 +77,7 @@ define(
                 menuContent.append(header);
                 _.each(templates, function(template) {
                     if (template.get("name")) {
-                        var menuItem = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#">' + template.get("name") + '</a></li>');
+                        var menuItem = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;">' + template.get("name") + '</a></li>');
                         menuItem.tooltip();
                         menuContent.append(menuItem);
                         menuItem.data("templateName", template.get("name"));
