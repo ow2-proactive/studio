@@ -100,6 +100,7 @@ define(
                 $('#select-workflow-modal').modal();
                 return;
             }
+            save_workflow();
             closeCollapsedMenu();
             StudioApp.views.xmlView.render();
             $('#xml-view-modal').modal();
@@ -108,6 +109,7 @@ define(
         $("#layout-button").click(function (event) {
             event.preventDefault();
             require('StudioApp').views.workflowView.autoLayout();
+            save_workflow();
         });
         $("#zoom-in-button").click(function (event) {
             event.preventDefault();
@@ -131,6 +133,7 @@ define(
                 return;
             }
 
+            save_workflow();
             closeCollapsedMenu();
             StudioClient.isConnected(function () {
                 // submitting
@@ -156,6 +159,7 @@ define(
                 return;
             }
 
+            save_workflow();
             closeCollapsedMenu();
             console.log("Clearing the workflow");
             StudioApp.clear();
@@ -244,6 +248,7 @@ define(
                 return;
             }
 
+            save_workflow();
             closeCollapsedMenu();
             StudioClient.resetLastValidationResult()
             validate_job();
