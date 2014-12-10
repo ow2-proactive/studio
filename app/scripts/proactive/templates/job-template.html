@@ -7,9 +7,9 @@
     <% if (job["Max Number Of Executions For Task"]&&parseInt(job["Max Number Of Executions For Task"])>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>"<% } %>
     <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
 
-    <% if (job["Local Variables"] && job["Local Variables"].length>0) { %>
+    <% if (job["Job Variables"] && job["Job Variables"].length>0) { %>
     <variables>
-    <% _.each(job["Local Variables"], function(variable) { %>
+    <% _.each(job["Job Variables"], function(variable) { %>
             <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable["Value"])%>"/>
     <% }) %>
     </variables>

@@ -511,7 +511,7 @@ button[data-action='add'] {
     margin-bottom: 10px;
 }
 
-div[name="Local Variables"] {
+div[name="Job Variables"] {
     display: inline-block;
     cursor: pointer;
 }
