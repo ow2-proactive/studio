@@ -102,6 +102,7 @@ define(
                 })
             }
 
+            jsPlumb.setContainer($("#workflow-designer"))
             jsPlumb.unbind();
 
             jsPlumb.bind("connection", function (connection) {
@@ -228,8 +229,6 @@ define(
             jsPlumb.reset()
             this.initJsPlumb()
         },
-        initLeftOffset: [],
-        initTopOffset: [],
         addView: function (view, position) {
 
             var that = this;
@@ -238,7 +237,6 @@ define(
             rendering.$el.offset(position);
 
             view.addSourceEndPoint('dependency')
-            var initLeftOffset = [], initTopOffset = [];
 
             jsPlumb.draggable(rendering.$el)
             this.taskViews.push(view);

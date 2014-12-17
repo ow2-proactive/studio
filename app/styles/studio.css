@@ -17,6 +17,7 @@ footer {
 
 #workflow-designer {
     height: 100%;
+    position: relative;
 }
 
 #workflow-designer-outer {
@@ -48,6 +49,7 @@ footer {
     left: 30%;
     right: 30%;
     margin: 0 auto;
+    z-index: 1000;
 }
 
 #palette-container p {
