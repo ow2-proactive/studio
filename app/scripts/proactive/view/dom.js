@@ -504,7 +504,7 @@ define(
                     $(".selected-task").removeClass("selected-task");
                     pasteAllow = false;
                 })
-                $('#workflow-designer').mousedown(function (e) {
+                $('#workflow-designer-outer').mousedown(function (e) {
                     pasteAllow = {left: e.pageX, top: e.pageY};
                     e.stopPropagation();
 
