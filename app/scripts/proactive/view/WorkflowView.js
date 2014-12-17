@@ -182,7 +182,7 @@ define(
 
 
             jsPlumb.bind("click", function (connection, originalEvent) {
-                if (originalEvent.isPropagationStopped()) return false;
+                if ("isPropagationStopped" in originalEvent && originalEvent.isPropagationStopped()) return false;
                 var source = connection.source;
                 var target = connection.target;
 
