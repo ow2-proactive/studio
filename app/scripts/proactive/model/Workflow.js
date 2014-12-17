@@ -31,7 +31,11 @@ define(
             },
             getOffsets: function () {
                 try {
-                    return this.getMetadata().offsets;
+                    var offsets = this.getMetadata().offsets;
+                    if (!offsets) {
+                        offsets = {};
+                    }
+                    return offsets;
                 } catch (e) {
                     return {};
                 }

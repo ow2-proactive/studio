@@ -386,7 +386,6 @@ define(
                 var taskName = task.get("Task Name");
                 var offset = offsets[taskName];
                 if (!offset || (offset && offset.left==0 && offset.top==0)) {
-                    //nodes.push({id: taskName, task: task, width: elemWithInitialOffset.width(), height: elemWithInitialOffset.height()});
                     nodes.push({id: taskName, task: task, width: 78, height: 28});
                 }
             })
