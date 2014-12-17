@@ -13,6 +13,11 @@ require.config({
             ],
             exports: 'Backbone'
         },
+        boostrap: {
+            deps: [
+                'jquery'
+            ]
+        },
         jsplumb: {
             deps: [
                 'jquery'
