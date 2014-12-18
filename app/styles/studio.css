@@ -926,6 +926,7 @@ li.success {
     font-size: 18px;
     display: table;
     cursor: default;
+    z-index: 2000;
 }
 
 .no-workflows-open div {
