@@ -51,8 +51,8 @@ define(
                     var placeholder = this.schema[prop].fieldAttrs.placeholder;
 
                     if (this.schema[prop].type && this.schema[prop].type == 'List') {
-                        var list = []
-                        this.set(prop, list);
+                        var currentElements = this.get(prop) || [];
+                        var newElements = [];
                         var value = this.getValue(placeholder, obj);
                         if (value) {
                             if (!Array.isArray(value)) {
@@ -61,10 +61,11 @@ define(
                             $.each(value, function (i, v) {
                                 var listElemValue = that.getListElementValue(that.schema[prop], v)
                                 if (listElemValue) {
-                                    list.push(listElemValue)
+                                    newElements.push(listElemValue)
 //                                    console.log("Adding to list", prop, listElemValue)
                                 }
                             })
+                            this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
                         }
                     } else {
                         var value = null;
@@ -117,7 +118,11 @@ define(
                     }
                 }
             }
+        },
+        _mergeListsRemovingDuplicates: function (a, b) {
+            return _.uniq(a.concat(b), false, JSON.stringify);
+
         }
-    })
+    });
     return SchemaModel;
 })
