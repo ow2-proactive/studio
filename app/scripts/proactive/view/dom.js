@@ -461,14 +461,14 @@ define(
 
             $(document).ready(function () {
                 var ctrlDown = false;
-                var ctrlKey = 17, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
+                var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
                 var copied = false;
                 var pasteAllow = true;
 
                 $(document).keydown(function (e) {
-                    if (e.keyCode == ctrlKey) ctrlDown = true;
+                    if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
                 }).keyup(function (e) {
-                    if (e.keyCode == ctrlKey) ctrlDown = false;
+                    if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
                 });
 
                 $(document).keydown(function (e) {
@@ -479,14 +479,12 @@ define(
                             copied.push(t);
                         })
                     }
-                    ;
                     if (ctrlDown && e.keyCode == vKey) {
                         if (pasteAllow) {
                             console.log("paste");
                             require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
                         }
                     }
-                    ;
                     if (ctrlDown && e.keyCode == zKey) {
                         undoManager.undoIfEnabled();
                     }
