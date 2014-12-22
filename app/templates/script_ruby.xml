@@ -7,7 +7,7 @@
         A workflow that executes ruby in JVM.
     </description>
     <taskFlow>
-        <task name="simple_task">
+        <task name="Ruby_Task">
             <description>
                 The simplest task, ran by a ruby engine.
             </description>

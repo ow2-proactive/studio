@@ -10,7 +10,7 @@
         <info name="var2" value="val2"/>
     </genericInformation>
     <taskFlow>
-        <task name="task1"
+        <task name="Java"
               maxNumberOfExecution="4" >
             <javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
                 <parameters>

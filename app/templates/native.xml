@@ -9,7 +9,7 @@
         cancelJobOnError="false">
 
     <taskFlow>
-        <task name="task1">
+        <task name="Native">
             <nativeExecutable>
                 <staticCommand value="/bin/bash" >
                     <arguments>
