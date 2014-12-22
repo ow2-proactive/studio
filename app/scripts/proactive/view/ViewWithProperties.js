@@ -19,6 +19,9 @@ define(
             this.$el.unbind('click');
 
             this.$el.click(function (event) {
+                if (event.isPropagationStopped() || $(event.target).attr('id') != that.$el.attr('id')) {
+                    return;
+                }
                 event.stopPropagation();
                 $(".dropdown").removeClass('open');
                 that.renderForm()

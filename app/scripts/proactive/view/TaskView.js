@@ -134,11 +134,18 @@ define(
             ];
         },
         showControlFlowScript: function (label, evn) {
-            evn.stopPropagation()
+
+            if (!evn.stopBubble) {
+                evn.stopBubble = true;
+                evn.isPropagationStopped = function() {return true;}
+            } else {
+                return;
+            }
 
             var labelElem = $(label.canvas);
             var modelType = labelElem.text();
             var model = this.model.controlFlow[modelType];
+
             if (!model) return;
 
             var modelView = new ViewWithProperties({el: labelElem, model: model.model})
