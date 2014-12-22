@@ -11,7 +11,7 @@
         We also define a variable above and use it a parameter.
     </description>
     <taskFlow>
-        <task name="native_task_linux">
+        <task name="Linux">
             <nativeExecutable>
                 <staticCommand value="ping">
                     <arguments>
