@@ -139,9 +139,6 @@ define(
                     if (connection.connection.scope == 'dependency') {
                         targetModel.removeDependency(sourceModel);
                     } else {
-                        if (!$(target).data("view").removing) {
-                            jsPlumb.deleteEndpoint(connection.targetEndpoint);
-                        }
                         sourceModel.removeControlFlow(connection.connection.scope, targetModel);
                     }
                 }
