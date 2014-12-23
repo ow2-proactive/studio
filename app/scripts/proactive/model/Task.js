@@ -185,10 +185,12 @@ define(
             this.set({'Control Flow': 'none'});
             delete this.controlFlow['loop']
         },
-        setreplicate: function (task) {
+        setreplicate: function () {
             console.log('Adding replicate')
-            this.set({'Control Flow': 'replicate'});
-            this.controlFlow = {'replicate': {model: new BranchWithScript()}}
+            if (!this.controlFlow['replicate']) { // keep existing script if it is already defined
+                this.set({'Control Flow': 'replicate'});
+                this.controlFlow = {'replicate': {model: new BranchWithScript()}}
+           }
         },
         removereplicate: function (controlFlow, task) {
             console.log('Removing replicate')

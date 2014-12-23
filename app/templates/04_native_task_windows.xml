@@ -7,7 +7,7 @@
         Here a native command will be executed, with an argument.
     </description>
     <taskFlow>
-        <task name="native_task_windows">
+        <task name="Windows">
             <nativeExecutable>
                 <staticCommand value="ping">
                     <arguments>

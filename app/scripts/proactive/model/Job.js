@@ -165,7 +165,7 @@ define(
                             taskModel.setcontinuation(name2Task[ifFlow['continuation']])
                         }
                         if (taskJson.controlFlow.replicate) {
-                            taskModel.setreplicate(null);
+                            taskModel.setreplicate();
                             taskModel.controlFlow.replicate.model.populateSchema(taskJson.controlFlow.replicate);
                         }
                         if (taskJson.controlFlow.loop) {
