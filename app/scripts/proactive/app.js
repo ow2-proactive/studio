@@ -58,7 +58,7 @@ define(
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
 
-            this.views.palleteView = new PaletteView({templates: this.models.templates});
+            this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();

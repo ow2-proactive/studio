@@ -23,6 +23,8 @@ define(
             this.render();
         },
         createMenuFromConfig: function (template, menu) {
+            var that = this;
+
             for (var property in template) {
                 if (template.hasOwnProperty(property)) {
                     if (typeof template[property] == "object") {
@@ -37,6 +39,12 @@ define(
                         subMenu.data("templateName", property);
                         subMenu.data("templateUrl", template[property]);
                         subMenu.draggable({helper: "clone", scroll: true})
+
+                        subMenu.click(function(event) {
+                            // simulating drag and drop of this element
+                            var workflowView = that.options.app.views.workflowView
+                            workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
+                        })
                     }
                 }
             }
@@ -83,6 +91,12 @@ define(
                         menuItem.data("templateName", template.get("name"));
                         menuItem.data("templateId", template.get("id"));
                         menuItem.draggable({helper: "clone", scroll: true});
+
+                        menuItem.click(function(event) {
+                            // simulating drag and drop of this element
+                            var workflowView = that.options.app.views.workflowView
+                            workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
+                        })
                     }
                 })
             }, this);

@@ -36,38 +36,43 @@ define(
             this.$el.droppable({
                 accept: ".job-element",
                 drop: function (event, ui) {
-                    undoManager.runWithDisabled(function () {
-                        var elem = $(ui.draggable);
-
-                        if (elem.hasClass('task-menu')) {
-                            that.createTask(ui)
-                        } else {
-                            if (elem.data("templateUrl")) {
-                                console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
-                                $.ajax({
-                                    type: "GET",
-                                    dataType: "text",
-                                    async: false,
-                                    url: elem.data("templateUrl"),
-                                    success: function (data) {
-                                        that.options.app.mergeXML(data, ui);
-                                    },
-                                    error: function (data) {
-                                        console.log("Cannot retrieve the template", data)
-                                        that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
-                                    }
-                                });
-                            } else {
-                                console.log("Dropped element: ", elem.data("templateName"), elem.data("templateId"));
-                                var templateModel = that.options.app.models.templates.get({id: elem.data('templateId')})
-                                that.options.app.mergeXML(templateModel.get("xml"), ui);
-                            }
-                        }
-                    });
+                    that.dropElement(event, ui)
                 }
             });
 
             this.importNoReset()
+        },
+        dropElement: function(event, ui) {
+            var that = this;
+
+            undoManager.runWithDisabled(function () {
+                var elem = $(ui.draggable);
+
+                if (elem.hasClass('task-menu')) {
+                    that.createTask(ui)
+                } else {
+                    if (elem.data("templateUrl")) {
+                        console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
+                        $.ajax({
+                            type: "GET",
+                            dataType: "text",
+                            async: false,
+                            url: elem.data("templateUrl"),
+                            success: function (data) {
+                                that.options.app.mergeXML(data, ui);
+                            },
+                            error: function (data) {
+                                console.log("Cannot retrieve the template", data)
+                                that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
+                            }
+                        });
+                    } else {
+                        console.log("Dropped element: ", elem.data("templateName"), elem.data("templateId"));
+                        var templateModel = that.options.app.models.templates.get({id: elem.data('templateId')})
+                        that.options.app.mergeXML(templateModel.get("xml"), ui);
+                    }
+                }
+            });
         },
         initJsPlumb: function () {
             var that = this;
