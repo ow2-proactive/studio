@@ -33,7 +33,7 @@ define(
 
                         this.createMenuFromConfig(template[property], menu);
                     } else {
-                        var subMenu = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;">'+property+'</a></li>');
+                        var subMenu = $('<li id="'+property+'" class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;">'+property+'</a></li>');
                         subMenu.tooltip();
                         menu.append(subMenu);
                         subMenu.data("templateName", property);
@@ -61,7 +61,7 @@ define(
             this.$el.html('');
             var that = this;
             var taskWidget = $(
-                '<span class="dropdown"><span class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span class="dropdown"><span id="task-menu" class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="30px" type="button" >Task <span class="caret"></span></span></span>');
 
             this.initMenu($(taskWidget), config.tasks);
