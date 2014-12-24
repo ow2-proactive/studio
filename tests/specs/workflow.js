@@ -43,11 +43,33 @@ module.exports = {
             .click('.btn.ok')
 
             .checkExport(function (xpath, jobXmlDocument) {
-                var taskName = xpath.select("//*[local-name()='variable']", jobXmlDocument)[0]
+                var variable = xpath.select("//*[local-name()='variable']", jobXmlDocument)[0]
 
-                this.assert.equal(taskName.attributes[0].value, "aVariable", "Variable name")
-                this.assert.equal(taskName.attributes[1].value, "aValue", "Variable value")
+                this.assert.equal(variable.attributes[0].value, "aVariable", "Variable name")
+                this.assert.equal(variable.attributes[1].value, "aValue", "Variable value")
             })
+            .end();
+    },
+
+    "Clear workflow": function (browser) {
+        browser
+            .login()
+
+            .createAndOpenWorkflow()
+
+            .createTask()
+            .waitForElementVisible('.task', 1000)
+
+            .click("#clear-button")
+
+            .waitForElementNotPresent('.task', 1000)
+
+            .checkExport(function (xpath, jobXmlDocument) {
+                var task = xpath.select("//*[local-name()='task']", jobXmlDocument)[0]
+
+                this.assert.equal(task, null, "No task in XML")
+            })
+
             .end();
     },
 
