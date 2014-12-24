@@ -33,33 +33,16 @@
                 "acceptSslCerts": true
             },
             "globals" : {
-                "studio_url" : "http://localhost:8080/studio"
+                "studio_url" : "http://localhost:8080/studio",
+                "waitForConditionTimeout" : 1000,
+                "waitForConditionPollInterval" : 100
             }
         },
         "trydev" : {
-            "launch_url" : "http://localhost",
-            "selenium_port"  : 4444,
-            "selenium_host"  : "localhost",
-            "silent": true,
-            "screenshots" : {
-                "enabled" : true,
-                "path" : "reports"
-            },
-            "desiredCapabilities": {
-                "browserName": "firefox",
-                "javascriptEnabled": true,
-                "acceptSslCerts": true
-            },
             "globals" : {
-                "studio_url" : "http://trydev.activeeon.com/studio"
-            }
-        },
-
-        "chrome" : {
-            "desiredCapabilities": {
-                "browserName": "chrome",
-                "javascriptEnabled": true,
-                "acceptSslCerts": true
+                "studio_url" : "http://trydev.activeeon.com/studio",
+                "waitForConditionTimeout" : 5000,
+                "waitForConditionPollInterval" : 100
             }
         }
     }

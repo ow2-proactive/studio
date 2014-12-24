@@ -27,7 +27,7 @@ exports.assertion = function(expectedText, msg) {
     };
 
     this.command = function(callback) {
-      this.api.waitForElementVisible('.ui-pnotify-title', 1000)
+      this.api.waitForElementVisible('.ui-pnotify-title')
       return this.api.getText('.ui-pnotify-title', callback)
     };
 

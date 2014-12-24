@@ -3,7 +3,7 @@ exports.command = function (xpathCheck) {
 
     this
         .click('#export-button')
-        .waitForElementVisible('.CodeMirror-code', 1000)
+        .waitForElementVisible('.CodeMirror-code')
 
         .element("css selector", ".CodeMirror", function (codeMirrorElement) {
             self.execute(function (data) {

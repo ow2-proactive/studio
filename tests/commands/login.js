@@ -5,11 +5,11 @@ exports.command = function (url) {
     this
         .resizeWindow(1280,1024)
         .url(url)
-        .waitForElementVisible('button[type=submit]', 1000)
+        .waitForElementVisible('button[type=submit]')
         .setValue('#user', 'user')
         .setValue('#password', 'pwd')
         .click('button[type=submit]')
-        .waitForElementVisible('.no-workflows-open-help-title', 1000)
+        .waitForElementVisible('.no-workflows-open-help-title')
         .assert.containsText('.no-workflows-open-help-title', 'No workflows are open')
 
     return this;

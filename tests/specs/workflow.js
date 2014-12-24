@@ -21,7 +21,7 @@ module.exports = {
             .checkExport(function (xpath, jobXmlDocument) {
                 var taskName = xpath.select("//*[local-name()='task']/@name", jobXmlDocument)[0].value
 
-                this.assert.equal(taskName, "Javascript_Task")
+                this.assert.equal(taskName, "Javascript_Task", "Task name")
             })
             .end();
     },
@@ -36,7 +36,7 @@ module.exports = {
 
             .click('div[name="Job Variables"] button')
 
-            .waitForElementVisible('#Name', 1000)
+            .waitForElementVisible('#Name')
             .setValue("#Name", "aVariable")
             .setValue("#Value", "aValue")
 
@@ -58,11 +58,11 @@ module.exports = {
             .createAndOpenWorkflow()
 
             .createTask()
-            .waitForElementVisible('.task', 1000)
+            .waitForElementVisible('.task')
 
             .click("#clear-button")
 
-            .waitForElementNotPresent('.task', 1000)
+            .waitForElementNotPresent('.task')
 
             .checkExport(function (xpath, jobXmlDocument) {
                 var task = xpath.select("//*[local-name()='task']", jobXmlDocument)[0]

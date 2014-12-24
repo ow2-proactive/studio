@@ -1,9 +1,9 @@
 exports.command = function () {
 
     this
-        .waitForElementVisible('#task-menu', 1000)
+        .waitForElementVisible('#task-menu')
         .click('#task-menu')
-        .waitForElementVisible('#Javascript', 1000)
+        .waitForElementVisible('#Javascript')
         .moveToElement('#Javascript', 0, 0)
         .mouseButtonDown(0)
         .moveToElement('#workflow-designer', 100, 100)

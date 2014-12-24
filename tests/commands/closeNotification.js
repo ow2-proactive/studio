@@ -4,7 +4,7 @@ exports.command = function (xpathCheck) {
         .moveToElement('.ui-pnotify-title', 10, 10)
         .pause(500)
         .click("span.glyphicon.glyphicon-remove")
-        .waitForElementNotPresent('.ui-pnotify-title', 1000)
+        .waitForElementNotPresent('.ui-pnotify-title')
 
     return this;
 };
