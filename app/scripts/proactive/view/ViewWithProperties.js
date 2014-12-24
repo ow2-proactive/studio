@@ -120,7 +120,7 @@ define(
                             openAccordion = true;
                         }
 
-                        var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
+                        var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a id="'+ el.attr("data-tab")+ '" data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
                         currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
 
                         if (el.attr("data-help")) {

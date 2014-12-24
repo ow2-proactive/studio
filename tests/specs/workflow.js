@@ -4,36 +4,49 @@ module.exports = {
         browser
             .login()
 
-            .moveToElement('.ui-pnotify-title', 10, 10)
-            .pause(500)
-            .click("span.glyphicon.glyphicon-remove")
-            .waitForElementNotPresent('.ui-pnotify-title', 1000)
+            .closeNotification()
 
             .createAndOpenWorkflow()
 
             .createTask()
 
+            .click('#save-button')
+            .assert.notification("Saved")
+
+            .closeNotification()
+
             .click('#validate-button')
-            .waitForElementVisible('.ui-pnotify-title', 1000)
-            .assert.containsText('.ui-pnotify-title', 'Workflow is valid')
+            .assert.notification('Workflow is valid')
 
-            .click('#export-button')
-            .waitForElementVisible('.CodeMirror-code', 1000)
+            .checkExport(function (xpath, jobXmlDocument) {
+                var taskName = xpath.select("//*[local-name()='task']/@name", jobXmlDocument)[0].value
 
-            .element("css selector", ".CodeMirror", function (result) {
-                browser.execute(function (data) {
-                    return arguments[0].CodeMirror.getValue();
-                }, [result.value], function (res) {
-                    var jobXml = res.value
-                    console.log(jobXml)
-                    var xpath = require('xpath')
-                        , dom = require('xmldom').DOMParser
+                this.assert.equal(taskName, "Javascript_Task")
+            })
+            .end();
+    },
 
-                    var doc = new dom().parseFromString(jobXml)
-                    var taskName = xpath.select("//*[local-name()='task']/@name", doc)[0].value
+    "Workflow with job variable": function (browser) {
+        browser
+            .login()
 
-                    this.assert.equal(taskName, "Javascript_Task")
-                });
+            .createAndOpenWorkflow()
+
+            .click("#Job\\ Variables")
+
+            .click('div[name="Job Variables"] button')
+
+            .waitForElementVisible('#Name', 1000)
+            .setValue("#Name", "aVariable")
+            .setValue("#Value", "aValue")
+
+            .click('.btn.ok')
+
+            .checkExport(function (xpath, jobXmlDocument) {
+                var taskName = xpath.select("//*[local-name()='variable']", jobXmlDocument)[0]
+
+                this.assert.equal(taskName.attributes[0].value, "aVariable", "Variable name")
+                this.assert.equal(taskName.attributes[1].value, "aValue", "Variable value")
             })
             .end();
     },
