@@ -926,7 +926,7 @@ li.success {
     font-size: 18px;
     display: table;
     cursor: default;
-    z-index: 2000;
+    z-index: 1010; /* above tasks toolbar */
 }
 
 .no-workflows-open div {
