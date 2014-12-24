@@ -3,7 +3,7 @@ exports.command = function (url) {
     url = typeof url !== 'undefined' ? url : this.globals.studio_url;
 
     this
-        .windowMaximize()
+        .resizeWindow(1280,1024)
         .url(url)
         .waitForElementVisible('button[type=submit]', 1000)
         .setValue('#user', 'user')

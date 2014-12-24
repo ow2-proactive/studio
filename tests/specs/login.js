@@ -7,7 +7,7 @@ module.exports = {
 
     "Login with wrong password": function (browser) {
         browser
-            .url(browser.globals.custom_vars.studio_url)
+            .url(browser.globals.studio_url)
             .waitForElementVisible('button[type=submit]', 1000)
             .setValue('#user', 'demo')
             .setValue('#password', 'wrongpassword')
