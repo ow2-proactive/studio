@@ -1,6 +1,7 @@
 exports.command = function () {
 
     this
+        .waitForElementVisible('#task-menu', 1000)
         .click('#task-menu')
         .waitForElementVisible('#Javascript', 1000)
         .moveToElement('#Javascript', 0, 0)
