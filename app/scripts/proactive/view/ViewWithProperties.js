@@ -52,10 +52,11 @@ define(
                 mode.charAt(0).toUpperCase() + mode.slice(1) + 's' + '</a></span></li>');
             breadcrumb.append(workflows)
 
-            var selectedJob = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
-            breadcrumb.append(selectedJob)
-
+            var jobBreadcrumb
             if (that.model.get("Task Name")) {
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
+                breadcrumb.append(jobBreadcrumb)
+
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
 
                 var removeTask = $('<a href="#" class="glyphicon glyphicon-trash pull-right" title="Remove task"></a>');
@@ -65,6 +66,9 @@ define(
                 })
                 breadcrumb.append(removeTask)
             } else {
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Job Name") + '</span></li>');
+                breadcrumb.append(jobBreadcrumb)
+
                 // selected-task class is used for copy/paste, delete operations, group task moving etc
                 $(".selected-task").removeClass("selected-task");
                 // active-task class is used to identify which task is currently shown in the properties view
@@ -85,7 +89,8 @@ define(
 
                 return StudioApp.views.propertiesView.listCurrent();
             })
-            selectedJob.click(function () {
+            jobBreadcrumb.click(function (event) {
+                event.preventDefault();
                 return $("#workflow-designer").click();
             })
 

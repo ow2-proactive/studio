@@ -1,8 +1,5 @@
-<ul class="breadcrumb">
+<ul id="breadcrumb" class="breadcrumb">
     <li class="active"><span><%= mode.charAt(0).toUpperCase() + mode.slice(1) + 's' %></span></li>
-    <% if (typeof(jobName) != "undefined") { %>
-    <li class="active"><span><a href="#" id="breadcrumb-selected-job"><%= jobName %></a></span></li>
-    <% } %>
 </ul>
 <form class="form-inline" role="form" id="workflow-list-controls">
     <div class="form-group">
