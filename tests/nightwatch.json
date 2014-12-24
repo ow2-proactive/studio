@@ -31,6 +31,27 @@
                 "browserName": "firefox",
                 "javascriptEnabled": true,
                 "acceptSslCerts": true
+            },
+            "globals" : {
+                "studio_url" : "http://localhost:8080/studio"
+            }
+        },
+        "trydev" : {
+            "launch_url" : "http://localhost",
+            "selenium_port"  : 4444,
+            "selenium_host"  : "localhost",
+            "silent": true,
+            "screenshots" : {
+                "enabled" : true,
+                "path" : "reports"
+            },
+            "desiredCapabilities": {
+                "browserName": "firefox",
+                "javascriptEnabled": true,
+                "acceptSslCerts": true
+            },
+            "globals" : {
+                "studio_url" : "http://trydev.activeeon.com/studio"
             }
         },
 
