@@ -18,8 +18,8 @@ module.exports = {
             .click('#validate-button')
             .assert.notification('Workflow is valid')
 
-            .checkExport(function (xpath, jobXmlDocument) {
-                var taskName = xpath.select("//*[local-name()='task']/@name", jobXmlDocument)[0].value
+            .checkExport(function (select, jobXmlDocument) {
+                var taskName = select("//p:task/@name", jobXmlDocument)[0].value
 
                 this.assert.equal(taskName, "Javascript_Task", "Task name")
             })
@@ -42,8 +42,8 @@ module.exports = {
 
             .click('.btn.ok')
 
-            .checkExport(function (xpath, jobXmlDocument) {
-                var variable = xpath.select("//*[local-name()='variable']", jobXmlDocument)[0]
+            .checkExport(function (select, jobXmlDocument) {
+                var variable = select("//p:variable", jobXmlDocument)[0]
 
                 this.assert.equal(variable.attributes[0].value, "aVariable", "Variable name")
                 this.assert.equal(variable.attributes[1].value, "aValue", "Variable value")
@@ -64,8 +64,8 @@ module.exports = {
 
             .waitForElementNotPresent('.task')
 
-            .checkExport(function (xpath, jobXmlDocument) {
-                var task = xpath.select("//*[local-name()='task']", jobXmlDocument)[0]
+            .checkExport(function (select, jobXmlDocument) {
+                var task = select("//p:task", jobXmlDocument)[0]
 
                 this.assert.equal(task, null, "No task in XML")
             })

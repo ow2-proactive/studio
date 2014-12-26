@@ -6,17 +6,19 @@ exports.command = function (xpathCheck) {
         .waitForElementVisible('.CodeMirror-code')
 
         .element("css selector", ".CodeMirror", function (codeMirrorElement) {
-            self.execute(function (data) {
-                return arguments[0].CodeMirror.getValue();
+            self.execute(function (element) {
+                return element.CodeMirror.getValue();
             }, [codeMirrorElement.value], function (codeMirrorTextContent) {
                 var jobXml = codeMirrorTextContent.value
                 var xpath = require('xpath')
                     , dom = require('xmldom').DOMParser
 
+                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.2"});
+
                 var jobXmlDocument = new dom().parseFromString(jobXml)
 
                 if (typeof xpathCheck === "function") {
-                    xpathCheck.call(self, xpath, jobXmlDocument);
+                    xpathCheck.call(self, select, jobXmlDocument);
                 }
 
             });
