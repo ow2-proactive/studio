@@ -192,6 +192,25 @@
             </div>
         </div>
 
+        <div id="confirm-data-loss" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Data loss warning</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        After switching to simple view all custom selection scripts will be lost.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                        <button id="data-loss-continue" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script data-main="scripts/main" src="libs/requirejs/require.js"></script>
 </body>
 </html>

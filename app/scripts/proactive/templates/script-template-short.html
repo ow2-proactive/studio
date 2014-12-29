@@ -1,5 +1,5 @@
 <% if (model["Script"] && model["Script"].length>0) { %>
 <% print("<sc"+"ript") %> <% if (model["Type"]) { %> type="<%=model["Type"]%>" <% } %>>
-    <code language="<%=model["Engine"]%>"><![CDATA[<%=model["Script"] %>]]></code>
+    <code language="<%=model["Written in"]%>"><![CDATA[<%=model["Script"] %>]]></code>
 <% print("</sc"+"ript>") %>
 <% } %>

@@ -179,16 +179,6 @@ footer {
 
 /* demo elements */
 
-a, a:visited {
-    text-decoration: none;
-    color: #5c96bc;
-    border-radius: 0.2em;
-    -webkit-transition: color 0.15s ease-in;
-    -moz-transition: color 0.15s ease-in;
-    -o-transition: color 0.15s ease-in;
-    transition: color 0.15s ease-in;
-}
-
 a:hover {
     color: #E87224;
 }
@@ -464,6 +454,24 @@ input {
     line-height: 23px !important;
     height: 30px !important;
     resize: none !important;
+
+    height: 34px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+#accordion-properties {
+    padding-bottom: 20px;
 }
 
 #accordion-properties select {
@@ -511,11 +519,6 @@ label {
 
 button[data-action='add'] {
     margin-bottom: 10px;
-}
-
-div[name="Job Variables"] {
-    display: inline-block;
-    cursor: pointer;
 }
 
 div[name="Generic Info"] {
@@ -680,6 +683,7 @@ button[data-action='remove'] {
     background-color: #f5f5f5;
     border: none;
     margin-bottom: 4px;
+    padding-top:0px;
 
 }
 
@@ -983,4 +987,38 @@ li.success {
 
 .formLayout {
     padding: 3px;
+}
+
+.row {
+    display: table-row;
+}
+
+.property-field {
+    float:left;
+    width: 40%;
+    max-width: 40%;
+    margin-right:10px;
+    overflow: hidden;
+    white-space: nowrap;
+    resize: none;
+}
+
+.simple-form-header {
+    font-weight: bold;
+    padding-bottom:10px;
+}
+.padding-top-10 {
+    padding-top:10px;
+}
+
+.simple-form-select {
+    max-width: 90%;
+}
+
+.no-underline {
+    text-decoration: none
+}
+
+.bottom-btn {
+    margin-bottom: 20px;
 }

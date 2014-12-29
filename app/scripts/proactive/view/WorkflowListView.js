@@ -77,7 +77,7 @@ define(['jquery',
             createOne: function () {
                 var jobModel = new Job();
                 var jobName = "Untitled " + this.mode;
-                jobModel.set("Job Name", jobName);
+                jobModel.set("Name", jobName);
                 var jobXml = new XmlView().xml(jobModel);
                 var workflow = this.collection.create({name: jobName, xml: jobXml}, {wait: true});
             },
@@ -128,9 +128,13 @@ define(['jquery',
                 var app = this.options.app;
                 app.import(model);
             },
-            saveCurrentWorkflow: function (name, project, workflowXml, offsets) {
+            saveCurrentWorkflow: function (name, workflowXml, metadata) {
                 this._currentWorkflow().save(
-                    {name: name, xml: workflowXml, metadata: JSON.stringify({offsets: offsets, project: project})});
+                    {
+                        name: name,
+                        xml: workflowXml,
+                        metadata: JSON.stringify(metadata)
+                    });
             },
             _currentWorkflow: function () {
                 return this.options.app.models.currentWorkflow;

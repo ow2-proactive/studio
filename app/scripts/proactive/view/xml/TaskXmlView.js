@@ -18,7 +18,7 @@ define(
         render: function () {
             var executableType = this.model.get("Type");
             var executableViewType = require('proactive/view/xml/' + executableType + "XmlView");
-            var executableView = new executableViewType({model: this.model.get("Parameters")});
+            var executableView = new executableViewType({model: this.model.get("Execute")});
             var executable = executableView.render().$el.text();
 
             var selectionScripts = [];

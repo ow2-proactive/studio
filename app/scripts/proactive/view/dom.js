@@ -137,7 +137,7 @@ define(
             save_workflow();
             closeCollapsedMenu();
 
-            var jobVariables = StudioApp.models.jobModel.get('Job Variables');
+            var jobVariables = StudioApp.models.jobModel.get('Variables');
             if (jobVariables == null || jobVariables.length == 0) {
                 executeIfConnected(submit);
                 return;
@@ -151,13 +151,13 @@ define(
         $("#exec-button").click(function (event) {
             var StudioApp = require('StudioApp');
             executeIfConnected(function () {
-                var oldJobVariables = StudioApp.models.jobModel.get('Job Variables');
+                var oldJobVariables = StudioApp.models.jobModel.get('Variables');
                 var jobVariables = $('#job-variables').find('input').map(function() {
                     return {'Name': $(this).attr('name'), 'Value': $(this).val()};
                 });
-                StudioApp.models.jobModel.set('Job Variables', jobVariables);
+                StudioApp.models.jobModel.set('Variables', jobVariables);
                 submit();
-                StudioApp.models.jobModel.set('Job Variables', oldJobVariables);
+                StudioApp.models.jobModel.set('Variables', oldJobVariables);
             })
         });
 
@@ -223,7 +223,7 @@ define(
 
             console.log("Saving xml");
             var StudioApp = require('StudioApp');
-            var jobName = StudioApp.models.jobModel.get("Job Name")
+            var jobName = StudioApp.models.jobModel.get("Name")
             var blob = new Blob([StudioApp.views.xmlView.generatedXml]);
             saveAs(blob, jobName + ".xml")
         })
@@ -253,7 +253,14 @@ define(
             var StudioApp = require('StudioApp');
             if (StudioApp.models.jobModel) {
                 StudioApp.views.propertiesView.saveCurrentWorkflow(
-                    StudioApp.models.jobModel.get("Job Name"), StudioApp.models.jobModel.get("Project"), StudioApp.views.xmlView.generateXml(), undoManager.getOffsetsFromDOM());
+                    StudioApp.models.jobModel.get("Name"),
+                    StudioApp.views.xmlView.generateXml(),
+                    {
+                        offsets: undoManager.getOffsetsFromDOM(),
+                        project: StudioApp.models.jobModel.get("Project"),
+                        detailedView: StudioApp.models.currentWorkflow.getMetadata()['detailedView']
+                    }
+                );
             }
         }
 

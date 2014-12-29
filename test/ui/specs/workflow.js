@@ -34,7 +34,7 @@ module.exports = {
 
             .click("#Job\\ Variables")
 
-            .click('div[name="Job Variables"] button')
+            .click('div[name="Variables"] button')
 
             .waitForElementVisible('#Name')
             .setValue("#Name", "aVariable")

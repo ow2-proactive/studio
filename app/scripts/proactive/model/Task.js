@@ -9,11 +9,15 @@ define(
         'proactive/model/Script',
         'proactive/model/SelectionScript',
         'proactive/model/BranchWithScript',
-        'proactive/view/utils/undo'
+        'proactive/view/utils/undo',
+        'text!proactive/templates/selection-script-host-template.html',
+        'text!proactive/templates/selection-script-os-template.html',
+        'text!proactive/templates/selection-script-totalmem-template.html'
     ],
 
     // TODO REMOVE undoManager dependency - comes from view
-    function (Backbone, SchemaModel, tpl, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript, BranchWithScript, undoManager) {
+    function (Backbone, SchemaModel, tpl, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript,
+              BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate) {
 
     "use strict";
 
@@ -26,7 +30,7 @@ define(
                     {val: "NativeExecutable", label: "Native"},
                     {val: "JavaExecutable", label: "Java"}
                 ]},
-            "Parameters": {type: 'NestedModel', model: ScriptExecutable},
+            "Execute": {type: 'NestedModel', model: ScriptExecutable},
             "Description": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'data-tab-help': 'General task parameters (description, execution control, error handling...)', 'placeholder': ['description->#cdata-section', 'description->#text'], "data-help":'A small textual description of what task does.'}},
             "Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder': '@attributes->maxNumberOfExecution', "data-help":'Defines how many times this task is allowed to be restarted.'}},
             "Maximum Execution Time (hh:mm:ss)": {type: "Text", fieldAttrs: {'placeholder': '@attributes->walltime', "data-help":'Task execution timeout. Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'}},
@@ -72,7 +76,17 @@ define(
                 "Access Mode": {type: 'Select',
                     fieldAttrs: {'placeholder': '@attributes->accessMode'},
                     options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]}
-            }}
+            }},
+            // extra parameters for the simple view
+            "Host Name": {type: "Text", fieldAttrs: {"data-help":'A host name or a part of host name on which this task must be executed', "simple-view": true}},
+            "Operating System": {type: 'Select', fieldAttrs: { "data-help":'An operating system name where this task must be executed.', "simple-view": true}, options: [
+                {val: "any", label: "Any"},
+                {val: "linux", label: "Linux"},
+                {val: "windows", label: "Windows"},
+                {val: "mac", label: "Mac"}
+            ]},
+            "Required amount of memory (in mb)": {type: "Text", fieldAttrs: {"data-help":'A host with this amount of memory.',  "simple-view": true}},
+            "Dedicated Host": {type: "Checkbox", fieldAttrs: {"data-help":'Run the task exclusively on host - no other tasks will be executed in parallel on the same host.',  "simple-view": true}}
         },
 
         initialize: function () {
@@ -83,7 +97,7 @@ define(
             this.schema = $.extend(true, {}, this.schema);
 
             this.set({"Type": "ScriptExecutable"});
-            this.set({"Parameters": new ScriptExecutable()});
+            this.set({"Execute": new ScriptExecutable()});
             this.set({"Task Name": "Task" + (++Task.counter)});
             this.set({"Maximum Number of Execution": 1});
             this.set({"Run as me": false});
@@ -196,6 +210,98 @@ define(
             console.log('Removing replicate')
             this.set({'Control Flow': 'none'});
             delete this.controlFlow['replicate']
+        },
+
+        getBasicFields: function() {
+            return [
+                "Task Name",
+                "Execute",
+                "Host Name",
+                "Operating System",
+                "Required amount of memory (in mb)",
+                "Dedicated Host"]
+        },
+        addOrReplaceGenericInfo: function(key, value) {
+
+            var genericInfo = this.get("Generic Info");
+            if (!genericInfo) {genericInfo = []}
+
+            var found = false;
+            for (var i in genericInfo) {
+                if (genericInfo[i]["Property Name"] == key) {
+                    genericInfo[i]["Property Value"] = value;
+                    found = true;
+                }
+            }
+            if (!found) {
+                genericInfo.push({"Property Name": key, "Property Value":value})
+            }
+            this.set("Generic Info", genericInfo)
+
+        },
+        commitSimpleForm: function(form) {
+            var data = form.getValue();
+            var selectionScripts = [];
+
+            var name = "Host Name"
+            if (data[name]) {
+                var selectionScript = {
+                    Script:_.template(ssHostTemplate, {hostName:data[name]}),
+                    "Written in":"javascript",
+                    Type:"dynamic"};
+
+                selectionScripts.push(selectionScript)
+            }
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            name = "Operating System"
+            if (data[name] && data[name] != 'any') {
+                var selectionScript = {
+                    Script:_.template(ssOSTemplate, {os:data[name]}),
+                    "Written in":"javascript",
+                    Type:"dynamic"};
+
+                selectionScripts.push(selectionScript)
+            }
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            name = "Required amount of memory (in mb)"
+            if (data[name]) {
+                var selectionScript = {
+                    Script:_.template(ssTotalMemTemplate, {mem:data[name]}),
+                    "Written in":"javascript",
+                    Type:"dynamic"};
+
+                selectionScripts.push(selectionScript)
+            }
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            name = "Dedicated Host"
+            if (data[name]) {
+                this.set({"Topology": "singleHostExclusive"});
+                this.set({"Number of Nodes": 2});
+            } else {
+                this.set({"Topology": "arbitrary"});
+                this.set({"Number of Nodes": 1});
+            }
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            this.set({"Selection Scripts": selectionScripts});
+        },
+        populateSimpleForm: function() {
+            // initializing filed for simple form from generic info
+            var genericInfo = this.get("Generic Info");
+            if (!genericInfo) {genericInfo = []}
+
+            for (var i in genericInfo) {
+                var key = genericInfo[i]["Property Name"];
+                var value = genericInfo[i]["Property Value"];
+
+                if (key == "Dedicated Host") {
+                    value = (value === 'true')
+                }
+                this.set(key, value)
+            }
         }
     })
 

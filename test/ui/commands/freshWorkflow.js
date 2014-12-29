@@ -19,7 +19,8 @@ exports.command = function () {
         .click('.create-workflow-button')
         .waitForElementPresent('.list-group-item:last-child .btn-open')
         .click('.list-group-item:last-child .btn-open')
-        .waitForElementNotPresent('.no-workflows-open-help-title');
+        .waitForElementNotPresent('.no-workflows-open-help-title')
+        .waitForElementVisible('#simple-form');
 
     return browser;
 };
