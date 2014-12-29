@@ -631,6 +631,8 @@ define(
             jsPlumb.unbind();
             jsPlumb.deleteEveryEndpoint();
             Backbone.View.prototype.remove.apply(this, arguments);
+        },
+        formChangeUpdate: function() {
         }
 
     });

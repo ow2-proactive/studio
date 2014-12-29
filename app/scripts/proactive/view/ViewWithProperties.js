@@ -43,6 +43,7 @@ define(
             var form = new Backbone.Form({
                 'model': that.model
             }).render();
+            that.form = form;
 
             var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
 
@@ -94,11 +95,11 @@ define(
                 return $("#workflow-designer").click();
             })
 
-            that.form = form;
             StudioApp.views.propertiesView.$el.data('form', form);
 
             form.on('change', function (f, changed) {
                 form.commit();
+                that.formChangeUpdate();
             })
 
             form.$el.find("input").addClass("form-control");
@@ -198,6 +199,8 @@ define(
                 StudioApp.views.propertiesView.$el.html(breadcrumb);
                 StudioApp.views.propertiesView.$el.append(form.$el);
             }
+
+            that.formChangeUpdate();
 
             // showinf only file names in job classpath
             $(".visible-job-classpath input").val(function () {
