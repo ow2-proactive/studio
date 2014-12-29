@@ -19,7 +19,14 @@ define(
             this.$el.unbind('click');
 
             this.$el.click(function (event) {
-                if (event.isPropagationStopped() || $(event.target).attr('id') != that.$el.attr('id')) {
+                var target = $(event.target);
+                if (!target.attr("id")) {
+                    target = target.parents("[id]")
+                }
+
+                if (event.isPropagationStopped() ||
+                    // preventing the execution of a handler of underlying element (e.g. when click on task handler for a job is also triggered)
+                    target.attr('id') != that.$el.attr('id')) {
                     return;
                 }
                 event.stopPropagation();
@@ -99,7 +106,7 @@ define(
 
             form.on('change', function (f, changed) {
                 form.commit();
-                that.formChangeUpdate();
+                if (that.formChangeUpdate) that.formChangeUpdate();
             })
 
             form.$el.find("input").addClass("form-control");
@@ -200,7 +207,7 @@ define(
                 StudioApp.views.propertiesView.$el.append(form.$el);
             }
 
-            that.formChangeUpdate();
+            if (that.formChangeUpdate) that.formChangeUpdate();
 
             // showinf only file names in job classpath
             $(".visible-job-classpath input").val(function () {
