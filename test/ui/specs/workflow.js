@@ -21,7 +21,7 @@ module.exports = {
             .checkExport(function (select, jobXmlDocument) {
                 var taskName = select("//p:task/@name", jobXmlDocument)[0].value
 
-                this.assert.equal(taskName, "Javascript_Task", "Task name")
+                this.assert(taskName.indexOf("Javascript_Task") > -1, "Task name")
             })
             .end();
     },
