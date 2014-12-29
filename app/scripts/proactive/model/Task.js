@@ -72,7 +72,19 @@ define(
                 "Access Mode": {type: 'Select',
                     fieldAttrs: {'placeholder': '@attributes->accessMode'},
                     options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]}
-            }}
+            }},
+            // extra parameters for the simple view
+            "Execute on Host": {type: "Text", fieldAttrs: {"data-help":'A host name or a part of host name on which this task must be executed'}},
+            "Operating System": {type: 'Select', fieldAttrs: { "data-help":'An operating system name where this task must be executed.'}, options: [
+                {val: "any", label: "Any"},
+                {val: "linux", label: "Linux"},
+                {val: "windows", label: "Windows"},
+                {val: "mac", label: "Mac"}
+            ]},
+            "Node Source": {type: "Text", fieldAttrs: {"data-help":'A node source name on which this task must be executed'}},
+            "Exclusively": {type: "Checkbox", fieldAttrs: {"data-help":'Run on host exclusively - no other tasks will be executed in parallel on the same host.'}},
+            "Same host as for task": {type: "Text", fieldAttrs: {"data-help":'Task will be executed on the same host as the task with this name.'}}
+
         },
 
         initialize: function () {
@@ -196,7 +208,24 @@ define(
             console.log('Removing replicate')
             this.set({'Control Flow': 'none'});
             delete this.controlFlow['replicate']
+        },
+
+        getBasicFields: function() {
+            return ["Task Name", "Parameters", "Host", "Operating System", "Node Source", "Exclusively", "Same host as for task"]
+        },
+        commitSimpleForm: function(form) {
+            console.log()
+            this.set({"Selection Scripts": [new SelectionScript({Script:"aaaaa", Engine:"javascript", Type:"dynamic"})]});
+//            var data = form.getValue();
+//            var selectionScripts = [];
+//
+//            if (data['Host']) {
+//                var selectionScript = "aaaaa";
+//                selectionScripts.push(selectionScript)
+//
+//            }
         }
+
     })
 
     return Task;

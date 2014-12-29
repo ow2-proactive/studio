@@ -36,13 +36,17 @@ define(
         renderForm: function () {
 
             var StudioApp = require('StudioApp');
+            var workflow = StudioApp.models.currentWorkflow;
+            var detailedView = workflow.getMetadata()['detailedView'];
 
             var that = this
             that.clearTextSelection();
 
             var form = new Backbone.Form({
-                'model': that.model
+                'model': that.model,
+                fields: detailedView?undefined:that.model.getBasicFields()
             }).render();
+            this.form = form;
 
             var breadcrumb = $('<ul id="breadcrumb" class="breadcrumb"></ul>');
 
@@ -73,6 +77,28 @@ define(
                 $(".selected-task").removeClass("selected-task");
                 // active-task class is used to identify which task is currently shown in the properties view
                 $(".active-task").removeClass("active-task");
+
+                var icon = detailedView? "glyphicon-th-list" : "glyphicon-list";
+                var title = detailedView? "Switch to simple view": "Switch to detailed view";
+                var changeView = $('<a href="#" class="glyphicon '+icon+' pull-right" title="'+title+'"></a>');
+
+                changeView.click(function () {
+
+                    if (StudioApp.models.jobModel) {
+                        // saving current workflow
+                        StudioApp.views.propertiesView.saveCurrentWorkflow(
+                            StudioApp.models.jobModel.get("Job Name"),
+                            StudioApp.models.jobModel.get("Project"),
+                            StudioApp.views.xmlView.generateXml(),
+                            undoManager.getOffsetsFromDOM(),
+                            !detailedView
+                        );
+                        that.renderForm();
+                    }
+
+                    return false;
+                })
+                breadcrumb.append(changeView)
             }
 
             workflows.click(function (event) {
@@ -94,11 +120,14 @@ define(
                 return $("#workflow-designer").click();
             })
 
-            that.form = form;
             StudioApp.views.propertiesView.$el.data('form', form);
 
             form.on('change', function (f, changed) {
-                form.commit();
+                console.log("!!! commit", form, changed)
+                form.commit()
+                if (!detailedView) {
+                    that.model.commitSimpleForm(form)
+                }
             })
 
             form.$el.find("input").addClass("form-control");
@@ -107,7 +136,7 @@ define(
             form.$el.find("button").addClass("btn").addClass("btn-default");
 
             var tabs = form.$el.find("[data-tab]");
-            if (tabs.length > 0) {
+            if (tabs.length > 0 && detailedView) {
                 var accordion = $('<div class="panel-group" id="accordion-properties">');
                 var currentAccordionGroup = undefined;
                 var curLabel = "";

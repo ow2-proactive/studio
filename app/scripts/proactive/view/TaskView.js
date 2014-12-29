@@ -353,22 +353,22 @@ define(
 
             })
 
-            this.$el.click(function (e) {
-                e.stopPropagation();
-
-                that.form.on('Parameters:change', function (f, task) {
-                    that.form.commit();
-                    that.showOrHideForkEnvironment();
-                })
-
-                that.showOrHideForkEnvironment();
-                $('select[name=Library]').click();
-            })
+//            this.$el.click(function (e) {
+//                e.stopPropagation();
+//
+//                that.form.on('Parameters:change', function (f, task) {
+//                    that.form.commit();
+//                    that.showOrHideForkEnvironment();
+//                })
+//
+//                that.showOrHideForkEnvironment();
+//                $('select[name=Library]').click();
+//            })
             return this;
-        },
-        commitForm: function () {
-            this.form.commit();
         }
+//        commitForm: function () {
+//            this.form.commit();
+//        }
     })
 
 })

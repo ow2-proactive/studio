@@ -27,7 +27,7 @@ define(
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text'], "data-help": "Small textual explanation of what this job does."}},
             "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path', "data-help":"Add jars with your classes that are used in Java or Script tasks. They will be transferred automatically to computing nodes."}, itemTemplate: jobClasspathTemplate},
             "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority', "data-help":"Scheduling priority level of the job. A user can only set the priority of his jobs and can only use the values \"lowest\", \"low\", or \"normal\". There are two higher priority levels \"high\" and \"highest\" which can be only set by the administrator."}, options: ["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
-            "Job Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Job Variables", 'placeholder': 'variables->variable', "data-help":"On the job level you can define variables that are available in all tasks. Then anywhere in your tasks you can reference them."}, itemToString: Utils.inlineName, subSchema: {
+            "Job Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Job Variables", 'placeholder': 'variables->variable', "data-help":"On the job level you can define variables that are available in all tasks. Then anywhere in your tasks you can reference them."}, itemToString: Utils.inlineNameValue, subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
@@ -179,6 +179,12 @@ define(
                     }
                 })
             }
+        },
+        getBasicFields: function() {
+            return ["Job Name", "Job Variables"]
+        },
+        commitSimpleForm: function(form) {
+            // no custom transformation for job's simple view
         }
     })
 })
