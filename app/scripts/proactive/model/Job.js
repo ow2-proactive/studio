@@ -182,9 +182,6 @@ define(
         },
         getBasicFields: function() {
             return ["Job Name", "Job Variables"]
-        },
-        commitSimpleForm: function(form) {
-            // no custom transformation for job's simple view
         }
     })
 })

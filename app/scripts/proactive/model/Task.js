@@ -9,11 +9,16 @@ define(
         'proactive/model/Script',
         'proactive/model/SelectionScript',
         'proactive/model/BranchWithScript',
-        'proactive/view/utils/undo'
+        'proactive/view/utils/undo',
+        'text!proactive/templates/selection-script-host-template.html',
+        'text!proactive/templates/selection-script-os-template.html',
+        'text!proactive/templates/selection-script-freemem-template.html'
+
     ],
 
     // TODO REMOVE undoManager dependency - comes from view
-    function (Backbone, SchemaModel, tpl, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript, BranchWithScript, undoManager) {
+    function (Backbone, SchemaModel, tpl, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript,
+              BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssFreeMemTemplate) {
 
     "use strict";
 
@@ -74,16 +79,17 @@ define(
                     options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]}
             }},
             // extra parameters for the simple view
-            "Execute on Host": {type: "Text", fieldAttrs: {"data-help":'A host name or a part of host name on which this task must be executed'}},
+            "Execute on host with name": {type: "Text", fieldAttrs: {"data-help":'A host name or a part of host name on which this task must be executed'}},
             "Operating System": {type: 'Select', fieldAttrs: { "data-help":'An operating system name where this task must be executed.'}, options: [
                 {val: "any", label: "Any"},
                 {val: "linux", label: "Linux"},
                 {val: "windows", label: "Windows"},
                 {val: "mac", label: "Mac"}
             ]},
-            "Node Source": {type: "Text", fieldAttrs: {"data-help":'A node source name on which this task must be executed'}},
-            "Exclusively": {type: "Checkbox", fieldAttrs: {"data-help":'Run on host exclusively - no other tasks will be executed in parallel on the same host.'}},
-            "Same host as for task": {type: "Text", fieldAttrs: {"data-help":'Task will be executed on the same host as the task with this name.'}}
+            "Min free memory in mb": {type: "Text", fieldAttrs: {"data-help":'A minimum free memory required for the task execution'}},
+//            "Node Source": {type: "Text", fieldAttrs: {"data-help":'A node source name on which this task must be executed'}},
+            "Do not allow to execute other jobs on the same host": {type: "Checkbox", fieldAttrs: {"data-help":'Run on host exclusively - no other tasks will be executed in parallel on the same host.'}},
+//            "Same host as for task": {type: "Text", fieldAttrs: {"data-help":'Task will be executed on the same host as the task with this name.'}}
 
         },
 
@@ -211,19 +217,48 @@ define(
         },
 
         getBasicFields: function() {
-            return ["Task Name", "Parameters", "Host", "Operating System", "Node Source", "Exclusively", "Same host as for task"]
+            return [
+                "Task Name",
+                "Parameters",
+                "Execute on host with name",
+                "Operating System",
+                "Min free memory in mb",
+                "Do not allow to execute other jobs on the same host"]
         },
         commitSimpleForm: function(form) {
-            console.log()
-            this.set({"Selection Scripts": [new SelectionScript({Script:"aaaaa", Engine:"javascript", Type:"dynamic"})]});
-//            var data = form.getValue();
-//            var selectionScripts = [];
-//
-//            if (data['Host']) {
-//                var selectionScript = "aaaaa";
-//                selectionScripts.push(selectionScript)
-//
-//            }
+            var data = form.getValue();
+            var selectionScripts = [];
+
+            if (data['Execute on host with name']) {
+                var selectionScript = new SelectionScript({
+                    Script:_.template(ssHostTemplate, {hostName:data['Execute on host with name']}),
+                    Engine:"javascript",
+                    Type:"dynamic"});
+
+                selectionScripts.push(selectionScript)
+            }
+            if (data['Operating System'] && data['Operating System'] != 'any') {
+                var selectionScript = new SelectionScript({
+                    Script:_.template(ssOSTemplate, {os:data['Operating System']}),
+                    Engine:"javascript",
+                    Type:"dynamic"});
+
+                selectionScripts.push(selectionScript)
+            }
+            if (data['Min free memory in mb']) {
+                var selectionScript = new SelectionScript({
+                    Script:_.template(ssFreeMemTemplate, {mem:data['Min free memory in mb']}),
+                    Engine:"javascript",
+                    Type:"dynamic"});
+
+                selectionScripts.push(selectionScript)
+            }
+            if (data['Do not allow to execute other jobs on the same host']) {
+                this.set({"Topology": "singleHostExclusive"});
+                this.set({"Number of Nodes": 2});
+            }
+
+            this.set({"Selection Scripts": selectionScripts});
         }
 
     })

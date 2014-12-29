@@ -1,0 +1,7 @@
+var selected = false;
+
+var osb = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+var mem = java.lang.Math.round(osb.getFreePhysicalMemorySize()/(1024*1024));
+print(mem+" mb available");
+selected=java.lang.Integer.parseInt(mem)>java.lang.Integer.parseInt(<%=mem%>);
+print("FreeMem check : "+selected);

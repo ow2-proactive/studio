@@ -130,7 +130,6 @@ define(
             StudioApp.views.propertiesView.$el.data('form', form);
 
             form.on('change', function (f, changed) {
-                console.log("!!! commit", form, changed)
                 form.commit()
                 if (that.formChangeUpdate) that.formChangeUpdate();
 
