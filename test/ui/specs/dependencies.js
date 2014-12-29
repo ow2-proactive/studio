@@ -14,9 +14,9 @@ module.exports = {
                 var tasksWithDependency = select('//p:task[p:depends]/@name', jobXmlDocument);
                 var dependencies = select('//p:task/p:depends/p:task/@ref', jobXmlDocument);
 
-                this.assert.equal(1, tasksWithoutDependency.length, "Number of tasks without dependency");
-                this.assert.equal(1, tasksWithDependency.length, "Number of tasks with dependency");
-                this.assert.equal(1, dependencies.length, "Number of dependencies");
+                this.assert.equal(tasksWithoutDependency.length, 1, "Number of tasks without dependency");
+                this.assert.equal(tasksWithDependency.length, 1, "Number of tasks with dependency");
+                this.assert.equal(dependencies.length, 1, "Number of dependencies");
 
                 var parent = tasksWithoutDependency[0].nodeValue;
                 var child = tasksWithDependency[0].nodeValue;
