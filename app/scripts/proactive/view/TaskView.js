@@ -357,6 +357,7 @@ define(
         },
         formChangeUpdate: function() {
             this.showOrHideForkEnvironment();
+            $('select[name=Library]').click();
         }
     })
 
