@@ -637,7 +637,6 @@ define(
             jsPlumb.deleteEveryEndpoint();
             Backbone.View.prototype.remove.apply(this, arguments);
         }
-
     });
 
 })

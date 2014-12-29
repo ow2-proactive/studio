@@ -19,7 +19,14 @@ define(
             this.$el.unbind('click');
 
             this.$el.click(function (event) {
-                if (event.isPropagationStopped() || $(event.target).attr('id') != that.$el.attr('id')) {
+                var target = $(event.target);
+                if (!target.attr("id")) {
+                    target = target.parents("[id]")
+                }
+
+                if (event.isPropagationStopped() ||
+                    // preventing the execution of a handler of underlying element (e.g. when click on task handler for a job is also triggered)
+                    target.attr('id') != that.$el.attr('id')) {
                     return;
                 }
                 event.stopPropagation();
@@ -125,7 +132,9 @@ define(
             form.on('change', function (f, changed) {
                 console.log("!!! commit", form, changed)
                 form.commit()
-                if (!detailedView) {
+                if (that.formChangeUpdate) that.formChangeUpdate();
+
+                if (!detailedView && that.model.commitSimpleForm) {
                     that.model.commitSimpleForm(form)
                 }
             })
@@ -154,7 +163,7 @@ define(
                             openAccordion = true;
                         }
 
-                        var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
+                        var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a id="'+ el.attr("data-tab")+ '" data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
                         currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
 
                         if (el.attr("data-help")) {
@@ -227,6 +236,8 @@ define(
                 StudioApp.views.propertiesView.$el.html(breadcrumb);
                 StudioApp.views.propertiesView.$el.append(form.$el);
             }
+
+            if (that.formChangeUpdate) that.formChangeUpdate();
 
             // showinf only file names in job classpath
             $(".visible-job-classpath input").val(function () {

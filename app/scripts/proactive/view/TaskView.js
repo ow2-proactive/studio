@@ -353,22 +353,11 @@ define(
 
             })
 
-//            this.$el.click(function (e) {
-//                e.stopPropagation();
-//
-//                that.form.on('Parameters:change', function (f, task) {
-//                    that.form.commit();
-//                    that.showOrHideForkEnvironment();
-//                })
-//
-//                that.showOrHideForkEnvironment();
-//                $('select[name=Library]').click();
-//            })
             return this;
+        },
+        formChangeUpdate: function() {
+            this.showOrHideForkEnvironment();
         }
-//        commitForm: function () {
-//            this.form.commit();
-//        }
     })
 
 })
