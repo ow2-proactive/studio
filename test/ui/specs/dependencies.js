@@ -2,7 +2,7 @@ module.exports = {
     "Pull out a dependency" : function(browser) {
         browser
             .login()
-            .createAndOpenWorkflow()
+            .freshWorkflow()
             .createTask()
             .waitForElementVisible('.dependency-source-endpoint', 1000)
             .moveToElement('.dependency-source-endpoint', 0, 10)

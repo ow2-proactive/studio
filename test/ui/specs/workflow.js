@@ -6,7 +6,7 @@ module.exports = {
 
             .closeNotification()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
 
             .createTask()
 
@@ -30,7 +30,7 @@ module.exports = {
         browser
             .login()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
 
             .click("#Job\\ Variables")
 
@@ -55,7 +55,7 @@ module.exports = {
         browser
             .login()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
 
             .createTask()
             .waitForElementVisible('.task')
