@@ -18,15 +18,6 @@ define(
             "Or Path": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->path'}},
             "Arguments": {type: 'Hidden', itemType: 'Text', fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}},
             "Or Url": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->url'}}
-        },
-
-        populateSchema: function (obj) {
-            SchemaModel.prototype.populateSchema.call(this, obj);
-            var path = this.get("Or Path");
-            if (path) {
-                var fileName = path.replace(/^.*[\\\/]/, '');
-                this.set("Library", fileName);
-            }
         }
     })
 })
