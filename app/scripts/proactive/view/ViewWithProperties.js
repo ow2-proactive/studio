@@ -95,10 +95,12 @@ define(
                         // saving current workflow
                         StudioApp.views.propertiesView.saveCurrentWorkflow(
                             StudioApp.models.jobModel.get("Job Name"),
-                            StudioApp.models.jobModel.get("Project"),
                             StudioApp.views.xmlView.generateXml(),
-                            undoManager.getOffsetsFromDOM(),
-                            !detailedView
+                            {
+                                offsets: undoManager.getOffsetsFromDOM(),
+                                project: StudioApp.models.jobModel.get("Project"),
+                                detailedView: !detailedView
+                            }
                         );
                         that.renderForm();
                     }
@@ -114,9 +116,12 @@ define(
                 if (StudioApp.models.jobModel) {
                     StudioApp.views.propertiesView.saveCurrentWorkflow(
                         StudioApp.models.jobModel.get("Job Name"),
-                        StudioApp.models.jobModel.get("Project"),
                         StudioApp.views.xmlView.generateXml(),
-                        undoManager.getOffsetsFromDOM()
+                        {
+                            offsets: undoManager.getOffsetsFromDOM(),
+                            project: StudioApp.models.jobModel.get("Project"),
+                            detailedView: detailedView
+                        }
                     );
                 }
 

@@ -88,7 +88,7 @@ define(
             ]},
             "Min free memory in mb": {type: "Text", fieldAttrs: {"data-help":'A minimum free memory required for the task execution'}},
 //            "Node Source": {type: "Text", fieldAttrs: {"data-help":'A node source name on which this task must be executed'}},
-            "Do not allow to execute other jobs on the same host": {type: "Checkbox", fieldAttrs: {"data-help":'Run on host exclusively - no other tasks will be executed in parallel on the same host.'}},
+            "Do not allow to execute other jobs on the same host in parallel": {type: "Checkbox", fieldAttrs: {"data-help":'Run on host exclusively - no other tasks will be executed in parallel on the same host.'}}
 //            "Same host as for task": {type: "Text", fieldAttrs: {"data-help":'Task will be executed on the same host as the task with this name.'}}
 
         },
@@ -223,42 +223,90 @@ define(
                 "Execute on host with name",
                 "Operating System",
                 "Min free memory in mb",
-                "Do not allow to execute other jobs on the same host"]
+                "Do not allow to execute other jobs on the same host in parallel"]
+        },
+        addOrReplaceGenericInfo: function(key, value) {
+
+            var genericInfo = this.get("Generic Info");
+            if (!genericInfo) {genericInfo = []}
+
+            var found = false;
+            for (var i in genericInfo) {
+                if (genericInfo[i]["Property Name"] == key) {
+                    genericInfo[i]["Property Value"] = value;
+                    found = true;
+                }
+            }
+            if (!found) {
+                genericInfo.push({"Property Name": key, "Property Value":value})
+            }
+            this.set("Generic Info", genericInfo)
+
         },
         commitSimpleForm: function(form) {
+            console.log("!!!! here")
             var data = form.getValue();
             var selectionScripts = [];
 
-            if (data['Execute on host with name']) {
+            var name = "Execute on host with name"
+            if (data[name]) {
                 var selectionScript = new SelectionScript({
-                    Script:_.template(ssHostTemplate, {hostName:data['Execute on host with name']}),
+                    Script:_.template(ssHostTemplate, {hostName:data[name]}),
                     Engine:"javascript",
                     Type:"dynamic"});
 
                 selectionScripts.push(selectionScript)
             }
-            if (data['Operating System'] && data['Operating System'] != 'any') {
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            name = "Operating System"
+            if (data[name] && data[name] != 'any') {
                 var selectionScript = new SelectionScript({
-                    Script:_.template(ssOSTemplate, {os:data['Operating System']}),
+                    Script:_.template(ssOSTemplate, {os:data[name]}),
                     Engine:"javascript",
                     Type:"dynamic"});
 
                 selectionScripts.push(selectionScript)
             }
-            if (data['Min free memory in mb']) {
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            name = "Min free memory in mb"
+            if (data[name]) {
                 var selectionScript = new SelectionScript({
-                    Script:_.template(ssFreeMemTemplate, {mem:data['Min free memory in mb']}),
+                    Script:_.template(ssFreeMemTemplate, {mem:data[name]}),
                     Engine:"javascript",
                     Type:"dynamic"});
 
                 selectionScripts.push(selectionScript)
             }
-            if (data['Do not allow to execute other jobs on the same host']) {
+            this.addOrReplaceGenericInfo(name, data[name])
+
+            name = "Do not allow to execute other jobs on the same host in parallel"
+            if (data[name]) {
                 this.set({"Topology": "singleHostExclusive"});
                 this.set({"Number of Nodes": 2});
+            } else {
+                this.set({"Topology": "arbitrary"});
+                this.set({"Number of Nodes": 1});
             }
+            this.addOrReplaceGenericInfo(name, data[name])
 
             this.set({"Selection Scripts": selectionScripts});
+        },
+        populateSimpleForm: function() {
+            // initializing filed for simple form from generic info
+            var genericInfo = this.get("Generic Info");
+            if (!genericInfo) {genericInfo = []}
+
+            for (var i in genericInfo) {
+                var key = genericInfo[i]["Property Name"];
+                var value = genericInfo[i]["Property Value"];
+
+                if (key == "Do not allow to execute other jobs on the same host in parallel") {
+                    value = (value === 'true')
+                }
+                this.set(key, value)
+            }
         }
 
     })

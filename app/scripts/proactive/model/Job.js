@@ -123,6 +123,7 @@ define(
                     }
 
                     taskModel.populateSchema(task);
+                    taskModel.populateSimpleForm();
 
                     // check for unique task name to keep the job valid
                     var originalName = taskModel.get("Task Name");

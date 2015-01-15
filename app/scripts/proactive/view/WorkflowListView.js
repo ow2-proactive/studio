@@ -128,12 +128,12 @@ define(['jquery',
                 var app = this.options.app;
                 app.import(model);
             },
-            saveCurrentWorkflow: function (name, project, workflowXml, offsets, detailedView) {
+            saveCurrentWorkflow: function (name, workflowXml, metadata) {
                 this._currentWorkflow().save(
                     {
                         name: name,
                         xml: workflowXml,
-                        metadata: JSON.stringify({offsets: offsets, project: project, detailedView: detailedView})
+                        metadata: JSON.stringify(metadata)
                     });
             },
             _currentWorkflow: function () {
