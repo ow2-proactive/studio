@@ -122,7 +122,9 @@ define(
 
                 $.each(form.$el.children().children(), function (i, elem) {
                     var el = $(elem);
+
                     if (el.attr("data-tab")) {
+
                         var accId = "acc-" + i;
                         // defining if this accordion should be opened
                         var openAccordion = false;
@@ -202,6 +204,17 @@ define(
                     addHelpAfter.after(help);
                 })
 
+                accordion.find("[data-tab-help]").each(function() {
+                    var el = $(this);
+
+                    var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-tab-help")+"'></span>")
+                    help.tooltip({html: true});
+
+                    var addHelpAfter = el.find("label:first")
+                    addHelpAfter = el.parents(".panel").find(".panel-heading a");
+
+                    addHelpAfter.after(help);
+                })
             } else {
                 StudioApp.views.propertiesView.$el.html(breadcrumb);
                 StudioApp.views.propertiesView.$el.append(form.$el);
