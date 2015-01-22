@@ -6,7 +6,7 @@ define(function (require) {
             return name;
         },
         inlineNameValue: function(prop) {
-            return prop['Name']+": " + prop["Value"];
+            return "<div class='inlined'>" + prop['Name'] + "</div><div class='inlined'>" + prop["Value"] + "</div>";
         }
     }
 })

@@ -464,6 +464,20 @@ input {
     line-height: 23px !important;
     height: 30px !important;
     resize: none !important;
+
+    height: 34px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
 #accordion-properties select {
@@ -680,6 +694,7 @@ button[data-action='remove'] {
     background-color: #f5f5f5;
     border: none;
     margin-bottom: 4px;
+    padding-top:0px;
 
 }
 
@@ -972,4 +987,36 @@ li.success {
 #select-mode {
     display: inline;
     width: auto;
+}
+
+.row {
+    display: table-row;
+}
+
+.inlined {
+    /*display: inline;*/
+    float:left;
+    width: 40%;
+    max-width: 40%;
+    margin-right:10px;
+    overflow: hidden;
+    white-space: nowrap;
+    resize: none;
+    /*overflow: hidden;*/
+}
+
+.simple-form-header {
+    font-weight: bold;
+    padding-bottom:10px;
+}
+.padding-top-10 {
+    padding-top:10px;
+}
+
+.simple-form-select {
+    max-width: 90%;
+}
+
+.no-underline {
+    text-decoration: none
 }

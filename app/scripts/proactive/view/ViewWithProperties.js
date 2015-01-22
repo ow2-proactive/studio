@@ -49,8 +49,14 @@ define(
             var that = this
             that.clearTextSelection();
 
+            var template = undefined;
+            if (!detailedView && that.model.getSimpleViewTemplate) {
+                template = that.model.getSimpleViewTemplate();
+            }
+
             var form = new Backbone.Form({
                 'model': that.model,
+                template: template,
                 fields: detailedView?undefined:that.model.getBasicFields()
             }).render();
             this.form = form;
@@ -65,7 +71,7 @@ define(
 
             var jobBreadcrumb
             if (that.model.get("Task Name")) {
-                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Name") + '</a></span></li>');
                 breadcrumb.append(jobBreadcrumb)
 
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
@@ -77,7 +83,7 @@ define(
                 })
                 breadcrumb.append(removeTask)
             } else {
-                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Job Name") + '</span></li>');
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Name") + '</span></li>');
                 breadcrumb.append(jobBreadcrumb)
 
                 // selected-task class is used for copy/paste, delete operations, group task moving etc
@@ -89,12 +95,11 @@ define(
                 var title = detailedView? "Switch to simple view": "Switch to detailed view";
                 var changeView = $('<a href="#" class="glyphicon '+icon+' pull-right" title="'+title+'"></a>');
 
-                changeView.click(function () {
-
+                var switchView = function() {
                     if (StudioApp.models.jobModel) {
                         // saving current workflow
                         StudioApp.views.propertiesView.saveCurrentWorkflow(
-                            StudioApp.models.jobModel.get("Job Name"),
+                            StudioApp.models.jobModel.get("Name"),
                             StudioApp.views.xmlView.generateXml(),
                             {
                                 offsets: undoManager.getOffsetsFromDOM(),
@@ -104,7 +109,19 @@ define(
                         );
                         that.renderForm();
                     }
+                }
 
+                changeView.click(function () {
+                    if (detailedView) {
+                        $("#data-loss-continue").unbind("click")
+                        $("#data-loss-continue").click(function() {
+                            switchView();
+                        })
+                        $("#confirm-data-loss").modal();
+                        return false;
+                    }
+
+                    switchView();
                     return false;
                 })
                 breadcrumb.append(changeView)
@@ -115,7 +132,7 @@ define(
 
                 if (StudioApp.models.jobModel) {
                     StudioApp.views.propertiesView.saveCurrentWorkflow(
-                        StudioApp.models.jobModel.get("Job Name"),
+                        StudioApp.models.jobModel.get("Name"),
                         StudioApp.views.xmlView.generateXml(),
                         {
                             offsets: undoManager.getOffsetsFromDOM(),
@@ -215,30 +232,42 @@ define(
 
                 // adding help info
                 accordion.find("[data-help]").each(function() {
-                    var el = $(this);
-
-                    var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-help")+"'></span>")
-                    help.tooltip({html: true});
-
-                    var addHelpAfter = el.find("label:first")
-
-                    if (addHelpAfter.length==0) {
-                        addHelpAfter = el.parents(".panel").find(".panel-heading a");
-                    } else if (addHelpAfter.hasClass("checkbox")) {
-                        addHelpAfter = addHelpAfter.find("input:last");
-                    }
-                    // if already exist - remove it (see tricky case for control flows in tasks)
-                    var next = addHelpAfter.next();
-                    if (next && next.hasClass("help-sign")) {
-                        next.remove();
-                    }
-
-                    addHelpAfter.after(help);
+                    that.addHelpTooltip($(this))
                 })
 
+                accordion.find("[simple-view]").remove()
+
             } else {
+                // simple view
                 StudioApp.views.propertiesView.$el.html(breadcrumb);
-                StudioApp.views.propertiesView.$el.append(form.$el);
+
+                var panel = $('<div class="well"></div>')
+                panel.append(form.$el)
+
+                StudioApp.views.propertiesView.$el.append(panel);
+
+                // form manipulation for the simple view
+                form.$el.find("label").addClass("simple-form-header");
+                form.$el.find("label:not(:first)").addClass("padding-top-10");
+                form.$el.find("select").addClass("simple-form-select");
+                form.$el.find("label:contains(' Script')").remove();
+                form.$el.find("label:contains(' Host  Name')").parent().before('<div ><hr/><a class="no-underline">Limit Execution To</a></div>');
+
+                $.each(form.$el.children().children(), function (i, elem) {
+                    var el = $(elem);
+                    // modifying checkbox layout
+                    var checkbox = el.find("input[type='checkbox']");
+                    if (checkbox.length > 0) {
+                        var label = el.find("label");
+                        label.addClass("checkbox");
+                        checkbox.detach().appendTo(label);
+                    }
+
+                })
+
+                form.$el.find("[data-help]").each(function() {
+                    that.addHelpTooltip($(this))
+                })
             }
 
             if (that.formChangeUpdate) that.formChangeUpdate();
@@ -258,6 +287,28 @@ define(
                 var sel = window.getSelection();
                 sel.removeAllRanges();
             }
+        },
+
+        addHelpTooltip: function(el) {
+
+            var help = $("<span class='glyphicon glyphicon-info-sign pointer help-sign' data-toggle='tooltip' data-placement='right' title='"+el.attr("data-help")+"'></span>")
+            help.tooltip({html: true});
+
+            var addHelpAfter = el.find("label:first")
+
+            if (addHelpAfter.length==0) {
+                addHelpAfter = el.parents(".panel").find(".panel-heading a");
+            } else if (addHelpAfter.hasClass("checkbox")) {
+                addHelpAfter = addHelpAfter.find("input:last");
+            }
+            // if already exist - remove it (see tricky case for control flows in tasks)
+            var next = addHelpAfter.next();
+            if (next && next.hasClass("help-sign")) {
+                next.remove();
+            }
+
+            addHelpAfter.after(help);
+
         }
     })
 

@@ -14,7 +14,7 @@ define(
     return SchemaModel.extend({
         schema: {
             "Script": {type: "TextArea", fieldAttrs: {'placeholder': ['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
-            "Engine": {type: 'Select', options: ["javascript", "groovy", "ruby", "python", "bash", "cmd", "R"], fieldAttrs: {'placeholder': 'code->@attributes->language', "data-help":"The runtime of the script."}},
+            "written in": {type: 'Select', options: ["javascript", "groovy", "ruby", "python", "bash", "cmd", "R"], fieldAttrs: {'placeholder': 'code->@attributes->language', "data-help":"The language of the code to execute."}},
             "Or Path": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->path'}},
             "Arguments": {type: 'Hidden', itemType: 'Text', fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}},
             "Or Url": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->url'}}

@@ -197,7 +197,7 @@ define(
 
             console.log("Saving xml");
             var StudioApp = require('StudioApp');
-            var jobName = StudioApp.models.jobModel.get("Job Name")
+            var jobName = StudioApp.models.jobModel.get("Name")
             var blob = new Blob([StudioApp.views.xmlView.generatedXml]);
             saveAs(blob, jobName + ".xml")
         })
@@ -227,7 +227,7 @@ define(
             var StudioApp = require('StudioApp');
             if (StudioApp.models.jobModel) {
                 StudioApp.views.propertiesView.saveCurrentWorkflow(
-                    StudioApp.models.jobModel.get("Job Name"),
+                    StudioApp.models.jobModel.get("Name"),
                     StudioApp.views.xmlView.generateXml(),
                     {
                         offsets: undoManager.getOffsetsFromDOM(),

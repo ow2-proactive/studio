@@ -18,16 +18,16 @@ define(
 
     "use strict";
 
-    var jobClasspathTemplate = _.template(tpl);
+    var jobClasspathTemplateContent = _.template(tpl);
 
     return SchemaModel.extend({
         schema: {
-            "Job Name": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
+            "Name": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
             "Project": {type: "Text", fieldAttrs: {'placeholder': '@attributes->projectName', "data-help":'Set a name of a project to be able to group different jobs of the same project later.'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text'], "data-help": "Small textual explanation of what this job does."}},
-            "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path', "data-help":"Add jars with your classes that are used in Java or Script tasks. They will be transferred automatically to computing nodes."}, itemTemplate: jobClasspathTemplate},
+            "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path', "data-help":"Add jars with your classes that are used in Java or Script tasks. They will be transferred automatically to computing nodes."}, itemTemplate: jobClasspathTemplateContent},
             "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority', "data-help":"Scheduling priority level of the job. A user can only set the priority of his jobs and can only use the values \"lowest\", \"low\", or \"normal\". There are two higher priority levels \"high\" and \"highest\" which can be only set by the administrator."}, options: ["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
-            "Job Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Job Variables", 'placeholder': 'variables->variable', "data-help":"On the job level you can define variables that are available in all tasks. Then anywhere in your tasks you can reference them."}, itemToString: Utils.inlineNameValue, subSchema: {
+            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Job Variables", 'placeholder': 'variables->variable', "data-help":"Workflow variables that will be available in all tasks."}, itemToString: Utils.inlineNameValue,  subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
@@ -48,7 +48,7 @@ define(
         },
         initialize: function () {
 //            this.set({"Project Name": "Project"});
-            this.set({"Job Name": "Untitled Job"});
+            this.set({"Name": "Untitled Workflow"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
             this.set({"Max Number Of Executions For Task": 1});
@@ -106,19 +106,19 @@ define(
                 $.each(obj.taskFlow.task, function (i, task) {
                     var taskModel = new Task();
                     if (task.javaExecutable) {
-                        taskModel.schema['Parameters']['model'] = JavaExecutable;
-                        taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'javaExecutable'}
-                        taskModel.set({Parameters: new JavaExecutable()});
+                        taskModel.schema['Execute']['model'] = JavaExecutable;
+                        taskModel.schema['Execute']['fieldAttrs'] = {placeholder: 'javaExecutable'}
+                        taskModel.set({'Execute': new JavaExecutable()});
                         taskModel.set({Type: "JavaExecutable"});
                     } else if (task.nativeExecutable) {
-                        taskModel.schema['Parameters']['model'] = NativeExecutable;
-                        taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'nativeExecutable'}
-                        taskModel.set({Parameters: new NativeExecutable()});
+                        taskModel.schema['Execute']['model'] = NativeExecutable;
+                        taskModel.schema['Execute']['fieldAttrs'] = {placeholder: 'nativeExecutable'}
+                        taskModel.set({'Execute': new NativeExecutable()});
                         taskModel.set({Type: "NativeExecutable"});
                     } else if (task.scriptExecutable) {
-                        taskModel.schema['Parameters']['model'] = ScriptExecutable;
-                        taskModel.schema['Parameters']['fieldAttrs'] = {placeholder: 'scriptExecutable'}
-                        taskModel.set({Parameters: new ScriptExecutable()});
+                        taskModel.schema['Execute']['model'] = ScriptExecutable;
+                        taskModel.schema['Execute']['fieldAttrs'] = {placeholder: 'scriptExecutable'}
+                        taskModel.set({'Execute': new ScriptExecutable()});
                         taskModel.set({Type: "ScriptExecutable"});
                     }
 
@@ -182,7 +182,7 @@ define(
             }
         },
         getBasicFields: function() {
-            return ["Job Name", "Job Variables"]
+            return ["Name", "Variables"]
         }
     })
 })

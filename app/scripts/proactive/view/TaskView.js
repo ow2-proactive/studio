@@ -25,8 +25,8 @@ define(
                 this.model = new Task();
                 var script = new Script()
                 script.set("Script", "print(java.lang.System.getProperty('pas.task.name'))");
-                script.set("Engine", "javascript");
-                this.model.get("Parameters").set("Script", script)
+                script.set("written in", "javascript");
+                this.model.get("Execute").set("Script", script)
             }
             this.modelType = this.model.get("Type");
             this.model.on("change:Task Name", this.updateTaskName, this);
@@ -61,14 +61,14 @@ define(
                 this.model.schema = $.extend(true, {}, this.model.schema);
                 // TODO beautify
                 if (executableTypeStr == "JavaExecutable") {
-                    this.model.schema['Parameters'] = {type: 'NestedModel', model: JavaExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: JavaExecutable};
                 } else if (executableTypeStr == "NativeExecutable") {
-                    this.model.schema['Parameters'] = {type: 'NestedModel', model: NativeExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable};
                 } else {
-                    this.model.schema['Parameters'] = {type: 'NestedModel', model: ScriptExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
                 }
                 this.$el.find("img").attr('src', this.icons[executableTypeStr])
-                this.model.set({"Parameters": executable});
+                this.model.set({"Execute": executable});
                 this.$el.click();
             }
             this.modelType = executableTypeStr;
@@ -109,7 +109,7 @@ define(
             }
         },
         showOrHideForkEnvironment: function () {
-            var executable = this.model.get("Parameters");
+            var executable = this.model.get("Execute");
             if (executable) {
                 var forkEnvTitle = "Fork Environment";
                 var forkEnvDiv = $("body").find('[placeholder="forkEnvironment"]')

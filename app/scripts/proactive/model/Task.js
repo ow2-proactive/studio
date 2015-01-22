@@ -13,7 +13,6 @@ define(
         'text!proactive/templates/selection-script-host-template.html',
         'text!proactive/templates/selection-script-os-template.html',
         'text!proactive/templates/selection-script-freemem-template.html'
-
     ],
 
     // TODO REMOVE undoManager dependency - comes from view
@@ -31,7 +30,7 @@ define(
                     {val: "NativeExecutable", label: "Native"},
                     {val: "JavaExecutable", label: "Java"}
                 ]},
-            "Parameters": {type: 'NestedModel', model: ScriptExecutable},
+            "Execute": {type: 'NestedModel', model: ScriptExecutable},
             "Description": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': ['description->#cdata-section', 'description->#text'], "data-help":'A small textual description of what task does.'}},
             "Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder': '@attributes->maxNumberOfExecution', "data-help":'Defines how many times this task is allowed to be restarted.'}},
             "Maximum Execution Time (hh:mm:ss)": {type: "Text", fieldAttrs: {'placeholder': '@attributes->walltime', "data-help":'Task execution timeout. Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'}},
@@ -79,18 +78,15 @@ define(
                     options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]}
             }},
             // extra parameters for the simple view
-            "Execute on host with name": {type: "Text", fieldAttrs: {"data-help":'A host name or a part of host name on which this task must be executed'}},
-            "Operating System": {type: 'Select', fieldAttrs: { "data-help":'An operating system name where this task must be executed.'}, options: [
+            "Host Name": {type: "Text", fieldAttrs: {"data-help":'A host name or a part of host name on which this task must be executed', "simple-view": true}},
+            "Operating System": {type: 'Select', fieldAttrs: { "data-help":'An operating system name where this task must be executed.', "simple-view": true}, options: [
                 {val: "any", label: "Any"},
                 {val: "linux", label: "Linux"},
                 {val: "windows", label: "Windows"},
                 {val: "mac", label: "Mac"}
             ]},
-            "Min free memory in mb": {type: "Text", fieldAttrs: {"data-help":'A minimum free memory required for the task execution'}},
-//            "Node Source": {type: "Text", fieldAttrs: {"data-help":'A node source name on which this task must be executed'}},
-            "Do not allow to execute other jobs on the same host in parallel": {type: "Checkbox", fieldAttrs: {"data-help":'Run on host exclusively - no other tasks will be executed in parallel on the same host.'}}
-//            "Same host as for task": {type: "Text", fieldAttrs: {"data-help":'Task will be executed on the same host as the task with this name.'}}
-
+            "Required free memory (in mb)": {type: "Text", fieldAttrs: {"data-help":'A minimum free memory required for the task execution - appropriate host will be selected',  "simple-view": true}},
+            "Host with no other activities": {type: "Checkbox", fieldAttrs: {"data-help":'Run the task exclusively on host - no other tasks will be executed in parallel on the same host.',  "simple-view": true}}
         },
 
         initialize: function () {
@@ -101,7 +97,7 @@ define(
             this.schema = $.extend(true, {}, this.schema);
 
             this.set({"Type": "ScriptExecutable"});
-            this.set({"Parameters": new ScriptExecutable()});
+            this.set({"Execute": new ScriptExecutable()});
             this.set({"Task Name": "Task" + (++Task.counter)});
             this.set({"Maximum Number of Execution": 1});
             this.set({"Run as me": false});
@@ -219,11 +215,11 @@ define(
         getBasicFields: function() {
             return [
                 "Task Name",
-                "Parameters",
-                "Execute on host with name",
+                "Execute",
+                "Host Name",
                 "Operating System",
-                "Min free memory in mb",
-                "Do not allow to execute other jobs on the same host in parallel"]
+                "Required free memory (in mb)",
+                "Host with no other activities"]
         },
         addOrReplaceGenericInfo: function(key, value) {
 
@@ -244,15 +240,14 @@ define(
 
         },
         commitSimpleForm: function(form) {
-            console.log("!!!! here")
             var data = form.getValue();
             var selectionScripts = [];
 
-            var name = "Execute on host with name"
+            var name = "Host Name"
             if (data[name]) {
                 var selectionScript = new SelectionScript({
                     Script:_.template(ssHostTemplate, {hostName:data[name]}),
-                    Engine:"javascript",
+                    "written in":"javascript",
                     Type:"dynamic"});
 
                 selectionScripts.push(selectionScript)
@@ -263,25 +258,25 @@ define(
             if (data[name] && data[name] != 'any') {
                 var selectionScript = new SelectionScript({
                     Script:_.template(ssOSTemplate, {os:data[name]}),
-                    Engine:"javascript",
+                    "written in":"javascript",
                     Type:"dynamic"});
 
                 selectionScripts.push(selectionScript)
             }
             this.addOrReplaceGenericInfo(name, data[name])
 
-            name = "Min free memory in mb"
+            name = "Required free memory (in mb)"
             if (data[name]) {
                 var selectionScript = new SelectionScript({
                     Script:_.template(ssFreeMemTemplate, {mem:data[name]}),
-                    Engine:"javascript",
+                    "written in":"javascript",
                     Type:"dynamic"});
 
                 selectionScripts.push(selectionScript)
             }
             this.addOrReplaceGenericInfo(name, data[name])
 
-            name = "Do not allow to execute other jobs on the same host in parallel"
+            name = "Host with no other activities"
             if (data[name]) {
                 this.set({"Topology": "singleHostExclusive"});
                 this.set({"Number of Nodes": 2});
@@ -302,13 +297,12 @@ define(
                 var key = genericInfo[i]["Property Name"];
                 var value = genericInfo[i]["Property Value"];
 
-                if (key == "Do not allow to execute other jobs on the same host in parallel") {
+                if (key == "Host with no other activities") {
                     value = (value === 'true')
                 }
                 this.set(key, value)
             }
         }
-
     })
 
     return Task;
