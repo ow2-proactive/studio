@@ -13,7 +13,7 @@ require.config({
             ],
             exports: 'Backbone'
         },
-        boostrap: {
+        bootstrap: {
             deps: [
                 'jquery'
             ]
