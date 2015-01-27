@@ -6,7 +6,7 @@ module.exports = {
 
             .closeNotification()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
 
             .createTask()
 
@@ -21,7 +21,7 @@ module.exports = {
             .checkExport(function (select, jobXmlDocument) {
                 var taskName = select("//p:task/@name", jobXmlDocument)[0].value
 
-                this.assert(taskName.indexOf("Javascript_Task") > -1, "Task name")
+                this.assert.ok(taskName.indexOf("Javascript_Task") > -1, "Task name")
             })
             .end();
     },
@@ -30,7 +30,7 @@ module.exports = {
         browser
             .login()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
 
             .click("#Job\\ Variables")
 
@@ -55,7 +55,7 @@ module.exports = {
         browser
             .login()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
 
             .createTask()
             .waitForElementVisible('.task')

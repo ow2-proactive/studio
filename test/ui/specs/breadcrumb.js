@@ -4,7 +4,7 @@ module.exports = {
         browser
             .login()
 
-            .createAndOpenWorkflow()
+            .freshWorkflow()
             .createTask()
 
             .click(".task")
