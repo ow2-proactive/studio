@@ -7,20 +7,20 @@
 ]]>
         </code>
     <% } else { %>
-        <% if (model["Library Path"] && model["Library Path"].length>0) { %>
-            <file path="<%=model["Library Path"]%>">
+        <% if (model["Or Path"] && model["Or Path"].length>0) { %>
+        <file path="<%=model["Or Path"]%>">
+        <% } else if (model["Or Url"] && model["Or Url"].length>0) {%>
+        <file url="<%=model["Or Url"]%>">
         <% }%>
 
         <% if (model["Arguments"] && model["Arguments"].length>0) { %>
-            <arguments>
-            <% _.each(model["Arguments"], function(arg) { %>
-                <argument value="<%=arg%>"/>
-            <% }) %>
-            </arguments>
+        <arguments>
+        <% _.each(model["Arguments"], function(arg) { %>
+            <argument value="<%=arg%>"/>
+        <% }) %>
+        </arguments>
         <% }%>
-        <% if (model["Library Path"] && model["Library Path"].length>0) { %>
-            </file>
-        <% }%>
+        </file>
     <% } %>
 <% print("</sc"+"ript>") %>
 <% } %>

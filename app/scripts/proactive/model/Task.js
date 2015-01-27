@@ -60,9 +60,9 @@ define(
             "Selection Scripts": {type: 'List', itemType: 'NestedModel', model: SelectionScript, itemToString: function () {
                 return "Selection Script"
             }, fieldAttrs: {"data-tab": "Selection Scripts", 'placeholder': 'selection->script', "data-help":'A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'}},
-            "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre Script", 'placeholder': 'pre->script', "data-help":'A script that is executed on computing node before executing the task. A script can be saved into a library when you are logged in.'}},
-            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script', "data-help":'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'}},
-            "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Clean Script", 'placeholder': 'cleaning->script', "data-help":'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'}},
+            "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre Script", 'placeholder': 'pre->script', "data-help":'A script that is executed on computing node before executing the task.'}},
+            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script', "data-help":'A script that is executed on computing node after the task execution (if task is finished correctly).'}},
+            "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Clean Script", 'placeholder': 'cleaning->script', "data-help":'A script that is executed on computing node after the task execution even if task failed.'}},
             "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Data Management", 'placeholder': 'inputFiles->files', "data-help":'Files from your user or global spaces that will be transferred to computing nodes automatically.'}, subSchema: {
                 "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
                 "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
