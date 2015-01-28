@@ -19,7 +19,7 @@ define(
 
     var Task = SchemaModel.extend({
         schema: {
-            "Task Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name', "data-tab": "Execution", "data-help":'Unique name of a task without spaces.'}},
+            "Task Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name', "data-tab": "Execution", 'data-tab-help': 'Execution parameters', "data-help":'Unique name of a task without spaces.'}},
             "Type": {type: 'TaskTypeRadioEditor', fieldAttrs: {"data-help":'<b>Script Task</b>, a script written in Groovy, Ruby, Python and other languages supported by the JSR-223.<br/><b>Native Task</b>, an executable with eventual parameters to be executed.<br/><b>Java Task</b>, a task written in Java extending the Scheduler API.'}, fieldClass: 'task-type',
                 options: [
                     {val: "ScriptExecutable", label: "Script"},
@@ -27,7 +27,7 @@ define(
                     {val: "JavaExecutable", label: "Java"}
                 ]},
             "Parameters": {type: 'NestedModel', model: ScriptExecutable},
-            "Description": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': ['description->#cdata-section', 'description->#text'], "data-help":'A small textual description of what task does.'}},
+            "Description": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'data-tab-help': 'General task parameters (description, execution control, error handling...)', 'placeholder': ['description->#cdata-section', 'description->#text'], "data-help":'A small textual description of what task does.'}},
             "Maximum Number of Execution": {type: 'Number', fieldAttrs: {'placeholder': '@attributes->maxNumberOfExecution', "data-help":'Defines how many times this task is allowed to be restarted.'}},
             "Maximum Execution Time (hh:mm:ss)": {type: "Text", fieldAttrs: {'placeholder': '@attributes->walltime', "data-help":'Task execution timeout. Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'}},
             "Result Preview Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->resultPreviewClass', "data-help":'A class that defines how the result of a task should be displayed in the Scheduler Web Interface.'}},
@@ -43,7 +43,7 @@ define(
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-            "Number of Nodes": {type: 'Text', fieldAttrs: {"data-tab": "Multi-Node Execution", 'placeholder': 'parallel->@attributes->numberOfNodes', "data-help":'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'}},
+            "Number of Nodes": {type: 'Text', fieldAttrs: {"data-tab": "Multi-Node Execution", 'data-tab-help': 'Configuration of resources requirements', 'placeholder': 'parallel->@attributes->numberOfNodes', "data-help":'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'}},
             "Topology": { type: 'Select', fieldAttrs: {'placeholder': 'parallel->topology', "data-help":'The topology of computing nodes in the network in terms of network latency.'}, options: ["none", "arbitrary",
                 {val: "bestProximity", label: "best proximity"},
                 {val: "singleHost", label: "single host"},
@@ -53,13 +53,13 @@ define(
             "Or Topology Threshold Proximity": {type: "Number", fieldAttrs: {'placeholder': 'parallel->topology->thresholdProximity->@attributes->threshold', "data-help":'Hosts in the network with predefined max latency between all of them.'}},
             "Control Flow": {type: 'Select', options: ["none", "if", "replicate", "loop"], fieldAttrs: {"data-tab": "Control Flow", "data-help":'Advanced control flow constructions, such as if, loop and replicate.'}},
             "Block": {type: 'Select', options: ["none", {val: "start", label: "start block"}, {val: "end", label: "end block"}], fieldAttrs: {"placeholder": "controlFlow->@attributes->block", "data-help":"Task blocks are defined by pairs of start and end tags.<br/>The role of task blocks is to restrain the expressiveness of the system so that a workflow can be statically checked and validated."}},
-            "Selection Scripts": {type: 'List', itemType: 'NestedModel', model: SelectionScript, itemToString: function () {
-                return "Selection Script"
-            }, fieldAttrs: {"data-tab": "Selection Scripts", 'placeholder': 'selection->script', "data-help":'A selection script provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'}},
-            "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre Script", 'placeholder': 'pre->script', "data-help":'A script that is executed on computing node before executing the task. A script can be saved into a library when you are logged in.'}},
-            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Post Script", 'placeholder': 'post->script', "data-help":'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'}},
-            "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Clean Script", 'placeholder': 'cleaning->script', "data-help":'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'}},
-            "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Data Management", 'placeholder': 'inputFiles->files', "data-help":'Files from your user or global spaces that will be transferred to computing nodes automatically.'}, subSchema: {
+            "Node Selection": {type: 'List', itemType: 'NestedModel', model: SelectionScript, itemToString: function () {
+                return "Node Selection"
+            }, fieldAttrs: {"data-tab": "Node Selection", 'placeholder': 'selection->script', "data-help":'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'}},
+            "Pre Script": {type: 'NestedModel', model: Script, fieldAttrs: {"data-tab": "Pre/Post/Clean scripts", 'data-tab-help': 'Scripts executed before and after the task', 'placeholder': 'pre->script', "data-help":'A script that is executed on computing node before executing the task. A script can be saved into a library when you are logged in.'}},
+            "Post Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'post->script', "data-help":'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'}},
+            "Clean Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'cleaning->script', "data-help":'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'}},
+            "Input Files": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Data Management", 'data-tab-help': 'Input and output files transferred before and after the task execution', 'placeholder': 'inputFiles->files', "data-help":'Files from your user or global spaces that will be transferred to computing nodes automatically.'}, subSchema: {
                 "Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
                 "Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
                 "Access Mode": {type: 'Select',

@@ -52,7 +52,7 @@
     </parallel>
     <% }%>
 
-    <% if (task["Selection Scripts"] && task["Selection Scripts"].length>0) { %>
+    <% if (task["Node Selection"] && task["Node Selection"].length>0) { %>
         <selection>
         <% _.each(selectionScripts, function(script) { %>
                 <%=script%>

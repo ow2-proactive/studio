@@ -22,8 +22,8 @@ define(
             var executable = executableView.render().$el.text();
 
             var selectionScripts = [];
-            if (this.model.get("Selection Scripts")) {
-                $.each(this.model.get("Selection Scripts"), function (i, script) {
+            if (this.model.get("Node Selection")) {
+                $.each(this.model.get("Node Selection"), function (i, script) {
                     var view = new TemplateView({model: script, template: "script-template"}).render();
                     selectionScripts.push(view.$el.text());
                 })

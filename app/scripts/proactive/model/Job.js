@@ -22,7 +22,7 @@ define(
 
     return SchemaModel.extend({
         schema: {
-            "Job Name": {type: "Text", fieldAttrs: {"data-tab": "General Parameters", 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
+            "Name": {type: "Text", fieldAttrs: {"data-tab": 'General Parameters', 'data-tab-help': 'General workflow parameters (name, description, priority...)', 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
             "Project": {type: "Text", fieldAttrs: {'placeholder': '@attributes->projectName', "data-help":'Set a name of a project to be able to group different jobs of the same project later.'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text'], "data-help": "Small textual explanation of what this job does."}},
             "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path', "data-help":"Add jars with your classes that are used in Java or Script tasks. They will be transferred automatically to computing nodes."}, itemTemplate: jobClasspathTemplate},
@@ -35,11 +35,11 @@ define(
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Property Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
-            "User Space Url": {type: "Text", fieldAttrs: {"data-tab": "Data Management", 'placeholder': 'userSpace->@attributes->url', "data-help":"A User Space which is a personal user data storage. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."}},
+            "User Space Url": {type: "Text", fieldAttrs: {"data-tab": "Data Management", 'data-tab-help': 'Definition of dataspaces URLs', 'placeholder': 'userSpace->@attributes->url', "data-help":"A User Space which is a personal user data storage. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."}},
             "Global Space Url": {type: "Text", fieldAttrs: {'placeholder': 'globalSpace->@attributes->url', "data-help":"A Global Space where anyone can read/write files. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."}},
             "Input Space Url": {type: "Text", fieldAttrs: {'placeholder': 'inputSpace->@attributes->url', "data-help":"A private read-only Data Space started manually by user with the proactive-dataserver command."}},
             "Output Space Url": {type: "Text", fieldAttrs: {'placeholder': 'outputSpace->@attributes->url', "data-help":"A private Data Space started manually by user with the proactive-dataserver command."}},
-            "Max Number Of Executions For Task": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'placeholder': '@attributes->maxNumberOfExecution', "data-help":"Defines how many times tasks are allowed to be restarted."}},
+            "Max Number Of Executions For Task": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'data-tab-help': 'Configure workflow behavior upon errors', 'placeholder': '@attributes->maxNumberOfExecution', "data-help":"Defines how many times tasks are allowed to be restarted."}},
             "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->cancelJobOnError', "data-help":"Defines whether the job must continue when a user exception or error occurs during the job process."}, options: [
                 {val: "true", label: "cancel job as soon as one task fails"},
                 {val: "false", label: "continue job execution when a task fails"}
