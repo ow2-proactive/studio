@@ -48,7 +48,7 @@ define(
         },
         initialize: function () {
 //            this.set({"Project Name": "Project"});
-            this.set({"Job Name": "Untitled Job"});
+            this.set({"Name": "Untitled Job"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
             this.set({"Max Number Of Executions For Task": 1});
