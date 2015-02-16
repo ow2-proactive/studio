@@ -12,7 +12,7 @@ define(
 
     return SchemaModel.extend({
         schema: {
-            "Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->class', "data-help":'A java class extending the Scheduler API. It can be in a jar attached to job classpath (see job properties).'}},
+            "Class": {type: "Text", fieldAttrs: {'placeholder': '@attributes->class', "data-help":'A java class extending the Scheduler API. It can be in a jas attached to job classpath (see job properties).'}},
             "Application Parameters": {type: 'List', itemType: 'Object', fieldAttrs: {'placeholder': 'parameters->parameter', "data-help":'Java application parameters.'}, itemToString: Utils.inlineName, subSchema: {
                 "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
                 "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}}
