@@ -832,7 +832,7 @@ li.success {
     margin-right: 10px;
 }
 
-@media (max-width: 1220px) {
+@media (max-width: 1320px) {
     .navbar-header {
         float: none;
     }
