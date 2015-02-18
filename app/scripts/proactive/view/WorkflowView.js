@@ -31,7 +31,7 @@ define(
                 console.log("Creating task", event);
                 that.createTask({offset: {top: event.clientY, left: event.clientX}});
             })
-            this.model.on("change:Name", this.updateJobName, this);
+            this.model.on("change:Job Name", this.updateJobName, this);
 
             this.$el.droppable({
                 accept: ".job-element",
@@ -224,7 +224,7 @@ define(
         },
         updateJobName: function () {
 //	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))
-            $("#breadcrumb-selected-job").text(this.model.get("Name"))
+            $("#breadcrumb-selected-job").text(this.model.get("Job Name"))
         },
         clean: function () {
             this.workFlowDesigner.empty();
@@ -282,7 +282,7 @@ define(
             var that = this;
             this.clean();
 
-            this.model.on("change:Name", this.updateJobName, this);
+            this.model.on("change:Job Name", this.updateJobName, this);
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();

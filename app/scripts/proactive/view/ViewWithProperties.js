@@ -62,7 +62,7 @@ define(
 
             var jobBreadcrumb
             if (that.model.get("Task Name")) {
-                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Name") + '</a></span></li>');
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Job Name") + '</a></span></li>');
                 breadcrumb.append(jobBreadcrumb)
 
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + that.model.get("Task Name") + '</span></li>')
@@ -74,7 +74,7 @@ define(
                 })
                 breadcrumb.append(removeTask)
             } else {
-                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Name") + '</span></li>');
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Job Name") + '</span></li>');
                 breadcrumb.append(jobBreadcrumb)
 
                 // selected-task class is used for copy/paste, delete operations, group task moving etc
@@ -88,7 +88,7 @@ define(
 
                 if (StudioApp.models.jobModel) {
                     StudioApp.views.propertiesView.saveCurrentWorkflow(
-                        StudioApp.models.jobModel.get("Name"),
+                        StudioApp.models.jobModel.get("Job Name"),
                         StudioApp.models.jobModel.get("Project"),
                         StudioApp.views.xmlView.generateXml(),
                         undoManager.getOffsetsFromDOM()

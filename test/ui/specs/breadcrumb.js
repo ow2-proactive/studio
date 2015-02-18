@@ -14,7 +14,7 @@ module.exports = {
             .assert.containsText("#breadcrumb", 'Workflows')
 
             .click("#breadcrumb-selected-job")
-            .assert.value('input[name="Name"]', 'Untitled workflow')
+            .assert.value('input[name="Job Name"]', 'Untitled workflow')
             .assert.containsText("#breadcrumb", 'Untitled workflow')
             .assert.containsText("#breadcrumb", 'Workflows')
 

@@ -22,7 +22,7 @@ define(
 
     return SchemaModel.extend({
         schema: {
-            "Name": {type: "Text", fieldAttrs: {"data-tab": 'General Parameters', 'data-tab-help': 'General workflow parameters (name, description, priority...)', 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
+            "Job Name": {type: "Text", fieldAttrs: {"data-tab": 'General Parameters', 'data-tab-help': 'General workflow parameters (name, description, priority...)', 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
             "Project": {type: "Text", fieldAttrs: {'placeholder': '@attributes->projectName', "data-help":'Set a name of a project to be able to group different jobs of the same project later.'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text'], "data-help": "Small textual explanation of what this job does."}},
             "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path', "data-help":"Add jars with your classes that are used in Java or Script tasks. They will be transferred automatically to computing nodes."}, itemTemplate: jobClasspathTemplate},
@@ -48,7 +48,7 @@ define(
         },
         initialize: function () {
 //            this.set({"Project Name": "Project"});
-            this.set({"Name": "Untitled Job"});
+            this.set({"Job Name": "Untitled Job"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
             this.set({"Max Number Of Executions For Task": 1});
