@@ -6,6 +6,7 @@ define(
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
+        'text!proactive/templates/job-variable-template.html',
         'codemirrorJs',
         'codemirrorComment',
         'codemirrorMB',
@@ -17,7 +18,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate) {
 
         "use strict";
 
@@ -135,20 +136,45 @@ define(
 
             save_workflow();
             closeCollapsedMenu();
-            StudioClient.isConnected(function () {
-                // submitting
-                StudioApp.views.xmlView.render();
 
-                var button = $(this);
-                var xml = StudioApp.views.xmlView.generateXml()
-                var htmlVisualization = StudioApp.views.xmlView.generateHtml();
-                StudioClient.submit(xml, htmlVisualization)
-            }, function () {
+            var jobVariables = StudioApp.models.jobModel.get('Job Variables');
+            if (jobVariables == null || jobVariables.length == 0) {
+                executeIfConnected(submit);
+                return;
+            }
+
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables});
+            $('#job-variables').html(template);
+            $('#execute-workflow-modal').modal();
+        });
+
+        $("#exec-button").click(function (event) {
+            var StudioApp = require('StudioApp');
+            executeIfConnected(function () {
+                var oldJobVariables = StudioApp.models.jobModel.get('Job Variables');
+                var jobVariables = $('#job-variables').find('input').map(function() {
+                    return {'Name': $(this).attr('name'), 'Value': $(this).val()};
+                });
+                StudioApp.models.jobModel.set('Job Variables', jobVariables);
+                submit();
+                StudioApp.models.jobModel.set('Job Variables', oldJobVariables);
+            })
+        });
+
+        function executeIfConnected(action) {
+            var StudioApp = require('StudioApp');
+            StudioClient.isConnected(action, function () {
                 // ask to login first
                 StudioApp.views.loginView.render();
             })
+        }
 
-        });
+        function submit() {
+            var StudioApp = require('StudioApp');
+            var xml = StudioApp.views.xmlView.generateXml();
+            var htmlVisualization = StudioApp.views.xmlView.generateHtml();
+            StudioClient.submit(xml, htmlVisualization);
+        }
 
         $("#clear-button").click(function (event) {
             event.preventDefault();
