@@ -6,7 +6,6 @@ define(
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
-        'text!proactive/templates/job-variable-template.html',
         'codemirrorJs',
         'codemirrorComment',
         'codemirrorMB',
@@ -18,7 +17,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror) {
 
         "use strict";
 
@@ -136,41 +135,20 @@ define(
 
             save_workflow();
             closeCollapsedMenu();
-
-            var jobVariables = StudioApp.models.jobModel.get('Job Variables');
-            if (jobVariables == null) {
-                executeJob();
-                return;
-            }
-
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables});
-            $('#job-variables').html(template);
-            $('#execute-workflow-modal').modal();
-        });
-
-        $("#exec-button").click(function (event) {
-            executeJob();
-        });
-
-        function executeJob() {
-            var StudioApp = require('StudioApp');
             StudioClient.isConnected(function () {
-                var oldJobVariables = StudioApp.models.jobModel.get('Job Variables');
-                if (oldJobVariables != null) {
-                    var jobVariables = $('#job-variables').find('input').map(function() {
-                        return {'Name': $(this).attr('name'), 'Value': $(this).val()};
-                    });
-                    StudioApp.models.jobModel.set('Job Variables', jobVariables);
-                }
-                var xml = StudioApp.views.xmlView.generateXml();
+                // submitting
+                StudioApp.views.xmlView.render();
+
+                var button = $(this);
+                var xml = StudioApp.views.xmlView.generateXml()
                 var htmlVisualization = StudioApp.views.xmlView.generateHtml();
-                StudioApp.models.jobModel.set('Job Variables', oldJobVariables);
-                StudioClient.submit(xml, htmlVisualization);
+                StudioClient.submit(xml, htmlVisualization)
             }, function () {
                 // ask to login first
                 StudioApp.views.loginView.render();
             })
-        }
+
+        });
 
         $("#clear-button").click(function (event) {
             event.preventDefault();
