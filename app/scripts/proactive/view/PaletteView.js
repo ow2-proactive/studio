@@ -16,7 +16,6 @@ define(
             $("#palette-container").append(this.$el)
 
             this.options.templates.on('add', this.render, this);
-            this.options.templates.on('change', this.render, this);
             this.options.templates.on('remove', this.render, this);
             this.options.templates.on('reset', this.render, this);
             this.options.templates.fetch();

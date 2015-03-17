@@ -135,6 +135,9 @@ define(['jquery',
                         xml: workflowXml,
                         metadata: JSON.stringify(metadata)
                     });
+                if (this.options.paletteView) {
+                    this.options.paletteView.render();
+                }
             },
             _currentWorkflow: function () {
                 return this.options.app.models.currentWorkflow;
