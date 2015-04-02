@@ -55,7 +55,7 @@ define(
 
                 breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + this.model.get("Task Name") + '</span></li>')
             } else {
-                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + StudioApp.models.jobModel.get("Name") + '</span></li>');
+                jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + this.model.get("Name") + '</span></li>');
                 breadcrumb.append(jobBreadcrumb)
 
                 // selected-task class is used for copy/paste, delete operations, group task moving etc
@@ -155,6 +155,11 @@ define(
             form.on('change', function (f, changed) {
                 form.commit()
                 if (that.model.commitSimpleForm) that.model.commitSimpleForm(form)
+
+                if (that.model.get('Name')) {
+                    // updating breadcrumb
+                    $("#breadcrumb-job-name").text(that.model.get('Name'))
+                }
             })
 
             var panel = $('<div id="simple-form" class="well"></div>')
@@ -194,6 +199,11 @@ define(
 
             form.on('change', function (f, changed) {
                 form.commit()
+
+                if (that.model.get('Name')) {
+                    // updating breadcrumb
+                    $("#breadcrumb-job-name").text(that.model.get('Name'))
+                }
             })
 
             var accordion = $('<div class="panel-group" id="accordion-properties">');
