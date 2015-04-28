@@ -67,7 +67,11 @@ define(
             var that = this;
             // adding switch view button
             var workflow = StudioApp.models.currentWorkflow;
-            var detailedView = workflow.getMetadata()['detailedView'];
+            var detailedView = true;
+            if (workflow.getMetadata()['detailedView']!=undefined) {
+                detailedView = workflow.getMetadata()['detailedView']
+            }
+
             var icon = detailedView? "glyphicon-th-list" : "glyphicon-list";
             var title = detailedView? "Switch to simple view": "Switch to detailed view";
             var changeView = $('<a id="form-switch" href="#" class="glyphicon '+icon+' pull-right" title="'+title+'"></a>');
@@ -312,7 +316,10 @@ define(
 
             var StudioApp = require('StudioApp');
             var workflow = StudioApp.models.currentWorkflow;
-            var detailedView = workflow.getMetadata()['detailedView'];
+            var detailedView = true;
+            if (workflow.getMetadata()['detailedView']!=undefined) {
+                detailedView = workflow.getMetadata()['detailedView'];
+            }
 
             this.clearTextSelection();
             this.initBreadCrumb(StudioApp);
