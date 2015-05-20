@@ -11,11 +11,11 @@ repositories {
 uploadArchives {
     repositories {
         mavenDeployer {
-            snapshotRepository(url: "http://repo.activeeon.com/content/repositories/snapshots/") {
+            snapshotRepository(url: "http://repository.activeeon.com/content/repositories/snapshots/") {
                 authentication(userName: "${System.getProperty('nexusUsername')}",
                         password: "${System.getProperty('nexusPassword')}")
             }
-            repository(url: "http://repo.activeeon.com/content/repositories/releases/") {
+            repository(url: "http://repository.activeeon.com/content/repositories/releases/") {
                 authentication(userName: "${System.getProperty('nexusUsername')}",
                         password: "${System.getProperty('nexusPassword')}")
             }
