@@ -2,7 +2,6 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'text!proactive/templates/job-classpath-template.html',
         'proactive/model/ScriptExecutable',
         'proactive/model/NativeExecutable',
         'proactive/model/JavaExecutable',
@@ -16,7 +15,7 @@ define(
     ],
 
     // TODO REMOVE undoManager dependency - comes from view
-    function (Backbone, SchemaModel, tpl, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript,
+    function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, Script, SelectionScript,
               BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate) {
 
     "use strict";

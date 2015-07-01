@@ -313,7 +313,7 @@ define(['module'], function (module) {
             var stringBuffer, line,
                 encoding = "utf-8",
                 file = new java.io.File(url),
-                lineSeparator = java.lang.System.getProperty("line.separator"),
+                lineSeparator = java.lang.System.lineSeparator(),
                 input = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file), encoding)),
                 content = '';
             try {

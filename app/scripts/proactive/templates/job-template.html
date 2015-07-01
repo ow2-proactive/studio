@@ -19,14 +19,6 @@
     <description> <![CDATA[ <%= job["Description"]%> ]]> </description>
     <% } %>
 
-    <% if (job["Job Classpath"] && job["Job Classpath"].length>0) { %>
-    <jobClasspath>
-    <% _.each(job["Job Classpath"], function(cp) { %>
-        <pathElement path="<%=cp%>"/>
-    <% }) %>
-    </jobClasspath>
-    <% } %>
-
     <% if (job["Generic Info"] && job["Generic Info"].length>0) { %>
     <genericInformation>
     <% _.each(job["Generic Info"], function(gi) { %>
