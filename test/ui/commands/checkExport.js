@@ -13,7 +13,7 @@ exports.command = function (xpathCheck) {
                 var xpath = require('xpath')
                     , dom = require('xmldom').DOMParser
 
-                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.2"});
+                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.3"});
 
                 var jobXmlDocument = new dom().parseFromString(jobXml)
 
