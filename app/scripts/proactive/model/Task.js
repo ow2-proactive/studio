@@ -43,11 +43,6 @@ define(
                     ]
                 },
                 "Execute": {type: 'NestedModel', model: ScriptExecutable},
-                "Fork Environment": {
-                    type: 'NestedModel',
-                    model: ForkEnvironment,
-                    fieldAttrs: {"data-tab": "Fork Environment"}
-                },
                 "Description": {
                     type: "Text",
                     fieldAttrs: {
@@ -287,6 +282,11 @@ define(
                         "data-help": 'Run the task exclusively on host - no other tasks will be executed in parallel on the same host.',
                         "simple-view": true
                     }
+                },
+                "Fork Environment": {
+                    type: 'NestedModel',
+                    model: ForkEnvironment,
+                    fieldAttrs: {"data-tab": "Fork Environment"}
                 }
             },
 
