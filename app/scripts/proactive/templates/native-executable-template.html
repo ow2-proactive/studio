@@ -11,13 +11,6 @@
     <% } %>
 </staticCommand>
 
-<% } else { %>
-
-<dynamicCommand <% if (model["Working Dir"] && model["Working Dir"].length>0) { %>workingDir="<%=model["Working Dir"]%>"<% } %>>
-<generation>
-    <%=script%>
-</generation>
-</dynamicCommand>
 <% } %>
 
 </nativeExecutable>
