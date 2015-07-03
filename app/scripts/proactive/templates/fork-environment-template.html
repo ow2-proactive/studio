@@ -1,0 +1,31 @@
+<% if (isForkEnvironmentDefined) { %>
+<forkEnvironment<% if(model["Java Home"]&&model["Java Home"].length>0) {%> javaHome="<%=model["Java Home"]%>"<%}%> <% if(model["Working Dir"]&&model["Working Dir"].length>0) {%>workingDir="<%=model["Working Dir"]%>"<%}%>>
+    <% if (model["Environment Variables"] && model["Environment Variables"].length>0) { %>
+    <SystemEnvironment>
+        <% _.each(model["Environment Variables"], function(arg) { %>
+        <variable name="<%=arg["Name"]%>" value="<%=arg["Value"]%>" append="<%=arg["Append"]%>" appendChar="<%=arg["Append Char"]%>" />
+        <% }) %>
+    </SystemEnvironment>
+    <% } %>
+    <% if (model["Jvm Arguments"] && model["Jvm Arguments"].length>0) { %>
+    <jvmArgs>
+        <% _.each(model["Jvm Arguments"], function(arg) { %>
+        <jvmArg value="<%=arg%>"/>
+        <% }) %>
+    </jvmArgs>
+    <% } %>
+    <% if (model["Additional Classpath"] && model["Additional Classpath"].length>0) { %>
+    <additionalClasspath>
+        <% _.each(model["Additional Classpath"], function(arg) { %>
+        <pathElement path="<%=arg%>"/>
+        <% }) %>
+    </additionalClasspath>
+    <% } %>
+
+    <% if (script && script.length>0) { %>
+    <envScript>
+        <%=script%>
+    </envScript>
+    <% } %>
+</forkEnvironment>
+<% } %>

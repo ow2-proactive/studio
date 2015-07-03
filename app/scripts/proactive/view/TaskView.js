@@ -67,6 +67,9 @@ define(
                 } else {
                     this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
                 }
+
+                this.model.schema['Fork Environment'] = {type: 'NestedModel', model: ForkEnvironment};
+
                 this.$el.find("img").attr('src', this.icons[executableTypeStr])
                 this.model.set({"Execute": executable});
                 this.$el.click();
