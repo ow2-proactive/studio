@@ -27,7 +27,7 @@ define(
 
                 var isForkEnvironmentDefined =
                     (model["Java Home"] && model["Java Home"].length > 0) ||
-                    (model["Working Dir"] && model["Working Dir"].length > 0) ||
+                    (model["Working Folder"] && model["Working Folder"].length > 0) ||
                     (model["Environment Variables"] && model["Environment Variables"].length > 0) ||
                     (model["Jvm Arguments"] && model["Jvm Arguments"].length > 0) ||
                     (model["Additional Classpath"] && model["Additional Classpath"].length > 0) ||
