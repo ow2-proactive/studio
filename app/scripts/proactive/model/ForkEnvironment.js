@@ -53,8 +53,6 @@ define(
                     subSchema: {
                         "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
                         "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}},
-                        "Append": {type: "Checkbox", fieldAttrs: {'placeholder': '@attributes->append'}},
-                        "Append Char": {type: "Text", fieldAttrs: {'placeholder': '@attributes->appendChar'}}
                     }
                 },
                 "Environment Script": {

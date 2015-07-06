@@ -3,7 +3,7 @@
     <% if (model["Environment Variables"] && model["Environment Variables"].length>0) { %>
     <SystemEnvironment>
         <% _.each(model["Environment Variables"], function(arg) { %>
-        <variable name="<%=arg["Name"]%>" value="<%=arg["Value"]%>" append="<%=arg["Append"]%>" appendChar="<%=arg["Append Char"]%>" />
+        <variable name="<%=arg["Name"]%>" value="<%=arg["Value"]%>" />
         <% }) %>
     </SystemEnvironment>
     <% } %>
