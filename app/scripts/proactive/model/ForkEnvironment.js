@@ -27,11 +27,11 @@ define(
                         "data-help": 'JVM properties e.g:<br/>-Xmx2G<br/>-Dprop.name=value'
                     }
                 },
-                "Working Dir": {
+                "Working Folder": {
                     type: "Text",
                     fieldAttrs: {
                         'placeholder': 'forkEnvironment->@attributes->workingDir',
-                        "data-help": 'JVM working directory'
+                        "data-help": 'A working folder of the executable on computing nodes.'
                     }
                 },
                 "Additional Classpath": {
