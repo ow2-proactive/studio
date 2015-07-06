@@ -362,6 +362,56 @@ define(
             })
         })();
 
+        $(document).ready(function () {
+            var ctrlDown = false;
+            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
+            var copied = false;
+            var pasteAllow = true;
+
+            $(document).keydown(function (e) {
+                if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
+            }).keyup(function (e) {
+                if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
+            });
+
+            $(document).keydown(function (e) {
+                if (ctrlDown && e.keyCode == cKey) {
+                    console.log("copy");
+                    copied = [];
+                    $(".selected-task").each(function (i, t) {
+                        copied.push(t);
+                    })
+                }
+                if (ctrlDown && e.keyCode == vKey) {
+                    if (pasteAllow) {
+                        console.log("paste");
+                        require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
+                    }
+                }
+                if (ctrlDown && e.keyCode == zKey) {
+                    undoManager.undoIfEnabled();
+                }
+                if (ctrlDown && e.keyCode == yKey) {
+                    undoManager.redoIfEnabled();
+                }
+            });
+
+            $('body').mousedown(function (e) {
+
+                if (e.isPropagationStopped()) {
+                    return;
+                }
+
+                $(".selected-task").removeClass("selected-task");
+                pasteAllow = false;
+            })
+            $('#workflow-designer-outer').mousedown(function (e) {
+                pasteAllow = {left: e.pageX, top: e.pageY};
+                e.stopPropagation();
+
+            })
+        });
+
         // adding form-control classes to new input elements after clicking on "add"
         // button in forms
         $(document).on('click', 'button[data-action="add"]', function () {
