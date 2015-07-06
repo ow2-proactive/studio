@@ -1,5 +1,5 @@
 <% if (isForkEnvironmentDefined) { %>
-<forkEnvironment<% if(model["Java Home"]&&model["Java Home"].length>0) {%> javaHome="<%=model["Java Home"]%>"<%}%> <% if(model["Working Dir"]&&model["Working Dir"].length>0) {%>workingDir="<%=model["Working Dir"]%>"<%}%>>
+<forkEnvironment<% if(model["Java Home"]&&model["Java Home"].length>0) {%> javaHome="<%=model["Java Home"]%>"<%}%> <% if(model["Working Folder"]&&model["Working Folder"].length>0) {%>workingDir="<%=model["Working Folder"]%>"<%}%>>
     <% if (model["Environment Variables"] && model["Environment Variables"].length>0) { %>
     <SystemEnvironment>
         <% _.each(model["Environment Variables"], function(arg) { %>
