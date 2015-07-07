@@ -66,13 +66,6 @@ define(
                         "data-help": 'Task execution timeout. Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'
                     }
                 },
-                "Result Preview Class": {
-                    type: "Text",
-                    fieldAttrs: {
-                        'placeholder': '@attributes->resultPreviewClass',
-                        "data-help": 'A class that defines how the result of a task should be displayed in the Scheduler Web Interface.'
-                    }
-                },
                 "Run as me": {
                     type: "Checkbox",
                     fieldAttrs: {

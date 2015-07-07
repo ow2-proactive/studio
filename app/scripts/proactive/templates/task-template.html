@@ -8,9 +8,6 @@
 
     <%if (task["Maximum Execution Time (hh:mm:ss)"]){%>
         walltime="<%=task["Maximum Execution Time (hh:mm:ss)"]%>"
-    <%}%>
-    <%if (task["Result Preview Class"]){%>
-        resultPreviewClass="<%=task["Result Preview Class"]%>"
     <%}%>>
 
     <% if (task["Description"] && task["Description"].length>0) { %>
