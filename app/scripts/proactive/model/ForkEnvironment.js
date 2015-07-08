@@ -14,7 +14,7 @@ define(
                 "Java Home": {
                     type: "Text",
                     fieldAttrs: {
-                        'placeholder': 'forkEnvironment->@attributes->javaHome',
+                        'placeholder': '@attributes->javaHome',
                         "data-help": 'Java installation directory on the node side. Must not include /bin/java.'
                     }
                 },
@@ -22,7 +22,7 @@ define(
                     type: 'List',
                     itemType: 'Text',
                     fieldAttrs: {
-                        'placeholder': 'forkEnvironment->jvmArgs->jvmArg',
+                        'placeholder': 'jvmArgs->jvmArg',
                         'itemplaceholder': '@attributes->value',
                         "data-help": 'JVM properties e.g:<br/>-Xmx2G<br/>-Dprop.name=value'
                     }
@@ -30,7 +30,7 @@ define(
                 "Working Folder": {
                     type: "Text",
                     fieldAttrs: {
-                        'placeholder': 'forkEnvironment->@attributes->workingDir',
+                        'placeholder': '@attributes->workingDir',
                         "data-help": 'A working folder of the executable on computing nodes.'
                     }
                 },
@@ -38,7 +38,7 @@ define(
                     type: 'List',
                     itemType: 'Text',
                     fieldAttrs: {
-                        'placeholder': 'forkEnvironment->additionalClasspath->pathElement',
+                        'placeholder': 'additionalClasspath->pathElement',
                         'itemplaceholder': '@attributes->path',
                         "data-help": 'The list of \"pathElement\" representing the classpath to be added when starting the new JVM.'
                     }
@@ -47,7 +47,7 @@ define(
                     type: 'List',
                     itemType: 'Object',
                     fieldAttrs: {
-                        'placeholder': 'forkEnvironment->SystemEnvironment->variable',
+                        'placeholder': 'SystemEnvironment->variable',
                         "data-help": 'The list of system variables that will be added to the forked JVM process'
                     },
                     subSchema: {
@@ -59,7 +59,7 @@ define(
                     type: 'NestedModel',
                     model: Script,
                     fieldAttrs: {
-                        'placeholder': 'forkEnvironment->envScript->script',
+                        'placeholder': 'envScript->script',
                         "data-help": 'Environment script that is able to add/change each items of the fork environment programmatically.'
                     }
                 }

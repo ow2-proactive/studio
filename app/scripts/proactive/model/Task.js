@@ -279,7 +279,10 @@ define(
                 "Fork Environment": {
                     type: 'NestedModel',
                     model: ForkEnvironment,
-                    fieldAttrs: {"data-tab": "Fork Environment"}
+                    fieldAttrs: {
+                        "data-tab": "Fork Environment",
+                        "placeholder": "forkEnvironment"
+                    }
                 }
             },
 
