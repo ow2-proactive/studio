@@ -109,25 +109,6 @@ define(
                 this.element.removeClass('block-end').removeClass('block-start');
             }
         },
-        showOrHideForkEnvironment: function () {
-            var executable = this.model.get("Execute");
-            if (executable) {
-                var forkEnvTitle = "Fork Environment";
-                var forkEnvDiv = $("body").find('[placeholder="forkEnvironment"]')
-                if (typeof(executable.toJSON) != "undefined") {
-                    executable = executable.toJSON();
-                }
-                if (executable[forkEnvTitle] == undefined) {
-                    return;
-                }
-
-                if (executable[forkEnvTitle] == "true") {
-                    forkEnvDiv.nextAll("div").show();
-                } else {
-                    forkEnvDiv.nextAll("div").hide();
-                }
-            }
-        },
         overlays: function () {
             var arrowCommon = { foldback: 0.7, fillStyle: "gray", width: 14 };
             return [
