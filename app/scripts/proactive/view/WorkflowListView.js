@@ -76,7 +76,31 @@ define(['jquery',
             },
             createOne: function () {
                 var jobModel = new Job();
-                var jobName = "Untitled " + this.mode;
+                var lastUntitledJobIndex = 0;
+
+                if (this.collection.length > 0) {
+                    var lastUntitledJobName;
+                    var models = this.collection.models;
+
+                    for (var i=0; i<models.length; i++) {
+                        var model = models[i];
+                        var modelName = model.attributes.name;
+
+                        if (modelName.startsWith("Untitled " + this.mode + " ")) {
+                            lastUntitledJobName = modelName;
+
+                            var chunks = lastUntitledJobName.split(" ");
+                            var parsedIndex = parseInt(chunks[chunks.length - 1]);
+
+                            if (!isNaN(parsedIndex) &&
+                                    parsedIndex > lastUntitledJobIndex) {
+                                lastUntitledJobIndex = parsedIndex;
+                            }
+                        }
+                    }
+                }
+
+                var jobName = "Untitled " + this.mode + " " + (lastUntitledJobIndex + 1);
                 jobModel.set("Name", jobName);
                 var jobXml = new XmlView().xml(jobModel);
                 var workflow = this.collection.create({name: jobName, xml: jobXml}, {wait: true});

@@ -42,8 +42,7 @@ define(
             "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->restartTaskOnError', "data-help":"Defines whether tasks that have to be restarted will restart on an other computing node."}, options: ["anywhere", "elsewhere"]}
         },
         initialize: function () {
-//            this.set({"Project Name": "Project"});
-            this.set({"Name": "Untitled Workflow"});
+            this.set({"Name": "Untitled Workflow 1"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
             this.set({"Max Number Of Executions For Task": 1});
