@@ -16,12 +16,7 @@ define(
             if (typeof(this.model.toJSON) != "undefined") {
                 model = this.model.toJSON();
             }
-            var script = undefined;
-            if (model["Environment Script"]) {
-                script = new TemplateView({model: model["Environment Script"], template: "script-template"}).render().$el.text();
-                script = script.trim();
-            }
-            var template = _.template(tpl, {model: model, 'script': script});
+            var template = _.template(tpl, {model: model});
             this.$el.text(template);
             return this;
         }

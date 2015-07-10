@@ -2,31 +2,26 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'text!proactive/templates/job-classpath-template.html',
         'proactive/model/Task',
         'proactive/model/ScriptExecutable',
         'proactive/model/NativeExecutable',
         'proactive/model/JavaExecutable',
         'proactive/model/BranchWithScript',
         'proactive/model/utils',
-
         'proactive/view/utils/undo' // TODO remove
     ],
 
     // TODO REMOVE undoManager dependency - comes from view
-    function (Backbone, SchemaModel, tpl, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager) {
+    function (Backbone, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager) {
 
     "use strict";
-
-    var jobClasspathTemplateContent = _.template(tpl);
 
     return SchemaModel.extend({
         schema: {
             "Name": {type: "Text", fieldAttrs: {"data-tab": 'General Parameters', 'data-tab-help': 'General workflow parameters (name, description, priority...)', 'placeholder': '@attributes->name', "data-help":'The name of your workflow.'}},
             "Project": {type: "Text", fieldAttrs: {'placeholder': '@attributes->projectName', "data-help":'Set a name of a project to be able to group different jobs of the same project later.'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text'], "data-help": "Small textual explanation of what this job does."}},
-            "Job Classpath": {type: 'List', itemType: 'Text', fieldAttrs: {'placeholder': 'jobClasspath->pathElement', 'itemplaceholder': '@attributes->path', "data-help":"Add jars with your classes that are used in Java or Script tasks. They will be transferred automatically to computing nodes."}, itemTemplate: jobClasspathTemplateContent},
-            "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority', "data-help":"Scheduling priority level of the job. A user can only set the priority of his jobs and can only use the values \"lowest\", \"low\", or \"normal\". There are two higher priority levels \"high\" and \"highest\" which can be only set by the administrator."}, options: ["low", "normal", "high", { val: "highest", label: 'highest (admin only)' }]},
+            "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority', "data-help":"Scheduling priority level of the job. A user can only set the priority of his jobs and can only use the values \"lowest\", \"low\", or \"normal\". There are two higher priority levels \"high\" and \"highest\" which can be only set by the administrator."}, options: ["low", "normal", { val: "high", label: 'high (admin only)' }, { val: "highest", label: 'highest (admin only)' }]},
             "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Variables", 'placeholder': 'variables->variable', "data-help":"Workflow variables that will be available in all tasks."}, itemToString: Utils.inlineNameValue,  subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
@@ -47,8 +42,7 @@ define(
             "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->restartTaskOnError', "data-help":"Defines whether tasks that have to be restarted will restart on an other computing node."}, options: ["anywhere", "elsewhere"]}
         },
         initialize: function () {
-//            this.set({"Project Name": "Project"});
-            this.set({"Name": "Untitled Workflow"});
+            this.set({"Name": "Untitled Workflow 1"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
             this.set({"Max Number Of Executions For Task": 1});

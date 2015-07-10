@@ -281,14 +281,6 @@ define(
             container.find("textarea").addClass("form-control");
             container.find("button").addClass("btn").addClass("btn-default");
 
-            // showinf only file names in job classpath
-            $(".visible-job-classpath input").val(function () {
-                var fullPath = $(this).val();
-                var fileName = fullPath.replace(/^.*[\\\/]/, '')
-                $(this).attr('readonly', true);
-                return fileName;
-            })
-
             // adding help info
             var that = this;
             container.find("[data-help]").each(function() {

@@ -2,15 +2,12 @@
     <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>"<% } %>
     <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
     <% if (task["Cancel Job On Error Policy"]=='true') { %>cancelJobOnError="<%=task["Cancel Job On Error Policy"]%>" <% } %>
-    <% if (task["Precious Result"]=='true') { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
+    <% if (task["Precious Result"]) { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
     <% if (task["Run as me"]) { %>runAsMe="<%=task["Run as me"]%>" <% } %>
     <% if (task["If An Error Occurs Restart Task"] && task["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= task["If An Error Occurs Restart Task"]%>" <% } %>
 
     <%if (task["Maximum Execution Time (hh:mm:ss)"]){%>
         walltime="<%=task["Maximum Execution Time (hh:mm:ss)"]%>"
-    <%}%>
-    <%if (task["Result Preview Class"]){%>
-        resultPreviewClass="<%=task["Result Preview Class"]%>"
     <%}%>>
 
     <% if (task["Description"] && task["Description"].length>0) { %>
@@ -65,6 +62,8 @@
         <%=preScript%>
     <% print("</pre"+">") %>
     <% } %>
+
+    <%=forkEnvironment%>
 
     <%=executable%>
 

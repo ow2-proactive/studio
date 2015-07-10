@@ -7,7 +7,8 @@ define(
         'proactive/view/TemplateView',
         'proactive/view/xml/JavaExecutableXmlView',
         'proactive/view/xml/NativeExecutableXmlView',
-        'proactive/view/xml/ScriptExecutableXmlView'
+        'proactive/view/xml/ScriptExecutableXmlView',
+        'proactive/view/xml/ForkEnvironmentXmlView'
 
     ],
     function (require, $, Backbone, TaskTemplate, TemplateView) {
@@ -20,6 +21,10 @@ define(
             var executableViewType = require('proactive/view/xml/' + executableType + "XmlView");
             var executableView = new executableViewType({model: this.model.get("Execute")});
             var executable = executableView.render().$el.text();
+
+            var forkEnvironmentViewType = require('proactive/view/xml/ForkEnvironmentXmlView');
+            var forkEnvironmentView = new forkEnvironmentViewType({model: this.model.get("Fork Environment")});
+            var forkEnvironment = forkEnvironmentView.render().$el.text();
 
             var selectionScripts = [];
             if (this.model.get("Node Selection")) {
@@ -55,7 +60,9 @@ define(
                     'cleanScript': cleanScript.trim(),
                     'dependencies': this.model.dependencies,
                     'controlFlow': this.model.controlFlow,
-                    'executable': executable});
+                    'executable': executable,
+                    'forkEnvironment': forkEnvironment
+                });
 
             this.$el.text(taskTemplate);
             return this;

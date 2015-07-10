@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.2"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.2/schedulerjob.xsd"
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.3"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.3 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd"
     name="<%= job["Name"]%>" <% if (job["Project"] && job["Project"].length>0) { %>projectName="<%= job["Project"]%>"<% } %>
     priority="<%= job["Job Priority"]%>"
     cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
@@ -17,14 +17,6 @@
 
     <% if (job["Description"] && job["Description"].length>0) { %>
     <description> <![CDATA[ <%= job["Description"]%> ]]> </description>
-    <% } %>
-
-    <% if (job["Job Classpath"] && job["Job Classpath"].length>0) { %>
-    <jobClasspath>
-    <% _.each(job["Job Classpath"], function(cp) { %>
-        <pathElement path="<%=cp%>"/>
-    <% }) %>
-    </jobClasspath>
     <% } %>
 
     <% if (job["Generic Info"] && job["Generic Info"].length>0) { %>

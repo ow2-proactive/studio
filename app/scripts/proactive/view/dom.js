@@ -362,112 +362,55 @@ define(
             })
         })();
 
-        (function jobClassPathManagement() {
-            $(document).on("click", '.choose-job-classpath', function () {
-                var inputFile = $(this).parents("li").find("input[type='file']");
-                inputFile.click();
+        $(document).ready(function () {
+            var ctrlDown = false;
+            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
+            var copied = false;
+            var pasteAllow = true;
 
-                inputFile.unbind("change");
-                inputFile.change(function (env) {
-
-                    if ($(this)[0].files.length == 0) {
-                        // no files selected
-                        return;
-                    }
-
-                    var selectedFileName = undefined;
-                    var data = new FormData();
-                    jQuery.each($(this)[0].files, function (i, file) {
-                        data.append(file.name, file);
-                        selectedFileName = file.name;
-                    });
-
-                    StudioClient.uploadBinaryFile(data, function (fullPath) {
-                        if (selectedFileName) {
-
-                            var fullJobClassPath = inputFile.parents("li").find("input[name='Job Classpath']");
-                            fullJobClassPath.val(fullPath);
-
-                            var fileName = fullPath.replace(/^.*[\\\/]/, '')
-                            var shortJobClassPath = inputFile.parents("li").find(".visible-job-classpath input");
-                            shortJobClassPath.val(fileName);
-                            shortJobClassPath.attr('readonly', true);
-
-                            var StudioApp = require('StudioApp');
-                            if (StudioApp.views.propertiesView.$el.data('form')) {
-                                StudioApp.views.propertiesView.$el.data('form').commit();
-                            }
-                        }
-                    }, function () {
-                        // TODO hide loading icon
-                    });
-                })
-            })
-
-            $(document).on('click', 'input[name="Class"]', function () {
-                if (!classes) {
-                    var classes = StudioClient.getClassesSynchronously();
-                    $(this).autocomplete({
-                        source: classes,
-                        messages: {
-                            noResults: '',
-                            results: function () {
-                            }
-                        }
-                    });
-                }
-            })
-
-            $(document).ready(function () {
-                var ctrlDown = false;
-                var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
-                var copied = false;
-                var pasteAllow = true;
-
-                $(document).keydown(function (e) {
-                    if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
-                }).keyup(function (e) {
-                    if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
-                });
-
-                $(document).keydown(function (e) {
-                    if (ctrlDown && e.keyCode == cKey) {
-                        console.log("copy");
-                        copied = [];
-                        $(".selected-task").each(function (i, t) {
-                            copied.push(t);
-                        })
-                    }
-                    if (ctrlDown && e.keyCode == vKey) {
-                        if (pasteAllow) {
-                            console.log("paste");
-                            require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
-                        }
-                    }
-                    if (ctrlDown && e.keyCode == zKey) {
-                        undoManager.undoIfEnabled();
-                    }
-                    if (ctrlDown && e.keyCode == yKey) {
-                        undoManager.redoIfEnabled();
-                    }
-                });
-
-                $('body').mousedown(function (e) {
-
-                    if (e.isPropagationStopped()) {
-                        return;
-                    }
-
-                    $(".selected-task").removeClass("selected-task");
-                    pasteAllow = false;
-                })
-                $('#workflow-designer-outer').mousedown(function (e) {
-                    pasteAllow = {left: e.pageX, top: e.pageY};
-                    e.stopPropagation();
-
-                })
+            $(document).keydown(function (e) {
+                if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
+            }).keyup(function (e) {
+                if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
             });
-        })();
+
+            $(document).keydown(function (e) {
+                if (ctrlDown && e.keyCode == cKey) {
+                    console.log("copy");
+                    copied = [];
+                    $(".selected-task").each(function (i, t) {
+                        copied.push(t);
+                    })
+                }
+                if (ctrlDown && e.keyCode == vKey) {
+                    if (pasteAllow) {
+                        console.log("paste");
+                        require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
+                    }
+                }
+                if (ctrlDown && e.keyCode == zKey) {
+                    undoManager.undoIfEnabled();
+                }
+                if (ctrlDown && e.keyCode == yKey) {
+                    undoManager.redoIfEnabled();
+                }
+            });
+
+            $('body').mousedown(function (e) {
+
+                if (e.isPropagationStopped()) {
+                    return;
+                }
+
+                $(".selected-task").removeClass("selected-task");
+                pasteAllow = false;
+            })
+            $('#workflow-designer-outer').mousedown(function (e) {
+                pasteAllow = {left: e.pageX, top: e.pageY};
+                e.stopPropagation();
+
+            })
+        });
 
         // adding form-control classes to new input elements after clicking on "add"
         // button in forms

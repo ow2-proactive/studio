@@ -67,6 +67,7 @@ define(
                 } else {
                     this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
                 }
+
                 this.$el.find("img").attr('src', this.icons[executableTypeStr])
                 this.model.set({"Execute": executable});
                 this.$el.click();
@@ -106,25 +107,6 @@ define(
                 else this.element.removeClass('block-start').addClass('block-end');
             } else {
                 this.element.removeClass('block-end').removeClass('block-start');
-            }
-        },
-        showOrHideForkEnvironment: function () {
-            var executable = this.model.get("Execute");
-            if (executable) {
-                var forkEnvTitle = "Fork Environment";
-                var forkEnvDiv = $("body").find('[placeholder="forkEnvironment"]')
-                if (typeof(executable.toJSON) != "undefined") {
-                    executable = executable.toJSON();
-                }
-                if (executable[forkEnvTitle] == undefined) {
-                    return;
-                }
-
-                if (executable[forkEnvTitle] == "true") {
-                    forkEnvDiv.nextAll("div").show();
-                } else {
-                    forkEnvDiv.nextAll("div").hide();
-                }
             }
         },
         overlays: function () {
