@@ -5,7 +5,7 @@
      name="11_cron_task">
     <taskFlow>
         <task name="cron_task">
-            <description>Will run every minutes</description>
+            <description>Cron task running every minute</description>
             <scriptExecutable>
                 <script>
                     <code language="javascript">
