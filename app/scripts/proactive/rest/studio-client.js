@@ -197,7 +197,7 @@ define(
                 if (result.errorMessage) {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
                 } else if (result.id) {
-                    that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>Successfully submitted " + result.readableName + " with id " + result.id +"</a></html>", 'success');
+                    that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id +")</a></html>", 'success');
                     that.setVisualization(result.id, visualization);
                 } else {
                     that.alert("Job submission", request.responseText, 'error');
