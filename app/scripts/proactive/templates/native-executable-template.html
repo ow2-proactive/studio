@@ -1,6 +1,6 @@
 <nativeExecutable>
 
-<% if (model["Static Command"] && model["Static Command"].length>0 || !script) { %>
+<% if (model["Command"] && model["Command"].length>0 || !script) { %>
 <staticCommand value="<%-model["Command"]%>">
     <% if (model["Arguments"] && model["Arguments"].length>0) { %>
     <arguments>
