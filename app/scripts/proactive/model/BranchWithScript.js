@@ -11,7 +11,7 @@ define(
 
     return SchemaModel.extend({
         schema: {
-            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'script'}}
+            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'script', "data-tab": 'Control Flow'}}
         }
     })
 })
