@@ -22,6 +22,8 @@ module.exports = {
         browser
             .login()
 
+            .click(".navbar-toggle")
+            
             .click("#save-button")
 
             .waitForElementVisible('#select-workflow-modal')

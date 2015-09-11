@@ -8,3 +8,11 @@ node_modules
 _SpecRunner.html
 .grunt
 /test/ui/reports
+
+# Gradle local files
+.gradle/
+build/
+
+# Eclipse
+.project
+.settings/
