@@ -1,10 +1,12 @@
 exports.command = function (xpathCheck) {
     var self = this;
-
+    
     this
-        .click('#export-button')
+    	.showMenu()
+    	.moveToElement('#export-button', 0, 250)
+    	.click('#export-button')
         .waitForElementVisible('.CodeMirror-code')
-
+        
         .element("css selector", ".CodeMirror", function (codeMirrorElement) {
             self.execute(function (element) {
                 return element.CodeMirror.getValue();
