@@ -2,8 +2,7 @@ define(function (require) {
     return {
         restApiUrl: '/rest/studio',
         tasks: {
-            "Native Linux": 'templates/04_native_task_linux.xml',
-            "Native Windows": 'templates/04_native_task_windows.xml',
+            "Native": 'templates/04_native_task.xml',
             "Java": 'templates/java.xml',
             "Javascript": 'templates/script_javascript.xml',
             "Groovy": 'templates/script_groovy.xml',
