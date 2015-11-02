@@ -4,6 +4,7 @@ define(function (require) {
         tasks: {
             "Linux Bash": 'templates/script_bash.xml',
             "Windows Cmd": 'templates/script_cmd.xml',
+            "Docker": 'templates/script_docker_compose.xml',
             "Java": 'templates/java.xml',
             "Javascript": 'templates/script_javascript.xml',
             "Groovy": 'templates/script_groovy.xml',
