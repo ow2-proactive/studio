@@ -2,21 +2,20 @@
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="urn:proactive:jobdescriptor:3.3"
      xsi:schemaLocation="urn:proactive:jobdescriptor:3.3 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd"
-     name="script_python" projectName="" priority="normal" cancelJobOnError="false">
+     name="script_docker" projectName="" priority="normal" cancelJobOnError="false">
     <description>
-        A workflow that executes python in JVM.
+        A workflow that executes a Docker compose script.
     </description>
     <taskFlow>
-        <task name="Python_Task">
+        <task name="Docker_Task">
             <description>
-                The simplest task, ran by a python engine.
+                Simple task running multi-container applications with Docker.
             </description>
             <scriptExecutable>
                 <script>
-                    <code language="python">
+                    <code language="docker-compose">
                         <![CDATA[
-for x in range(1, 11):
-    print x
+TODO
 ]]>
                     </code>
                 </script>

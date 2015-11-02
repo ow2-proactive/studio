@@ -4,7 +4,7 @@
     name="<%= job["Name"]%>" <% if (job["Project"] && job["Project"].length>0) { %>projectName="<%= job["Project"]%>"<% } %>
     priority="<%= job["Job Priority"]%>"
     cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
-    <% if (job["Max Number Of Executions For Task"]&&parseInt(job["Max Number Of Executions For Task"])>1) { %> maxNumberOfExecution="<%= job["Max Number Of Executions For Task"]%>"<% } %>
+    <% if (job["Maximum Number of Restart (upon failure)"]&&parseInt(job["Maximum Number of Restart (upon failure)"])>1) { %> maxNumberOfExecution="<%= job["Maximum Number of Restart (upon failure)"]%>"<% } %>
     <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
 
     <% if (job["Variables"] && job["Variables"].length>0) { %>

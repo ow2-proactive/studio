@@ -52,7 +52,7 @@ define(
                         "data-help": 'A small textual description of what task does.'
                     }
                 },
-                "Maximum Number of Execution": {
+                "Maximum Number of Restart (upon failure)": {
                     type: 'Number',
                     fieldAttrs: {
                         'placeholder': '@attributes->maxNumberOfExecution',
@@ -297,7 +297,7 @@ define(
                 this.set({"Execute": new ScriptExecutable()});
                 this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Task Name": "Task" + (++Task.counter)});
-                this.set({"Maximum Number of Execution": 1});
+                this.set({"Maximum Number of Restart (upon failure)": 1});
                 this.set({"Run as me": false});
                 this.set({"Precious Result": false});
                 this.set({"Cancel Job On Error Policy": "false"});

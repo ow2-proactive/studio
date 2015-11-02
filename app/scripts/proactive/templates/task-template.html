@@ -1,5 +1,5 @@
 <task name="<%=task["Task Name"]%>"
-    <% if (task["Maximum Number of Execution"] && parseInt(task["Maximum Number of Execution"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Execution"]%>"<% } %>
+    <% if (task["Maximum Number of Restart (upon failure)"] && parseInt(task["Maximum Number of Restart (upon failure)"])>1) { %>maxNumberOfExecution="<%=task["Maximum Number of Restart (upon failure)"]%>"<% } %>
     <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
     <% if (task["Cancel Job On Error Policy"]=='true') { %>cancelJobOnError="<%=task["Cancel Job On Error Policy"]%>" <% } %>
     <% if (task["Precious Result"]) { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
@@ -110,4 +110,3 @@
     </outputFiles>
     <% } %>
 </task>
-
