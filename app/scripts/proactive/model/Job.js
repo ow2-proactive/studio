@@ -34,7 +34,7 @@ define(
             "Global Space Url": {type: "Text", fieldAttrs: {'placeholder': 'globalSpace->@attributes->url', "data-help":"A Global Space where anyone can read/write files. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."}},
             "Input Space Url": {type: "Text", fieldAttrs: {'placeholder': 'inputSpace->@attributes->url', "data-help":"A private read-only Data Space started manually by user with the proactive-dataserver command."}},
             "Output Space Url": {type: "Text", fieldAttrs: {'placeholder': 'outputSpace->@attributes->url', "data-help":"A private Data Space started manually by user with the proactive-dataserver command."}},
-            "Max Number Of Executions For Task": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'data-tab-help': 'Configure workflow behavior upon errors', 'placeholder': '@attributes->maxNumberOfExecution', "data-help":"Defines how many times tasks are allowed to be restarted."}},
+            "Maximum Number of Restart (upon failure)": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'data-tab-help': 'Configure workflow behavior upon errors', 'placeholder': '@attributes->maxNumberOfExecution', "data-help":"Defines how many times tasks are allowed to be restarted."}},
             "Cancel Job On Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->cancelJobOnError', "data-help":"Defines whether the job must continue when a user exception or error occurs during the job process."}, options: [
                 {val: "true", label: "cancel job as soon as one task fails"},
                 {val: "false", label: "continue job execution when a task fails"}
@@ -45,7 +45,7 @@ define(
             this.set({"Name": "Untitled Workflow 1"});
             this.set({"Job Priority": "normal"});
             this.set({"Cancel Job On Error Policy": "false"});
-            this.set({"Max Number Of Executions For Task": 1});
+            this.set({"Maximum Number of Restart (upon failure)": 1});
             this.set({"If An Error Occurs Restart Task": "anywhere"});
             this.tasks = [];
             this.on("change", function (eventName, event) {
