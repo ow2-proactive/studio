@@ -7,7 +7,7 @@
         A workflow that executes bash in JVM.
     </description>
     <taskFlow>
-        <task name="Bash_Task">
+        <task name="Linux_Bash_Task">
             <description>
                 The simplest task, ran by a bash engine.
             </description>

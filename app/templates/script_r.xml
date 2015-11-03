@@ -7,7 +7,7 @@
         A workflow that executes R in JVM.
     </description>
     <taskFlow>
-        <task name="R_Task">
+        <task name="Language_R_Task">
             <description>
                 The simplest task, ran by a R engine.
             </description>

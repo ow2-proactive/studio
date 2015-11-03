@@ -32,7 +32,8 @@ define(
 
                         this.createMenuFromConfig(template[property], menu);
                     } else {
-                        var subMenu = $('<li id="'+property+'" class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;">'+property+'</a></li>');
+                    	var iconName = property.replace(/\s+/g, '');
+                        var subMenu = $('<li id="'+property+'" class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;"><img src="images/'+iconName+'.png"  style="width:20px;height:20px;">&nbsp;&nbsp;'+property+' </a></li>');
                         subMenu.tooltip();
                         menu.append(subMenu);
                         subMenu.data("templateName", property);

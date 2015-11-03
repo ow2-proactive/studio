@@ -7,7 +7,7 @@
         A workflow that executes cmd in JVM.
     </description>
     <taskFlow>
-        <task name="Cmd_Task">
+        <task name="Windows_Cmd_Task">
             <description>
                 The simplest task, ran by a cmd engine.
             </description>

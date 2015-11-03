@@ -16,7 +16,10 @@ define(
 
     return ViewWithProperties.extend({
 
-        icons: {"JavaExecutable": "images/java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
+        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
+        iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
+        	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
+        	"R": "images/LanguageR.png", "python": "images/Python.png" },
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
         initialize: function () {
@@ -28,16 +31,22 @@ define(
                 script.set("Written in", "javascript");
                 this.model.get("Execute").set("Script", script)
             }
+            
+            
             this.modelType = this.model.get("Type");
+            var iconPath = this.icons[this.modelType];
+            if(this.model.get("Execute") && this.model.get("Execute").get("Script") && this.model.get("Execute").get("Script").get("Written in")){
+	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Written in")];
+            }
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
 
             this.model.on("invalid", this.setInvalid, this);
-
+                   	            
             this.element = $('<div class="task"><a class="task-name"><img src="'
-                + this.icons[this.modelType] + '" width="20px">&nbsp;<span class="name">'
+                + iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
@@ -51,9 +60,12 @@ define(
         setInvalid: function () {
             this.$el.addClass("invalid-task")
         },
+        
+        
 
         changeTaskType: function () {
             var executableTypeStr = this.model.get("Type");
+            
             if (this.modelType && this.modelType != executableTypeStr) {
                 var executableType = require('proactive/model/'+executableTypeStr);
                 var executable = new executableType();
@@ -67,7 +79,6 @@ define(
                 } else {
                     this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
                 }
-
                 this.$el.find("img").attr('src', this.icons[executableTypeStr])
                 this.model.set({"Execute": executable});
                 this.$el.click();
