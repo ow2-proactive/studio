@@ -13,7 +13,7 @@
             </description>
             <scriptExecutable>
                 <script>
-                    <code language="R">
+                    <code language="Language R">
                         <![CDATA[
 cat('Hello, world!\n')
 ]]>

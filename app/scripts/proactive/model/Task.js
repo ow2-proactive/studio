@@ -447,7 +447,7 @@ define(
                 if (data[name]) {
                     var selectionScript = {
                         Script: _.template(ssHostTemplate, {hostName: data[name]}),
-                        "Written in": "javascript",
+                        "Language": "javascript",
                         Type: "dynamic"
                     };
 
@@ -459,7 +459,7 @@ define(
                 if (data[name] && data[name] != 'any') {
                     var selectionScript = {
                         Script: _.template(ssOSTemplate, {os: data[name]}),
-                        "Written in": "javascript",
+                        "Language": "javascript",
                         Type: "dynamic"
                     };
 
@@ -471,7 +471,7 @@ define(
                 if (data[name]) {
                     var selectionScript = {
                         Script: _.template(ssTotalMemTemplate, {mem: data[name]}),
-                        "Written in": "javascript",
+                        "Language": "javascript",
                         Type: "dynamic"
                     };
 
