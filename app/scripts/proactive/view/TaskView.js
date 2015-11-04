@@ -35,10 +35,10 @@ define(
             
             this.modelType = this.model.get("Type");
             var iconPath = this.icons[this.modelType];
-            if(this.model.get("Execute") && this.model.get("Execute").get("Script") && this.model.get("Execute").get("Script").get("Language")){
+            try{
 	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-	            this.model.on("change:Execute", this.updateIcon, this);
-            }
+            }catch(err){}
+            this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
