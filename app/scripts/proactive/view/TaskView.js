@@ -19,7 +19,7 @@ define(
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
         	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
-        	"R": "images/LanguageR.png", "python": "images/Python.png" },
+        	"Language R": "images/LanguageR.png", "python": "images/Python.png" },
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
         initialize: function () {
@@ -28,15 +28,16 @@ define(
                 this.model = new Task();
                 var script = new Script()
                 script.set("Script", "print(java.lang.System.getProperty('pas.task.name'))");
-                script.set("Written in", "javascript");
+                script.set("Language", "javascript");
                 this.model.get("Execute").set("Script", script)
             }
             
             
             this.modelType = this.model.get("Type");
             var iconPath = this.icons[this.modelType];
-            if(this.model.get("Execute") && this.model.get("Execute").get("Script") && this.model.get("Execute").get("Script").get("Written in")){
-	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Written in")];
+            if(this.model.get("Execute") && this.model.get("Execute").get("Script") && this.model.get("Execute").get("Script").get("Language")){
+	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
+	            this.model.on("change:Execute", this.updateIcon, this);
             }
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
@@ -55,6 +56,15 @@ define(
         updateTaskName: function () {
             this.element.find(".name").text(this.model.get("Task Name"))
             $("#breadcrumb-task-name").text(this.model.get("Task Name"))
+        },
+        
+        updateIcon: function (changed) {
+        	
+           var changedLanguage = changed.attributes.Execute.Script.Language;
+ 	       var iconPath = this.iconsPerLanguage[changedLanguage]; 
+ 	       this.$el.find("img").attr('src', iconPath)
+	 	        
+        	
         },
 
         setInvalid: function () {
@@ -86,7 +96,8 @@ define(
             this.modelType = executableTypeStr;
         },
         controlFlowChanged: function (model, valu, handler) {
-            var fromFormChange = handler.error; // its defined when form was changed
+            var fromFormChange = handler.error; // its defined when form was
+												// changed
             var control = this.model.get("Control Flow");
             if (fromFormChange && control && control != 'none') {
 
@@ -101,7 +112,8 @@ define(
                             })
                         }
                         if (!connectionDetached) {
-                            // if an endpoint had a connection it will be already removed at this point
+                            // if an endpoint had a connection it will be
+							// already removed at this point
                             jsPlumb.deleteEndpoint(endPoint)
                         }
                     }
