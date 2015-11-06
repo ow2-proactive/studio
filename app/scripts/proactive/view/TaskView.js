@@ -15,7 +15,7 @@ define(
     "use strict";
 
     return ViewWithProperties.extend({
-
+    	
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
         	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
@@ -45,9 +45,13 @@ define(
             this.model.on("change:Block", this.showBlockInTask, this);
 
             this.model.on("invalid", this.setInvalid, this);
+            
+            var base_studio_url = window.location.origin + "/studio" ;
+
+            
                    	            
             this.element = $('<div class="task"><a class="task-name"><img src="'
-                + iconPath + '" width="20px">&nbsp;<span class="name">'
+            	+ base_studio_url+ "/" + iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
