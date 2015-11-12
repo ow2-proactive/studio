@@ -15,7 +15,9 @@
                 <script>
                     <code language="docker-compose">
                         <![CDATA[
-TODO
+helloworld:
+    image: busybox
+    command: echo "Hello ProActive"
 ]]>
                     </code>
                 </script>
