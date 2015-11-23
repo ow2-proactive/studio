@@ -26,10 +26,10 @@ define(
             if (!this.model) {
                 // creating a default task model
                 this.model = new Task();
-                var script = new Script()
+                var script = new Script();
                 script.set("Script", "print(java.lang.System.getProperty('pas.task.name'))");
                 script.set("Language", "javascript");
-                this.model.get("Execute").set("Script", script)
+                this.model.get("Execute").set("Script", script);
             }
             
             
@@ -63,12 +63,14 @@ define(
         },
         
         updateIcon: function (changed) {
-        	
-           var changedLanguage = changed.attributes.Execute.Script.Language;
- 	       var iconPath = this.iconsPerLanguage[changedLanguage]; 
+            var executableTypeStr = this.model.get("Type");
+            var iconPath = this.icons[executableTypeStr];
+            if (executableTypeStr == "ScriptExecutable") {
+                var language = this.model.get("Execute").Script.Language;
+                iconPath = this.iconsPerLanguage[language];
+            }
+
  	       this.$el.find("img").attr('src', iconPath)
-	 	        
-        	
         },
 
         setInvalid: function () {
@@ -92,8 +94,9 @@ define(
                     this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable};
                 } else {
                     this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
+                    executable["Script"] = {"Language": "bash"};
                 }
-                this.$el.find("img").attr('src', this.icons[executableTypeStr])
+                this.$el.find("img").attr('src', this.icons[executableTypeStr]);
                 this.model.set({"Execute": executable});
                 this.$el.click();
             }
