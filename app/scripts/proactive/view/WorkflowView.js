@@ -197,6 +197,9 @@ define(
         },
         alert: function (caption, message, type) {
             var text_escape = message.indexOf("<html>") == -1 ? true : false;
+
+            PNotify.removeAll();
+
             new Pnotify({
                 title: caption,
                 text: message,

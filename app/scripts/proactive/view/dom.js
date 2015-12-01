@@ -202,6 +202,9 @@ define(
 
             closeCollapsedMenu();
             save_workflow();
+
+            PNotify.removeAll();
+
             new PNotify({
                 title: 'Saved',
                 text: 'Workflow has been saved',
