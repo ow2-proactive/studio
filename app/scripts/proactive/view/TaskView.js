@@ -48,7 +48,6 @@ define(
             
             var base_studio_url = window.location.origin + "/studio" ;
 
-            
                    	            
             this.element = $('<div class="task"><a class="task-name"><img src="'
             	+ base_studio_url+ "/" + iconPath + '" width="20px">&nbsp;<span class="name">'
@@ -58,8 +57,51 @@ define(
         },
 
         updateTaskName: function () {
-            this.element.find(".name").text(this.model.get("Task Name"))
-            $("#breadcrumb-task-name").text(this.model.get("Task Name"))
+            var newTaskName = this.model.get("Task Name");
+            var existingTasks = $('.task-name .name');
+
+            var duplicated = false;
+            var taskNameInputField = $("input[id='" + this.model.cid + "_Task Name']");
+
+            PNotify.removeAll();
+            taskNameInputField.css({ "border": "" });
+
+            // if there is another task with same name as the current one
+            // there will be at least two tasks detected with same name
+            // since variable existingTasks contains all tasks, including
+            // the one for which duplicated names are checked
+            existingTasks.each(function (index) {
+                if ($(this).text() == newTaskName) {
+                    if (duplicated) {
+                        PNotify.removeAll();
+
+                        new PNotify({
+                            title: "Duplicated task name detected",
+                            text: "Task name must be unique per workflow.\nPlease fix the issue before submitting.",
+                            type: "error",
+                            text_escape: false,
+                            buttons: {
+                                closer: true,
+                                sticker: false
+                            },
+                            opacity: .8,
+                            width: '20%'
+                        });
+
+                        // TODO: improve by retrieving input text using Backbonejs methods
+                        // and style using existing Bootstrap styles
+                        // http://getbootstrap.com/css/?#forms-control-validation
+                        taskNameInputField.css({ "border": "1px solid #D2322D"});
+
+                        return false;
+                    } else {
+                        duplicated = true;
+                    }
+                }
+            });
+
+            this.element.find(".name").text(newTaskName);
+            $("#breadcrumb-task-name").text(newTaskName);
         },
         
         updateIcon: function (changed) {
