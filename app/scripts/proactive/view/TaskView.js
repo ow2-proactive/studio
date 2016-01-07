@@ -43,6 +43,9 @@ define(
             this.model.on("change:Type", this.changeTaskType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
+            // Register a handler, listening for changes on Fork Execution Environment,
+            // sadly it gets executed at different change events as well.
+            this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
 
             this.model.on("invalid", this.setInvalid, this);
             
@@ -102,6 +105,41 @@ define(
 
             this.element.find(".name").text(newTaskName);
             $("#breadcrumb-task-name").text(newTaskName);
+        },
+
+        /**
+         * This function is invoked when changes occur in the fork environment section.
+         * @param changed
+         */
+        updateForkEnvironment: function (changed) {
+            // Query changed for Fork Execution Environment. If it contains Fork Execution Environment,
+            // then it was altered. If it was not altered, then changed will not contain
+            // Fork Execution Environment, then jump out of this function.
+            // Otherwise the script will be overwritten that means that the user's input will be overwritten.
+            var forkExecutionEnvironmentSelector = changed.changed['Fork Execution Environment'];
+            if (typeof forkExecutionEnvironmentSelector == 'undefined') {
+                // Fork Execution Environment was not altered -> don't change (overwrite)
+                // anything in this case.
+                return;
+            }
+            // So the Fork Execution Environment was changed. Check if it was changed for Docker
+            if (this.model.get('Fork Execution Environment') == "Docker") {
+                // It was changed for Docker, insert a template script in the language python
+                var prefixCommandLanguage = 'python'
+                var prefixDockerCommandString = "containerName = 'java' \\\npreJavaHomeCmd = 'docker run --rm -v  ' + \\\nvariables.get(\"PA_SCHEDULER_HOME\") + \\\n':'+variables.get(\"PA_SCHEDULER_HOME\") + \\\n' -v '+localspace+':'+localspace + \\\n' -w '+localspace + \\\n' '+containerName";
+                // Set the script and language inside the Browser, this will render it immediately.
+                // We did not find a way to render the model, so the last possibility was to
+                // just set it in the DOM.
+                $('[id*="_Fork Environment_Environment Script_Language"]').val(prefixCommandLanguage);
+                $('[id*="_Fork Environment_Environment Script_Script"]').val( prefixDockerCommandString);
+                // Set the script and language in the model. This persists the changes but does not render
+                // them immediately.
+                var replacedScript = new Script();
+                replacedScript.set({Script :prefixDockerCommandString, Language : prefixCommandLanguage });
+                this.model.get('Fork Environment')['Environment Script'] = replacedScript;
+            }
+            // Function is done. If the Fork Execution Environment was set to something not handled above,
+            // then the previous inputs will just be kept.
         },
         
         updateIcon: function (changed) {

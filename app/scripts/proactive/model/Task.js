@@ -276,11 +276,28 @@ define(
                         "simple-view": true
                     }
                 },
+                // Add the Fork Execution Environment select before the Fork Environment model. Because
+                // that is the only way to receive precise events. If something changes in the
+                // Fork Environment the whole model will be copied in the changed event, therefore specific events
+                // can't be distinguished. That is because Backbone js dos not support nested models (without
+                // appropriate plugins/frameworks). In this case, nested models are used but no code which
+                // handles them. That's why we arrived at this hybrid design.
+                "Fork Execution Environment": {
+                    type: "Select",
+                    options: ["User Defined", "Docker"],
+                    fieldAttrs: {
+                        // The Fork Execution Environment begins the Fork Environment tab, 'data-tab',
+                        // everything which comes after this tab is included in it, if no new 'data-tab'
+                        // is defined.
+                        "data-tab": "Fork Environment",
+                        "data-help":"The environment in which to execute this task. " +
+                        "Example: Docker selected will execute this task inside a Docker container."
+                    }
+                },
                 "Fork Environment": {
                     type: 'NestedModel',
                     model: ForkEnvironment,
                     fieldAttrs: {
-                        "data-tab": "Fork Environment",
                         "placeholder": "forkEnvironment"
                     }
                 }
