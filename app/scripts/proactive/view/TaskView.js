@@ -124,16 +124,19 @@ define(
             }
             // So the Fork Execution Environment was changed. Check if it was changed for Docker
             if (this.model.get('Fork Execution Environment') == "Docker") {
-                // It was changed for Docker, insert a template script in the language python
-                var prefixCommandLanguage = 'python'
-                var prefixDockerCommandString = "containerName = 'java' \\\npreJavaHomeCmd = 'docker run --rm -v  ' + \\\nvariables.get(\"PA_SCHEDULER_HOME\") + \\\n':'+variables.get(\"PA_SCHEDULER_HOME\") + \\\n' -v '+localspace+':'+localspace + \\\n' -w '+localspace + \\\n' '+containerName";
+                // Docker was selected on the dropdown, insert a template script in the language python
+                var javaHome = '/usr';
+                var prefixCommandLanguage = 'python';
+                var prefixDockerCommandString = "#Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.\n# Prepare Docker parameters \ncontainerName = 'java' \ndockerRunCommand =  'docker run ' \ndockerParameters = '--rm ' \n# Prepare ProActive home volume \npaHomeHost = variables.get(\"PA_SCHEDULER_HOME\") \npaHomeContainer = variables.get(\"PA_SCHEDULER_HOME\") \nproActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' ' \n# Prepare working directory (For Dataspaces and serialized task file) \nworkspaceHost = localspace \nworkspaceContainer = localspace \nworkspaceVolume = '-v '+localspace +':'+localspace+' ' \n# Prepare container working directory \ncontainerWorkingDirectory = '-w '+workspaceContainer+' ' \n# Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node \npreJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName \nprint preJavaHomeCmd";
                 // Set the script and language inside the Browser, this will render it immediately.
                 // We did not find a way to render the model, so the last possibility was to
                 // just set it in the DOM.
+                $('[id*="_Fork Environment_Java Home"]').val(javaHome);
                 $('[id*="_Fork Environment_Environment Script_Language"]').val(prefixCommandLanguage);
                 $('[id*="_Fork Environment_Environment Script_Script"]').val( prefixDockerCommandString);
                 // Set the script and language in the model. This persists the changes but does not render
                 // them immediately.
+                this.model.get('Fork Environment')['Java Home'] = javaHome;
                 var replacedScript = new Script();
                 replacedScript.set({Script :prefixDockerCommandString, Language : prefixCommandLanguage });
                 this.model.get('Fork Environment')['Environment Script'] = replacedScript;
