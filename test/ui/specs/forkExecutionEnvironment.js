@@ -1,4 +1,7 @@
 module.exports = {
+    // Set global timeout to 5 seconds. This will be applied to each wait for which does not
+    // specify a timeout
+    waitForConditionTimeout: 5000,
     "Find Fork Execution Environment setting": function (browser) {
         browser
             .login() // Login into the interface
