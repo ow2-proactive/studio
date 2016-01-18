@@ -1,5 +1,7 @@
 module.exports = {
-
+    // Set global timeout to 5 seconds. This will be applied to each wait for which does not
+    // specify a timeout
+    waitForConditionTimeout: 5000,
     "Drag and drop a single task": function (browser) {
         browser
             .login()

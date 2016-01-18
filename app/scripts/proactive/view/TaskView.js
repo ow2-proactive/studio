@@ -43,6 +43,9 @@ define(
             this.model.on("change:Type", this.changeTaskType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
+            // Register a handler, listening for changes on Fork Execution Environment,
+            // sadly it gets executed at different change events as well.
+            this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
 
             this.model.on("invalid", this.setInvalid, this);
             
@@ -102,6 +105,44 @@ define(
 
             this.element.find(".name").text(newTaskName);
             $("#breadcrumb-task-name").text(newTaskName);
+        },
+
+        /**
+         * This function is invoked when changes occur in the fork environment section.
+         * @param changed
+         */
+        updateForkEnvironment: function (changed) {
+            // Query changed for Fork Execution Environment. If it contains Fork Execution Environment,
+            // then it was altered. If it was not altered, then changed will not contain
+            // Fork Execution Environment, then jump out of this function.
+            // Otherwise the script will be overwritten that means that the user's input will be overwritten.
+            var forkExecutionEnvironmentSelector = changed.changed['Fork Execution Environment'];
+            if (typeof forkExecutionEnvironmentSelector == 'undefined') {
+                // Fork Execution Environment was not altered -> don't change (overwrite)
+                // anything in this case.
+                return;
+            }
+            // So the Fork Execution Environment was changed. Check if it was changed for Docker
+            if (this.model.get('Fork Execution Environment') == "Docker") {
+                // Docker was selected on the dropdown, insert a template script in the language python
+                var javaHome = '/usr';
+                var prefixCommandLanguage = 'python';
+                var prefixDockerCommandString = "#Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.\n# Prepare Docker parameters \ncontainerName = 'java' \ndockerRunCommand =  'docker run ' \ndockerParameters = '--rm ' \n# Prepare ProActive home volume \npaHomeHost = variables.get(\"PA_SCHEDULER_HOME\") \npaHomeContainer = variables.get(\"PA_SCHEDULER_HOME\") \nproActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' ' \n# Prepare working directory (For Dataspaces and serialized task file) \nworkspaceHost = localspace \nworkspaceContainer = localspace \nworkspaceVolume = '-v '+localspace +':'+localspace+' ' \n# Prepare container working directory \ncontainerWorkingDirectory = '-w '+workspaceContainer+' ' \n# Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node \npreJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName";
+                // Set the script and language inside the Browser, this will render it immediately.
+                // We did not find a way to render the model, so the last possibility was to
+                // just set it in the DOM.
+                $('[id*="_Fork Environment_Java Home"]').val(javaHome);
+                $('[id*="_Fork Environment_Environment Script_Language"]').val(prefixCommandLanguage);
+                $('[id*="_Fork Environment_Environment Script_Script"]').val( prefixDockerCommandString);
+                // Set the script and language in the model. This persists the changes but does not render
+                // them immediately.
+                this.model.get('Fork Environment')['Java Home'] = javaHome;
+                var replacedScript = new Script();
+                replacedScript.set({Script :prefixDockerCommandString, Language : prefixCommandLanguage });
+                this.model.get('Fork Environment')['Environment Script'] = replacedScript;
+            }
+            // Function is done. If the Fork Execution Environment was set to something not handled above,
+            // then the previous inputs will just be kept.
         },
         
         updateIcon: function (changed) {
