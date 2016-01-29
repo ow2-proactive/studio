@@ -7,7 +7,7 @@ module.exports = {
             .login()
             .freshWorkflow()
             .createTask()
-            .waitForElementVisible('.dependency-source-endpoint', 5000)
+            .waitForElementVisible('.dependency-source-endpoint')
             .moveToElement('.dependency-source-endpoint', 0, 15)
             .mouseButtonDown(0)
             .moveToElement('#workflow-designer', 200, 200)
