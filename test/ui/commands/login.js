@@ -5,7 +5,7 @@ exports.command = function (url) {
     this
         .resizeWindow(1280,1024)
         .url(url)
-        .waitForElementVisible('button[type=submit]', 30000)
+        .waitForElementVisible('button[type=submit]')
         .setValue('#user', 'user')
         .setValue('#password', 'pwd')
         .click('button[type=submit]')
