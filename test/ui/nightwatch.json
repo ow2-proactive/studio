@@ -33,7 +33,7 @@
             },
             "globals" : {
                 "studio_url" : "http://localhost:8080/studio",
-                "waitForConditionTimeout" : 1000,
+                "waitForConditionTimeout" : 5000,
                 "waitForConditionPollInterval" : 100
             }
         },

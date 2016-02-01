@@ -1,5 +1,7 @@
 module.exports = {
-	
+    // Set global timeout to 5 seconds. This will be applied to each wait for which does not
+    // specify a timeout
+    waitForConditionTimeout: 5000,
     "Detailed form by default": function (browser) {
         browser
             .login()
@@ -43,9 +45,7 @@ module.exports = {
             .assert.elementPresent("#form-switch")
             .click("#form-switch")
             .waitForElementVisible('#accordion-properties')
-            .assert.elementPresent("#Execution")
             .assert.elementPresent("#form-switch")
-            .click("#form-switch")
             .waitForElementVisible('#confirm-data-loss')
             .assert.containsText('#confirm-data-loss', 'After switching to simple view all custom selection scripts will be lost')
             .click("#data-loss-continue")
@@ -54,7 +54,7 @@ module.exports = {
     },
 	
     "Check selection script generation": function (browser) {
-    	
+
     	// Input values
     	var _hostNameVal = 'host_name';
     	var _operatingSystemVal = 'linux';

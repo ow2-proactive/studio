@@ -1,10 +1,13 @@
 module.exports = {
+    // Set global timeout to 5 seconds. This will be applied to each wait for which does not
+    // specify a timeout
+    waitForConditionTimeout: 5000,
     "Pull out a dependency" : function(browser) {
         browser
             .login()
             .freshWorkflow()
             .createTask()
-            .waitForElementVisible('.dependency-source-endpoint', 5000)
+            .waitForElementVisible('.dependency-source-endpoint')
             .moveToElement('.dependency-source-endpoint', 0, 15)
             .mouseButtonDown(0)
             .moveToElement('#workflow-designer', 200, 200)
