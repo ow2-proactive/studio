@@ -38,6 +38,7 @@ module.exports = {
             function (result) {
                 this.assert.equal(typeof result, "object");
                 this.assert.equal(result.status, 0);
+                this.assert.equal(result.value, "/usr");
             })
             .useCss() // we're back to CSS now
             .end();
