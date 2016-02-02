@@ -6,5 +6,5 @@ for i in {1..100000}
 do
     xwd -root -silent | xwdtopnm |pnmtojpeg > "test/ui/reports/screen$i.jpg"
    echo "Took screenshot number: $i"
-   sleep 0.5s
+   sleep 0.2s
 done
