@@ -4,6 +4,6 @@
 # Use export DISPLAY=:99 to capture screenshots from display 99.
 for i in {1..100000}
 do
-    xwd -root -silent | xwdtopnm |pnmtojpeg > "/home/activeeon/jenkins/workspace/studio/test/ui/reports/screen$i.jpg"
+    xwd -root -silent | xwdtopnm |pnmtojpeg > "../ui/reports/screen$i.jpg"
    echo "Took screenshot number: $i"
 done
