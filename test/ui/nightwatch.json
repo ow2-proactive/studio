@@ -34,14 +34,16 @@
             "globals" : {
                 "studio_url" : "http://localhost:8080/studio",
                 "waitForConditionTimeout" : 5000,
+                "numberOfTries" : 50,
                 "waitForConditionPollInterval" : 100
             }
         },
         "trydev" : {
             "globals" : {
                 "studio_url" : "http://trydev.activeeon.com/studio",
-                "waitForConditionTimeout" : 5000,
-                "waitForConditionPollInterval" : 100
+                "waitForConditionTimeout" : 30000,
+                "numberOfTries" : 50,
+                "waitForConditionPollInterval" : 500
             }
         }
     }

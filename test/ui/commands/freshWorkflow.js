@@ -4,16 +4,17 @@
 exports.command = function () {
     var browser = this
 
-    var deleteWorkflows = function () {
+    var deleteWorkflows = function (iteration, amount) {
         // isVisible will cause a test failure if element cannot be found, fallback to Selenium method
         browser.element("css selector", ".btn-remove", function (result) {
-            if (result.status === 0) {
+            console.log("Remove Workflows, iteration: "+iteration+", max repetitions: "+amount)
+            if (result.status === 0 && iteration < amount) {
                 browser.click('.btn-remove')
-                deleteWorkflows();
+                deleteWorkflows(iteration +1, amount);
             }
         })
     }
-    deleteWorkflows();
+    deleteWorkflows(0, browser.globals.numberOfTries);
 
     browser
         .click('.create-workflow-button')
