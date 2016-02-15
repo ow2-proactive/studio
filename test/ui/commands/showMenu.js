@@ -11,7 +11,7 @@ exports.command = function () {
             console.log("Show menu, iteration: "+iteration+" max repetitions: "+amount)
             if (result.status != 0 && iteration < amount ) {
                 browser.click('.navbar-toggle').pause(2000)
-                showMenu(iteration++, amount)
+                showMenu(iteration +1, amount)
             }
         })
     }

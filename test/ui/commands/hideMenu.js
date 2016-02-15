@@ -11,7 +11,7 @@ exports.command = function () {
             console.log("Hide menu, iteration: "+iteration+" max repetitions: "+amount)
             if (result.status === 0 && iteration < amount) {
                 browser.click('.navbar-toggle')
-                hideMenu(iteration++, amount)
+                hideMenu(iteration +1, amount)
             }
         })
     }
