@@ -23,6 +23,8 @@
         <!-- build:css(.tmp) styles/studio.css -->
         <link rel="stylesheet" href="styles/login.css">
         <link rel="stylesheet" href="styles/studio.css">
+        
+        <script src="studio-conf.js"></script>
         <!-- endbuild -->
 
     </head>
@@ -41,7 +43,7 @@
                 </button>
                 <icons class="flex-center">
 				  <div>
-				    <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px"> ProActive Studio</a>
+				    <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px">ProActive Studio</a>
 				  </div>
 				  <div style="padding-top: 0px;">
 				    <img src="images/company-icon-squared.png" style="height:40px;display:block;margin:auto;">
@@ -60,6 +62,7 @@
                             <i class="glyphicon glyphicon-hdd"></i> Save
                         </a>
                     </li>
+                     
                     <li class="divider-vertical"></li>
                     <li><a id="import-button" href="" class="pointer"
                            title="Import existing workflows (.xml files)."><i
@@ -82,8 +85,12 @@
                     <li><a id="redo-button" href="#" class="pointer"><i
                             class="glyphicon glyphicon-arrow-right "></i> Redo</a></li>
                     <li class="divider-vertical"></li>
-                    <li><a href="http://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_workflow_concepts"
-                           class="pointer" target="_blank"><i class="glyphicon glyphicon-book"></i> Doc</a>
+                    <li class="dropdown">
+						    <a href="#" data-toggle="dropdown" >Help <b class="caret"></b></a>
+						    <ul class="dropdown-menu">
+						        <li><a class="pointer" target="_blank" id="documentationLinkId" href="http://doc.activeeon.com/"><i class="glyphicon glyphicon-book"></i> Documentation</a></li>
+						        <li><a class="pointer" href="#" id="about-button"><i class="glyphicon glyphicons-question-sign"></i> About</a></li>
+						    </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -158,6 +165,35 @@
                     <div class="modal-footer">
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="about-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>ProActive Studio</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                    <div class="row">
+					    <div class="col-sm-4">
+					      <img src="images/about_115.png" style="height:100%;display:block;">
+					    </div>
+					    <div class="col-sm-8">
+					      <p>Version: <b id="version"></b></p>
+                        	<p>Copyright (C) 1997-2015 INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+	                        <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
+	                        <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
+	                        <p>REST server	<a target="_blank" href="" id="restServer"></a></p>
+	                        <p>REST version	<b id="restVersion"></b></p>
+	                        <p>Studio version	<b id="studioVersion"></b></p>				
+					    </div>
+					  </div>
+                        
+                    </div>
+                    
                 </div>
             </div>
         </div>
