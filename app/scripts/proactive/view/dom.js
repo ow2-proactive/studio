@@ -192,6 +192,7 @@ define(
         });
 
         $("#save-button").click(function (event) {
+        	
             event.preventDefault();
 
             var StudioApp = require('StudioApp');
@@ -220,6 +221,35 @@ define(
                 }
             });
         });
+        
+        
+        $("#about-button").click(function (event) {
+        	      	
+            event.preventDefault();
+            
+            
+            jQuery.get('file.txt', function(data) {
+            	   alert(data);
+            	   //process text file line by line
+            	   $('#div').html(data.replace('n',''));
+            });
+            
+            
+            var url = window.location.href;
+            var arr = url.split("/");
+            var result = arr[0] + "//" + arr[2] + "/rest";
+            
+            $("#version").text( conf.studioVersion);
+            $("#restServer").text( result );
+            $("#restServer").attr("href", result);
+            $("#restVersion").text( conf.studioVersion );
+            $("#studioVersion").text( conf.studioVersion );
+            $('#about-modal').modal('show');
+            return;
+           
+        });
+        
+        
 
         $("#download-xml-button").click(function (event) {
             event.preventDefault();
@@ -366,6 +396,19 @@ define(
         })();
 
         $(document).ready(function () {
+        	
+        	var result = "http://doc.activeeon.com/" ;
+        	
+        	if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
+        		result = result + "latest";
+        	}else{
+        		result = result + conf.studioVersion;
+        	}
+        	
+        	
+        	
+        	$("#documentationLinkId").attr("href", result);
+        	
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
             var copied = false;
