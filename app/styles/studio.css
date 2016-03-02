@@ -93,6 +93,11 @@ icons div {
   margin-right: auto;
 }
 
+.no-padding{
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
 
 .draggable {
     z-index: 100;
@@ -921,7 +926,7 @@ li.success {
 
 #navbar-fixed a {
     padding-left: 10px;
-    padding-right: 30px;
+    padding-right: 10px;
 }
 
 .navbar-form {
