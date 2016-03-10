@@ -7,7 +7,7 @@ body {
 }
 
 body {
-    padding-top: 60px;
+    padding-top: 100px;
     padding-bottom: 5px;
 }
 
@@ -66,6 +66,40 @@ footer {
     resize: none;
     height: 100%;
 }
+
+icons {
+  background: white;
+}
+
+icons div {
+  width: 100%;  
+}
+
+.inline-block-center {
+  text-align: center;
+}
+.inline-block-center div {
+  display: inline-block;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.image-center-div {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.no-padding{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
 
 .draggable {
     z-index: 100;
@@ -832,7 +866,6 @@ li.success {
 }
 
 .menu-button {
-    margin-left: 10px;
     margin-right: 10px;
 }
 
@@ -917,6 +950,12 @@ li.success {
     width: 100%;
     height: 100%;
     z-index: 9999;
+}
+
+.container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1600px; /* or 950px */
 }
 
 .no-workflows-open {

@@ -1,0 +1,1 @@
+conf = { studioVersion: '7.6.0-SNAPSHOT'} 

@@ -28,15 +28,17 @@ module.exports = {
             .useXpath() // every selector now must be xpath
             .waitForElementVisible('//*[@id=\"Fork Environment\"]') // Check for the Fork Environment tab
             .click('//*[@id=\"Fork Environment\"]') // Click on the Fork Environment tab
+            .pause(browser.globals.waitForConditionTimeout)
             // Wait for the For Execution Environment select to be visible
             .waitForElementVisible('//select[@name=\"Fork Execution Environment\"]')
             // Click in the Fork Execution Enviuronment selector and select 2 (Docker)
             .click('//select[@name=\"Fork Execution Environment\"]/option[2]')
-            .pause(2000)
+            .pause(browser.globals.waitForConditionTimeout)
             .getValue('//input[@name=\"Java Home\"]' ,
             function (result) {
                 this.assert.equal(typeof result, "object");
                 this.assert.equal(result.status, 0);
+                this.assert.equal(result.value, "/usr");
             })
             .useCss() // we're back to CSS now
             .end();
