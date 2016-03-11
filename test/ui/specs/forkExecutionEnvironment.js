@@ -27,7 +27,6 @@ module.exports = {
             .click(".task") // Select the task -- that will show a new sidebar
             .useXpath() // every selector now must be xpath
             .waitForElementVisible('//*[@id=\"Fork Environment\"]') // Check for the Fork Environment tab
-            .pause(1000)// The click logic runs while the interface is still moving, so wait
             .click('//*[@id=\"Fork Environment\"]') // Click on the Fork Environment tab
             .pause(browser.globals.waitForConditionTimeout)
             // Wait for the For Execution Environment select to be visible
