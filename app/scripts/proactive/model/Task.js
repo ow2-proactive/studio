@@ -80,15 +80,18 @@ define(
                         "data-help": 'Indicates if you want to save the result of this task in the job result.'
                     }
                 },
-                "Cancel Job On Error Policy": {
+                "On Task Error Policy": {
                     type: 'Select',
                     fieldAttrs: {
-                        'placeholder': '@attributes->cancelJobOnError',
-                        "data-help": 'Defines whether the job must continue when a user exception or error occurs during the job process.'
+                        'placeholder': '@attributes->onTaskError',
+                        "data-help": 'Overwrites the on task error policy set for the job.'
                     },
                     options: [
-                        {val: "true", label: "cancel job as soon as one task fails"},
-                        {val: "false", label: "continue job execution when a task fails"}
+                        {val: "cancelJob", label: "cancel job"},
+                        {val: "pauseTask", label: "pause task"},
+                        {val: "pauseJob", label: "pause job"},
+                        {val: "continueJobExecution", label: "continue execution"},
+                        {val: "none", label: "not set"}
                     ]
                 },
                 "If An Error Occurs Restart Task": {
@@ -317,7 +320,7 @@ define(
                 this.set({"Maximum Number of Restart (upon failure)": 1});
                 this.set({"Run as me": false});
                 this.set({"Precious Result": false});
-                this.set({"Cancel Job On Error Policy": "false"});
+                this.set({"On Task Error Policy": "none"});
                 this.set({"If An Error Occurs Restart Task": "anywhere"});
                 this.set({"Store Task Logs in a File": false});
                 this.set({"Number of Nodes": 1});
