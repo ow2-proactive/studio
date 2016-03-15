@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.3"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.3 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd"
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.4"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.4 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.4/schedulerjob.xsd"
     name="<%= job["Name"]%>" <% if (job["Project"] && job["Project"].length>0) { %>projectName="<%= job["Project"]%>"<% } %>
     priority="<%= job["Job Priority"]%>"
-    cancelJobOnError="<%= job["Cancel Job On Error Policy"]%>"
+    onTaskError="<%= job["On Task Error Policy"]%>"
     <% if (job["Maximum Number of Restart (upon failure)"]&&parseInt(job["Maximum Number of Restart (upon failure)"])>1) { %> maxNumberOfExecution="<%= job["Maximum Number of Restart (upon failure)"]%>"<% } %>
     <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
-
     <% if (job["Variables"] && job["Variables"].length>0) { %>
     <variables>
     <% _.each(job["Variables"], function(variable) { %>
