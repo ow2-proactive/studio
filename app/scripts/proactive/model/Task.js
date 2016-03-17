@@ -52,11 +52,11 @@ define(
                         "data-help": 'A small textual description of what task does.'
                     }
                 },
-                "Maximum Number of Restart (upon failure)": {
+                "Maximum Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
                         'placeholder': '@attributes->maxNumberOfExecution',
-                        "data-help": 'Defines how many times this task is allowed to be restarted.'
+                        "data-help": 'Defines the maximum number of execution attempts of the task.'
                     }
                 },
                 "Maximum Execution Time (hh:mm:ss)": {
@@ -87,11 +87,11 @@ define(
                         "data-help": 'Overwrites the on task error policy set for the job.'
                     },
                     options: [
-                        {val: "cancelJob", label: "cancel job"},
-                        {val: "pauseTask", label: "pause task"},
-                        {val: "pauseJob", label: "pause job"},
-                        {val: "continueJobExecution", label: "continue execution"},
-                        {val: "none", label: "not set"}
+                        {val: "cancelJob", label: "cancel job after all execution attempts"},
+                        {val: "suspendTask", label: "suspend task after first error"},
+                        {val: "pauseJob", label: "suspend task after first error and pause job immediately"},
+                        {val: "continueJobExecution", label: "continue job (trying all execution attempts)"},
+                        {val: "none", label: "default (defined at job level)"}
                     ]
                 },
                 "If An Error Occurs Restart Task": {
@@ -317,7 +317,7 @@ define(
                 this.set({"Execute": new ScriptExecutable()});
                 this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Task Name": "Task" + (++Task.counter)});
-                this.set({"Maximum Number of Restart (upon failure)": 1});
+                this.set({"Maximum Number of Execution Attempts": ""});
                 this.set({"Run as me": false});
                 this.set({"Precious Result": false});
                 this.set({"On Task Error Policy": "none"});
