@@ -91,7 +91,7 @@ define(
                         {val: "pauseTask", label: "pause task"},
                         {val: "pauseJob", label: "pause job"},
                         {val: "continueJobExecution", label: "continue execution"},
-                        {val: "none", label: "not set"}
+                        {val: "none", label: "default (defined at job level)"}
                     ]
                 },
                 "If An Error Occurs Restart Task": {
