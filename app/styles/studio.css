@@ -931,7 +931,14 @@ li.success {
 }
 
 .navbar-form {
-    padding-left: 5px !important;
+    padding-left: 0px !important;
+}
+.right-padding{
+    padding-right: 10px;
+}
+
+.zero-right-padding{
+    padding-right: 0px !important;
 }
 
 .dropdown-header {
