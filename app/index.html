@@ -97,19 +97,20 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                     <div>
-                    	<form class="navbar-form">
-                    		<a class="btn btn-small btn-default" href="/scheduler" target="_blank">Scheduling & Orchestration</a>
+                    	<form class="navbar-form" style="padding-right: 12px">
+                    		<a class="btn btn-small btn-default" href="/scheduler" target="_blank"><img src="images/scheduler_30.png"class="right-padding" style="height:25px">Scheduling & Orchestration</a>
                     	</form>
                     </div>
                     </li>
                     
                      <li>
                     <div>
-                    	<form class="navbar-form">
-                    		<a class="btn btn-small btn-default" href="/rm" target="_blank">Resource Manager</a>
+                    	<form class="navbar-form zero-right-padding">
+                    		<a class="btn btn-small btn-default" href="/rm" target="_blank"><img src="images/rm_30.png" class="right-padding" style="height:25px">Resource Manager</a>
                     	</form>
                     </div>
                     </li>
+                    <li class="divider-vertical"></li>
                     
                     <li id="logout-view-container" > </li>
                 </ul>
@@ -198,7 +199,7 @@
 					    </div>
 					    <div class="col-sm-9">
 					      <p>Version: <b id="version"></b></p>
-                        	<p>Copyright (C) 1997-2016 INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                        	<p>Copyright (C) 1997-<script>document.write(new Date().getFullYear())</script> INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
 	                        <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
 	                        <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
 	                        <p>REST server	<a target="_blank" href="" id="restServer"></a></p>
