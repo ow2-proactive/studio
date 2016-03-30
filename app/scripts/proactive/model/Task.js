@@ -84,7 +84,7 @@ define(
                     type: 'Select',
                     fieldAttrs: {
                         'placeholder': '@attributes->onTaskError',
-                        "data-help": 'Overwrites the on task error policy set for the job.'
+                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- cancel job after all execution attempts<br>&nbsp;&nbsp;- continue job (trying all execution attempts)<br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- suspend task after first error<br>&nbsp;&nbsp;- suspend task after first error and pause job immediately.'
                     },
                     options: [
                         {val: "cancelJob", label: "cancel job after all execution attempts"},
