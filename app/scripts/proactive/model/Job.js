@@ -35,11 +35,11 @@ define(
             "Input Space Url": {type: "Text", fieldAttrs: {'placeholder': 'inputSpace->@attributes->url', "data-help":"A private read-only Data Space started manually by user with the proactive-dataserver command."}},
             "Output Space Url": {type: "Text", fieldAttrs: {'placeholder': 'outputSpace->@attributes->url', "data-help":"A private Data Space started manually by user with the proactive-dataserver command."}},
             "Maximum Number of Execution Attempts": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'data-tab-help': 'Configure workflow behavior upon errors', 'placeholder': '@attributes->maxNumberOfExecution', "data-help":"Defines the maximum number of execution attempts for the tasks."}},
-            "On Task Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->onTaskError', "data-help":"Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- cancel job after all execution attempts<br>&nbsp;&nbsp;- continue job (trying all execution attempts)<br>&nbsp;&nbsp;- suspend task after first error<br>&nbsp;&nbsp;- suspend task after first error and pause job immediately."}, options: [
+            "On Task Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->onTaskError', "data-help":"Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- cancel job after all execution attempts<br>&nbsp;&nbsp;- continue job (try all execution attempts)<br>&nbsp;&nbsp;- suspend task after first error<br>&nbsp;&nbsp;- suspend task after first error and pause job immediately."}, options: [
                 {val: "cancelJob", label: "cancel job after all execution attempts"},
                 {val: "suspendTask", label: "suspend task after first error"},
                 {val: "pauseJob", label: "suspend task after first error and pause job immediately"},
-                {val: "continueJobExecution", label: "continue job (trying all execution attempts)"}
+                {val: "continueJobExecution", label: "continue job (try all execution attempts)"}
             ]},
             "If An Error Occurs Restart Task": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->restartTaskOnError', "data-help":"Defines whether tasks that have to be restarted will restart on an other computing node."}, options: ["anywhere", "elsewhere"]}
         },
