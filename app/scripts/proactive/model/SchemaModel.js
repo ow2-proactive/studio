@@ -40,6 +40,11 @@ define(
             } else {
                 return this.getValue(listSchema.fieldAttrs.itemplaceholder, listElemObj);
             }
+        },convertCancelJobOnErrorToOnTaskError: function (obj) {
+            if (obj["@attributes"]['cancelOnJobError'] && obj["@attributes"]['cancelOnJobError']  == "true") {
+                //var placeholderName = this.schema['On Task Error Policy'].fieldAttrs.placeholder;
+                this.set("On Task Error Policy", "cancelJob")
+            }
         },
         populateSchema: function (obj, merging) {
 //            console.log("Populating", obj, this.schema)
