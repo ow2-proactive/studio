@@ -90,6 +90,9 @@ define(
                 }
             }
         },
+        updateWorkflowName: function (job) {
+            this.set({"Name": job["@attributes"].name.trim()});
+        },
         populate: function (obj, merging) {
             this.populateSchema(obj, merging);
             var that = this;

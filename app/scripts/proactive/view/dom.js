@@ -85,8 +85,10 @@ define(
                 reader.onloadend = function (evt) {
 
                     if (evt.target.readyState == FileReader.DONE) {
-                        var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result))
-                        StudioApp.merge(json, null)
+                        var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
+                        StudioApp.merge(json, null);
+                        StudioApp.updateWorkflowName(json.job);
+                        StudioApp.views.workflowView.importNoReset();
                     }
                 }
                 reader.readAsBinaryString(file);

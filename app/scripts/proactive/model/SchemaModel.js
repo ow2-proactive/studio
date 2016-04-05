@@ -106,7 +106,7 @@ define(
                                     console.log("Should no be here", prop, value);
                                 }
                             } else {
-                                if (merging && that.get(prop) && prop != "Name") {
+                                if (merging && that.get(prop)) {
                                     // do not override existing value when merging, except for workflow name
                                 } else {
 //                                    console.log("Setting", prop, "from", placeholder, "to", value)
