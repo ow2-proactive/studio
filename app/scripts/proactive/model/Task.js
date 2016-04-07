@@ -52,11 +52,11 @@ define(
                         "data-help": 'A small textual description of what task does.'
                     }
                 },
-                "Maximum Number of Restart (upon failure)": {
+                "Maximum Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
                         'placeholder': '@attributes->maxNumberOfExecution',
-                        "data-help": 'Defines how many times this task is allowed to be restarted.'
+                        "data-help": 'Defines the maximum number of execution attempts of the task.'
                     }
                 },
                 "Maximum Execution Time (hh:mm:ss)": {
@@ -80,15 +80,18 @@ define(
                         "data-help": 'Indicates if you want to save the result of this task in the job result.'
                     }
                 },
-                "Cancel Job On Error Policy": {
+                "On Task Error Policy": {
                     type: 'Select',
                     fieldAttrs: {
-                        'placeholder': '@attributes->cancelJobOnError',
-                        "data-help": 'Defines whether the job must continue when a user exception or error occurs during the job process.'
+                        'placeholder': '@attributes->onTaskError',
+                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- cancel job after all execution attempts<br>&nbsp;&nbsp;- continue job (try all execution attempts)<br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- suspend task after first error<br>&nbsp;&nbsp;- suspend task after first error and pause job immediately.'
                     },
                     options: [
-                        {val: "true", label: "cancel job as soon as one task fails"},
-                        {val: "false", label: "continue job execution when a task fails"}
+                        {val: "cancelJob", label: "cancel job after all execution attempts"},
+                        {val: "suspendTask", label: "suspend task after first error"},
+                        {val: "pauseJob", label: "suspend task after first error and pause job immediately"},
+                        {val: "continueJobExecution", label: "continue job (try all execution attempts)"},
+                        {val: "none", label: "default (defined at job level)"}
                     ]
                 },
                 "If An Error Occurs Restart Task": {
@@ -314,10 +317,10 @@ define(
                 this.set({"Execute": new ScriptExecutable()});
                 this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Task Name": "Task" + (++Task.counter)});
-                this.set({"Maximum Number of Restart (upon failure)": 1});
+                this.set({"Maximum Number of Execution Attempts": ""});
                 this.set({"Run as me": false});
                 this.set({"Precious Result": false});
-                this.set({"Cancel Job On Error Policy": "false"});
+                this.set({"On Task Error Policy": "none"});
                 this.set({"If An Error Occurs Restart Task": "anywhere"});
                 this.set({"Store Task Logs in a File": false});
                 this.set({"Number of Nodes": 1});

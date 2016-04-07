@@ -115,6 +115,9 @@ define(
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
+        updateWorkflowName: function(job) {
+            this.models.jobModel.updateWorkflowName(job)  
+        },
         mergeXML: function(xml, elem) {
             var json = xml2json.xmlToJson(xml2json.parseXml(xml))
             this.merge(json, elem);

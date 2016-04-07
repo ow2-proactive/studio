@@ -107,7 +107,7 @@ define(
                                 }
                             } else {
                                 if (merging && that.get(prop)) {
-                                    // do not override existing value when merging
+                                    // do not override existing value when merging, except for workflow name
                                 } else {
 //                                    console.log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
@@ -121,7 +121,6 @@ define(
         },
         _mergeListsRemovingDuplicates: function (a, b) {
             return _.uniq(a.concat(b), false, JSON.stringify);
-
         }
     });
     return SchemaModel;
