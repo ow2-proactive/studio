@@ -37,7 +37,11 @@ define(
             var iconPath = this.icons[this.modelType];
             try{
 	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-            }catch(err){}
+            }catch(err){
+            	 try{
+     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
+                 }catch(err){}
+            }
             this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
