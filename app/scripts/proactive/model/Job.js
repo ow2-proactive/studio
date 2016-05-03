@@ -95,6 +95,7 @@ define(
         },
         populate: function (obj, merging) {
             this.populateSchema(obj, merging);
+            this.convertCancelJobOnErrorToOnTaskError(obj);
             var that = this;
             if (obj.taskFlow && obj.taskFlow.task) {
 
@@ -120,7 +121,7 @@ define(
                         taskModel.set({'Execute': new ScriptExecutable()});
                         taskModel.set({Type: "ScriptExecutable"});
                     }
-
+                    taskModel.convertCancelJobOnErrorToOnTaskError(task);
                     taskModel.populateSchema(task);
                     taskModel.populateSimpleForm();
 

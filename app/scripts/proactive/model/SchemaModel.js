@@ -40,9 +40,12 @@ define(
             } else {
                 return this.getValue(listSchema.fieldAttrs.itemplaceholder, listElemObj);
             }
+        },convertCancelJobOnErrorToOnTaskError: function (obj) {
+            if (obj["@attributes"]['cancelOnJobError'] && obj["@attributes"]['cancelOnJobError']  == "true") {
+                this.set("On Task Error Policy", "cancelJob")
+            }
         },
         populateSchema: function (obj, merging) {
-//            console.log("Populating", obj, this.schema)
             var that = this;
 
             for (var prop in this.schema) {
