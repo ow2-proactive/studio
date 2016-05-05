@@ -38,7 +38,7 @@
     </inputFiles>
     <% } %>
 
-    <% if (task["Number of Nodes"] && task["Number of Nodes"]>1) { %>
+    <% if (task["Number of Nodes"] && task["Topology"] && task["Topology"]!="none") { %>
     <parallel numberOfNodes="<%=task["Number of Nodes"]%>">
 
     <% if (task["Topology"]&&task["Topology"]!="none") { %>
