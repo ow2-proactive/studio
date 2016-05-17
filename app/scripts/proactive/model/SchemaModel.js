@@ -109,9 +109,9 @@ define(
                                     console.log("Should no be here", prop, value);
                                 }
                             } else {
-                                  console.log("Setting", prop, "from", placeholder, "to", value)
-                                                                    value = value.trim()
-                                                                    that.set(prop, value)
+//                                  console.log("Setting", prop, "from", placeholder, "to", value)
+                                    value = value.trim()
+                                    that.set(prop, value)
                             }
                         }
                     }
