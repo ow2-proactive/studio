@@ -3,9 +3,9 @@
         <% if (model["Type"]) { %> type="<%=model["Type"]%>" <% }%>>
             <% if (model["Script"] && model["Script"].length>0 && !model["Library Path"] || model["Language"]) {%>
                 <code language="<%=model["Language"]%>">
-                    <![CDATA[
-                    <%= model["Script"] %>
-                    ]]>
+<![CDATA[
+<%= model["Script"] %>
+]]>
                 </code>
             <% } else { %>
                 <% if (model["Library Path"] && model["Library Path"].length>0) { %>
