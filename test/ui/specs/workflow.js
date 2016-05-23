@@ -24,6 +24,48 @@ module.exports = {
             })
             .end();
     },
+    
+    "Test export python task": function (browser) {
+        browser
+            .login()
+            .closeNotification()
+            .freshWorkflow()
+            .createPythonTask()
+            .showMenu()
+            .waitForElementVisible('#save-button')
+            .click('#save-button')
+            .assert.notification("Saved")
+            .hideMenu()
+            .closeNotification()
+            .showMenu()
+            .click('#validate-button')
+            .assert.notification('Workflow is valid')
+            .checkExport(function (select, jobXmlDocument) {
+                var taskName = select("//p:task/@name", jobXmlDocument)[0].value
+
+                this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name")
+                
+                var data = jobXmlDocument.getElementsByTagName("scriptExecutable")[0];
+               
+                
+                var pythonExpectedScript = "<scriptExecutable>"
+                pythonExpectedScript = pythonExpectedScript.concat("\n        <script>");
+                pythonExpectedScript = pythonExpectedScript.concat("\n          <code language=\"python\">");
+                pythonExpectedScript = pythonExpectedScript.concat("\n            <![CDATA[");
+                pythonExpectedScript = pythonExpectedScript.concat("\nfor x in range(1, 11):");
+                pythonExpectedScript = pythonExpectedScript.concat("\n    print x");
+                pythonExpectedScript = pythonExpectedScript.concat("\n]]>");
+                pythonExpectedScript = pythonExpectedScript.concat("\n          </code>");
+                pythonExpectedScript = pythonExpectedScript.concat("\n        </script>");
+                pythonExpectedScript = pythonExpectedScript.concat("\n      </scriptExecutable>");
+
+                
+                this.assert.equal(data, pythonExpectedScript, "Data value")
+                
+                                
+            })
+            .end();
+    },
 
     "Workflow with job variable": function (browser) {
         browser
