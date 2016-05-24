@@ -45,6 +45,7 @@ define(
                 this.set("On Task Error Policy", "cancelJob")
             }
         },
+        //This method is used for the imported job xml
         populateSchema: function (obj, merging) {
             var that = this;
 
@@ -118,6 +119,7 @@ define(
                 }
             }
         },
+        //This method is used for the templates
         populateTemplate: function (obj, merging) {
             var that = this;
 
@@ -183,7 +185,13 @@ define(
                                 }
                             } else {
                                 if (merging && that.get(prop)) {
-                                    // do not override existing value when merging, except for workflow name
+                                    // do not override existing value when merging
+                                } else if(this.schema["Name"]){
+                                   // do not override workflow name even if it is empty
+                                } else if(this.schema["Project"]){
+                                   // do not override project name even if it is empty
+                                } else if(this.schema["Description"] ){
+                                   // do not override project description even if it is empty
                                 } else {
 //                                    console.log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()

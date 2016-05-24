@@ -111,12 +111,12 @@ define(
             this.views.workflowView.importNoReset();
         },
         merge: function(json, elem) {
-            this.models.jobModel.populate(json.job, true)
+            this.models.jobModel.populate(json.job, true, false)
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
         mergeTemplate: function(json, elem) {
-            this.models.jobModel.load(json.job, true)
+            this.models.jobModel.populate(json.job, true, true)
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },

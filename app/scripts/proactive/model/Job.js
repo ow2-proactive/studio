@@ -93,96 +93,12 @@ define(
         updateWorkflowName: function (job) {
             this.set({"Name": job["@attributes"].name.trim()});
         },
-        populate: function (obj, merging) {
-            this.populateSchema(obj, merging);
-            this.convertCancelJobOnErrorToOnTaskError(obj);
-            var that = this;
-            if (obj.taskFlow && obj.taskFlow.task) {
-
-                if (!Array.isArray(obj.taskFlow.task)) {
-                    obj.taskFlow.task = [obj.taskFlow.task];
-                }
-                var name2Task = {};
-                $.each(obj.taskFlow.task, function (i, task) {
-                    var taskModel = new Task();
-                    if (task.javaExecutable) {
-                        taskModel.schema['Execute']['model'] = JavaExecutable;
-                        taskModel.schema['Execute']['fieldAttrs'] = {placeholder: 'javaExecutable'}
-                        taskModel.set({'Execute': new JavaExecutable()});
-                        taskModel.set({Type: "JavaExecutable"});
-                    } else if (task.nativeExecutable) {
-                        taskModel.schema['Execute']['model'] = NativeExecutable;
-                        taskModel.schema['Execute']['fieldAttrs'] = {placeholder: 'nativeExecutable'}
-                        taskModel.set({'Execute': new NativeExecutable()});
-                        taskModel.set({Type: "NativeExecutable"});
-                    } else if (task.scriptExecutable) {
-                        taskModel.schema['Execute']['model'] = ScriptExecutable;
-                        taskModel.schema['Execute']['fieldAttrs'] = {placeholder: 'scriptExecutable'}
-                        taskModel.set({'Execute': new ScriptExecutable()});
-                        taskModel.set({Type: "ScriptExecutable"});
-                    }
-                    taskModel.convertCancelJobOnErrorToOnTaskError(task);
-                    taskModel.populateSchema(task);
-                    taskModel.populateSimpleForm();
-
-                    // check for unique task name to keep the job valid
-                    var originalName = taskModel.get("Task Name");
-                    if (merging && that.getTaskByName(taskModel.get("Task Name"))) {
-                        var counter = 2;
-                        while (that.getTaskByName(taskModel.get("Task Name") + counter)) {
-                            counter++;
-                        }
-                        taskModel.set({"Task Name": originalName + counter});
-                    }
-                    console.log("Adding task to workflow", taskModel)
-                    that.tasks.push(taskModel);
-                    name2Task[taskModel.get("Task Name")] = taskModel;
-                    name2Task[originalName] = taskModel;
-                });
-                // adding dependencies after all tasks are populated
-                $.each(obj.taskFlow.task, function (i, task) {
-                    var taskModel = name2Task[task['@attributes']['name']]
-                    if (taskModel && task.depends && task.depends.task) {
-                        if (!Array.isArray(task.depends.task)) {
-                            task.depends.task = [task.depends.task];
-                        }
-                        $.each(task.depends.task, function (i, dep) {
-                            if (name2Task[dep['@attributes']['ref']]) {
-                                var depTaskModel = name2Task[dep['@attributes']['ref']];
-                                taskModel.addDependency(depTaskModel);
-                            }
-                        })
-                    }
-                })
-                // adding controlFlows after all dependencies are set
-                $.each(obj.taskFlow.task, function (i, taskJson) {
-                    var taskModel = name2Task[taskJson['@attributes']['name']]
-                    if (taskJson.controlFlow) {
-                        if (taskJson.controlFlow.if) {
-                            var ifFlow = taskJson.controlFlow.if['@attributes'];
-                            taskModel.setif(name2Task[ifFlow['target']])
-                            taskModel.controlFlow.if.model.populateSchema(taskJson.controlFlow.if);
-                            taskModel.setelse(name2Task[ifFlow['else']])
-                            taskModel.setcontinuation(name2Task[ifFlow['continuation']])
-                        }
-                        if (taskJson.controlFlow.replicate) {
-                            taskModel.setreplicate();
-                            taskModel.controlFlow.replicate.model.populateSchema(taskJson.controlFlow.replicate);
-                        }
-                        if (taskJson.controlFlow.loop) {
-                            var branch = new BranchWithScript();
-                            branch.populateSchema(taskJson.controlFlow.loop);
-                            var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
-                            var targetTask = name2Task[loopTarget];
-                            taskModel.set({'Control Flow': 'loop'});
-                            taskModel.controlFlow = {'loop': {task: targetTask, model: branch}};
-                        }
-                    }
-                })
+        populate: function (obj, merging, isTemplate) {
+            if(isTemplate){
+                this.populateTemplate(obj, merging);
+            }else{
+                this.populateSchema(obj, merging);
             }
-        },
-    load: function (obj, merging) {
-            this.populateTemplate(obj, merging);
             this.convertCancelJobOnErrorToOnTaskError(obj);
             var that = this;
             if (obj.taskFlow && obj.taskFlow.task) {
