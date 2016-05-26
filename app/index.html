@@ -71,6 +71,9 @@
                     <li><a id="export-button" href="#" class="pointer"
                            title="Export current workflow as .xml file."><i
                             class="glyphicon glyphicon-export"></i> Export</a></li>
+                    <li><a id="browse-catalog-button" href="#" class="pointer"
+                           title="Browse the Workflow Catalog."><i
+                            class="glyphicon glyphicon-folder-open"></i> Catalog</a></li>
                     <li class="divider-vertical"></li>
                     <li><a id="validate-button" href="#" class="pointer"
                            title="Check the validity of current workflow."><i
@@ -162,6 +165,26 @@
                     </div>
                     <div class="modal-footer">
                         <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="catalog-browser-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Workflow Catalog</h3>
+                    </div>
+                    <div id="catalog-browser-body" class="modal-body" style="height:100%">
+                        <div id="catalog-browser-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="publish-to-catalog-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Publish as workflow
+                        </button>
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>

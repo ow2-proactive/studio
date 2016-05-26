@@ -12,6 +12,7 @@ define(
         'proactive/view/xml/JobXmlView',
         'proactive/view/LoginView',
         'proactive/view/LogoutView',
+        'proactive/view/CatalogView',
         'proactive/view/WorkflowListView',
         'xml2json',
         'proactive/router',
@@ -20,7 +21,7 @@ define(
         'jquery.ui.touch-punch',
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, WorkflowListView, xml2json, StudioRouter, dom) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom) {
 
     "use strict";
 
@@ -39,7 +40,8 @@ define(
             propertiesView : undefined,
             xmlView : undefined,
             loginView : undefined,
-            logoutView : undefined
+            logoutView : undefined,
+            catalogView : undefined
         },
 
         router: undefined,
@@ -62,6 +64,7 @@ define(
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
+            this.views.catalogView = new CatalogView();
 
             this.router = new StudioRouter(this);
         },
