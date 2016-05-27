@@ -10,7 +10,8 @@ define(function (require) {
             "Groovy": 'templates/script_groovy.xml',
             "Ruby": 'templates/script_ruby.xml',
             "Python": 'templates/script_python.xml',
-            "Language R": 'templates/script_r.xml'
+            "Language R": 'templates/script_r.xml',
+            "Cron": 'templates/script_cron.xml'
         },
         controls: {
             "If": 'templates/07_workflow_branch.xml',
