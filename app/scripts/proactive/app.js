@@ -111,7 +111,12 @@ define(
             this.views.workflowView.importNoReset();
         },
         merge: function(json, elem) {
-            this.models.jobModel.populate(json.job, true)
+            this.models.jobModel.populate(json.job, true, false)
+            this.views.workflowView.layoutNewElements(elem);
+            this.views.workflowView.importNoReset();
+        },
+        mergeTemplate: function(json, elem) {
+            this.models.jobModel.populate(json.job, true, true)
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
@@ -121,6 +126,10 @@ define(
         mergeXML: function(xml, elem) {
             var json = xml2json.xmlToJson(xml2json.parseXml(xml))
             this.merge(json, elem);
+        },
+        mergeTemplateXML: function(xml, elem) {
+            var json = xml2json.xmlToJson(xml2json.parseXml(xml))
+            this.mergeTemplate(json, elem);
         },
         closeWorkflow: function() {
             if (this.models.jobModel) {

@@ -45,6 +45,7 @@ define(
                 this.set("On Task Error Policy", "cancelJob")
             }
         },
+        //This method is used for the imported job xml
         populateSchema: function (obj, merging) {
             var that = this;
 
@@ -109,8 +110,86 @@ define(
                                     console.log("Should no be here", prop, value);
                                 }
                             } else {
+//                                  console.log("Setting", prop, "from", placeholder, "to", value)
+                                    value = value.trim()
+                                    that.set(prop, value)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        //This method is used for the templates
+        populateTemplate: function (obj, merging) {
+            var that = this;
+
+            for (var prop in this.schema) {
+                if (this.schema[prop] && this.schema[prop].fieldAttrs && this.schema[prop].fieldAttrs.placeholder) {
+
+                    var placeholder = this.schema[prop].fieldAttrs.placeholder;
+
+                    if (this.schema[prop].type && this.schema[prop].type == 'List') {
+                        var currentElements = this.get(prop) || [];
+                        var newElements = [];
+                        var value = this.getValue(placeholder, obj);
+                        if (value) {
+                            if (!Array.isArray(value)) {
+                                value = [value];
+                            }
+                            $.each(value, function (i, v) {
+                                var listElemValue = that.getListElementValue(that.schema[prop], v)
+                                if (listElemValue) {
+                                    newElements.push(listElemValue)
+//                                    console.log("Adding to list", prop, listElemValue)
+                                }
+                            })
+                            this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
+                        }
+                    } else {
+                        var value = null;
+                        if (!value && placeholder instanceof Array) {
+                            for (var ph in placeholder) {
+                                value = this.getValue(placeholder[ph], obj)
+                                if (value) {
+                                    break;
+                                }
+                            }
+                        } else {
+                            var value = this.getValue(placeholder, obj);
+                        }
+                        if (value) {
+                            if (typeof value === 'object') {
+                                if (this.schema[prop].type == "Select") {
+                                    // looking for a filed in the value matching select options
+                                    if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy == 'checkpresence') {
+                                        if (value) {
+//                                            console.log("Setting", prop, "from", placeholder, "to", "true")
+                                            that.set(prop, "true")
+                                        }
+                                    } else {
+                                        $.each(this.schema[prop].options, function (i, option) {
+                                            if (value[option] || value[option.val]) {
+//                                                console.log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
+                                                that.set(prop, option.val ? option.val : option)
+                                                return false;
+                                            }
+                                        });
+                                    }
+                                } else if (this.schema[prop].type == "NestedModel") {
+                                    var model = new this.schema[prop].model();
+                                    model.populateSchema(value)
+//                                    console.log("Setting", prop, "from", placeholder, "to", model)
+                                    that.set(prop, model)
+                                } else {
+                                    console.log("Should no be here", prop, value);
+                                }
+                            } else {
                                 if (merging && that.get(prop)) {
-                                    // do not override existing value when merging, except for workflow name
+                                    // do not override existing value when merging
+                                }  else if(this.schema["Project"]){
+                                   // do not override project name even if it is empty
+                                } else if(this.schema["Description"] ){
+                                   // do not override project description even if it is empty
                                 } else {
 //                                    console.log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()

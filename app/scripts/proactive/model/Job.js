@@ -93,8 +93,12 @@ define(
         updateWorkflowName: function (job) {
             this.set({"Name": job["@attributes"].name.trim()});
         },
-        populate: function (obj, merging) {
-            this.populateSchema(obj, merging);
+        populate: function (obj, merging, isTemplate) {
+            if(isTemplate){
+                this.populateTemplate(obj, merging);
+            }else{
+                this.populateSchema(obj, merging);
+            }
             this.convertCancelJobOnErrorToOnTaskError(obj);
             var that = this;
             if (obj.taskFlow && obj.taskFlow.task) {
