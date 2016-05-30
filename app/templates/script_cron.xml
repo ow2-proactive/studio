@@ -2,7 +2,7 @@
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="urn:proactive:jobdescriptor:3.3"
      xsi:schemaLocation="urn:proactive:jobdescriptor:3.3 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.3/schedulerjob.xsd"
-     name="11_cron_task">
+     name="script_Cron">
     <taskFlow>
         <task name="cron_task">
             <description>Cron task running every minute</description>
