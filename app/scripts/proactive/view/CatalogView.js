@@ -18,6 +18,7 @@ define(
             this.render();
         },
         render: function () {
+            console.log(this.buckets);
             this.$el.html(this.template())
             return this;
         }
