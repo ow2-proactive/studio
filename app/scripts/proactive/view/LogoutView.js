@@ -23,8 +23,9 @@ define(
                 var that = this;
 
                var buttonLogout = $('<button class="btn btn-small menu-button btn-default" data-toggle="dropdown">'
-                    + '<img src="images/logout_30.png" class="right-padding" style="height:25px">'
-                    + 'Logout <b>'+localStorage["pa.login"]+'</b></button>');
+                    + 'Logout <b>'+localStorage["pa.login"] + '</b>'
+                    + '<img src="images/logout_30.png" class="left-padding" style="height:25px;padding-left: 10px">'
+                    +'</button>');
                 var menu = $('<form class="navbar-form"></form>');
                 menu.append(buttonLogout);
 
