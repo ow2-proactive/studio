@@ -3,9 +3,13 @@ define(
         'jquery',
         'backbone',
         'text!proactive/templates/catalog-browser.html',
+        'text!proactive/templates/catalog-list.html',
+        'text!proactive/templates/catalog-workflow.html',
+        'proactive/model/CatalogBucketCollection',
+        'proactive/model/CatalogWorkflowCollection'
     ],
 
-    function ($, Backbone, catalogBrowser) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflowList, catalogBucket, catalogWorkflow) {
 
     "use strict";
 
@@ -14,15 +18,34 @@ define(
         initialize: function (options) {
             this.$el = $("<div id='catalog-browser-container'></div>");
             $("#catalog-browser-body").append(this.$el);
-            // this.buckets.on('reset', this.render);
-            // this.buckets.fetch();
             this.buckets = options.buckets;
             this.render();
         },
         render: function () {
-            console.log("Full CatalogBucketCollection:");
-            console.log(this.buckets);
+//            console.log("Full CatalogBucketCollection:");
+//            console.log(this.buckets);
+
             this.$el.html(this.template())
+            var BucketList = _.template(catalogList);
+
+            _(this.buckets.models).each(function(bucket) {
+//                console.log(bucket.get("id"));
+                var id = bucket.get("id");
+
+                this.$('#bucket-list').append(BucketList({bucket: "Bucket" + id}));
+
+                var WorkflowList = _.template(catalogWorkflowList);
+                _(bucket.get("workflows").models).each(function(workflow) {
+                    console.log(workflow.get("name"));
+                    var name = workflow.get("name");
+
+                    this.$('#catalog-workflow-listBucket'+id).append(WorkflowList({workflow: name}));
+
+
+                }, this);
+
+            }, this);
+
             return this;
         }
     })

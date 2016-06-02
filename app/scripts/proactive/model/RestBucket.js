@@ -13,7 +13,8 @@ define(
                 id: "",
                 name: "",
                 owner: "",
-                created_at: ""
+                created_at: "",
+                workflows: ""
             },
             initialize: function(options) {
                 var workflows = new CatalogWorkflowCollection({id: this.id});
