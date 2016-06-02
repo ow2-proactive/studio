@@ -6,7 +6,8 @@ define(
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
         'proactive/model/TemplateCollection',
-        'proactive/model/CatalogCollection',
+        'proactive/model/CatalogBucketCollection',
+        'proactive/model/CatalogWorkflowCollection',
         'proactive/view/PaletteView',
         'proactive/view/WorkflowView',
         'proactive/view/EmptyWorkflowView',
@@ -22,7 +23,7 @@ define(
         'jquery.ui.touch-punch',
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom) {
 
     "use strict";
 
@@ -33,7 +34,8 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
-            catalog: undefined
+            catalogBuckets: undefined,
+            catalogWorkflows: undefined
         },
 
         views : {
@@ -61,13 +63,18 @@ define(
 
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
-            this.models.catalog = new CatalogCollection();
+            this.models.catalogBuckets = new CatalogBucketCollection();
+            this.models.catalogBuckets.fetch();
+
+            // works when ran separately
+            // this.models.catalogWorkflows = new CatalogWorkflowCollection({id: 1});
+            // this.models.catalogWorkflows.fetch();
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
-            this.views.catalogView = new CatalogView({buckets: this.models.catalog});
+            this.views.catalogView = new CatalogView({buckets: this.models.catalogBuckets});
 
             this.router = new StudioRouter(this);
         },
