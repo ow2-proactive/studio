@@ -36,10 +36,12 @@ define(
 
                 var WorkflowList = _.template(catalogWorkflowList);
                 _(bucket.get("workflows").models).each(function(workflow) {
-                    console.log(workflow.get("name"));
+                    console.log('workflow:');
+                    console.log(workflow);
                     var name = workflow.get("name");
-                    var xml = workflow.get("xml");
-                    console.log("XML du workflow: ");
+                    console.log(name);
+                    var xml = workflow.getXml();
+                    console.log("XML du workflow:");
                     console.log(xml);
                     this.$('#catalog-workflow-listBucket'+id).append(WorkflowList({workflow: name}));
 
