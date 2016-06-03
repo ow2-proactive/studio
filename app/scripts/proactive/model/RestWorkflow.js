@@ -1,10 +1,9 @@
 define(
     [
-        'backbone',
-        'proactive/model/RestWorkflowXml'
+        'backbone'
     ],
 
-    function (Backbone, RestWorkflowXml) {
+    function (Backbone) {
 
         "use strict";
 
