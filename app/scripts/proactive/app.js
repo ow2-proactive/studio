@@ -64,11 +64,8 @@ define(
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
+            // TODO Handle pagination
             this.models.catalogBuckets.fetch();
-
-            // works when ran separately
-            // this.models.catalogWorkflows = new CatalogWorkflowCollection({id: 1});
-            // this.models.catalogWorkflows.fetch();
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});

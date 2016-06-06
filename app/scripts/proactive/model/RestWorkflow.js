@@ -28,12 +28,7 @@ define(
                 return $.ajax({
                     url: this.collection.url() + '/' + this.id + '?alt=xml'
                 }).done(function (response) {
-                    console.log('getXml() raw response:');
-                    console.log(response);
-                    var strXml = new XMLSerializer().serializeToString(response);
-                    console.log('getXml() stringified xml response:');
-                    console.log(strXml);
-                    return strXml;
+                    return new XMLSerializer().serializeToString(response);
                 });
             }
         });

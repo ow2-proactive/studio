@@ -17,8 +17,6 @@ define(
                 return '/workflow-catalog/buckets/' + this.id + '/workflows';
             },
             parse: function(data) {
-                console.log("fetching workflows (bucket " + this.id + ") via REST");
-                console.log(data._embedded.workflowMetadataList);
                 return data._embedded.workflowMetadataList;
             }
         });

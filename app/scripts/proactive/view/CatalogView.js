@@ -34,13 +34,6 @@ define(
                 _(bucket.get("workflows").models).each(function(workflow) {
                     var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
                     catalogWorkflowItem.render();
-                    console.log('workflow:');
-                    console.log(workflow);
-                    var name = workflow.get("name");
-                    console.log(name);
-                    var xml = workflow.getXml();
-                    console.log("XML du workflow:");
-                    console.log(xml);
                     this.$('#catalog-workflow-listBucket'+id).append(catalogWorkflowItem.el);
 
                 }, this);
