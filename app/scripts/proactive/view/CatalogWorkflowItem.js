@@ -20,8 +20,14 @@ define(
                 var xmlContent = this.model.getXml();
                 $.when(xmlContent).done(function () {
                     var StudioApp = require('StudioApp');
-                    StudioApp.mergeXML(xmlContent.responseText, null);
-                    StudioApp.views.workflowView.importNoReset();
+                    if (!StudioApp.models.currentWorkflow) {
+                        $('#select-workflow-modal').modal();
+                        return;
+                    }
+                    else {
+                        StudioApp.mergeXML(xmlContent.responseText, null);
+                        StudioApp.views.workflowView.importNoReset();
+                    }
                 });
             },
             render: function () {
