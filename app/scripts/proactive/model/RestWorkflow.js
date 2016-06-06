@@ -27,10 +27,13 @@ define(
 
                 return $.ajax({
                     url: this.collection.url() + '/' + this.id + '?alt=xml'
-                }).then(function (response) {
-                    console.log('getXml() response:');
+                }).done(function (response) {
+                    console.log('getXml() raw response:');
                     console.log(response);
-                    return response;
+                    var strXml = new XMLSerializer().serializeToString(response);
+                    console.log('getXml() stringified xml response:');
+                    console.log(strXml);
+                    return strXml;
                 });
             }
         });
