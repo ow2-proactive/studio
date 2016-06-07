@@ -24,27 +24,25 @@ define(
         },
         events: {
             'change #select-bucket': 'switchBucket'
-         },
-         switchBucket: function(e){
-            var currentBucketID = e.target.value;
-            this.$('#catalog-workflow-list').empty();
-            this.$('#current-id').empty();
-            var currentID = _.template(catalogCurrentBucket)
-            if(currentBucketID == "Please Select a Bucket"){
-                 this.$('#current-id').append(currentID({bucketid : "No Bucket Selected"}));
-            }else{
-                 var currentBucket = this.buckets.get(currentBucketID);
-                 _(currentBucket.get("workflows").models).each(function(workflow){
-                 var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
-                 catalogWorkflowItem.render();
-                 this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
-                 }, this);
-                 this.$('#current-id').append(currentID({bucketid : "Bucket" + currentBucketID}));
-            }
-
-         },
+        },
+        switchBucket: function(e){
+           var currentBucketID = e.target.value;
+           this.$('#catalog-workflow-list').empty();
+           this.$('#current-id').empty();
+           var currentID = _.template(catalogCurrentBucket)
+           if(currentBucketID == "Please Select a Bucket"){
+                this.$('#current-id').append(currentID({bucketid : "No Bucket Selected"}));
+           }else{
+                var currentBucket = this.buckets.get(currentBucketID);
+                _(currentBucket.get("workflows").models).each(function(workflow){
+                var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
+                catalogWorkflowItem.render();
+                this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
+                }, this);
+                this.$('#current-id').append(currentID({bucketid : "Bucket" + currentBucketID}));
+           }
+        },
         render: function () {
-
             this.$el.html(this.template());
             var BucketList = _.template(catalogList);
             var empty= '<ul class="breadcrumb"> <li class="active"><span>Current Bucket is: No Bucket Selected</span></li></ul>';
@@ -52,10 +50,7 @@ define(
 
             _(this.buckets.models).each(function(bucket) {
                 var id = bucket.get("id");
-
                 this.$('#bucket-list select').append(BucketList({bucket: id}));
-
-
             }, this);
 
             return this;
