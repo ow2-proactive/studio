@@ -270,6 +270,24 @@ define(
             saveAs(blob, jobName + ".xml")
         })
 
+        $("#publish-to-catalog-button").click(function (event) {
+            console.log("publish-to-catalog-button event !");
+            var StudioApp = require('StudioApp');
+
+            // TODO how do I get the selected Bucket from the dropdown list ?
+            var mockedBucketId = 2;
+            var xmlToPublish = StudioApp.views.xmlView.generateXml();
+            var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
+            console.log("Workflow to publish to bucket " + mockedBucketId + ":");
+            console.log("    layout:");
+            console.log(layout);
+            console.log("    xml:");
+            console.log(xmlToPublish);
+
+            console.log(publish_to_catalog(mockedBucketId, xmlToPublish, layout));
+
+        })
+
         // removing a task by del
         $('body').keyup(function (e) {
             if (e.keyCode == 46) {
@@ -290,6 +308,29 @@ define(
                 $("#script-save-button").click();
             }
         });
+
+        function publish_to_catalog (bucketId, xmlContent, layoutContent) {
+
+            var payload = new FormData();
+            // var xml = new window.DOMParser().parseFromString(xmlContent, "text/xml");
+            // console.log(xml);
+            var blob = new Blob([xmlContent], { type: "text?xml" });
+            payload.append('file', blob);
+            console.log('formdata:');
+            console.log(payload);
+
+            return $.ajax({
+                url: '/workflow-catalog/buckets/' + bucketId + '/workflows',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: payload
+            }).done(function (response) {
+                console.log('OKAYYYYYYYYYY PUBLISHAAYYYYYY');
+                console.log(response);
+            });
+        }
 
         function save_workflow() {
             var StudioApp = require('StudioApp');

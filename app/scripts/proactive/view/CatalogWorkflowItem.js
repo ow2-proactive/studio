@@ -13,9 +13,11 @@ define(
         return Backbone.View.extend({
             tagName: "li",
             events: {
-                "click #btn-import-xml": "clicked"
+                "click #btn-pull-workflow-xml": "pullWorkflow",
+                "click #btn-push-workflow-xml": "pushWorkflow"
             },
-            clicked: function(e){
+            // Pull from the Catalog to the Studio
+            pullWorkflow: function(e){
                 e.preventDefault();
                 var xmlContent = this.model.getXml();
                 $.when(xmlContent).done(function () {
