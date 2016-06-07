@@ -286,17 +286,19 @@ define(
                 console.log(newWorkflow);
                 console.log('JSON:');
                 console.log(newWorkflow);
-                var newWorkflowModel = StudioApp.models.catalogBuckets.models[1].get('workflows').create(
+                // We manually add the newly published workflow into the right bucket
+                // without relying on Backbone's persistence layer
+                var newWorkflowModel = StudioApp.models.catalogBuckets.models[1].get('workflows').add(
                     {
-                        // id: newWorkflow.id,
-                        // name: newWorkflow.name,
-                        // variables: newWorkflow.variables,
-                        // generic_information: newWorkflow.generic_information,
-                        // created_at: newWorkflow.created_at,
-                        // revision_id: newWorkflow.revision_id,
-                        // bucket_id: newWorkflow.bucket_id,
-                        // project_name: newWorkflow.project_name,
-                        // layout: newWorkflow.layout
+                        id: newWorkflow.id,
+                        name: newWorkflow.name,
+                        variables: newWorkflow.variables,
+                        generic_information: newWorkflow.generic_information,
+                        created_at: newWorkflow.created_at,
+                        revision_id: newWorkflow.revision_id,
+                        bucket_id: newWorkflow.bucket_id,
+                        project_name: newWorkflow.project_name,
+                        layout: newWorkflow.layout
                     },
                     {
                         xmlContent: xmlToPublish,
