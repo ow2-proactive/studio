@@ -64,6 +64,7 @@ define(
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
+            
             // TODO Handle pagination
             this.models.catalogBuckets.fetch();
 

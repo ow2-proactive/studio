@@ -288,15 +288,15 @@ define(
                 console.log(newWorkflow);
                 var newWorkflowModel = StudioApp.models.catalogBuckets.models[1].get('workflows').create(
                     {
-                        id: newWorkflow.id,
-                        name: newWorkflow.name,
-                        variables: newWorkflow.variables,
-                        generic_information: newWorkflow.generic_information,
-                        created_at: newWorkflow.created_at,
-                        revision_id: newWorkflow.revision_id,
-                        bucket_id: newWorkflow.bucket_id,
-                        project_name: newWorkflow.project_name,
-                        layout: newWorkflow.layout
+                        // id: newWorkflow.id,
+                        // name: newWorkflow.name,
+                        // variables: newWorkflow.variables,
+                        // generic_information: newWorkflow.generic_information,
+                        // created_at: newWorkflow.created_at,
+                        // revision_id: newWorkflow.revision_id,
+                        // bucket_id: newWorkflow.bucket_id,
+                        // project_name: newWorkflow.project_name,
+                        // layout: newWorkflow.layout
                     },
                     {
                         xmlContent: xmlToPublish,
