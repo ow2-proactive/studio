@@ -7,6 +7,7 @@ define(
         'xml2json',
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
+        'proactive/view/CatalogView',
         'codemirrorJs',
         'codemirrorComment',
         'codemirrorMB',
@@ -18,7 +19,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView) {
 
         "use strict";
 
@@ -278,13 +279,33 @@ define(
             var mockedBucketId = 2;
             var xmlToPublish = StudioApp.views.xmlView.generateXml();
             var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
-            console.log("Workflow to publish to bucket " + mockedBucketId + ":");
-            console.log("    layout:");
-            console.log(layout);
-            console.log("    xml:");
-            console.log(xmlToPublish);
-
-            console.log(publish_to_catalog(mockedBucketId, xmlToPublish, layout));
+            var createdWorkflowPromise = publish_to_catalog(mockedBucketId, xmlToPublish, layout);
+            var newWorkflow = undefined;
+            $.when(createdWorkflowPromise).then(function () {
+                newWorkflow = createdWorkflowPromise.responseJSON;
+                console.log(newWorkflow);
+                console.log('JSON:');
+                console.log(newWorkflow);
+                var newWorkflowModel = StudioApp.models.catalogBuckets.models[1].get('workflows').create(
+                    {
+                        id: newWorkflow.id,
+                        name: newWorkflow.name,
+                        variables: newWorkflow.variables,
+                        generic_information: newWorkflow.generic_information,
+                        created_at: newWorkflow.created_at,
+                        revision_id: newWorkflow.revision_id,
+                        bucket_id: newWorkflow.bucket_id,
+                        project_name: newWorkflow.project_name,
+                        layout: newWorkflow.layout
+                    },
+                    {
+                        xmlContent: xmlToPublish,
+                        layout: layout
+                    });
+                console.log("new workflow model created:");
+                console.log(newWorkflowModel);
+            });
+            // TODO create a new RestWorkflow and add it to the adequate bucket
 
         })
 
@@ -312,12 +333,10 @@ define(
         function publish_to_catalog (bucketId, xmlContent, layoutContent) {
 
             var payload = new FormData();
-            // var xml = new window.DOMParser().parseFromString(xmlContent, "text/xml");
-            // console.log(xml);
-            var blob = new Blob([xmlContent], { type: "text?xml" });
+            var blob = new Blob([xmlContent], { type: "text/xml" });
             payload.append('file', blob);
-            console.log('formdata:');
-            console.log(payload);
+
+            // TODO add the layout as a query parameter
 
             return $.ajax({
                 url: '/workflow-catalog/buckets/' + bucketId + '/workflows',
@@ -326,9 +345,8 @@ define(
                 processData: false,
                 cache: false,
                 data: payload
-            }).done(function (response) {
-                console.log('OKAYYYYYYYYYY PUBLISHAAYYYYYY');
-                console.log(response);
+            }).success(function (response) {
+                return response;
             });
         }
 

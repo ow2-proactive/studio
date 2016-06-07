@@ -19,6 +19,29 @@ define(
                 project_name: "",
                 layout: ""
             },
+            save: function (attrs, options) {
+
+                var payload = new FormData();
+                var blob = new Blob([options.xmlContent], { type: "text/xml" });
+                payload.append('file', blob);
+
+                // TODO add the layout as a query parameter
+
+                console.log('sending save request');
+
+                return $.ajax({
+                    url: this.collection.url(),
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    data: payload
+                }).success(function (response) {
+                    console.log('sending save request SUCCEEDED');
+                    console.log(response);
+                    return this;
+                });
+            },
             getXml: function() {
                 console.log('collection parent:');
                 console.log(this.collection);
