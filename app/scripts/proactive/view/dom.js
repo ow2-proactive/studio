@@ -275,12 +275,10 @@ define(
         $("#publish-to-catalog-button").click(function (event) {
             console.log("publish-to-catalog-button event !");
             var StudioApp = require('StudioApp');
-
-            // TODO how do I get the selected Bucket from the dropdown list ?
-            var mockedBucketId = 2;
+            var selectedBucketId = $("#select-bucket").val();
             var xmlToPublish = StudioApp.views.xmlView.generateXml();
             var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
-            var createdWorkflowPromise = publish_to_catalog(mockedBucketId, xmlToPublish, layout);
+            var createdWorkflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
             var newWorkflow = undefined;
             $.when(createdWorkflowPromise).then(function () {
                 newWorkflow = createdWorkflowPromise.responseJSON;
