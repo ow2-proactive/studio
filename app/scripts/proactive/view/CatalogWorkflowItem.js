@@ -22,13 +22,14 @@ define(
             pullWorkflow: function(e){
                 e.preventDefault();
                 var xmlContent = this.model.getXml();
+                var StudioApp = require('StudioApp');
                 $.when(xmlContent).done(function () {
-                    var StudioApp = require('StudioApp');
                     if (!StudioApp.models.currentWorkflow) {
                         $('#select-workflow-modal').modal();
                         return;
                     }
                     else {
+                        StudioApp.clear();
                         StudioApp.mergeXML(xmlContent.responseText, null);
                         StudioApp.views.workflowView.importNoReset();
                     }

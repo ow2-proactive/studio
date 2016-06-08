@@ -67,7 +67,6 @@ define(
                 $('#select-workflow-modal').modal();
                 return;
             }
-
             closeCollapsedMenu();
             $('#import-file').parent('form').trigger('reset');
             $('#import-file').click();
@@ -75,7 +74,7 @@ define(
 
         $('#import-file').change(function (env) {
             var StudioApp = require('StudioApp');
-
+            StudioApp.clear();
             var files = env.target.files;
             if (files.length > 0) {
                 var file = files[0];
