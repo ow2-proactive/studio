@@ -276,7 +276,6 @@ define(
 
             var selectedBucketId = $("#select-bucket").val();
             if (selectedBucketId == -1) {
-                // #select-bucket-modal
                 // show modal
                 $('#select-bucket-modal').modal();
             }
@@ -284,7 +283,22 @@ define(
                 var StudioApp = require('StudioApp');
                 var xmlToPublish = StudioApp.views.xmlView.generateXml();
                 var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
-                publish_to_catalog(selectedBucketId, xmlToPublish, layout);
+                var responseJSON = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
+
+                PNotify.removeAll();
+
+                new PNotify({
+                    title: 'Published',
+                    text: "The Workflow has been published to the Catalog",
+                    type: 'success',
+                    text_escape: true,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    opacity: .8,
+                    width: '20%'
+                });
             }
         })
 
@@ -327,6 +341,7 @@ define(
             }).success(function (response) {
                 return response;
             });
+            return createdWorkflowPromise;
         }
 
         function save_workflow() {
