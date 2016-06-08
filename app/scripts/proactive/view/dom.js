@@ -113,6 +113,7 @@ define(
         $("#browse-catalog-button").click(function (event) {
             event.preventDefault();
             var StudioApp = require('StudioApp');
+            StudioApp.models.catalogBuckets.fetch({reset: true});
             StudioApp.views.catalogView.render();
             $('#catalog-browser-view-modal').modal();
         })
