@@ -3,10 +3,11 @@ define(
         'jquery',
         'backbone',
         'xml2json',
-        'text!proactive/templates/catalog-workflow.html'
+        'text!proactive/templates/catalog-workflow.html',
+        'proactive/view/CatalogView'
     ],
 
-    function ($, Backbone, xml2json, catalogWorkflowList) {
+    function ($, Backbone, xml2json, catalogWorkflowList, CatalogView) {
 
         "use strict";
 
@@ -14,7 +15,8 @@ define(
             tagName: "li",
             events: {
                 "click #btn-pull-workflow-xml": "pullWorkflow",
-                "click #btn-push-workflow-xml": "pushWorkflow"
+                "click #btn-push-workflow-xml": "pushWorkflow",
+                "click #btn-remove-workflow": "removeWorkflow",
             },
             // Pull from the Catalog to the Studio
             pullWorkflow: function(e){
@@ -31,6 +33,22 @@ define(
                         StudioApp.views.workflowView.importNoReset();
                     }
                 });
+            },
+            removeWorkflow: function(event) {
+                event.stopPropagation();
+                var StudioApp = require('StudioApp');
+                var bucketId = this.model.get('bucket_id');
+                var workflowsCollection = StudioApp.models.catalogBuckets.get(bucketId).get('workflows');
+                StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
+                                    StudioApp.views.catalogView.internalSwitchBucket(bucketId));
+                var workflowId = this.model.get('id');
+                this.model.destroy();
+                workflowsCollection.remove(workflowId);
+                StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
+                                                    StudioApp.views.catalogView.internalSwitchBucket(bucketId));
+                console.log('collection a jour:');
+                console.log(workflowsCollection);
+
             },
             render: function () {
                 var workflowList = _.template(catalogWorkflowList);
