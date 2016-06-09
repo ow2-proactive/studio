@@ -57,13 +57,13 @@
         </selection>
     <% } %>
 
+    <%=forkEnvironment%>
+
     <% if (preScript && preScript.length>0) { %>
     <% print("<pre"+">") %>
         <%=preScript%>
     <% print("</pre"+">") %>
     <% } %>
-
-    <%=forkEnvironment%>
 
     <%=executable%>
 
