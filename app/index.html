@@ -217,7 +217,25 @@
             </div>
         </div>
 
-        <div id="select-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="publish-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Publish Workflow to Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        Do you want to publish your workflow into the Catalog ?
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Yes</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="import-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -228,7 +246,7 @@
                         Importing from the Catalog will override the workflow you are currently editing.
                     </div>
                     <div class="modal-footer">
-                        <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+                        <button id="confirm-import-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>

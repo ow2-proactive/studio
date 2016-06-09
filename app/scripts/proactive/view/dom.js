@@ -269,6 +269,13 @@ define(
             saveAs(blob, jobName + ".xml")
         })
 
+        $("#confirm-import-from-catalog").click(function () {
+            var StudioApp = require('StudioApp');
+            StudioApp.clear();
+            StudioApp.mergeXML(StudioApp.xmlToImport, null);
+            StudioApp.views.workflowView.importNoReset();
+        })
+
         $("#confirm-publication-to-catalog").click(function () {
             var selectedBucketId = $("#select-bucket").val();
             var StudioApp = require('StudioApp');
@@ -285,7 +292,7 @@ define(
                 $('#select-bucket-modal').modal();
             }
             else {
-                $('#select-workflow-confirmation-modal').modal();
+                $('#publish-workflow-confirmation-modal').modal();
             }
         })
 

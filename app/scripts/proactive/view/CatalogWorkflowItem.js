@@ -28,9 +28,8 @@ define(
                         return;
                     }
                     else {
-                        StudioApp.clear();
-                        StudioApp.mergeXML(xmlContent.responseText, null);
-                        StudioApp.views.workflowView.importNoReset();
+                        StudioApp.xmlToImport = xmlContent.responseText;
+                        $('#import-workflow-confirmation-modal').modal();
                     }
                 });
             },
