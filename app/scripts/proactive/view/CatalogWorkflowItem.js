@@ -15,7 +15,7 @@ define(
             tagName: "li",
             events: {
                 "click #btn-pull-workflow-xml": "pullWorkflow",
-                "click #btn-remove-workflow": "removeWorkflow",
+                "click #btn-remove-workflow": "removeConfirm",
             },
             // Pull from the Catalog to the Studio
             pullWorkflow: function(e){
@@ -33,20 +33,13 @@ define(
                     }
                 });
             },
-            removeWorkflow: function(event) {
-                event.stopPropagation();
+            removeConfirm: function(){
                 var StudioApp = require('StudioApp');
-                var bucketId = this.model.get('bucket_id');
-                var workflowsCollection = StudioApp.models.catalogBuckets.get(bucketId).get('workflows');
-                StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                                    StudioApp.views.catalogView.internalSwitchBucket(bucketId));
-                var workflowId = this.model.get('id');
-                this.model.destroy();
-                workflowsCollection.remove(workflowId);
-                StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                                                    StudioApp.views.catalogView.internalSwitchBucket(bucketId));
-                console.log('collection a jour:');
-                console.log(workflowsCollection);
+                StudioApp.workflowToRemove = this.model;
+                $('#delete-workflow-confirmation-modal').modal();
+
+            },
+            removeWorkflow: function(event) {
 
             },
             render: function () {
