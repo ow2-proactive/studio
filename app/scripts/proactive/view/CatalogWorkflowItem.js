@@ -15,7 +15,6 @@ define(
             tagName: "li",
             events: {
                 "click #btn-pull-workflow-xml": "pullWorkflow",
-                "click #btn-push-workflow-xml": "pushWorkflow",
                 "click #btn-remove-workflow": "removeWorkflow",
             },
             // Pull from the Catalog to the Studio
