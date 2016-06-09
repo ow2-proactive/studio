@@ -258,8 +258,6 @@ define(
             return;
            
         });
-        
-        
 
         $("#download-xml-button").click(function (event) {
             event.preventDefault();
@@ -271,34 +269,23 @@ define(
             saveAs(blob, jobName + ".xml")
         })
 
-        $("#publish-to-catalog-button").click(function (event) {
-            console.log("publish-to-catalog-button event !");
-
+        $("#confirm-publication-to-catalog").click(function () {
             var selectedBucketId = $("#select-bucket").val();
-            if (selectedBucketId == -1) {
-                // show modal
+            var StudioApp = require('StudioApp');
+            var xmlToPublish = StudioApp.views.xmlView.generateXml();
+            var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
+            var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
+            add_workflow_to_collection(workflowPromise, xmlToPublish);
+            // $('#catalog-browser-view-modal').hide();
+            // $('.modal-backdrop').hide();
+        })
+
+        $("#publish-to-catalog-button").click(function (event) {
+            if ($("#select-bucket").val()== -1) {
                 $('#select-bucket-modal').modal();
             }
             else {
-                var StudioApp = require('StudioApp');
-                var xmlToPublish = StudioApp.views.xmlView.generateXml();
-                var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
-                var responseJSON = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
-
-                PNotify.removeAll();
-
-                new PNotify({
-                    title: 'Published',
-                    text: "The Workflow has been published to the Catalog",
-                    type: 'success',
-                    text_escape: true,
-                    buttons: {
-                        closer: true,
-                        sticker: false
-                    },
-                    opacity: .8,
-                    width: '20%'
-                });
+                $('#select-workflow-confirmation-modal').modal();
             }
         })
 
@@ -339,9 +326,48 @@ define(
                 cache: false,
                 data: payload
             }).success(function (response) {
+                PNotify.removeAll();
+
+                new PNotify({
+                    title: 'Published',
+                    text: "The Workflow has been published to the Catalog",
+                    type: 'success',
+                    text_escape: true,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    opacity: .8,
+                    width: '20%'
+                });
                 return response;
             });
             return createdWorkflowPromise;
+        }
+
+        function add_workflow_to_collection (createdWorkflowPromise, xmlContent) {
+            $.when(createdWorkflowPromise).then(function () {
+                var StudioApp = require('StudioApp');
+                var newWorkflow = createdWorkflowPromise.responseJSON;
+                // We manually add the newly published workflow into the right bucket
+                // without relying on Backbone's persistence layer
+                StudioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
+                    {
+                        id: newWorkflow.id,
+                        name: newWorkflow.name,
+                        variables: newWorkflow.variables,
+                        generic_information: newWorkflow.generic_information,
+                        created_at: newWorkflow.created_at,
+                        revision_id: newWorkflow.revision_id,
+                        bucket_id: newWorkflow.bucket_id,
+                        project_name: newWorkflow.project_name,
+                        layout: newWorkflow.layout
+                    },
+                    {
+                        xmlContent: xmlContent,
+                        layout: newWorkflow.layout
+                    });
+            });
         }
 
         function save_workflow() {

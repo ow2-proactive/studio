@@ -20,6 +20,10 @@ define(
                 var workflows = new CatalogWorkflowCollection({id: this.id});
                 workflows.fetch();
                 this.set("workflows", workflows);
+                this.listenTo(workflows, 'add', this.forceRefreshView);
+            },
+            forceRefreshView: function () {
+                require('StudioApp').views.catalogView.internalSwitchBucket(this.id);
             }
         });
     })
