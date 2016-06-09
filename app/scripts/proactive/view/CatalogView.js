@@ -5,12 +5,13 @@ define(
         'text!proactive/templates/catalog-browser.html',
         'text!proactive/templates/catalog-list.html',
         'text!proactive/templates/catalog-bucket-id.html',
+        'text!proactive/templates/catalog-bucket-empty.html',
         'proactive/view/CatalogWorkflowItem',
         'proactive/model/CatalogBucketCollection',
         'proactive/model/CatalogWorkflowCollection',
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogCurrentBucket, CatalogWorkflowItem, catalogBucket, catalogWorkflow) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogCurrentBucket, catalogEmpty, CatalogWorkflowItem, catalogBucket, catalogWorkflow) {
 
     "use strict";
 
@@ -30,17 +31,25 @@ define(
             this.$('#catalog-workflow-list').empty();
             this.$('#current-id').empty();
             var currentID = _.template(catalogCurrentBucket);
+            var emptyView = _.template(catalogEmpty);
             if (currentBucketID == -1) {
-                this.$('#current-id').append(currentID({bucketid: "No Bucket Selected"}));
+                this.$('#current-id').append(currentID({bucketid: "No Bucket Selected. Please select a Bucket."}));
+                this.$('#catalog-workflow-list').append(emptyView);
             }
             else {
-                var currentBucket = this.buckets.get(currentBucketID);
-                _(currentBucket.get("workflows").models).each(function (workflow) {
+                var currentBucketLength = this.buckets.get(currentBucketID).get("workflows").length;
+                if(currentBucketLength == 0){
+                    this.$('#catalog-workflow-list').append(emptyView);
+                    this.$('#current-id').append(currentID({bucketid: "Bucket " + currentBucketID + " and it is empty."}));
+                }else{
+                    var currentBucket = this.buckets.get(currentBucketID);
+                    _(currentBucket.get("workflows").models).each(function(workflow){
                     var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
                     catalogWorkflowItem.render();
                     this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
-                }, this);
-                this.$('#current-id').append(currentID({bucketid: "Bucket" + currentBucketID}));
+                    }, this);
+                    this.$('#current-id').append(currentID({bucketid : "Bucket " + currentBucketID}));
+                    }
             }
         },
         switchBucket: function(e){
