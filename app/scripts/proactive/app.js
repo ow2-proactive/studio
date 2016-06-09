@@ -95,8 +95,6 @@ define(
 
             this.closeWorkflow();
 
-            console.log("Importing workflow");
-
             var jobXml = workflow.get('xml');
 
             var json = xml2json.xmlToJson(xml2json.parseXml(jobXml));

@@ -373,7 +373,9 @@ define(
                     {
                         xmlContent: xmlContent,
                         layout: newWorkflow.layout
-                    });
+                    }
+                );
+                StudioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
             });
         }
 
