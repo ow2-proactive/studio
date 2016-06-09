@@ -12,7 +12,13 @@ define(
             model: RestBucket,
             url: '/workflow-catalog/buckets',
             parse: function(data) {
-                return data._embedded.bucketMetadataList;
+                console.log(data);
+                if (data.page.totalElements > 0) {
+                    return data._embedded.bucketMetadataList;
+                }
+                else {
+                    return [];
+                }
             }
         });
     })

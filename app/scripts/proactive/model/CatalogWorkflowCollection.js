@@ -17,7 +17,13 @@ define(
                 return '/workflow-catalog/buckets/' + this.id + '/workflows';
             },
             parse: function(data) {
-                return data._embedded.workflowMetadataList;
+                if (data.page.totalElements > 0) {
+                    return data._embedded.workflowMetadataList;
+                }
+                else {
+                    return [];
+                }
+
             }
         });
     })
