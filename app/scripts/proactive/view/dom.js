@@ -300,6 +300,10 @@ define(
         // click event will only happen if the button is enabled
         // so the StudioApp.modelsToRemove array is not empty
         $("#delete-selection-catalog").click(function (event) {
+            $('#delete-workflow-confirmation-modal').modal();
+        })
+
+        $("#confirm-delete-from-catalog").click(function (event) {
             var StudioApp = require('StudioApp');
             var wfToRemove = StudioApp.modelsToRemove;
             var wId;
@@ -328,20 +332,6 @@ define(
             deleteButton.text("Delete");
             deleteButton.prop('disabled', true);
         })
-
-        $("#confirm-delete-from-catalog").click(function (event) {
-            //event.stopPropagation();
-            var StudioApp = require('StudioApp');
-            var bucketId = $("#select-bucket").val();
-            var workflowsCollection = StudioApp.models.catalogBuckets.get(bucketId).get('workflows');
-            StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                                                            StudioApp.views.catalogView.internalSwitchBucket(bucketId));
-            var workflowId = StudioApp.workflowToRemove.get('id');
-            StudioApp.workflowToRemove.destroy();
-            workflowsCollection.remove(workflowId);
-            StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                                                                StudioApp.views.catalogView.internalSwitchBucket(bucketId));
-        } )
 
         // removing a task by del
         $('body').keyup(function (e) {
