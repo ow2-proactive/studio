@@ -20,11 +20,6 @@ define(
                 layout: ""
             },
             getXml: function() {
-                console.log('collection parent:');
-                console.log(this.collection);
-                console.log('collection parent url:');
-                console.log(this.collection.url());
-
                 return $.ajax({
                     url: this.collection.url() + '/' + this.id + '?alt=xml'
                 }).done(function (response) {

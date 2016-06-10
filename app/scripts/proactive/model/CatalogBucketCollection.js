@@ -12,7 +12,6 @@ define(
             model: RestBucket,
             url: '/workflow-catalog/buckets',
             parse: function(data) {
-                console.log(data);
                 if (data.page.totalElements > 0) {
                     return data._embedded.bucketMetadataList;
                 }

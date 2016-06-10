@@ -27,7 +27,6 @@ define(
             'change #select-bucket': 'switchBucket'
         },
         internalSwitchBucket: function (currentBucketID) {
-            console.log('internalSwitchBucket called !');
             this.$('#catalog-workflow-list').empty();
             this.$('#current-id').empty();
             var currentID = _.template(catalogCurrentBucket);
@@ -63,7 +62,7 @@ define(
                 var id = bucket.get("id");
                 this.$('#bucket-list select').append(BucketList({bucket: id}));
             }, this);
-            // to open the browser on the "" Bucket
+            // to open the browser on the "No Bucket Selected" Bucket
             this.internalSwitchBucket(-1);
             return this;
         },

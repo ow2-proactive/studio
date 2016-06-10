@@ -311,12 +311,6 @@ define(
             var workflowId;
             var workflowsCollection;
             for (wId in wfToRemove) {
-                console.log('Workflow to delete:');
-                console.log(wfToRemove[wId]);
-                console.log('workflow id:');
-                console.log(wfToRemove[wId].get('id'));
-                console.log('bucket id:');
-                console.log(wfToRemove[wId].get('bucket_id'));
                 bucketId = wfToRemove[wId].get('bucket_id');
                 workflowId = wfToRemove[wId].get('id');
                 workflowsCollection = StudioApp.models.catalogBuckets.get(bucketId).get('workflows');
