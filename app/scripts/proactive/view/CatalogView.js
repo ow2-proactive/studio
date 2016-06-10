@@ -32,23 +32,39 @@ define(
             var currentID = _.template(catalogCurrentBucket);
             var emptyView = _.template(catalogEmpty);
             if (currentBucketID == -1) {
-                this.$('#current-id').append(currentID({bucketid: "No Bucket Selected. Please select a Bucket."}));
+                this.$('#current-id').append(currentID(
+                    {
+                        bucketName: "No Bucket Selected. Please select a Bucket.",
+                        bucketId: ""
+                    }
+                ));
                 this.$('#catalog-workflow-list').append(emptyView);
             }
             else {
-                var currentBucketLength = this.buckets.get(currentBucketID).get("workflows").length;
-                if(currentBucketLength == 0){
+                var currentBucket = this.buckets.get(currentBucketID);
+                var currentBucketSize = currentBucket.get("workflows").length;
+                if (currentBucketSize == 0) {
                     this.$('#catalog-workflow-list').append(emptyView);
-                    this.$('#current-id').append(currentID({bucketid: "Bucket " + currentBucketID + " and it is empty."}));
-                }else{
-                    var currentBucket = this.buckets.get(currentBucketID);
-                    _(currentBucket.get("workflows").models).each(function(workflow){
-                    var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
-                    catalogWorkflowItem.render();
-                    this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
+                    this.$('#current-id').append(currentID(
+                        {
+                            bucketName: currentBucket.get('name') + " is empty.",
+                            bucketId: ""
+                        }
+                    ));
+                }
+                else {
+                    _(currentBucket.get("workflows").models).each(function (workflow) {
+                        var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
+                        catalogWorkflowItem.render();
+                        this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
                     }, this);
-                    this.$('#current-id').append(currentID({bucketid : "Bucket " + currentBucketID}));
-                    }
+                    this.$('#current-id').append(currentID(
+                        {
+                            bucketName: currentBucket.get('name'),
+                            bucketId: currentBucketID
+                        }
+                    ));
+                }
             }
         },
         switchBucket: function(e){
@@ -60,7 +76,7 @@ define(
             var empty = '<ul class="breadcrumb"> <li class="active"><span>Current Bucket is: No Bucket Selected</span></li></ul>';
             _(this.buckets.models).each(function(bucket) {
                 var id = bucket.get("id");
-                this.$('#bucket-list select').append(BucketList({bucket: id}));
+                this.$('#bucket-list select').append(BucketList({bucket: bucket}));
             }, this);
             // to open the browser on the "No Bucket Selected" Bucket
             this.internalSwitchBucket(-1);
