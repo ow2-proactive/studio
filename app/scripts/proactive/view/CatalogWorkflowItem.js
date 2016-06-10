@@ -16,7 +16,7 @@ define(
             events: {
                 "click #btn-pull-workflow-xml": "pullWorkflow",
                 "click #btn-remove-workflow": "removeConfirm",
-		"click #btn-toggle-removal-state": "toggleRemovalState"
+		        "click #btn-toggle-removal-state": "toggleRemovalState"
             },
             // Pull from the Catalog to the Studio
             pullWorkflow: function(e){
@@ -48,8 +48,10 @@ define(
                         .addClass('state-icon glyphicon glyphicon-check');
                 }
             },
-            removeWorkflow: function(event) {
-
+            removeConfirm: function(){
+                var StudioApp = require('StudioApp');
+                StudioApp.workflowToRemove = this.model;
+                $('#delete-workflow-confirmation-modal').modal();
             },
             render: function () {
                 var workflowList = _.template(catalogWorkflowList);
