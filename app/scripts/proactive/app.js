@@ -67,6 +67,7 @@ define(
             
             // TODO Handle pagination
             this.models.catalogBuckets.fetch();
+            this.modelsToRemove = [];
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});

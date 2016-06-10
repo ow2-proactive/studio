@@ -34,18 +34,32 @@ define(
                 });
             },
             toggleRemovalState: function (event) {
+                var StudioApp = require('StudioApp');
+                var currentModel = this.model;
+
+                console.log('Model to toggle:');
+                console.log(currentModel);
+
                 if (this.$('#btn-toggle-removal-state input').prop('checked')) {
                     this.$('#btn-toggle-removal-state input').prop('checked', false);
                     this.$('#btn-toggle-removal-state i')
                         .removeClass()
                         .addClass('state-icon glyphicon glyphicon-unchecked');
+                    StudioApp.modelsToRemove = $.grep(StudioApp.modelsToRemove, function (model, index) {
+                        console.log('currentModel id:' + currentModel.get('id'));
+                        console.log('model from array:' + model.get('id'));
+                        return currentModel.get('id') != model.get('id');
+                    })
                 }
                 else {
                     this.$('#btn-toggle-removal-state input').prop('checked', true);
                     this.$('#btn-toggle-removal-state i')
                         .removeClass()
                         .addClass('state-icon glyphicon glyphicon-check');
+                    StudioApp.modelsToRemove.push(this.model);
                 }
+                console.log('Workflows to remove:');
+                console.log(StudioApp.modelsToRemove);
                 this._notifyDeleteButton();
             },
             removeConfirm: function(){
