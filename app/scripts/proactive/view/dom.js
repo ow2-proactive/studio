@@ -282,12 +282,18 @@ define(
 
             // I should clear only if a workflow is currently open
             if (StudioApp.isWorkflowOpen()) {
+                console.log("A workflow is already open, let's clear it first");
                 StudioApp.clear();
+                StudioApp.importFromCatalog();
+                $('#catalog-browser-close-button').click();
             }
-            // create a new workflow and open it
-            var clickAndOpenEvent = jQuery.Event( "click" );
-            clickAndOpenEvent.openWorkflow = true;
-            $('.create-workflow-button').trigger(clickAndOpenEvent);
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+
         })
 
         $("#confirm-publication-to-catalog").click(function () {
