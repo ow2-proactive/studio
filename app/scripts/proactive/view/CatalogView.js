@@ -66,6 +66,7 @@ define(
                     ));
                 }
             }
+            require('StudioApp').resetDeleteCollection();
         },
         switchBucket: function(e){
             this.internalSwitchBucket(e.target.value);

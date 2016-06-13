@@ -167,6 +167,12 @@ define(
             this.closeWorkflow();
             this.views.workflowView = new EmptyWorkflowView();
         },
+        resetDeleteCollection: function () {
+            this.modelsToRemove = [];
+            var deleteButton = $('#delete-selection-catalog');
+            deleteButton.text("Delete");
+            deleteButton.prop('disabled', true);
+        },
         clear: function() {
             var jobXml = new JobXmlView().xml(new Job());
             var json = xml2json.xmlToJson(xml2json.parseXml(jobXml))

@@ -327,10 +327,7 @@ define(
                 StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
                     StudioApp.views.catalogView.internalSwitchBucket(bucketId));
             }
-            StudioApp.modelsToRemove = [];
-            var deleteButton = $('#delete-selection-catalog');
-            deleteButton.text("Delete");
-            deleteButton.prop('disabled', true);
+            StudioApp.resetDeleteCollection();
         })
 
         // removing a task by del
