@@ -293,7 +293,6 @@ define(
                 clickAndOpenEvent.openWorkflow = true;
                 $('.create-workflow-button').trigger(clickAndOpenEvent);
             }
-
         })
 
         $("#confirm-publication-to-catalog").click(function () {
@@ -548,8 +547,6 @@ define(
         	}else{
         		result = result + conf.studioVersion;
         	}
-        	
-        	
         	
         	$("#documentationLinkId").attr("href", result);
         	

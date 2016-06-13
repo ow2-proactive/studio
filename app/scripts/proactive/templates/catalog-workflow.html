@@ -2,10 +2,12 @@
     <%= workflow.get("name") %> (id: <%= workflow.get("id") %>)
 </label>
 <div class="btn-group btn-group-xs pull-right" role="group">
-    <button type="button" id="btn-pull-workflow-xml" class="btn btn-default btn-mini">
+    <button type="button" id="btn-pull-workflow-xml" class="btn btn-default btn-mini"
+            title="Import this workflow">
         <i class="glyphicon glyphicon-cloud-download"></i>
     </button>
-    <button type="button" id="btn-toggle-removal-state" class="button-checkbox btn btn-default btn-mini">
+    <button type="button" id="btn-toggle-removal-state" class="button-checkbox btn btn-default btn-mini"
+            title="Select this workflow">
         <i class="state-icon glyphicon glyphicon-unchecked"></i>
         <input type="checkbox" class="hidden">
     </button>
