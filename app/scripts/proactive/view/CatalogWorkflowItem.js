@@ -18,19 +18,13 @@ define(
 		        "click #btn-toggle-removal-state": "toggleRemovalState"
             },
             // Pull from the Catalog to the Studio
-            pullWorkflow: function(e){
+            pullWorkflow: function (e) {
                 e.preventDefault();
                 var xmlContent = this.model.getXml();
                 var StudioApp = require('StudioApp');
                 $.when(xmlContent).done(function () {
-                    if (!StudioApp.models.currentWorkflow) {
-                        $('#select-workflow-modal').modal();
-                        return;
-                    }
-                    else {
-                        StudioApp.xmlToImport = xmlContent.responseText;
-                        $('#import-workflow-confirmation-modal').modal();
-                    }
+                    StudioApp.xmlToImport = xmlContent.responseText;
+                    $('#import-workflow-confirmation-modal').modal();
                 });
             },
             toggleRemovalState: function (event) {

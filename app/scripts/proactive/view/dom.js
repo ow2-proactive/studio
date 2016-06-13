@@ -272,9 +272,15 @@ define(
 
         $("#confirm-import-from-catalog").click(function () {
             var StudioApp = require('StudioApp');
-            StudioApp.clear();
-            StudioApp.mergeXML(StudioApp.xmlToImport, null);
-            StudioApp.views.workflowView.importNoReset();
+
+            // I should clear only if a workflow is currently open
+            if (StudioApp.isWorkflowOpen()) {
+                StudioApp.clear();
+            }
+            // create a new workflow and open it
+            var clickAndOpenEvent = jQuery.Event( "click" );
+            clickAndOpenEvent.openWorkflow = true;
+            $('.create-workflow-button').trigger(clickAndOpenEvent);
         })
 
         $("#confirm-publication-to-catalog").click(function () {

@@ -108,6 +108,10 @@ define(
 
             this.views.workflowView.saveInitialState();
         },
+        importFromCatalog: function () {
+            this.mergeXML(this.xmlToImport, null);
+            this.views.workflowView.importNoReset();
+        },
         _replaceJobModel: function (json) {
             console.log("Replacing the model");
             this.models.jobModel = new Job();
