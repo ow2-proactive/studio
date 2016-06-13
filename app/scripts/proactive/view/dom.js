@@ -114,7 +114,14 @@ define(
             var StudioApp = require('StudioApp');
             StudioApp.models.catalogBuckets.fetch({reset: true});
             StudioApp.modelsToRemove = [];
+            var publishButton = $('#publish-to-catalog-button');
             StudioApp.views.catalogView.render();
+            if (StudioApp.isWorkflowOpen()) {
+                publishButton.prop('disabled', false);
+            }
+            else {
+                publishButton.prop('disabled', true);
+            }
             $('#catalog-browser-view-modal').modal();
         })
 
