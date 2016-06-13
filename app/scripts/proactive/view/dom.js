@@ -314,8 +314,6 @@ define(
             var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
             var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
             add_workflow_to_collection(workflowPromise, xmlToPublish);
-            // $('#catalog-browser-view-modal').hide();
-            // $('.modal-backdrop').hide();
         })
 
         $("#publish-to-catalog-button").click(function (event) {

@@ -37,7 +37,7 @@ define(
                         .removeClass()
                         .addClass('state-icon glyphicon glyphicon-unchecked');
                     StudioApp.modelsToRemove = $.grep(StudioApp.modelsToRemove, function (model, index) {
-                        console.log('currentModel id:' + currentModel.get('id'));
+                        console.log('currentModel id: ' + currentModel.get('id'));
                         console.log('model from array:' + model.get('id'));
                         return currentModel.get('id') != model.get('id');
                     })
