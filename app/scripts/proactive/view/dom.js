@@ -239,6 +239,18 @@ define(
                 }
             });
         });
+
+        $("#close-button").click(function (event) {
+
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (StudioApp.isWorkflowOpen()) {
+                StudioApp.emptyWorkflowView(true);
+                StudioApp.router.gotoWorkflows();
+                $('#breadcrumb-list-workflows').click();
+            }
+        });
         
         
         $("#about-button").click(function (event) {
