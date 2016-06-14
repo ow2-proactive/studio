@@ -60,8 +60,8 @@ define(['jquery',
         return Backbone.View.extend({
             template: _.template(workflowListTemplate),
             initialize: function () {
-                this.$el = $("<div></div>")
-                $("#properties-container").append(this.$el)
+                this.$el = $("<div></div>");
+                $("#properties-container").append(this.$el);
             },
             events: {
                 'click .create-workflow-button': 'createOne',
@@ -74,7 +74,7 @@ define(['jquery',
                 this.listenTo(this.collection, 'remove', this.addAll);
                 this.collection.fetch({reset: true, success: success});
             },
-            createOne: function () {
+            createOne: function (event) {
                 var jobModel = new Job();
                 var lastUntitledJobIndex = 0;
 
@@ -103,7 +103,20 @@ define(['jquery',
                 var jobName = "Untitled " + this.mode + " " + (lastUntitledJobIndex + 1);
                 jobModel.set("Name", jobName);
                 var jobXml = new XmlView().xml(jobModel);
-                var workflow = this.collection.create({name: jobName, xml: jobXml}, {wait: true});
+                var workflowId = -1;
+                var that = this;
+                var workflow = this.collection.create({name: jobName, xml: jobXml}, {
+                    success: function () {
+                        var StudioApp = require('StudioApp');
+                        if (!StudioApp.isWorkflowOpen() && event.openWorkflow) {
+                            workflowId = workflow.id;
+                            console.log('Open workflow ' + workflowId);
+                            that.open(workflowId);
+                            StudioApp.importFromCatalog();
+                            $('#catalog-browser-close-button').click();
+                        }
+                    }
+                });
             },
             addOne: function (model) {
                 var workflow = new WorkflowListEntry({model: model, app: this.options.app, mode:this.mode});

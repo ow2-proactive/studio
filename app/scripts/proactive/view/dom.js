@@ -7,6 +7,7 @@ define(
         'xml2json',
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
+        'proactive/view/CatalogView',
         'codemirrorJs',
         'codemirrorComment',
         'codemirrorMB',
@@ -18,7 +19,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView) {
 
         "use strict";
 
@@ -66,7 +67,6 @@ define(
                 $('#select-workflow-modal').modal();
                 return;
             }
-
             closeCollapsedMenu();
             $('#import-file').parent('form').trigger('reset');
             $('#import-file').click();
@@ -74,7 +74,7 @@ define(
 
         $('#import-file').change(function (env) {
             var StudioApp = require('StudioApp');
-
+            StudioApp.clear();
             var files = env.target.files;
             if (files.length > 0) {
                 var file = files[0];
@@ -107,6 +107,22 @@ define(
             closeCollapsedMenu();
             StudioApp.views.xmlView.render();
             $('#xml-view-modal').modal();
+        })
+
+        $("#browse-catalog-button").click(function (event) {
+            event.preventDefault();
+            var StudioApp = require('StudioApp');
+            StudioApp.models.catalogBuckets.fetch({reset: true});
+            StudioApp.modelsToRemove = [];
+            var publishButton = $('#publish-to-catalog-button');
+            StudioApp.views.catalogView.render();
+            if (StudioApp.isWorkflowOpen()) {
+                publishButton.prop('disabled', false);
+            }
+            else {
+                publishButton.prop('disabled', true);
+            }
+            $('#catalog-browser-view-modal').modal();
         })
 
         $("#layout-button").click(function (event) {
@@ -223,6 +239,18 @@ define(
                 }
             });
         });
+
+        $("#close-button").click(function (event) {
+
+            event.preventDefault();
+
+            var StudioApp = require('StudioApp');
+            if (StudioApp.isWorkflowOpen()) {
+                StudioApp.emptyWorkflowView(true);
+                StudioApp.router.gotoWorkflows();
+                $('#breadcrumb-list-workflows').click();
+            }
+        });
         
         
         $("#about-button").click(function (event) {
@@ -250,8 +278,6 @@ define(
             return;
            
         });
-        
-        
 
         $("#download-xml-button").click(function (event) {
             event.preventDefault();
@@ -261,6 +287,69 @@ define(
             var jobName = StudioApp.models.jobModel.get("Name")
             var blob = new Blob([StudioApp.views.xmlView.generatedXml]);
             saveAs(blob, jobName + ".xml")
+        })
+
+        $("#confirm-import-from-catalog").click(function () {
+            var StudioApp = require('StudioApp');
+
+            // I should clear only if a workflow is currently open
+            if (StudioApp.isWorkflowOpen()) {
+                console.log("A workflow is already open, let's clear it first");
+                StudioApp.clear();
+                StudioApp.importFromCatalog();
+                $('#catalog-browser-close-button').click();
+            }
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+        })
+
+        $("#confirm-publication-to-catalog").click(function () {
+            var selectedBucketId = $("#select-bucket").val();
+            var StudioApp = require('StudioApp');
+            var xmlToPublish = StudioApp.views.xmlView.generateXml();
+            var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
+            var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
+            add_workflow_to_collection(workflowPromise, xmlToPublish);
+        })
+
+        $("#publish-to-catalog-button").click(function (event) {
+            if ($("#select-bucket").val()== -1) {
+                $('#select-bucket-modal').modal();
+            }
+            else {
+                $('#publish-workflow-confirmation-modal').modal();
+            }
+        })
+
+        // click event will only happen if the button is enabled
+        // so the StudioApp.modelsToRemove array is not empty
+        $("#delete-selection-catalog").click(function (event) {
+            $('#delete-workflow-confirmation-modal').modal();
+        })
+
+        $("#confirm-delete-from-catalog").click(function (event) {
+            var StudioApp = require('StudioApp');
+            var wfToRemove = StudioApp.modelsToRemove;
+            var wId;
+            var bucketId;
+            var workflowId;
+            var workflowsCollection;
+            for (wId in wfToRemove) {
+                bucketId = wfToRemove[wId].get('bucket_id');
+                workflowId = wfToRemove[wId].get('id');
+                workflowsCollection = StudioApp.models.catalogBuckets.get(bucketId).get('workflows');
+                StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
+                    StudioApp.views.catalogView.internalSwitchBucket(bucketId));
+                wfToRemove[wId].destroy();
+                workflowsCollection.remove(workflowId);
+                StudioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
+                    StudioApp.views.catalogView.internalSwitchBucket(bucketId));
+            }
+            StudioApp.resetDeleteCollection();
         })
 
         // removing a task by del
@@ -283,6 +372,68 @@ define(
                 $("#script-save-button").click();
             }
         });
+
+        function publish_to_catalog (bucketId, xmlContent, layoutContent) {
+
+            var payload = new FormData();
+            var blob = new Blob([xmlContent], { type: "text/xml" });
+            payload.append('file', blob);
+
+            // TODO add the layout as a query parameter
+
+            var createdWorkflowPromise = $.ajax({
+                url: '/workflow-catalog/buckets/' + bucketId + '/workflows',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: payload
+            }).success(function (response) {
+                PNotify.removeAll();
+
+                new PNotify({
+                    title: 'Published',
+                    text: "The Workflow has been published to the Catalog",
+                    type: 'success',
+                    text_escape: true,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    opacity: .8,
+                    width: '20%'
+                });
+                return response;
+            });
+            return createdWorkflowPromise;
+        }
+
+        function add_workflow_to_collection (createdWorkflowPromise, xmlContent) {
+            $.when(createdWorkflowPromise).then(function () {
+                var StudioApp = require('StudioApp');
+                var newWorkflow = createdWorkflowPromise.responseJSON;
+                // We manually add the newly published workflow into the right bucket
+                // without relying on Backbone's persistence layer
+                StudioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
+                    {
+                        id: newWorkflow.id,
+                        name: newWorkflow.name,
+                        variables: newWorkflow.variables,
+                        generic_information: newWorkflow.generic_information,
+                        created_at: newWorkflow.created_at,
+                        revision_id: newWorkflow.revision_id,
+                        bucket_id: newWorkflow.bucket_id,
+                        project_name: newWorkflow.project_name,
+                        layout: newWorkflow.layout
+                    },
+                    {
+                        xmlContent: xmlContent,
+                        layout: newWorkflow.layout
+                    }
+                );
+                StudioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
+            });
+        }
 
         function save_workflow() {
             var StudioApp = require('StudioApp');
@@ -406,8 +557,6 @@ define(
         	}else{
         		result = result + conf.studioVersion;
         	}
-        	
-        	
         	
         	$("#documentationLinkId").attr("href", result);
         	

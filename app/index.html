@@ -63,6 +63,11 @@
                             <i class="glyphicon glyphicon-hdd"></i> Save
                         </a>
                     </li>
+                    <li class="pointer">
+                        <a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
+                            <i class="glyphicon glyphicon-folder-close"></i> Close
+                        </a>
+                    </li>
                      
                     <li class="divider-vertical"></li>
                     <li><a id="import-button" href="" class="pointer"
@@ -71,6 +76,9 @@
                     <li><a id="export-button" href="#" class="pointer"
                            title="Export current workflow as .xml file."><i
                             class="glyphicon glyphicon-export"></i> Export</a></li>
+                    <li><a id="browse-catalog-button" href="#" class="pointer"
+                           title="Browse the Workflow Catalog."><i
+                            class="glyphicon glyphicon-folder-open"></i> Catalog</a></li>
                     <li class="divider-vertical"></li>
                     <li><a id="validate-button" href="#" class="pointer"
                            title="Check the validity of current workflow."><i
@@ -177,6 +185,31 @@
             </div>
         </div>
 
+        <div id="catalog-browser-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Workflow Catalog</h3>
+                    </div>
+                    <div id="catalog-browser-body" class="modal-body" style="height:100%">
+                        <div id="catalog-browser-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="publish-to-catalog-button" class="btn btn-primary" aria-hidden="true" disabled>
+                            Add current workflow to this bucket
+                        </button>
+                        <button id="delete-selection-catalog" class="btn btn-primary" aria-hidden="true" disabled>
+                            Delete
+                        </button>
+                        <button id="catalog-browser-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -186,6 +219,77 @@
                     </div>
                     <div class="modal-body" style="height:100%">
                         In order to perform this action you need to choose an existing workflow or create a new one.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="publish-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Publish Workflow to Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        Do you want to publish your workflow into the Catalog ?
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Yes</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="import-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Import Workflow from Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        You are about to import a Workflow from the Catalog.
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-import-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="delete-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Delete the selected workflow from current Bucket</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        Attention! You are going to delete the selected workflows. This step can not be reversed.
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-delete-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="select-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Please select a bucket</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        In order to perform this action you need to choose an existing bucket.
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
