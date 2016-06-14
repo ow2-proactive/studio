@@ -1,4 +1,4 @@
-/*global require*/
+/* global require */
 'use strict';
 
 require.config({
@@ -67,7 +67,7 @@ require.config({
             ]
         },
         codemirror: {
-            exports: "CodeMirror"
+            exports: 'CodeMirror'
         },
         codemirrorJs: { deps: [ 'codemirror' ]},
         codemirrorXml: { deps: [ 'codemirror' ]},

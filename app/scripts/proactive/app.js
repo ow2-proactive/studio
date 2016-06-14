@@ -1,3 +1,5 @@
+/* global define */
+
 define(
     [
         'jquery',
@@ -20,12 +22,12 @@ define(
         'proactive/router',
         'proactive/view/dom',
         'proactive/jsplumb',
-        'jquery.ui.touch-punch',
+        'jquery.ui.touch-punch'
     ],
 
     function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom) {
 
-    "use strict";
+    'use strict';
 
     return {
 
@@ -53,11 +55,10 @@ define(
         init: function() {
             var that = this;
 
-            jsPlumb.bind("ready", function () {
-                console.log("Initializing the studio")
+            jsPlumb.bind('ready', function () {
+                console.log('Initializing the studio');
                 that.views.loginView = new LoginView({app:that});
-            })
-
+            });
         },
         login: function() {
 
@@ -83,13 +84,13 @@ define(
                 if (model) {
                     that.models[i] = undefined;
                 }
-            })
+            });
             $.each(this.views, function(i, view) {
                 if (view) {
-                    view.remove()
+                    view.remove();
                     that.views[i] = undefined;
                 }
-            })
+            });
             this.views.loginView = new LoginView({app:this});
         },
         import: function(workflow) {
@@ -100,7 +101,7 @@ define(
 
             var json = xml2json.xmlToJson(xml2json.parseXml(jobXml));
             this.models.jobModel = new Job();
-            this.models.jobModel.populate(json.job)
+            this.models.jobModel.populate(json.job);
             this.models.currentWorkflow = workflow;
 
             this.views.workflowView = new WorkflowView({model: this.models.jobModel, app: this});
@@ -113,9 +114,9 @@ define(
             this.views.workflowView.importNoReset();
         },
         _replaceJobModel: function (json) {
-            console.log("Replacing the model");
+            console.log('Replacing the model');
             this.models.jobModel = new Job();
-            this.models.jobModel.populate(json.job)
+            this.models.jobModel.populate(json.job);
 
             this.views.workflowView.model = this.models.jobModel;
             this.views.xmlView.model = this.models.jobModel;
@@ -125,29 +126,29 @@ define(
             this.views.workflowView.importNoReset();
         },
         merge: function(json, elem) {
-            this.models.jobModel.populate(json.job, true, false)
+            this.models.jobModel.populate(json.job, true, false);
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
         mergeTemplate: function(json, elem) {
-            this.models.jobModel.populate(json.job, true, true)
+            this.models.jobModel.populate(json.job, true, true);
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
         updateWorkflowName: function(job) {
-            this.models.jobModel.updateWorkflowName(job)  
+            this.models.jobModel.updateWorkflowName(job)  ;
         },
         mergeXML: function(xml, elem) {
-            var json = xml2json.xmlToJson(xml2json.parseXml(xml))
+            var json = xml2json.xmlToJson(xml2json.parseXml(xml));
             this.merge(json, elem);
         },
         mergeTemplateXML: function(xml, elem) {
-            var json = xml2json.xmlToJson(xml2json.parseXml(xml))
+            var json = xml2json.xmlToJson(xml2json.parseXml(xml));
             this.mergeTemplate(json, elem);
         },
         closeWorkflow: function() {
             if (this.models.jobModel) {
-                this.models.jobModel.destroy()
+                this.models.jobModel.destroy();
                 this.models.jobModel = null;
             }
             if (this.views.workflowView) {
@@ -170,17 +171,16 @@ define(
         resetDeleteCollection: function () {
             this.modelsToRemove = [];
             var deleteButton = $('#delete-selection-catalog');
-            deleteButton.text("Delete");
+            deleteButton.text('Delete');
             deleteButton.prop('disabled', true);
         },
         clear: function() {
             var jobXml = new JobXmlView().xml(new Job());
-            var json = xml2json.xmlToJson(xml2json.parseXml(jobXml))
+            var json = xml2json.xmlToJson(xml2json.parseXml(jobXml));
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
-            return this.views.xmlView != null;
+            return this.views.xmlView !== null;
         }
-
-    }
-})
+    };
+});

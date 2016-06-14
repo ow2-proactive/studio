@@ -948,8 +948,7 @@ li.success {
 
 .dropdown-header {
     padding-top: 10px;
-    color: #333;
-!important;
+    color: #333 !important;
     font-weight: bold;
     font-size: 13px;
 }

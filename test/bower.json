@@ -2,7 +2,7 @@
   "name": "studio",
   "private": true,
   "dependencies": {
-    "jasmine": "~1.3.0",
+    "jasmine": "~2.4.1",
     "prettydiff": "austincheney/Pretty-Diff"
   },
   "devDependencies": {}

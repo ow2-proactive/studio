@@ -1,3 +1,5 @@
+/* global define */
+
 define(
     [
         'backbone'
@@ -5,30 +7,30 @@ define(
 
     function (Backbone) {
 
-        "use strict";
+        'use strict';
 
         return Backbone.Router.extend({
             routes: {
-                "" : "gotoWorkflows",
+                '' : 'gotoWorkflows',
 
-                "workflows" : "listWorkflows",
-                "workflows/:id" : "openWorkflow",
+                'workflows' : 'listWorkflows',
+                'workflows/:id' : 'openWorkflow',
 
-                "templates" : "listTemplates",
-                "templates/:id" : "openTemplate"
+                'templates' : 'listTemplates',
+                'templates/:id' : 'openTemplate'
             },
 
             initialize: function(app) {
                 this.app = app;
 
-                Backbone.history.stop()
-                Backbone.history.start()
+                Backbone.history.stop();
+                Backbone.history.start();
             },
             gotoWorkflows: function() {
-                this.navigate("workflows", {trigger: true})
+                this.navigate('workflows', {trigger: true});
             },
 
-            listWorkflows: function(id) {
+            listWorkflows: function() {
                 this.app.views.propertiesView.listWorkflows();
             },
             openWorkflow: function(id) {
@@ -39,7 +41,7 @@ define(
                 this.app.views.propertiesView.listTemplates();
             },
             openTemplate: function(id) {
-                this.app.views.propertiesView.listTemplates(id)
+                this.app.views.propertiesView.listTemplates(id);
             }
-        })
-    })
+        });
+    });
