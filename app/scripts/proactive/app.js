@@ -180,7 +180,7 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
-            return this.views.xmlView !== null;
+            return this.views.xmlView != null;
         }
     };
 });
