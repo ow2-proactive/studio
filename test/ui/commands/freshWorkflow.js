@@ -2,7 +2,7 @@
  * Remove all workflows, create a new one and open it.
  */
 exports.command = function () {
-    var browser = this
+    var browser = this;
 
     var deleteWorkflows = function (iteration, amount) {
         // isVisible will cause a test failure if element cannot be found, fallback to Selenium method

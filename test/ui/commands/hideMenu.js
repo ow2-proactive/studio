@@ -10,7 +10,7 @@ exports.command = function () {
         browser.element("css selector", "div.navbar-collapse.collapsed", function (result) {
             console.log("Hide menu, iteration: "+iteration+" max repetitions: "+amount)
             if (result.status === 0 && iteration < amount) {
-                browser.click('.navbar-toggle')
+                browser.click('.navbar-toggle');
                 hideMenu(iteration +1, amount)
             }
         })

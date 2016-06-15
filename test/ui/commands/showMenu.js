@@ -3,7 +3,7 @@
  * If the menu doesn't show, this function clicks on the navbar-toggle button.
  */
 exports.command = function () {
-    var browser = this
+    var browser = this;
 
     var showMenu = function (iteration, amount) {
         // isVisible will cause a test failure if element cannot be found, fallback to Selenium method
