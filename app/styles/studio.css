@@ -1072,3 +1072,7 @@ li.success {
 .bottom-btn {
     margin-bottom: 20px;
 }
+
+.ui-pnotify.translucent.ui-pnotify-fade-in {
+    opacity: .8;
+}

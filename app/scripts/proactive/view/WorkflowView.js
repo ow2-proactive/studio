@@ -5,7 +5,7 @@ define(
         'proactive/view/ViewWithProperties',
         'proactive/view/TaskView',
         'proactive/view/utils/undo',
-        'pnotify.core',
+        'pnotify',
         'pnotify.buttons'
     ],
 

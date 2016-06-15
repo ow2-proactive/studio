@@ -8,6 +8,8 @@ define(
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
         'proactive/view/CatalogView',
+        'pnotify',
+        'pnotify.buttons',
         'codemirrorJs',
         'codemirrorComment',
         'codemirrorMB',
@@ -19,7 +21,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView, PNotify) {
 
         "use strict";
 
@@ -232,7 +234,7 @@ define(
                     closer: true,
                     sticker: false
                 },
-                opacity: .8,
+                addclass: 'translucent', // is defined in studio.css
                 width: '20%',
                 history: {
                     history: false
@@ -400,7 +402,7 @@ define(
                         closer: true,
                         sticker: false
                     },
-                    opacity: .8,
+                    addclass: 'translucent', // is defined in studio.css
                     width: '20%'
                 });
                 return response;

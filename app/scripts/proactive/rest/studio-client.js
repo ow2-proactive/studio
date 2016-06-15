@@ -2,13 +2,15 @@ define(
     [
         'jquery',
         'proactive/config',
-        'pnotify.core',
+        'pnotify',
         'pnotify.buttons'
     ],
 
-    function ($, config) {
+    function ($, config, PNotify) {
 
     "use strict";
+
+        PNotify.prototype.options.styling = "bootstrap3";
 
     var cachedScripts;
 
@@ -28,7 +30,7 @@ define(
                     closer: true,
                     sticker: false
                 },
-                opacity: .8,
+                addclass: 'translucent', // defined in studio.css
                 width: '20%'
             });
         },
