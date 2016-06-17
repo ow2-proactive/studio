@@ -106,16 +106,16 @@ module.exports = {
             .click("input[name='Dedicated Host']")
             .checkExport(function (select, jobXmlDocument) {
                 var hostNameXml = select("string(//p:genericInformation/p:info[@name='Host Name']/@value)",
-                		jobXmlDocument)
+                		jobXmlDocument);
                 var operatingSystemXml = select("string(//p:genericInformation/p:info[@name='Operating System']/@value)",
-                		jobXmlDocument)
+                		jobXmlDocument);
                 var reqMemXml = select("string(//p:genericInformation/p:info[@name='Required amount of memory (in mb)']/@value)",
-                		jobXmlDocument)
+                		jobXmlDocument);
                 var topology = select("//p:singleHostExclusive", jobXmlDocument);
-                this.assert.equal(hostNameXml, _hostNameVal, "Host Name value check")
-                this.assert.equal(operatingSystemXml, _operatingSystemVal, "Operating System value check")
-                this.assert.equal(reqMemXml, _reqMemVal, "Required Mem value check")
-                this.assert.equal(topology.length, 1, "Topology descriptor check")
+                this.assert.equal(hostNameXml, _hostNameVal, "Host Name value check");
+                this.assert.equal(operatingSystemXml, _operatingSystemVal, "Operating System value check");
+                this.assert.equal(reqMemXml, _reqMemVal, "Required Mem value check");
+                this.assert.equal(topology.length, 1, "Topology descriptor check");
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)

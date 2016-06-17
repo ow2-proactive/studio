@@ -16,7 +16,7 @@ module.exports = {
             .assert.notification("Saved")
             .closeNotification()
             .toggleMenu()
-            .click('#validate-button')
+            .clickValidateWorkflow()
             .assert.notification('Workflow is valid')
             .closeNotification()
             .checkExport(function (select, jobXmlDocument) {
@@ -55,7 +55,6 @@ module.exports = {
                 this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name")
                 
                 var data = jobXmlDocument.getElementsByTagName("scriptExecutable")[0];
-               
                 
                 var pythonExpectedScript = "<scriptExecutable>"
                 pythonExpectedScript = pythonExpectedScript.concat("\n        <script>");
@@ -67,11 +66,9 @@ module.exports = {
                 pythonExpectedScript = pythonExpectedScript.concat("\n          </code>");
                 pythonExpectedScript = pythonExpectedScript.concat("\n        </script>");
                 pythonExpectedScript = pythonExpectedScript.concat("\n      </scriptExecutable>");
-
                 
                 this.assert.equal(data, pythonExpectedScript, "Data value")
                 
-                                
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
@@ -136,9 +133,7 @@ module.exports = {
             .createTask()
             .waitForElementVisible('.task')
             .toggleMenu()
-            .click("#clear-button")
-            .waitForElementNotPresent('.task')
-            .pause(2000)
+            .clickClearWorkflow()
             .checkExport(function (select, jobXmlDocument) {
                 var task = select("//p:task", jobXmlDocument)[0]
                 this.assert.equal(task, null, "No task in XML")

@@ -33,6 +33,6 @@ module.exports = {
             .click("#select-workflow-modal .modal-footer .btn") // close button
             .waitForElementNotVisible('#select-workflow-modal')
             .end();
-    },
+    }
 
 };
