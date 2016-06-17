@@ -1,50 +1,52 @@
 {
-    "src_folders" : ["specs"],
-    "output_folder" : "reports",
-    "custom_commands_path" : "commands",
-    "custom_assertions_path" : "assertions",
-    "globals_path" : "",
-
-    "selenium" : {
-        "start_process" : false,
-        "log_path" : "",
-        "host" : "127.0.0.1",
-        "port" : 4444,
-        "cli_args" : {
-            "webdriver.chrome.driver" : "",
-            "webdriver.ie.driver" : ""
-        }
-    },
-
-    "test_settings" : {
-        "default" : {
-            "launch_url" : "http://localhost",
-            "selenium_port"  : 4444,
-            "selenium_host"  : "localhost",
-            "silent": true,
-            "screenshots" : {
-                "enabled" : true,
-                "path" : "reports"
-            },
-            "desiredCapabilities": {
-                "browserName": "firefox",
-                "javascriptEnabled": true,
-                "acceptSslCerts": true
-            },
-            "globals" : {
-                "studio_url" : "http://localhost:8080/studio",
-                "waitForConditionTimeout" : 5000,
-                "numberOfTries" : 50,
-                "waitForConditionPollInterval" : 100
-            }
-        },
-        "trydev" : {
-            "globals" : {
-                "studio_url" : "http://trydev.activeeon.com/studio",
-                "waitForConditionTimeout" : 30000,
-                "numberOfTries" : 50,
-                "waitForConditionPollInterval" : 500
-            }
-        }
+  "src_folders": [
+    "specs"
+  ],
+  "output_folder": "reports",
+  "custom_commands_path": "commands",
+  "custom_assertions_path": "assertions",
+  "globals_path": "",
+  "selenium": {
+    "start_process": false,
+    "log_path": "",
+    "host": "127.0.0.1",
+    "port": 4444,
+    "cli_args": {
+      "webdriver.chrome.driver": "",
+      "webdriver.ie.driver": ""
     }
+  },
+  "test_settings": {
+    "default": {
+      "launch_url": "http://localhost",
+      "selenium_port": 4444,
+      "selenium_host": "localhost",
+      "silent": true,
+      "screenshots": {
+        "enabled": true,
+        "path": "reports"
+      },
+      "desiredCapabilities": {
+        "browserName": "firefox",
+        "javascriptEnabled": true,
+        "acceptSslCerts": true
+      },
+      "globals": {
+        "studio_url": "http://localhost:8080/studio",
+        "waitForConditionTimeout": 5000,
+        "numberOfTries": 50,
+        "menuAnimationTime": 2000,
+        "waitForConditionPollInterval": 100
+      }
+    },
+    "trydev": {
+      "globals": {
+        "studio_url": "http://trydev.activeeon.com/studio",
+        "waitForConditionTimeout": 30000,
+        "numberOfTries": 50,
+        "menuAnimationTime": 2000,
+        "waitForConditionPollInterval": 500
+      }
+    }
+  }
 }

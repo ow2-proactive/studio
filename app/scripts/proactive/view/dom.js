@@ -252,6 +252,8 @@ define(
                 StudioApp.router.gotoWorkflows();
                 $('#breadcrumb-list-workflows').click();
             }
+
+            closeCollapsedMenu();
         });
         
         

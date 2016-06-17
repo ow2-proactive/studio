@@ -24,14 +24,14 @@ module.exports = {
     "PWS-159 The dialog Please open a workflow appears behind the no workflow open panel": function (browser) {
         browser
             .login()
-            .click(".navbar-toggle")
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .toggleMenu()
             .click("#save-button")
             .waitForElementVisible('#select-workflow-modal')
             .assert.containsText('#select-workflow-modal h3', 'Please open a workflow')
             .click("#select-workflow-modal .modal-footer .btn") // close button
             .waitForElementNotVisible('#select-workflow-modal')
-            .hideMenu()
-            .removeAllWorkflows()
             .end();
     },
 

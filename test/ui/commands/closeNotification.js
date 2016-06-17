@@ -1,10 +1,12 @@
+// macro to close a notification
+// this macro waits some time for the notification to do its animations (appearing and close)
+
 exports.command = function (xpathCheck) {
 
-    this
-        .moveToElement('.ui-pnotify-title', 10, 10)
-        .pause(500)
-        .click("span.glyphicon.glyphicon-remove")
-        .waitForElementNotPresent('.ui-pnotify-title')
-
-    return this;
+    return this
+        .pause(this.globals.menuAnimationTime)
+        .moveToElement('span.glyphicon.glyphicon-remove', 0, 0)
+        .pause(this.globals.menuAnimationTime)
+        .click('span.glyphicon.glyphicon-remove')
+        .waitForElementNotPresent('.ui-pnotify-title');
 };

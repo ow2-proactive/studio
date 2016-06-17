@@ -5,7 +5,8 @@ module.exports = {
     "Pull out a dependency" : function(browser) {
         browser
             .login()
-            .freshWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
             .createTask()
             .waitForElementVisible('.dependency-source-endpoint')
             .moveToElement('.dependency-source-endpoint', 0, 15)
@@ -27,9 +28,12 @@ module.exports = {
 
                 this.assert.notEqual(parent, child, "Child is not the same as parent");
                 this.assert.equal(parent, dependency, "Child depends on parent");
-
             })
-            .end()
-
+            .keys(browser.Keys.ESCAPE)
+            .pause(browser.globals.menuAnimationTime)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .end();
     }
-}
+};

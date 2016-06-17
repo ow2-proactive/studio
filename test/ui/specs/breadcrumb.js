@@ -6,8 +6,9 @@ module.exports = {
     "Breadcrumb navigation": function (browser) {
         browser
             .login()
+            .removeAllWorkflows()
+            .createNewWorkflow()
 
-            .freshWorkflow()
             .createTask()
 
             .click(".task")
@@ -25,6 +26,9 @@ module.exports = {
             .assert.containsText("#workflow-list", 'Project: Default')
             .assert.containsText("#breadcrumb", 'Workflows')
 
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
             .end();
     }
 };

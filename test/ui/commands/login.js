@@ -8,6 +8,6 @@ exports.command = function (url) {
         .waitForElementPresent('button[type=submit]')
         .setValue('#user', 'user')
         .setValue('#password', 'pwd')
-        .click('button[type=submit]')
+        .click('button[type=submit]');
     return this;
 };

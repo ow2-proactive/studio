@@ -6,22 +6,29 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .freshWorkflow()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
             .createTask()
-            .showMenu()
-            .waitForElementVisible('#save-button')
-            .click('#save-button')
+            .toggleMenu()
+            .clickSaveWorkflow()
             .assert.notification("Saved")
-            .hideMenu()
             .closeNotification()
-            .showMenu()
+            .toggleMenu()
             .click('#validate-button')
             .assert.notification('Workflow is valid')
+            .closeNotification()
             .checkExport(function (select, jobXmlDocument) {
                 var taskName = select("//p:task/@name", jobXmlDocument)[0].value
 
                 this.assert.ok(taskName.indexOf("Javascript_Task") > -1, "Task name")
             })
+            .keys(browser.Keys.ESCAPE)
+            .pause(browser.globals.menuAnimationTime)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
             .end();
     },
     
@@ -29,17 +36,19 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .freshWorkflow()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
             .createPythonTask()
-            .showMenu()
-            .waitForElementVisible('#save-button')
-            .click('#save-button')
+            .toggleMenu()
+            .clickSaveWorkflow()
             .assert.notification("Saved")
-            .hideMenu()
             .closeNotification()
-            .showMenu()
+            .toggleMenu()
             .click('#validate-button')
             .assert.notification('Workflow is valid')
+            .closeNotification()
             .checkExport(function (select, jobXmlDocument) {
                 var taskName = select("//p:task/@name", jobXmlDocument)[0].value
 
@@ -64,13 +73,22 @@ module.exports = {
                 
                                 
             })
+            .keys(browser.Keys.ESCAPE)
+            .pause(browser.globals.menuAnimationTime)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
             .end();
     },
 
     "Workflow with job variable": function (browser) {
         browser
             .login()
-            .freshWorkflow()
+            .closeNotification()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
             
             // default mode is detailed view so we have to switch to simple view for the test
             .assert.elementPresent("#accordion-properties")
@@ -90,6 +108,7 @@ module.exports = {
             .setValue("#Value", "aValue")
 
             .click('.btn.ok')
+            .pause(browser.globals.menuAnimationTime)
 
             .checkExport(function (select, jobXmlDocument) {
                 var variable = select("//p:variable", jobXmlDocument)[0]
@@ -97,22 +116,38 @@ module.exports = {
                 this.assert.equal(variable.attributes[0].value, "aVariable", "Variable name")
                 this.assert.equal(variable.attributes[1].value, "aValue", "Variable value")
             })
+            .pause(browser.globals.menuAnimationTime)
+            .keys(browser.Keys.ESCAPE)
+            .pause(browser.globals.menuAnimationTime)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
             .end();
     },
 
     "Clear workflow": function (browser) {
         browser
             .login()
-            .freshWorkflow()
+            .closeNotification()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
             .createTask()
             .waitForElementVisible('.task')
-            .showMenu()
+            .toggleMenu()
             .click("#clear-button")
             .waitForElementNotPresent('.task')
+            .pause(2000)
             .checkExport(function (select, jobXmlDocument) {
                 var task = select("//p:task", jobXmlDocument)[0]
                 this.assert.equal(task, null, "No task in XML")
             })
+            .keys(browser.Keys.ESCAPE)
+            .pause(browser.globals.menuAnimationTime)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
             .end();
     }
 

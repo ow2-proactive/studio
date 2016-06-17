@@ -3,7 +3,8 @@ module.exports = {
         browser
             .login() // Login into the interface
             .closeNotification() // Close all notifications
-            .freshWorkflow() // Create a new workflow
+            .removeAllWorkflows() // Clean studio from previous use
+            .createNewWorkflow() // Create a new workflow
             .waitForElementVisible('#accordion-properties') // Wait for the sidebar to be visible
             .assert.elementNotPresent("#simple-form")
             .createTask() // Add a task to the workflow
@@ -21,7 +22,8 @@ module.exports = {
         browser
             .login() // Login into the interface
             .closeNotification() // Close all notifications
-            .freshWorkflow() // Create a new workflow
+            .removeAllWorkflows() // Clean studio from previous use
+            .createNewWorkflow() // Create a new workflow
             .waitForElementVisible('#accordion-properties') // Wait for the sidebar to be visible
             .assert.elementNotPresent("#simple-form")
             .createTask() // Add a task to the workflow
@@ -33,7 +35,7 @@ module.exports = {
             .pause(browser.globals.waitForConditionTimeout)
             // Wait for the For Execution Environment select to be visible
             .waitForElementVisible('//select[@name=\"Fork Execution Environment\"]')
-            // Click in the Fork Execution Enviuronment selector and select 2 (Docker)
+            // Click in the Fork Execution Environment selector and select 2 (Docker)
             .click('//select[@name=\"Fork Execution Environment\"]/option[2]')
             .pause(browser.globals.waitForConditionTimeout)
             .getValue('//input[@name=\"Java Home\"]' ,

@@ -7,7 +7,7 @@ exports.command = function () {
 
     var hideMenu = function (iteration, amount) {
         // isVisible will cause a test failure if element cannot be found, fallback to Selenium method
-        browser.element("css selector", "div.navbar-collapse.collapsed", function (result) {
+        browser.element("css selector", ".navbar-collapse.collapsed", function (result) {
             console.log("Hide menu, iteration: "+iteration+" max repetitions: "+amount)
             if (result.status === 0 && iteration < amount) {
                 browser.click('.navbar-toggle');
