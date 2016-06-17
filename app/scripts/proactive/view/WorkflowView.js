@@ -59,7 +59,7 @@ define(
                             async: false,
                             url: elem.data("templateUrl"),
                             success: function (data) {
-                                that.options.app.mergeXML(data, ui);
+                                that.options.app.mergeTemplateXML(data, ui);
                             },
                             error: function (data) {
                                 console.log("Cannot retrieve the template", data)
@@ -69,7 +69,7 @@ define(
                     } else {
                         console.log("Dropped element: ", elem.data("templateName"), elem.data("templateId"));
                         var templateModel = that.options.app.models.templates.get({id: elem.data('templateId')})
-                        that.options.app.mergeXML(templateModel.get("xml"), ui);
+                        that.options.app.mergeTemplateXML(templateModel.get("xml"), ui);
                     }
                 }
             });

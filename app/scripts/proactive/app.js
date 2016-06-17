@@ -6,12 +6,15 @@ define(
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
         'proactive/model/TemplateCollection',
+        'proactive/model/CatalogBucketCollection',
+        'proactive/model/CatalogWorkflowCollection',
         'proactive/view/PaletteView',
         'proactive/view/WorkflowView',
         'proactive/view/EmptyWorkflowView',
         'proactive/view/xml/JobXmlView',
         'proactive/view/LoginView',
         'proactive/view/LogoutView',
+        'proactive/view/CatalogView',
         'proactive/view/WorkflowListView',
         'xml2json',
         'proactive/router',
@@ -20,7 +23,7 @@ define(
         'jquery.ui.touch-punch',
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, WorkflowListView, xml2json, StudioRouter, dom) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom) {
 
     "use strict";
 
@@ -30,7 +33,9 @@ define(
             jobModel : undefined, // TODO move it to workflow
             currentWorkflow : undefined,
             workflows: undefined,
-            templates: undefined
+            templates: undefined,
+            catalogBuckets: undefined,
+            catalogWorkflows: undefined
         },
 
         views : {
@@ -39,7 +44,8 @@ define(
             propertiesView : undefined,
             xmlView : undefined,
             loginView : undefined,
-            logoutView : undefined
+            logoutView : undefined,
+            catalogView : undefined
         },
 
         router: undefined,
@@ -57,11 +63,17 @@ define(
 
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
+            this.models.catalogBuckets = new CatalogBucketCollection();
+            
+            // TODO Handle pagination
+            this.models.catalogBuckets.fetch();
+            this.modelsToRemove = [];
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
+            this.views.catalogView = new CatalogView({buckets: this.models.catalogBuckets});
 
             this.router = new StudioRouter(this);
         },
@@ -84,8 +96,6 @@ define(
 
             this.closeWorkflow();
 
-            console.log("Importing workflow");
-
             var jobXml = workflow.get('xml');
 
             var json = xml2json.xmlToJson(xml2json.parseXml(jobXml));
@@ -97,6 +107,10 @@ define(
             this.views.xmlView = new JobXmlView({model: this.models.jobModel});
 
             this.views.workflowView.saveInitialState();
+        },
+        importFromCatalog: function () {
+            this.mergeXML(this.xmlToImport, null);
+            this.views.workflowView.importNoReset();
         },
         _replaceJobModel: function (json) {
             console.log("Replacing the model");
@@ -111,7 +125,12 @@ define(
             this.views.workflowView.importNoReset();
         },
         merge: function(json, elem) {
-            this.models.jobModel.populate(json.job, true)
+            this.models.jobModel.populate(json.job, true, false)
+            this.views.workflowView.layoutNewElements(elem);
+            this.views.workflowView.importNoReset();
+        },
+        mergeTemplate: function(json, elem) {
+            this.models.jobModel.populate(json.job, true, true)
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
@@ -121,6 +140,10 @@ define(
         mergeXML: function(xml, elem) {
             var json = xml2json.xmlToJson(xml2json.parseXml(xml))
             this.merge(json, elem);
+        },
+        mergeTemplateXML: function(xml, elem) {
+            var json = xml2json.xmlToJson(xml2json.parseXml(xml))
+            this.mergeTemplate(json, elem);
         },
         closeWorkflow: function() {
             if (this.models.jobModel) {
@@ -143,6 +166,12 @@ define(
             }
             this.closeWorkflow();
             this.views.workflowView = new EmptyWorkflowView();
+        },
+        resetDeleteCollection: function () {
+            this.modelsToRemove = [];
+            var deleteButton = $('#delete-selection-catalog');
+            deleteButton.text("Delete");
+            deleteButton.prop('disabled', true);
         },
         clear: function() {
             var jobXml = new JobXmlView().xml(new Job());
