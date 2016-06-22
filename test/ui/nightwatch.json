@@ -1,10 +1,10 @@
 {
   "src_folders": [
-    "specs"
+    "test/ui/specs"
   ],
-  "output_folder": "reports",
-  "custom_commands_path": "commands",
-  "custom_assertions_path": "assertions",
+  "output_folder": "test/ui/reports",
+  "custom_commands_path": "test/ui/commands",
+  "custom_assertions_path": "test/ui/assertions",
   "globals_path": "",
   "selenium": {
     "start_process": false,
@@ -24,7 +24,7 @@
       "silent": true,
       "screenshots": {
         "enabled": true,
-        "path": "reports"
+        "path": "test/ui/reports"
       },
       "desiredCapabilities": {
         "browserName": "firefox",

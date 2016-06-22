@@ -99,7 +99,8 @@ module.exports = function (grunt) {
                     src: [
                         '.tmp',
                         '<%= yeoman.dist %>/*',
-                        '!<%= yeoman.dist %>/.git*'
+                        '!<%= yeoman.dist %>/.git*',
+                        'public'
                     ]
                 }]
             },
@@ -275,7 +276,9 @@ module.exports = function (grunt) {
                             'libs/requirejs/{,*/}*.js',
                             'libs/pines-notify/jquery*.css',
                             'scripts/proactive/templates/*.html',
-                            'scripts/proactive/config.js'
+                            'scripts/proactive/config.js',
+                            'templates/{,*/}*.xml',
+                            'studio-conf.js'
                         ]
                     },
                     {
@@ -322,7 +325,68 @@ module.exports = function (grunt) {
                 'imagemin',
                 'svgmin'
             ]
+        },
+        nightwatch_report: {
+            files: ['test/ui/reports/**/*.xml'],
+            options: {
+                outputDir: 'test/reports/nightwatch'
+            }
+        },
+        bgShell: {
+            _defaults: {
+                bg: true
+            },
+            seleniumInstall: {
+                cmd: 'node_modules/selenium-standalone/bin/selenium-standalone install',
+                bg: false
+            },
+            seleniumStart: {
+                cmd: 'node_modules/selenium-standalone/bin/selenium-standalone start'
+            },
+            seleniumStop: {
+                cmd: 'pkill -f selenium-standalone',
+                bg: false
+            },
+            jsonServerStart: {
+                cmd: 'node test/json-server-data/mock-scheduler-rest.js'
+            },
+            jsonServerStop: {
+                cmd: 'pkill -f json-server'
+            },
+            nightwatch: {
+                cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json',
+                bg: false
+            }
         }
+    });
+    grunt.loadNpmTasks('grunt-bg-shell');
+    grunt.loadNpmTasks('grunt-nightwatch-report');
+
+    grunt.registerTask('test:ui', 'Run the ui tests using a mocked REST scheduler', function () {
+        grunt.task.run([
+            'publishJsonServerFiles',
+            'bgShell:seleniumInstall',
+            'bgShell:seleniumStart',
+            'waitFor10Seconds',
+            'bgShell:jsonServerStart',
+            'bgShell:nightwatch',
+            'bgShell:seleniumStop',
+            'bgShell:jsonServerStop',
+            'nightwatch_report'
+        ]);
+        grunt.log.write('Summarized reports are available in test/reports');
+        grunt.log.write('Details for the Nightwatch tests are in test/ui/reports');
+    });
+
+    grunt.registerTask('publishJsonServerFiles', 'Create the public folder of json-servers', function () {
+        grunt.file.mkdir('public');
+        grunt.file.copy('dist', 'public/studio');
+    });
+
+    grunt.registerTask('waitFor10Seconds', 'Timer', function () {
+        grunt.log.write('Waiting for 10 seconds');
+        var done = this.async();
+        setTimeout(done, 10 * 1000);
     });
 
     grunt.registerTask('test:integration', 'Run the full app and check for errors', function () {
@@ -353,7 +417,6 @@ module.exports = function (grunt) {
             }
         });
     });
-
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
@@ -386,7 +449,8 @@ module.exports = function (grunt) {
         grunt.task.run([
             'connect:test',
             // 'jasmine',
-            'test:integration'
+            //'test:integration'
+            'test:ui'
         ]);
     });
 
