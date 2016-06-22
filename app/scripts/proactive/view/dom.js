@@ -555,13 +555,18 @@ define(
         $(document).ready(function () {
         	
         	var result = "http://doc.activeeon.com/" ;
-        	
-        	if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
-        		result = result + "latest";
-        	}else{
-        		result = result + conf.studioVersion;
-        	}
-        	
+
+            $.getScript("studio-conf.js", function () {
+                console.log('conf:');
+                console.log(conf);
+                if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
+                    result = result + "latest";
+                }
+                else{
+                    result = result + conf.studioVersion;
+                }
+            });
+
         	$("#documentationLinkId").attr("href", result);
         	
             var ctrlDown = false;
