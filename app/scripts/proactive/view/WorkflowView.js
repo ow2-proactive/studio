@@ -9,7 +9,7 @@ define(
         'pnotify.buttons'
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager) {
+    function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify) {
 
     "use strict";
 
@@ -200,7 +200,7 @@ define(
 
             PNotify.removeAll();
 
-            new Pnotify({
+            new PNotify({
                 title: caption,
                 text: message,
                 type: type,
