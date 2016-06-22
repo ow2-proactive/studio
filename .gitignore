@@ -8,6 +8,8 @@ node_modules
 _SpecRunner.html
 .grunt
 /test/ui/reports
+/test/reports
+/public
 phantomjsdriver.log
 
 # Gradle local files
