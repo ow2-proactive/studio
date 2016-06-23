@@ -332,6 +332,27 @@ module.exports = function (grunt) {
                 outputDir: 'test/reports/nightwatch'
             }
         },
+        selenium_standalone: {
+            options: {
+                stopOnExit: true
+            },
+            dev: {
+                seleniumVersion: '2.53.0',
+                seleniumDownloadURL: 'http://selenium-release.storage.googleapis.com',
+                drivers: {
+                    chrome: {
+                        version: '2.21',
+                        arch: process.arch,
+                        baseURL: 'http://chromedriver.storage.googleapis.com'
+                    },
+                    ie: {
+                        version: '2.53.0',
+                        arch: 'ia32',
+                        baseURL: 'http://selenium-release.storage.googleapis.com'
+                    }
+                }
+            }
+        },
         bgShell: {
             _defaults: {
                 bg: true
@@ -359,23 +380,22 @@ module.exports = function (grunt) {
             }
         }
     });
+    grunt.loadNpmTasks('grunt-selenium-standalone');
     grunt.loadNpmTasks('grunt-bg-shell');
     grunt.loadNpmTasks('grunt-nightwatch-report');
 
     grunt.registerTask('test:ui', 'Run the ui tests using a mocked REST scheduler', function () {
         grunt.task.run([
             'publishJsonServerFiles',
-            'bgShell:seleniumInstall',
-            'bgShell:seleniumStart',
-            'waitFor10Seconds',
+            'selenium_standalone:dev:install',
+            'selenium_standalone:dev:start',
             'bgShell:jsonServerStart',
             'bgShell:nightwatch',
-            'bgShell:seleniumStop',
+            'selenium_standalone:dev:stop',
             'bgShell:jsonServerStop',
             'nightwatch_report'
         ]);
-        grunt.log.write('Summarized reports are available in test/reports');
-        grunt.log.write('Details for the Nightwatch tests are in test/ui/reports');
+
     });
 
     grunt.registerTask('publishJsonServerFiles', 'Create the public folder of json-servers', function () {
