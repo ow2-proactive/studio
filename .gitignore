@@ -8,6 +8,7 @@ node_modules
 _SpecRunner.html
 .grunt
 /test/ui/reports
+/test/ui/screenshots
 /test/reports
 /public
 phantomjsdriver.log

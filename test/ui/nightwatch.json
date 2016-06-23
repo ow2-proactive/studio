@@ -24,7 +24,9 @@
       "silent": true,
       "screenshots": {
         "enabled": true,
-        "path": "test/ui/reports"
+        "on_failure" : true,
+        "on_error" : true,
+        "path": "test/ui/screenshots"
       },
       "desiredCapabilities": {
         "browserName": "chrome",
@@ -63,7 +65,7 @@
     },
     "jenkins-phantomjs": {
       "globals": {
-        "waitForConditionTimeout": 30000,
+        "waitForConditionTimeout": 5000,
         "numberOfTries": 50,
         "menuAnimationTime": 2000,
         "waitForConditionPollInterval": 500
@@ -71,7 +73,14 @@
       "desiredCapabilities": {
         "browserName": "phantomjs",
         "javascriptEnabled": true,
-        "acceptSslCerts": true
+        "phantomjs.binary.path": "node_modules/phantomjs-prebuilt/bin/phantomjs",
+        "phantomjs.cli.args": [
+          "--webdriver=5558",
+          "--ignore-ssl-errors=true",
+          "--web-security=false",
+          "--disk-cache=false"
+
+        ]
       }
     }
   }

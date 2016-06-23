@@ -399,6 +399,7 @@ module.exports = function (grunt) {
             'selenium_standalone:dev:install',
             'selenium_standalone:dev:start',
             'bgShell:jsonServerStart',
+            'waitFor5Seconds',
             'bgShell:nightwatchChrome',
             'selenium_standalone:dev:stop',
             'bgShell:jsonServerStop',
@@ -411,10 +412,10 @@ module.exports = function (grunt) {
         grunt.file.copy('dist', 'public/studio');
     });
 
-    grunt.registerTask('waitFor10Seconds', 'Timer', function () {
-        grunt.log.write('Waiting for 10 seconds');
+    grunt.registerTask('waitFor5Seconds', 'Timer', function () {
+        grunt.log.write('Waiting for 5 seconds');
         var done = this.async();
-        setTimeout(done, 10 * 1000);
+        setTimeout(done, 5 * 1000);
     });
 
     grunt.registerTask('test:integration', 'Run the full app and check for errors', function () {

@@ -3,8 +3,9 @@ exports.command = function (url) {
     url = typeof url !== 'undefined' ? url : this.globals.studio_url;
 
     this
-        .resizeWindow(1280,1024)
         .url(url)
+        .waitForElementVisible('body')
+        .resizeWindow(1280,1024)
         .waitForElementPresent('button[type=submit]')
         .setValue('#user', 'user')
         .setValue('#password', 'pwd')
