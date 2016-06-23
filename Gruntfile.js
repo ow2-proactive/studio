@@ -369,12 +369,21 @@ module.exports = function (grunt) {
                 bg: false
             },
             jsonServerStart: {
-                cmd: 'node test/json-server-data/mock-scheduler-rest.js'
+                cmd: 'node test/json-server-data/mock-scheduler-rest.js',
+                stdout: false
             },
             jsonServerStop: {
                 cmd: 'pkill -f json-server'
             },
-            nightwatch: {
+            nightwatchChrome: {
+                cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json --env jenkins-chrome',
+                bg: false
+            },
+            nightwatchPhantomJS: {
+                cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json --env jenkins-phantomjs',
+                bg: false
+            },
+            nightwatchDev: {
                 cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json',
                 bg: false
             }
@@ -390,12 +399,11 @@ module.exports = function (grunt) {
             'selenium_standalone:dev:install',
             'selenium_standalone:dev:start',
             'bgShell:jsonServerStart',
-            'bgShell:nightwatch',
+            'bgShell:nightwatchChrome',
             'selenium_standalone:dev:stop',
             'bgShell:jsonServerStop',
             'nightwatch_report'
         ]);
-
     });
 
     grunt.registerTask('publishJsonServerFiles', 'Create the public folder of json-servers', function () {

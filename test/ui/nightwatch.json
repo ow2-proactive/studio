@@ -27,7 +27,7 @@
         "path": "test/ui/reports"
       },
       "desiredCapabilities": {
-        "browserName": "firefox",
+        "browserName": "chrome",
         "javascriptEnabled": true,
         "acceptSslCerts": true
       },
@@ -46,6 +46,32 @@
         "numberOfTries": 50,
         "menuAnimationTime": 2000,
         "waitForConditionPollInterval": 500
+      }
+    },
+    "jenkins-chrome": {
+      "globals": {
+        "waitForConditionTimeout": 30000,
+        "numberOfTries": 50,
+        "menuAnimationTime": 2000,
+        "waitForConditionPollInterval": 500
+      },
+      "desiredCapabilities": {
+        "browserName": "chrome",
+        "javascriptEnabled": true,
+        "acceptSslCerts": true
+      }
+    },
+    "jenkins-phantomjs": {
+      "globals": {
+        "waitForConditionTimeout": 30000,
+        "numberOfTries": 50,
+        "menuAnimationTime": 2000,
+        "waitForConditionPollInterval": 500
+      },
+      "desiredCapabilities": {
+        "browserName": "phantomjs",
+        "javascriptEnabled": true,
+        "acceptSslCerts": true
       }
     }
   }
