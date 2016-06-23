@@ -370,7 +370,7 @@ module.exports = function (grunt) {
             },
             jsonServerStart: {
                 cmd: 'node test/json-server-data/mock-scheduler-rest.js',
-                stdout: false
+                stdout: true
             },
             jsonServerStop: {
                 cmd: 'pkill -f json-server'
@@ -396,12 +396,12 @@ module.exports = function (grunt) {
     grunt.registerTask('test:ui', 'Run the ui tests using a mocked REST scheduler', function () {
         grunt.task.run([
             'publishJsonServerFiles',
-            'selenium_standalone:dev:install',
-            'selenium_standalone:dev:start',
+            // 'selenium_standalone:dev:install',
+            // 'selenium_standalone:dev:start',
             'bgShell:jsonServerStart',
             'waitFor5Seconds',
             'bgShell:nightwatchChrome',
-            'selenium_standalone:dev:stop',
+            // 'selenium_standalone:dev:stop',
             'bgShell:jsonServerStop',
             'nightwatch_report'
         ]);

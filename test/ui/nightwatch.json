@@ -79,7 +79,6 @@
           "--ignore-ssl-errors=true",
           "--web-security=false",
           "--disk-cache=false"
-
         ]
       }
     }
