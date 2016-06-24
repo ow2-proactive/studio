@@ -393,7 +393,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bg-shell');
     grunt.loadNpmTasks('grunt-nightwatch-report');
 
-    grunt.registerTask('test:ui', 'Run the ui tests using a mocked REST scheduler', function () {
+    grunt.registerTask('test:ui:dev', 'Run the ui tests using a mocked REST scheduler', function () {
         grunt.task.run([
             'publishJsonServerFiles',
             'selenium_standalone:dev:install',
@@ -407,13 +407,24 @@ module.exports = function (grunt) {
         ]);
     });
 
+    grunt.registerTask('test:ui:jenkins', 'Run the ui tests using a mocked REST scheduler and an external Selenium server', function () {
+        grunt.task.run([
+            'publishJsonServerFiles',
+            'bgShell:jsonServerStart',
+            'waitFor5Seconds',
+            'bgShell:nightwatchChrome',
+            'bgShell:jsonServerStop',
+            'nightwatch_report'
+        ]);
+    });
+
     grunt.registerTask('publishJsonServerFiles', 'Create the public folder of json-servers', function () {
         grunt.file.mkdir('public');
         grunt.file.copy('dist', 'public/studio');
     });
 
     grunt.registerTask('waitFor5Seconds', 'Timer', function () {
-        grunt.log.write('Waiting for 5 seconds');
+        grunt.log.write('Waiting for 5 seconds so the mocked REST server can initialize properly');
         var done = this.async();
         setTimeout(done, 5 * 1000);
     });
@@ -480,6 +491,21 @@ module.exports = function (grunt) {
             // 'jasmine',
             //'test:integration'
             'test:ui'
+        ]);
+    });
+
+    grunt.registerTask('testJenkins', function (target) {
+        if (target !== 'watch') {
+            grunt.task.run([
+                'clean:server',
+                'concurrent:test',
+                'autoprefixer',
+            ]);
+        }
+
+        grunt.task.run([
+            'connect:test',
+            'test:ui:jenkins'
         ]);
     });
 
