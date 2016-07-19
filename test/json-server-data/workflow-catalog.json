@@ -1,0 +1,22 @@
+{
+    "buckets": [
+        {
+            "id": 1,
+            "name": "paraita",
+	    "toto": [
+		{
+		    "caca": "pipi"
+		}
+	    ]
+        },
+        {
+            "id": 2,
+            "name": "moeanui",
+	    "toto": [
+		{
+		    "caca": "popo"
+		}
+	    ]
+        }
+    ]
+}

@@ -3,10 +3,11 @@ define(
         'jquery',
         'backbone',
         'proactive/rest/studio-client',
-        'proactive/view/utils/undo'
+        'proactive/view/utils/undo',
+        'pnotify'
     ],
 
-    function ($, Backbone, StudioClient, undoManager) {
+    function ($, Backbone, StudioClient, undoManager, PNotify) {
 
         "use strict";
 
@@ -30,7 +31,8 @@ define(
                 menu.append(buttonLogout);
 
                 buttonLogout.click(function () {
-                    StudioClient.logout()
+                    StudioClient.logout();
+                    PNotify.removeAll();
                     that.options.app.logout();
                 })
 
