@@ -66,7 +66,12 @@ define(
                         } catch (e) {}
 
                         if (data.status == 404) {
-                            reason = "The studio rest server is not available at the following url: " + config.restApiUrl;
+                            if (data.responseText.indexOf("login.LoginException") >= 0 ) {
+                                reason = "Invalid Login or Password";
+                            } else {
+                                reason = "The studio rest server is not available at the following url: " + config.restApiUrl;
+                            }
+
                         }
 
                         that.alert("Cannot connect to ProActive Studio", reason, 'error');
