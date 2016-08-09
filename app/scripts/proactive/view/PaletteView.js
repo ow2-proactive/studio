@@ -66,6 +66,12 @@ define(
 
             this.initMenu($(taskWidget), config.tasks);
 
+            var manualWidget = $(
+                '<span class="dropdown"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                    '<img src="images/gears.png" width="20px" type="button" >Manuals <span class="caret"></span></span></span>');
+
+            this.initMenu($(manualWidget), config.manuals);
+
             var controlWidget = $(
                 '<span class="dropdown"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Controls <span class="caret"></span></span></span>');
@@ -103,7 +109,7 @@ define(
 
             $(templateWidget).find(".dropdown-toggle").dropdown();
 
-            this.$el.append(taskWidget).append(controlWidget).append(templateWidget);
+            this.$el.append(taskWidget).append(manualWidget).append(controlWidget).append(templateWidget);
         }
     })
 
