@@ -20,8 +20,7 @@ define(function () {
         },
         manuals: {
             'Email Notification' : 'templates/email.xml',
-            'Web Notification' : '',
-            'Web Validation' : '',
+            'Web Notification' : 'templates/webnotification.xml'
         },
         controls: {
             'If': 'templates/07_workflow_branch.xml',

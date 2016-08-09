@@ -62,7 +62,7 @@ define(
             var that = this;
             var taskWidget = $(
                 '<span class="dropdown"><span id="task-menu" class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
-                    '<img src="images/gears.png" width="30px" type="button" >Task <span class="caret"></span></span></span>');
+                    '<img src="images/gears.png" width="30px" type="button" >Tasks <span class="caret"></span></span></span>');
 
             this.initMenu($(taskWidget), config.tasks);
 
