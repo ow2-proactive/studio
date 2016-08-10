@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.5" xsi:schemaLocation="urn:proactive:jobdescriptor:3.5 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.5/schedulerjob.xsd"
-     onTaskError="continueJobExecution" name="ProactiveJob" priority="normal">
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:dev" xsi:schemaLocation="urn:proactive:jobdescriptor:3.2 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.1/schedulerjob.xsd"
+     cancelJobOnError="false" name="ProactiveJob" priority="normal">
 	<taskFlow>
 
 		<task name="premiere">
