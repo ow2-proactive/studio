@@ -22,10 +22,13 @@
           <code language="groovy">
             <![CDATA[
 // Please fill variables
-String method = "GET or POST"
-String url = "http://www.activeeon.com";
-String headers = "{key0 = value0, key1 = value1, ...}"
-String content = "the content";
+String method = "POST"
+String url = "http://localhost:8080/notification-service/notifications"
+String headers = "{key0 = value0}" //Example: "{key0 = value0, key1 = value1, ...}". Empty header not accepted!
+String content = "{\n" +
+"\"date\": \"2016-08-17T08:30:22.862Z\" \n" +
+"\"description\": \"some description\",\n" +
+"}"
 
 // Don't change code below
 import org.ow2.proactive.addons.webhook.Webhook;
