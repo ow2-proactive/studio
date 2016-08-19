@@ -226,7 +226,7 @@ define(
                         "Access Mode": {
                             type: 'Select',
                             fieldAttrs: {'placeholder': '@attributes->accessMode'},
-                            options: ["transferFromUserSpace", "transferFromGlobalSpace", "transferFromInputSpace", "transferFromOutputSpace","cacheFromUserSpace", "cacheFromGlobalSpace", "cacheFromInputSpace", "cacheFromOutputSpace", "none"]
+                            options: ["transferFromUserSpace", "transferFromGlobalSpace", "transferFromInputSpace", "transferFromOutputSpace", "none"]
                         }
                     }
                 },
