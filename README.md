@@ -1,6 +1,6 @@
 # Workflow Studio for ProActive Workflows & Scheduling
 
-[![Build Status](http://jenkins.activeeon.com/job/studio/badge/icon)](http://jenkins.activeeon.com/job/studio/)
+[![Build Status](http://jenkins.activeeon.com/buildStatus/icon?job=studio)](http://jenkins.activeeon.com/job/studio/)
 
 
 ## Requirements
