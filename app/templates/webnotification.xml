@@ -24,7 +24,7 @@
 // Please fill variables
 String method = "POST"
 String url = "http://localhost:8080/notification-service/notifications"
-String headers = "{Content-Type=application/json}"
+String headers = '{"Content-Type" : "application/json" }'
 String content = '{"description": "Put your notification here"}'
 
 // Don't change code below
