@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:proactive:jobdescriptor:3.4"
+        xsi:schemaLocation="urn:proactive:jobdescriptor:3.4 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.4/schedulerjob.xsd"
+        name="Web Validation" projectName="Notifications"
+        priority="normal"
+        onTaskError="continueJobExecution"
+        maxNumberOfExecution="2"
+>
+  <description>
+    <![CDATA[ Workflow to pause the job and send a message to a notification service ]]>
+  </description>
+  <taskFlow>
+    <task name="WebValidation"
+    
+    
+    onTaskError="pauseJob" >
+      <description>
+        <![CDATA[ Task to send a message to a notification service ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="python">
+            <![CDATA[
+# Please fill variables
+
+notification_message = 'Put your validation notification here'
+schedulerURL =  'localhost:8080'
+
+
+# Don't change code below unless you know whar you are doing
+
+import os
+import shutil
+import httplib
+import urllib
+import urllib2
+import codecs
+from org.ow2.proactive.addons.webhook import Webhook
+
+jobid=variables.get("PA_JOB_ID")
+
+
+# get sessionid
+print "Fetching a sessionid..."
+login_payload=urllib.urlencode({'username':'bobot','password':'proactive'})
+login_headers={'Content-Type': 'application/x-www-form-urlencoded'}
+http_con=httplib.HTTPConnection(schedulerURL)
+http_con.request('POST', '/rest/scheduler/login', login_payload, login_headers)
+sessionid=http_con.getresponse().read()
+print "sessionid: {}".format(sessionid)
+
+# pause job
+print "Pausing job..."
+headers = '{\"Content-Type\" : \"application/json\" , \"sessionid\": \"'+sessionid+'\" }'
+url = 'http://'+schedulerURL+'/rest/scheduler/jobs/' + jobid + '/pause'
+Webhook.execute ( 'PUT', url, headers, '');
+print "Job Paused"
+
+
+# send validation notification
+print "Sending validation notification..."
+url = 'http://'+schedulerURL+'/notification-service/notifications'
+headers = '{\"Content-Type\" : \"application/json\" }'
+notification_content = '{\"description\": \"'+notification_message+'\", \"jobid\": \"'+jobid+'\" , \"validation\": \"true\"}'
+Webhook.execute ( 'POST', url, headers, notification_content);
+print "Validation notification sent"
+
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>

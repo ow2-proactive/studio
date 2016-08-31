@@ -21,6 +21,7 @@ define(function () {
         manuals: {
             'Email Notification' : 'templates/email.xml',
             'Web Notification' : 'templates/webnotification.xml'
+            'Web Validation Notification' : 'templates/web_validation.xml'
         },
         controls: {
             'If': 'templates/07_workflow_branch.xml',
