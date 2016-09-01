@@ -27,7 +27,8 @@
 
 notification_message = 'Put your web validation message here'
 schedulerURL =  'localhost:8080'
-
+username = ''
+password = ''
 
 # Don't change code below unless you know whar you are doing
 
@@ -44,7 +45,7 @@ jobid=variables.get("PA_JOB_ID")
 
 # get sessionid
 print "Fetching a sessionid..."
-login_payload=urllib.urlencode({'username':'bobot','password':'proactive'})
+login_payload=urllib.urlencode({'username':''+username+'','password':''+password+''})
 login_headers={'Content-Type': 'application/x-www-form-urlencoded'}
 http_con=httplib.HTTPConnection(schedulerURL)
 http_con.request('POST', '/rest/scheduler/login', login_payload, login_headers)
