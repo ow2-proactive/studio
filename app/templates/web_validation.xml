@@ -26,7 +26,6 @@
 # Please fill variables
 
 notification_message = 'Put your web validation message here'
-schedulerURL =  'localhost:8080'
 username = ''
 password = ''
 
@@ -41,6 +40,7 @@ import codecs
 from org.ow2.proactive.addons.webhook import Webhook
 
 jobid=variables.get("PA_JOB_ID")
+schedulerURL =  'localhost:8080'
 
 
 # get sessionid
