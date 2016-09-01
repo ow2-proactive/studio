@@ -9,7 +9,7 @@
         maxNumberOfExecution="2"
 >
   <description>
-    <![CDATA[ Workflow to pause the job and send a message to a notification service ]]>
+    <![CDATA[ Workflow to pause the job and send a validation message to a notification service ]]>
   </description>
   <taskFlow>
     <task name="WebValidation"
@@ -17,7 +17,7 @@
     
     onTaskError="pauseJob" >
       <description>
-        <![CDATA[ Task to send a message to a notification service ]]>
+        <![CDATA[ Task to pause the job and send a validation message to the notification service ]]>
       </description>
       <scriptExecutable>
         <script>
@@ -25,7 +25,7 @@
             <![CDATA[
 # Please fill variables
 
-notification_message = 'Put your validation notification here'
+notification_message = 'Put your web validation message here'
 schedulerURL =  'localhost:8080'
 
 
@@ -59,13 +59,13 @@ Webhook.execute ( 'PUT', url, headers, '');
 print "Job Paused"
 
 
-# send validation notification
-print "Sending validation notification..."
+# send web validation
+print "Sending web validation..."
 url = 'http://'+schedulerURL+'/notification-service/notifications'
 headers = '{\"Content-Type\" : \"application/json\" }'
 notification_content = '{\"description\": \"'+notification_message+'\", \"jobid\": \"'+jobid+'\" , \"validation\": \"true\"}'
 Webhook.execute ( 'POST', url, headers, notification_content);
-print "Validation notification sent"
+print "Web Validation sent"
 
 ]]>
           </code>
