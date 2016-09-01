@@ -63,7 +63,7 @@ print "Job Paused"
 print "Sending web validation..."
 url = 'http://'+schedulerURL+'/notification-service/notifications'
 headers = '{\"Content-Type\" : \"application/json\" }'
-notification_content = '{\"description\": \"'+notification_message+'\", \"jobid\": \"'+jobid+'\" , \"validation\": \"true\"}'
+notification_content = '{\"description\": \"'+notification_message+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\"}'
 Webhook.execute ( 'POST', url, headers, notification_content);
 print "Web Validation sent"
 
