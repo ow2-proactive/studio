@@ -20,7 +20,7 @@ define(function () {
         },
         manuals: {
             'Email Notification' : 'templates/email.xml',
-            'Web Notification' : 'templates/webnotification.xml'
+            'Web Notification' : 'templates/webnotification.xml',
             'Web Validation' : 'templates/web_validation.xml'
         },
         controls: {
