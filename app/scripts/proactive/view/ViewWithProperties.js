@@ -227,7 +227,13 @@ define(
                         openAccordion = true;
                     }
 
-                    var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a id="'+ el.attr("data-tab")+ '" data-toggle="collapse" data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
+                    // create data-help for tab
+                    var dataTabHelp = '';
+                    if (el.attr("data-tab-help")) {
+                    	dataTabHelp = ' data-help="' + el.attr("data-tab-help") + '"';
+                    }
+                    
+                    var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a id="'+ el.attr("data-tab")+ '" data-toggle="collapse"' + dataTabHelp + ' data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
                     currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
 
                     if (el.attr("data-help")) {
@@ -271,7 +277,6 @@ define(
             })
 
             accordion.find("[simple-view]").remove()
-
             return accordion;
         },
 

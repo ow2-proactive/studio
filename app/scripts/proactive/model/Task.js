@@ -293,6 +293,7 @@ define(
                         // everything which comes after this tab is included in it, if no new 'data-tab'
                         // is defined.
                         "data-tab": "Fork Environment",
+                        "data-tab-help": "Fork environment is a new customisable JVM started to only run the task it belongs to. Also specify how to start this JVM, like in a Docker container for example.",
                         "data-help":"The environment in which to execute this task. " +
                         "Example: Docker selected will execute this task inside a Docker container."
                     }
