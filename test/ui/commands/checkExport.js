@@ -3,6 +3,7 @@ exports.command = function (xpathCheck) {
     
     this
         .toggleMenu()
+        .openDropdown('#file-dropdown')
     	.moveToElement('#export-button', 0, 250)
     	.click('#export-button')
         .waitForElementVisible('.CodeMirror-code')
