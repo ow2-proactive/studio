@@ -29,7 +29,7 @@ notification_message = 'Put your web validation message here'
 username = ''
 password = ''
 
-# Don't change code below unless you know whar you are doing
+# Don't change code below unless you know what you are doing
 
 import os
 import shutil
