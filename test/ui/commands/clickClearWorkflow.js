@@ -3,6 +3,7 @@
 exports.command = function () {
     return this
         .waitForElementPresent('.navbar-toggle', 2000)
+        .openDropdown('#edit-dropdown')
         .waitForElementVisible('#clear-button', 2000, 'The menu has not collapsed or is hidden')
         .click("#clear-button")
         .waitForElementNotPresent('.task')
