@@ -26,8 +26,6 @@
 # Please fill variables
 
 notification_message = 'Put your web validation message here'
-username = ''
-password = ''
 
 # Don't change code below unless you know what you are doing
 
@@ -39,25 +37,15 @@ import urllib2
 import codecs
 from org.ow2.proactive.addons.webhook import Webhook
 
-jobid=variables.get("PA_JOB_ID")
-schedulerURL =  'localhost:8080'
+jobid = variables.get("PA_JOB_ID")
+schedulerURL =  variables.get("PA_SCHEDULER_REST_URL")
 
 
 # get sessionid
-print "Fetching a sessionid..."
-login_payload=urllib.urlencode({'username':''+username+'','password':''+password+''})
-login_headers={'Content-Type': 'application/x-www-form-urlencoded'}
-http_con=httplib.HTTPConnection(schedulerURL)
-http_con.request('POST', '/rest/scheduler/login', login_payload, login_headers)
-sessionid=http_con.getresponse().read()
-print "sessionid: {}".format(sessionid)
+schedulerapi.connect()
 
 # pause job
-print "Pausing job..."
-headers = '{\"Content-Type\" : \"application/json\" , \"sessionid\": \"'+sessionid+'\" }'
-url = 'http://'+schedulerURL+'/rest/scheduler/jobs/' + jobid + '/pause'
-Webhook.execute ( 'PUT', url, headers, '');
-print "Job Paused"
+schedulerapi.pauseJob(jobid)
 
 
 # send web validation
