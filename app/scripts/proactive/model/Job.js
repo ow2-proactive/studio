@@ -90,6 +90,9 @@ define(
                 }
             }
         },
+        getTasksCount: function () {
+        	return this.tasks.length;
+        },
         updateWorkflowName: function (job) {
             this.set({"Name": job["@attributes"].name.trim()});
         },
