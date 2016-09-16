@@ -214,8 +214,10 @@ define(
             });
         },
 
-        validate: function (jobXml, jobModel) {
+        validate: function (jobXml, jobModel, automaticValidation) {
             if (!localStorage['pa.session']) return;
+            
+            if (automaticValidation && (jobModel.getTasksCount() == 0)) return;
 
             var that = this;
             that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
