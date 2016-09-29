@@ -839,9 +839,12 @@ li.success {
 }
 
 .navbar .divider-vertical {
-    height: 50px;
-    margin: 0 5px;
-    border-right: 1px solid #ffffff;
+    height: 35px;
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    border-right: 1px solid #777;
     border-left: 1px solid #f2f2f2;
 }
 
@@ -948,8 +951,7 @@ li.success {
 
 .dropdown-header {
     padding-top: 10px;
-    color: #333;
-!important;
+    color: #333 !important;
     font-weight: bold;
     font-size: 13px;
 }
@@ -1072,4 +1074,8 @@ li.success {
 
 .bottom-btn {
     margin-bottom: 20px;
+}
+
+.ui-pnotify.translucent.ui-pnotify-fade-in {
+    opacity: .8;
 }

@@ -2,6 +2,7 @@ define(
     [
         'jquery',
         'backbone',
+        'pnotify',
         'proactive/model/Task',
         'proactive/model/Script',
         'proactive/view/ViewWithProperties',
@@ -10,7 +11,7 @@ define(
         'proactive/model/ScriptExecutable'
     ],
 
-    function ($, Backbone, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
+    function ($, Backbone, PNotify, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
 
     "use strict";
 

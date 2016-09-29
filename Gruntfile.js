@@ -10,7 +10,7 @@
 module.exports = function (grunt) {
 
     // Load grunt tasks automatically
-    require('load-grunt-tasks')(grunt);
+    require('load-grunt-tasks')(grunt, {pattern: ['grunt-*', '!grunt-lib-phantomjs']});
 
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
@@ -99,7 +99,8 @@ module.exports = function (grunt) {
                     src: [
                         '.tmp',
                         '<%= yeoman.dist %>/*',
-                        '!<%= yeoman.dist %>/.git*'
+                        '!<%= yeoman.dist %>/.git*',
+                        'public'
                     ]
                 }]
             },
@@ -114,33 +115,33 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= yeoman.app %>/scripts/{,*/}*.js',
-                '!<%= yeoman.app %>/scripts/vendor/*',
-                'test/spec/{,*/}*.js'
+                '<%= yeoman.app %>/scripts/proactive/*.js',
+                '!<%= yeoman.app %>/scripts/thirdparties/*',
+                '<%= yeoman.app %>/scripts/main.js'
             ]
         },
 
-        jasmine: {
-            all: {
-                src: 'test/spec/*.js',
-//                specs: 'test/spec/*.js',
-                options: {
-                    host: 'http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/',
-                    keepRunner: true,
-                    template: require('grunt-template-jasmine-requirejs'),
-                    templateOptions: {
-                        requireConfigFile: 'app/scripts/main.js',
-                        requireConfig: {
-                            baseUrl: 'app/scripts',
-                            paths: {
-                                prettydiff: '../../test/libs/prettydiff/prettydiff'
-                            }
-                        }
-                    }
-                }
-
-            }
-        },
+        // jasmine: {
+        //     all: {
+        //         src: 'test/spec/*.js',
+        //        specs: 'test/spec/*.js',
+        //         options: {
+        //             host: 'http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/',
+        //             keepRunner: true,
+        //             template: require('grunt-template-jasmine-requirejs'),
+        //             templateOptions: {
+        //                 requireConfigFile: 'app/scripts/main.js',
+        //                 requireConfig: {
+        //                     baseUrl: 'app/scripts',
+        //                     paths: {
+        //                         prettydiff: '../../test/libs/prettydiff/prettydiff'
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //
+        //     }
+        // },
 
         // Add vendor prefixed styles
         autoprefixer: {
@@ -240,33 +241,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // By default, your `index.html`'s <!-- Usemin block --> will take care of
-        // minification. These next options are pre-configured if you do not wish
-        // to use the Usemin blocks.
-        // cssmin: {
-        //     dist: {
-        //         files: {
-        //             '<%= yeoman.dist %>/styles/main.css': [
-        //                 '.tmp/styles/{,*/}*.css',
-        //                 '<%= yeoman.app %>/styles/{,*/}*.css'
-        //             ]
-        //         }
-        //     }
-        // },
-        // uglify: {
-        //     dist: {
-        //         files: {
-        //             '<%= yeoman.dist %>/scripts/scripts.js': [
-        //                 '<%= yeoman.dist %>/scripts/scripts.js'
-        //             ]
-        //         }
-        //     }
-        // },
-        // concat: {
-        //     dist: {}
-        // },
-
-
         requirejs: {
             compile: {
                 options: {
@@ -277,9 +251,9 @@ module.exports = function (grunt) {
                     name: 'main',
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
-                    optimize: "uglify2",
+                    optimize: 'uglify2',
                     paths: {
-                        "proactive/config": "empty:"
+                        'proactive/config': 'empty:'
                     }
                 }
             }
@@ -302,7 +276,9 @@ module.exports = function (grunt) {
                             'libs/requirejs/{,*/}*.js',
                             'libs/pines-notify/jquery*.css',
                             'scripts/proactive/templates/*.html',
-                            'scripts/proactive/config.js'
+                            'scripts/proactive/config.js',
+                            'templates/{,*/}*.xml',
+                            'studio-conf.js'
                         ]
                     },
                     {
@@ -349,39 +325,140 @@ module.exports = function (grunt) {
                 'imagemin',
                 'svgmin'
             ]
-        }
-    });
-
-grunt.registerTask('test:integration', 'Run the full app and check for errors', function () {
-    var phantomjs = require('grunt-lib-phantomjs').init(grunt);
-
-    phantomjs.on('test.ok', function(msg) {
-        grunt.log.writeln(msg);
-        phantomjs.halt();
-    });
-
-    phantomjs.on('test.fail', function(msg) {
-        grunt.fail.warn(msg);
-        phantomjs.halt();
-    });
-
-    // This task is async.
-    var done = this.async();
-
-    phantomjs.spawn('http://127.0.0.1:9001/app/', {
-        // Additional PhantomJS options.
-        options: {
-            phantomScript: 'test/integration_test.js'
         },
-        // Complete the task when done.
-        done: function (err) {
-            done(err);
+        nightwatch_report: {
+            files: ['test/ui/reports/**/*.xml'],
+            options: {
+                outputDir: 'test/reports/nightwatch'
+            }
+        },
+        selenium_standalone: {
+            options: {
+                stopOnExit: true
+            },
+            dev: {
+                seleniumVersion: '2.53.0',
+                seleniumDownloadURL: 'http://selenium-release.storage.googleapis.com',
+                drivers: {
+                    chrome: {
+                        version: '2.21',
+                        arch: process.arch,
+                        baseURL: 'http://chromedriver.storage.googleapis.com'
+                    },
+                    ie: {
+                        version: '2.53.0',
+                        arch: 'ia32',
+                        baseURL: 'http://selenium-release.storage.googleapis.com'
+                    }
+                }
+            }
+        },
+        bgShell: {
+            _defaults: {
+                bg: true
+            },
+            seleniumInstall: {
+                cmd: 'node_modules/selenium-standalone/bin/selenium-standalone install',
+                bg: false
+            },
+            seleniumStart: {
+                cmd: 'node_modules/selenium-standalone/bin/selenium-standalone start'
+            },
+            seleniumStop: {
+                cmd: 'pkill -f selenium-standalone',
+                bg: false
+            },
+            jsonServerStart: {
+                cmd: 'node test/json-server-data/mock-scheduler-rest.js',
+                stdout: true
+            },
+            jsonServerStop: {
+                cmd: 'pkill -f json-server'
+            },
+            nightwatchChrome: {
+                cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json --env jenkins-chrome',
+                bg: false
+            },
+            nightwatchPhantomJS: {
+                cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json --env jenkins-phantomjs',
+                bg: false
+            },
+            nightwatchDev: {
+                cmd: 'node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json',
+                bg: false
+            }
         }
     });
-});
+    grunt.loadNpmTasks('grunt-selenium-standalone');
+    grunt.loadNpmTasks('grunt-bg-shell');
+    grunt.loadNpmTasks('grunt-nightwatch-report');
 
+    grunt.registerTask('test:ui:dev', 'Run the ui tests using a mocked REST scheduler', function () {
+        grunt.task.run([
+            'publishJsonServerFiles',
+            'selenium_standalone:dev:install',
+            'selenium_standalone:dev:start',
+            'bgShell:jsonServerStart',
+            'waitFor5Seconds',
+            'bgShell:nightwatchChrome',
+            'selenium_standalone:dev:stop',
+            'bgShell:jsonServerStop',
+            'nightwatch_report'
+        ]);
+    });
 
-grunt.registerTask('serve', function (target) {
+    grunt.registerTask('test:ui:jenkins', 'Run the ui tests using a mocked REST scheduler and an external Selenium server', function () {
+        grunt.task.run([
+            'publishJsonServerFiles',
+            'bgShell:jsonServerStart',
+            'waitFor5Seconds',
+            'bgShell:nightwatchChrome',
+            'bgShell:jsonServerStop',
+            'nightwatch_report'
+        ]);
+    });
+
+    grunt.registerTask('publishJsonServerFiles', 'Create the public folder of json-servers', function () {
+        grunt.file.mkdir('public');
+        grunt.file.copy('dist', 'public/studio');
+    });
+
+    grunt.registerTask('waitFor5Seconds', 'Timer', function () {
+        grunt.log.write('Waiting for 5 seconds so the mocked REST server can initialize properly');
+        var done = this.async();
+        setTimeout(done, 5 * 1000);
+    });
+
+    grunt.registerTask('test:integration', 'Run the full app and check for errors', function () {
+        var phantomjs = require('grunt-lib-phantomjs').init(grunt);
+
+        phantomjs.on('test.ok', function (msg) {
+            grunt.log.writeln(msg);
+            phantomjs.halt();
+        });
+
+        phantomjs.on('test.fail', function (msg) {
+            grunt.fail.warn(msg);
+            phantomjs.halt();
+        });
+
+        // This task is async.
+        var done = this.async();
+
+        // 'http://127.0.0.1:9001/app/'
+        phantomjs.spawn('http://localhost:8080/studio', {
+            // Additional PhantomJS options.
+            options: {
+                phantomScript: 'test/integration_test.js'
+            },
+            // Complete the task when done.
+            done: function (err) {
+                done(err);
+            }
+        });
+    });
+
+    grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist:keepalive']);
         }
@@ -400,7 +477,7 @@ grunt.registerTask('serve', function (target) {
         grunt.task.run(['serve']);
     });
 
-    grunt.registerTask('test', function(target) {
+    grunt.registerTask('test', function (target) {
         if (target !== 'watch') {
             grunt.task.run([
                 'clean:server',
@@ -411,8 +488,24 @@ grunt.registerTask('serve', function (target) {
 
         grunt.task.run([
             'connect:test',
-            'jasmine',
-            'test:integration'
+            // 'jasmine',
+            //'test:integration'
+            'test:ui'
+        ]);
+    });
+
+    grunt.registerTask('testJenkins', function (target) {
+        if (target !== 'watch') {
+            grunt.task.run([
+                'clean:server',
+                'concurrent:test',
+                'autoprefixer',
+            ]);
+        }
+
+        grunt.task.run([
+            'connect:test',
+            'test:ui:jenkins'
         ]);
     });
 

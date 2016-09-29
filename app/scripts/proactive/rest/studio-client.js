@@ -2,13 +2,15 @@ define(
     [
         'jquery',
         'proactive/config',
-        'pnotify.core',
+        'pnotify',
         'pnotify.buttons'
     ],
 
-    function ($, config) {
+    function ($, config, PNotify) {
 
     "use strict";
+
+        PNotify.prototype.options.styling = "bootstrap3";
 
     var cachedScripts;
 
@@ -28,7 +30,7 @@ define(
                     closer: true,
                     sticker: false
                 },
-                opacity: .8,
+                addclass: 'translucent', // defined in studio.css
                 width: '20%'
             });
         },
@@ -64,7 +66,12 @@ define(
                         } catch (e) {}
 
                         if (data.status == 404) {
-                            reason = "The studio rest server is not available at the following url: " + config.restApiUrl;
+                            if (data.responseText.indexOf("login.LoginException") >= 0 ) {
+                                reason = "Invalid Login or Password";
+                            } else {
+                                reason = "The studio rest server is not available at the following url: " + config.restApiUrl;
+                            }
+
                         }
 
                         that.alert("Cannot connect to ProActive Studio", reason, 'error');
@@ -207,8 +214,10 @@ define(
             });
         },
 
-        validate: function (jobXml, jobModel) {
+        validate: function (jobXml, jobModel, automaticValidation) {
             if (!localStorage['pa.session']) return;
+            
+            if (automaticValidation && (jobModel.getTasksCount() == 0)) return;
 
             var that = this;
             that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {

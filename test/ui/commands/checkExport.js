@@ -2,7 +2,8 @@ exports.command = function (xpathCheck) {
     var self = this;
     
     this
-    	.showMenu()
+        .toggleMenu()
+        .openDropdown('#file-dropdown')
     	.moveToElement('#export-button', 0, 250)
     	.click('#export-button')
         .waitForElementVisible('.CodeMirror-code')
@@ -11,20 +12,18 @@ exports.command = function (xpathCheck) {
             self.execute(function (element) {
                 return element.CodeMirror.getValue();
             }, [codeMirrorElement.value], function (codeMirrorTextContent) {
-                var jobXml = codeMirrorTextContent.value
-                var xpath = require('xpath')
-                    , dom = require('xmldom').DOMParser
+                var jobXml = codeMirrorTextContent.value;
+                var xpath = require('xpath');
+                var dom = require('xmldom').DOMParser;
 
-                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.4"});
+                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.5"});
 
-                var jobXmlDocument = new dom().parseFromString(jobXml)
+                var jobXmlDocument = new dom().parseFromString(jobXml);
 
                 if (typeof xpathCheck === "function") {
                     xpathCheck.call(self, select, jobXmlDocument);
                 }
-
             });
-        })
-
+        });
     return this;
 };

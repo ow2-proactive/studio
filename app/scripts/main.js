@@ -1,4 +1,4 @@
-/*global require*/
+/* global require */
 'use strict';
 
 require.config({
@@ -58,7 +58,7 @@ require.config({
         },
         'pnotify.buttons': {
             deps: [
-                'pnotify.core'
+                'pnotify'
             ]
         },
         backboneFormsAdapter: {
@@ -67,7 +67,7 @@ require.config({
             ]
         },
         codemirror: {
-            exports: "CodeMirror"
+            exports: 'CodeMirror'
         },
         codemirrorJs: { deps: [ 'codemirror' ]},
         codemirrorXml: { deps: [ 'codemirror' ]},
@@ -91,8 +91,8 @@ require.config({
         vkbeautify: '../libs/vkbeautify.0.99.00.beta/index',
         dagre: '../libs/dagre/index',
         text: '../libs/requirejs-text/text',
-        'pnotify.core': '../libs/pnotify/pnotify.core',
-        'pnotify.buttons': '../libs/pnotify/pnotify.buttons',
+        'pnotify': '../libs/pnotify/dist/pnotify',
+        'pnotify.buttons': '../libs/pnotify/dist/pnotify.buttons',
         fileSaver: '../libs/FileSaver/FileSaver',
         codemirror: '../libs/codemirror/lib/codemirror',
         codemirrorJs: '../libs/codemirror/mode/javascript/javascript',

@@ -173,7 +173,7 @@ define(['jquery',
                         metadata: JSON.stringify(metadata)
                     });
                 if (this.options.paletteView) {
-                    this.options.paletteView.render();
+                    //this.options.paletteView.render();
                 }
             },
             _currentWorkflow: function () {
