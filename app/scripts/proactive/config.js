@@ -18,6 +18,11 @@ define(function () {
             'Language R': 'templates/script_r.xml',
             'Cron': 'templates/script_cron.xml'
         },
+        manuals: {
+            'Email Notification' : 'templates/email.xml',
+            'Web Notification' : 'templates/webnotification.xml',
+            'Web Validation' : 'templates/web_validation.xml'
+        },
         controls: {
             'If': 'templates/07_workflow_branch.xml',
             'Loop': 'templates/06_workflow_loop.xml',

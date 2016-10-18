@@ -454,11 +454,11 @@ define(
             }
         }
 
-        function validate_job() {
+        function validate_job(automaticValidation) {
             $(".invalid-task").removeClass("invalid-task");
             var StudioApp = require('StudioApp');
             if (StudioApp.isWorkflowOpen()) {
-                StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+                StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel, automaticValidation);
             }
         }
 
@@ -474,7 +474,7 @@ define(
             save_workflow();
             closeCollapsedMenu();
             StudioClient.resetLastValidationResult()
-            validate_job();
+            validate_job(false);
         });
 
         $("#undo-button").click(function (event) {
@@ -627,7 +627,7 @@ define(
         // saving job xml every min to local store
         setInterval(save_workflow, 10000);
         // validating job periodically
-        setInterval(validate_job, 30000);
+        setInterval(function(){validate_job(true);}, 30000);
 
        return {
            saveWorkflow: save_workflow

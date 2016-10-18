@@ -3,6 +3,7 @@
 exports.command = function () {
     return this
         .waitForElementPresent('.navbar-toggle', 2000)
+        .openDropdown('#file-dropdown')
         .waitForElementPresent('#close-button', 2000)
         .waitForElementVisible('#close-button', 5000, 'The menu has not collapsed or is hidden')
         .click('#close-button')
