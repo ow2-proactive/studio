@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:proactive:jobdescriptor:3.4"
+        xsi:schemaLocation="urn:proactive:jobdescriptor:3.4 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.4/schedulerjob.xsd"
+        name="Web Validation" projectName="Notifications"
+        priority="normal"
+        onTaskError="continueJobExecution"
+        maxNumberOfExecution="2"
+>
+  <description>
+    <![CDATA[ Workflow to pause the job and send a validation message to a notification service ]]>
+  </description>
+  <taskFlow>
+    <task name="WebValidation"
+    
+    
+    onTaskError="pauseJob" >
+      <description>
+        <![CDATA[ Task to pause the job and send a validation message to the notification service ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="python">
+            <![CDATA[
+# Please fill variables
+
+notification_message = 'Put your web validation message here'
+
+# Don't change code below unless you know what you are doing
+from org.ow2.proactive.addons.webhook import Webhook
+
+jobid = variables.get("PA_JOB_ID")
+schedulerURL =  variables.get("PA_SCHEDULER_REST_URL")
+
+print schedulerURL
+# get sessionid
+schedulerapi.connect()
+
+# pause job
+schedulerapi.pauseJob(jobid)
+
+
+# send web validation
+print "Sending web validation..."
+url = schedulerURL.replace("/rest", "") +'/notification-service/notifications'
+headers = '{\"Content-Type\" : \"application/json\" }'
+notification_content = '{\"description\": \"'+notification_message+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\"}'
+Webhook.execute ( 'POST', url, headers, notification_content);
+print "Web Validation sent"
+
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>

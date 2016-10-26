@@ -144,6 +144,49 @@ module.exports = {
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
+    },
+
+    "Update task name": function (browser) {
+    	var _taskNameVal = 'updated_task_name';
+    	
+        browser
+            .login()
+            .closeNotification()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
+            .createTask()
+            .waitForElementVisible('.task')
+            .click(".task")
+            .assert.containsText('.task-name > .name', 'Javascript_Task')
+            .waitForElementVisible("input[name='Task Name']")
+            .clearValue("input[name='Task Name']")
+            .setValue("input[name='Task Name']", _taskNameVal)
+            .assert.containsText('.task-name > .name', _taskNameVal)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .end();
+    },
+
+    "Display tab tooltips": function (browser) {
+        browser
+            .login()
+            .closeNotification()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
+            .assert.attributeEquals("a[id='Error Handling']", "data-help", "Configure workflow behavior upon errors")
+            .createTask()
+            .waitForElementVisible('.task')
+            .click(".task")
+            .assert.attributeEquals("a[id='Multi-Node Execution']", "data-help", "Configuration of resources requirements")
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .end();
     }
 
 

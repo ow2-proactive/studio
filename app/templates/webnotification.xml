@@ -22,10 +22,10 @@
           <code language="groovy">
             <![CDATA[
 // Please fill variables
-String method = "GET or POST"
-String url = "http://www.activeeon.com";
-String headers = "{key0 = value0, key1 = value1, ...}"
-String content = "the content";
+String method = "POST"
+String url = "http://localhost:8080/notification-service/notifications"
+String headers = '{"Content-Type" : "application/json" }'
+String content = '{"description": "Put your notification here"}'
 
 // Don't change code below
 import org.ow2.proactive.addons.webhook.Webhook;

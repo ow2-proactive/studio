@@ -27,6 +27,7 @@ module.exports = {
             .toggleMenu()
             .clickCloseWorkflow()
             .toggleMenu()
+            .openDropdown('#file-dropdown')
             .click("#save-button")
             .waitForElementVisible('#select-workflow-modal')
             .assert.containsText('#select-workflow-modal h3', 'Please open a workflow')

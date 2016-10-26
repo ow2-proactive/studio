@@ -3,6 +3,7 @@ exports.command = function (xpathCheck) {
     
     this
         .toggleMenu()
+        .openDropdown('#file-dropdown')
     	.moveToElement('#export-button', 0, 250)
     	.click('#export-button')
         .waitForElementVisible('.CodeMirror-code')
@@ -15,7 +16,7 @@ exports.command = function (xpathCheck) {
                 var xpath = require('xpath');
                 var dom = require('xmldom').DOMParser;
 
-                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.5"});
+                var select = xpath.useNamespaces({"p": "urn:proactive:jobdescriptor:3.6"});
 
                 var jobXmlDocument = new dom().parseFromString(jobXml);
 
