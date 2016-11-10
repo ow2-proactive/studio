@@ -36,6 +36,9 @@ define(
             render: function () {
                 var that = this;
 
+                that.$el = $(that.template());
+                $('body').append(that.$el).show();
+
                 StudioClient.isConnected(function () {
                     // logged in successfully - show user name
                     console.log("Logged in");
@@ -44,10 +47,8 @@ define(
                     $('body').show();
                 }, function () {
                     // failed to login - show login form
-                    console.log("Login Required")
-                    that.$el = $(that.template())
-                    $('body').append(that.$el).show();
-                })
+                    console.log("Login Required");
+                });
 
                 return this;
             }
