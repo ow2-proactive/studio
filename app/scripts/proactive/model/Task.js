@@ -12,12 +12,13 @@ define(
 		 'proactive/view/utils/undo',
 		 'text!proactive/templates/selection-script-host-template.html',
 		 'text!proactive/templates/selection-script-os-template.html',
-		 'text!proactive/templates/selection-script-totalmem-template.html'
+		 'text!proactive/templates/selection-script-totalmem-template.html',
+		 'proactive/model/utils'
 		 ],
 
 		 // TODO REMOVE undoManager dependency - comes from view
 		 function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript,
-				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate) {
+				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils) {
 
 			"use strict";
 
@@ -43,6 +44,11 @@ define(
 						          ]
 					},
 					"Execute": {type: 'NestedModel', model: ScriptExecutable},
+		            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Variables", 'placeholder': 'variables->variable', "data-help":"Task variables that will be available in the task."}, itemToString: Utils.inlineNameValueInherited, subSchema: {
+		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, type: 'Text' },
+		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, type: 'Text' },
+		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, type: 'Checkbox' }
+		            }},
 					"Description": {
 						type: "Text",
 						fieldAttrs: {
