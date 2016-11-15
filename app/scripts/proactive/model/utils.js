@@ -1,5 +1,5 @@
 define(function (require) {
-
+	
     return {
         inlineNameNotEditable: function(prop) {
             var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
@@ -18,13 +18,17 @@ define(function (require) {
         },
         inlineNameValueInherited: function(prop) {
         	var checked = "";
+        	// update datatype if wrong, otherwise dislay is not correct
+        	if (prop['Inherited'] == "true") prop['Inherited'] = true;
+        	if (prop['Inherited'] == "false") prop['Inherited'] = false;
+
         	if (prop['Inherited']){
         		checked=" checked"
         	}
         			
             return "<input class='input-property-field' type=\"text\" value=\"" + prop['Name'] + 
             "\"><input class='input-property-field' type=\"text\"  value=\""+ prop["Value"] +
-            "\"><input class='input-property-field' type=\"checkbox\"" + checked + " disabled>";
+            "\"><input class='input-property-field' type=\"checkbox\"" + checked + " onclick=\"return false;\">";
         }
     }
 })
