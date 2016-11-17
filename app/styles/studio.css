@@ -1066,6 +1066,14 @@ li.success {
     resize: none;
 }
 
+.delete-button {
+   	height: 26px;
+}
+
+.popup-input-text-field{
+    width: 80%;
+}
+
 .simple-form-header {
     font-weight: bold;
     padding-bottom:10px;

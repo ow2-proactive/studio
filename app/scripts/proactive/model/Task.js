@@ -22,6 +22,9 @@ define(
 
 			"use strict";
 
+			var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>', 
+		    		null, Backbone.Form.templateSettings);
+
 			var Task = SchemaModel.extend({
 				schema: {
 					"Task Name": {
@@ -44,10 +47,14 @@ define(
 						          ]
 					},
 					"Execute": {type: 'NestedModel', model: ScriptExecutable},
-		            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Variables", 'placeholder': 'variables->variable', "data-help":"Task variables that will be available in the task."}, itemToString: Utils.inlineNameValueInherited, subSchema: {
-		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, type: 'Text' },
-		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, type: 'Text' },
-		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, type: 'Checkbox' }
+		            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Variables", 'placeholder': 'variables->variable', 
+		            	"data-help":"Task variables that will be available in the task."}, 
+		            	itemToString: Utils.inlineNameValueInherited, itemTemplate: bigCrossTemplate,
+		            	subSchema: {
+		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, type: 'Text', editorClass: 'popup-input-text-field' },
+		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, type: 'Text', editorClass: 'popup-input-text-field' },
+		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, type: 'Checkbox' },
+		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, type: 'Text', editorClass: 'popup-input-text-field' }
 		            }},
 					"Description": {
 						type: "Text",
@@ -444,7 +451,8 @@ define(
 					        "Host Name",
 					        "Operating System",
 					        "Required amount of memory (in mb)",
-					        "Dedicated Host"]
+					        "Dedicated Host", 
+					        "Variables"]
 				},
 				addOrReplaceGenericInfo: function (key, value) {
 
