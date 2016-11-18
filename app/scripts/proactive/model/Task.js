@@ -47,14 +47,15 @@ define(
 						          ]
 					},
 					"Execute": {type: 'NestedModel', model: ScriptExecutable},
-		            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Variables", 'placeholder': 'variables->variable', 
-		            	"data-help":"Task variables that will be available in the task."}, 
+		            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Task Variables", 'placeholder': 'variables->variable', 
+		            	"data-tab-help":"Task variables that will be available in the task.", 
+		            	"data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li><li><b>Inherited</b>: If a value is defined at Job level, it will override this variable&#39;s Task value</li><li><b>Model</b>: Type of the variable; should be empty</li>"}, 
 		            	itemToString: Utils.inlineNameValueInherited, itemTemplate: bigCrossTemplate,
 		            	subSchema: {
-		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, type: 'Text', editorClass: 'popup-input-text-field' },
-		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, type: 'Text', editorClass: 'popup-input-text-field' },
-		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, type: 'Checkbox' },
-		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, type: 'Text', editorClass: 'popup-input-text-field' }
+		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
+		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
+		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherit propagated value', type: 'Checkbox' },
+		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: 'Data type', type: 'Text', editorClass: 'popup-input-text-field' }
 		            }},
 					"Description": {
 						type: "Text",
