@@ -25,7 +25,9 @@ define(
             "Project": {type: "Text", fieldAttrs: {'placeholder': '@attributes->projectName', "data-help":'Set a name of a project to be able to group different jobs of the same project later.'}},
             "Description": {type: "Text", fieldAttrs: {'placeholder': ['description->#cdata-section', 'description->#text'], "data-help": "Small textual explanation of what this job does."}},
             "Job Priority": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->priority', "data-help":"Scheduling priority level of the job. A user can only set the priority of his jobs and can only use the values \"lowest\", \"low\", or \"normal\". There are two higher priority levels \"high\" and \"highest\" which can be only set by the administrator."}, options: ["low", "normal", { val: "high", label: 'high (admin only)' }, { val: "highest", label: 'highest (admin only)' }]},
-            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Variables", 'placeholder': 'variables->variable', "data-help":"Workflow variables that will be available in all tasks."}, itemToString: Utils.inlineNameValue, itemTemplate: bigCrossTemplate,  subSchema: {
+            "Variables": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Workflow Variables", 'placeholder': 'variables->variable', "data-tab-help":"Workflow variables that will be available in all tasks.",
+            	"data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li>"}, 
+            	itemToString: Utils.inlineNameValue, itemTemplate: bigCrossTemplate,  subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
                 "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
