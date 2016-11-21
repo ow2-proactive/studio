@@ -29,7 +29,7 @@ define(
             	"data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li>"}, 
             	itemToString: Utils.inlineNameValue, itemTemplate: bigCrossTemplate,  subSchema: {
                 "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
-                "Value": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->value'} }
+                "Value": { fieldAttrs: {'placeholder': '@attributes->value'} }
             }},
             "Generic Info": {type: 'List', itemType: 'Object', fieldAttrs: {"data-tab": "Generic Info", 'placeholder': 'genericInformation->info', "data-help":"Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this job to a node with token \"rack1\"."}, itemToString: Utils.inlineName, subSchema: {
                 "Property Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'} },
