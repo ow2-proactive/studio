@@ -54,8 +54,8 @@ define(
 		            	subSchema: {
 		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
 		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
-		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherit propagated value', type: 'Checkbox' },
-		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Data Type (Integer, String, Boolean, ...)', type: 'Text', editorClass: 'popup-input-text-field' }
+		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
+		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (Integer, String, Boolean, ...)', type: 'Text', editorClass: 'popup-input-text-field' }
 		            }},
 					"Description": {
 						type: "Text",
