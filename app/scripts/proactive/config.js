@@ -27,7 +27,8 @@ define(function () {
             'If': 'templates/07_workflow_branch.xml',
             'Loop': 'templates/06_workflow_loop.xml',
             'Replicate': 'templates/05_workflow_replication.xml',
-            'Task Dependencies': 'templates/02_task_dependencies.xml'
+            'Task Dependencies': 'templates/02_task_dependencies.xml',
+            'Submit Job': 'templates/SubmitJob.xml'
         }
     };
 });
