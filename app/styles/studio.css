@@ -560,14 +560,6 @@ button[data-action='add'] {
     margin-bottom: 10px;
 }
 
-div[name="Generic Info"] {
-    display: inline-block;
-}
-
-div[name="Generic Info"] {
-    display: inline-block;
-}
-
 div[name="Application Parameters"] {
     display: inline-block;
 }
@@ -1068,6 +1060,11 @@ li.success {
 
 .delete-button {
    	height: 26px;
+   	top: -10px;
+}
+
+.list-editor-row {
+   	height: 30px;
 }
 
 .popup-input-text-field{

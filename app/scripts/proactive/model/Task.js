@@ -130,6 +130,7 @@ define(
 							'placeholder': 'genericInformation->info',
 							"data-help": 'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'
 						},
+						itemToString: Utils.inlineNameValue, itemTemplate: bigCrossTemplate,
 						subSchema: {
 							"Property Name": {
 								validators: ['required'],
