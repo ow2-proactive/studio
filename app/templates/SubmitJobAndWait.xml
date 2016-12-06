@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.7"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.7 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.7/schedulerjob.xsd"
+    name="SubmitJobAndWait" 
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2">
+  <taskFlow>
+    <task name="SubmitJobAndWait">
+      <description>
+        <![CDATA[ The simplest task, ran by a groovy engine. ]]>
+      </description>
+      <variables>
+        <variable name="workflowURL" value="http://trydev.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="false" model="String"/>
+      </variables>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+//Please add the job URL that you want to execute in Task Variables under the key 'workflowURL'
+
+// connect to the scheduler
+schedulerapi.connect()
+
+// get the job URL from Task Variables
+jobURL = new URL(variables.get("workflowURL"))
+
+// submitting the job
+jobid = schedulerapi.submit(jobURL)
+
+// block job
+schedulerapi.waitForJob(jobid, 120000)
+
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>

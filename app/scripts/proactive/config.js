@@ -28,7 +28,8 @@ define(function () {
             'Loop': 'templates/06_workflow_loop.xml',
             'Replicate': 'templates/05_workflow_replication.xml',
             'Task Dependencies': 'templates/02_task_dependencies.xml',
-            'Submit Job': 'templates/SubmitJob.xml'
+            'Submit Job No Wait': 'templates/SubmitJobNoWait.xml',
+            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml'
         }
     };
 });
