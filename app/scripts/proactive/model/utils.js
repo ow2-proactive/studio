@@ -1,20 +1,19 @@
 define(function (require) {
 	
     return {
-        inlineNameNotEditable: function(prop) {
+    	inlineName: function(prop) {
             var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
             return name;
-        },
-        inlineName: function(prop) {
-            var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
-            return "<input class='input-property-field' type=\"text\" value=\"" + name + "\">";
         },
         inlineNameValueNotEditable: function(prop) {
             return "<div class='property-field'>" + prop['Name'] + "</div><div class='property-field'>" + prop["Value"] + "</div>";
         },
-        inlineNameValue: function(prop) {        			
-            return "<input class='input-property-field' type=\"text\" value=\"" + prop['Name'] + 
-            "\"><input class='input-property-field' type=\"text\"  value=\""+ prop["Value"] + "\">";
+        inlineNameValue: function(prop) {   
+            var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
+            var value = prop['Value'] ? prop['Value'] : prop['Property Value'];
+            
+            return "<input class='input-property-field' type=\"text\" value=\"" + name + 
+            "\"><input class='input-property-field' type=\"text\"  value=\""+ value + "\">";
         },
         inlineNameValueInherited: function(prop) {
         	prop['Inherited'] = (prop['Inherited'] && prop['Inherited'] != "false");

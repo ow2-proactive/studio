@@ -54,7 +54,7 @@ module.exports = {
 
                 this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name")
                 
-                var data = jobXmlDocument.getElementsByTagName("scriptExecutable")[0];
+                var data = select("//*:scriptExecutable", jobXmlDocument)[0];
                 
                 var pythonExpectedScript = "<scriptExecutable>"
                 pythonExpectedScript = pythonExpectedScript.concat("\n        <script>");
