@@ -13,7 +13,7 @@
         <![CDATA[ The simplest task, ran by a groovy engine. ]]>
       </description>
       <variables>
-        <variable name="workflowURL" value="http://trydev.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="true"  model="String"/>
+        <variable name="workflowURL" value="http://trydev.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="false" model="String"/>
       </variables>
       <scriptExecutable>
         <script>
@@ -64,7 +64,7 @@ variables.put("isFinished", isFinished)
 // You can use a Cron Expression here
               // examples http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
 if(!variables.get("isFinished")){
-	loop = '*/2 * * * *';
+	loop = '* * * * *';
 }else{
 	loop = false;
 }
