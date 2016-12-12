@@ -13,7 +13,7 @@
         <![CDATA[ The simplest task, ran by a groovy engine. ]]>
       </description>
       <variables>
-        <variable name="workflowURL" value="http://trydev.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="false" model="String"/>
+        <variable name="workflowURL" value="http://trydev.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="true"  model="String"/>
       </variables>
       <scriptExecutable>
         <script>
@@ -28,15 +28,51 @@ schedulerapi.connect()
 jobURL = new URL(variables.get("workflowURL"))
 
 // submitting the job
-jobid = schedulerapi.submit(jobURL)
+jobid = schedulerapi.submit(jobURL).value()
 
-// block job
-schedulerapi.waitForJob(jobid, 120000)
-
+variables.put("jobID", jobid)
 ]]>
           </code>
         </script>
       </scriptExecutable>
+    </task>
+    <task name="cron_task">
+      <description>
+        <![CDATA[ Will run every minutes ]]>
+      </description>
+      <depends>
+        <task ref="SubmitJobAndWait"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+schedulerapi.connect()
+
+isFinished = schedulerapi.isJobFinished(variables.get("jobID"))
+
+variables.put("isFinished", isFinished)
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+      <controlFlow >
+        <loop target="cron_task">
+          <script>
+            <code language="javascript">
+              <![CDATA[
+// You can use a Cron Expression here
+              // examples http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
+if(!variables.get("isFinished")){
+	loop = '*/2 * * * *';
+}else{
+	loop = false;
+}
+]]>
+            </code>
+          </script>
+        </loop>
+      </controlFlow>
     </task>
   </taskFlow>
 </job>
