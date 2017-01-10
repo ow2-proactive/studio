@@ -236,8 +236,8 @@ define(
 							"data-help": 'Files from your user or global spaces that will be transferred to computing nodes automatically.'
 						},
 						subSchema: {
-							"Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
-							"Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
+							"Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}, editorClass: 'popup-input-text-field'},
+							"Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}, editorClass: 'popup-input-text-field'},
 							"Access Mode": {
 								type: 'Select',
 								fieldAttrs: {'placeholder': '@attributes->accessMode'},
