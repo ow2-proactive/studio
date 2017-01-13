@@ -16,6 +16,7 @@ phantomjsdriver.log
 # Gradle local files
 .gradle/
 build/
+gradle/ext/
 
 # Eclipse
 .project
