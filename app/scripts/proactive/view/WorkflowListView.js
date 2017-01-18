@@ -86,7 +86,7 @@ define(['jquery',
                         var model = models[i];
                         var modelName = model.attributes.name;
 
-                        if (modelName.startsWith("Untitled " + this.mode + " ")) {
+                        if (modelName.indexOf("Untitled " + this.mode + " ") == 0) {
                             lastUntitledJobName = modelName;
 
                             var chunks = lastUntitledJobName.split(" ");
