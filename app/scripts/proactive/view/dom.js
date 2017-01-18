@@ -560,14 +560,16 @@ define(
                 console.log('conf:');
                 console.log(conf);
                 if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
-                    result = result + "latest";
+                    result = result + "dev";
                 }
                 else{
                     result = result + conf.studioVersion;
                 }
+
+                $("#documentationLinkId").attr("href", result);
             });
 
-        	$("#documentationLinkId").attr("href", result);
+
         	
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;

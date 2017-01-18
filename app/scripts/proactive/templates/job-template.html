@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.6"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.6 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.6/schedulerjob.xsd"
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.7"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.7 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.7/schedulerjob.xsd"
     name="<%= job["Name"]%>" <% if (job["Project"] && job["Project"].length>0) { %>projectName="<%= job["Project"]%>"<% } %>
     priority="<%= job["Job Priority"]%>"
     onTaskError="<%= job["On Task Error Policy"]%>"
