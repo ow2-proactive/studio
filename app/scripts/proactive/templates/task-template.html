@@ -13,6 +13,14 @@
     <% if (task["Description"] && task["Description"].length>0) { %>
     <description> <![CDATA[ <%= task["Description"]%> ]]> </description>
     <% } %>
+    
+    <% if (task["Variables"] && task["Variables"].length>0) { %>
+    <variables>
+    <% _.each(task["Variables"], function(variable) { %>
+            <variable name="<%=variable["Name"]%>" value="<%=variable["Value"]%>" <% if (variable["Inherited"]) { %>inherited="true" <% }else{ %>inherited="false"<% } %> model="<%=variable["Model"]%>"/>
+    <% }) %>
+    </variables>
+    <% } %>
 
     <% if (task["Generic Info"] && task["Generic Info"].length>0) { %>
     <genericInformation>

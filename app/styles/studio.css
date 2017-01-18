@@ -122,7 +122,7 @@ icons div {
     -moz-box-shadow: 2px 2px 19px #e0e0e0;
     -moz-border-radius: 0.5em;
     border-radius: 5px;
-    width: 90px;
+    width: 110px;
     height: 40px;
     line-height: 30px;
     position: absolute;
@@ -558,14 +558,6 @@ label {
 
 button[data-action='add'] {
     margin-bottom: 10px;
-}
-
-div[name="Generic Info"] {
-    display: inline-block;
-}
-
-div[name="Generic Info"] {
-    display: inline-block;
 }
 
 div[name="Application Parameters"] {
@@ -1054,6 +1046,29 @@ li.success {
     overflow: hidden;
     white-space: nowrap;
     resize: none;
+}
+
+.input-property-field {
+    float:left;
+    width: 42%;
+    max-width: 42%;
+    margin-right:10px;
+    overflow: hidden;
+    white-space: nowrap;
+    resize: none;
+}
+
+.delete-button {
+   	height: 26px;
+   	top: -10px;
+}
+
+.list-editor-row {
+   	height: 30px;
+}
+
+.popup-input-text-field{
+    width: 80%;
 }
 
 .simple-form-header {

@@ -12,14 +12,18 @@ define(
 		 'proactive/view/utils/undo',
 		 'text!proactive/templates/selection-script-host-template.html',
 		 'text!proactive/templates/selection-script-os-template.html',
-		 'text!proactive/templates/selection-script-totalmem-template.html'
+		 'text!proactive/templates/selection-script-totalmem-template.html',
+		 'proactive/model/utils'
 		 ],
 
 		 // TODO REMOVE undoManager dependency - comes from view
 		 function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript,
-				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate) {
+				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils) {
 
 			"use strict";
+
+			var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>', 
+		    		null, Backbone.Form.templateSettings);
 
 			var Task = SchemaModel.extend({
 				schema: {
@@ -43,6 +47,16 @@ define(
 						          ]
 					},
 					"Execute": {type: 'NestedModel', model: ScriptExecutable},
+		            "Variables": {type: 'List', itemType: 'Object', title: "Variables (Name, Value, Inherited)", fieldAttrs: {"data-tab": "Task Variables", 'placeholder': 'variables->variable', 
+		            	"data-tab-help":"Task variables that will be available in the task.", 
+		            	"data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li><li><b>Inherited</b>: Job Variable&#39;s value will be used</li>"}, 
+		            	itemToString: Utils.inlineNameValueInherited, itemTemplate: bigCrossTemplate,
+		            	subSchema: {
+		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
+		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
+		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
+		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (Integer, String, Boolean, ...)', type: 'Text', editorClass: 'popup-input-text-field' }
+		            }},
 					"Description": {
 						type: "Text",
 						fieldAttrs: {
@@ -116,6 +130,7 @@ define(
 							'placeholder': 'genericInformation->info',
 							"data-help": 'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'
 						},
+						itemToString: Utils.inlineNameValue, itemTemplate: bigCrossTemplate,
 						subSchema: {
 							"Property Name": {
 								validators: ['required'],
@@ -221,8 +236,8 @@ define(
 							"data-help": 'Files from your user or global spaces that will be transferred to computing nodes automatically.'
 						},
 						subSchema: {
-							"Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}},
-							"Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}},
+							"Excludes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->excludes'}, editorClass: 'popup-input-text-field'},
+							"Includes": {type: "Text", fieldAttrs: {'placeholder': '@attributes->includes'}, editorClass: 'popup-input-text-field'},
 							"Access Mode": {
 								type: 'Select',
 								fieldAttrs: {'placeholder': '@attributes->accessMode'},
@@ -438,7 +453,8 @@ define(
 					        "Host Name",
 					        "Operating System",
 					        "Required amount of memory (in mb)",
-					        "Dedicated Host"]
+					        "Dedicated Host", 
+					        "Variables"]
 				},
 				addOrReplaceGenericInfo: function (key, value) {
 

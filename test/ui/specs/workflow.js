@@ -54,7 +54,7 @@ module.exports = {
 
                 this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name")
                 
-                var data = jobXmlDocument.getElementsByTagName("scriptExecutable")[0];
+                var data = select("//*:scriptExecutable", jobXmlDocument)[0];
                 
                 var pythonExpectedScript = "<scriptExecutable>"
                 pythonExpectedScript = pythonExpectedScript.concat("\n        <script>");
@@ -140,6 +140,49 @@ module.exports = {
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .end();
+    },
+
+    "Update task name": function (browser) {
+    	var _taskNameVal = 'updated_task_name';
+    	
+        browser
+            .login()
+            .closeNotification()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
+            .createTask()
+            .waitForElementVisible('.task')
+            .click(".task")
+            .assert.containsText('.task-name > .name', 'Javascript_Task')
+            .waitForElementVisible("input[name='Task Name']")
+            .clearValue("input[name='Task Name']")
+            .setValue("input[name='Task Name']", _taskNameVal)
+            .assert.containsText('.task-name > .name', _taskNameVal)
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .end();
+    },
+
+    "Display tab tooltips": function (browser) {
+        browser
+            .login()
+            .closeNotification()
+            .toggleMenu()
+            .clickCloseWorkflow()
+            .removeAllWorkflows()
+            .createNewWorkflow()
+            .assert.attributeEquals("a[id='Error Handling']", "data-help", "Configure workflow behavior upon errors")
+            .createTask()
+            .waitForElementVisible('.task')
+            .click(".task")
+            .assert.attributeEquals("a[id='Multi-Node Execution']", "data-help", "Configuration of resources requirements")
             .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
