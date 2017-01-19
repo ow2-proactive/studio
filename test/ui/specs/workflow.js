@@ -50,12 +50,13 @@ module.exports = {
             .assert.notification('Workflow is valid')
             .closeNotification()
             .checkExport(function (select, jobXmlDocument) {
-                var taskName = select("//p:task/@name", jobXmlDocument)[0].value
+                this.assert.ok(true, "jobXmlDocument: " + jobXmlDocument);
+                var taskName = select("//p:task/@name", jobXmlDocument)[0].value;
+                this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name");
+                var selected = select("//p:scriptExecutable", jobXmlDocument);
+                this.assert.ok(true, "selected scriptExecutable: " + selected);
 
-                this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name")
-                
-                var data = select("//*:scriptExecutable", jobXmlDocument)[0];
-                
+                var data = selected[0];
                 var pythonExpectedScript = "<scriptExecutable>"
                 pythonExpectedScript = pythonExpectedScript.concat("\n        <script>");
                 pythonExpectedScript = pythonExpectedScript.concat("\n          <code language=\"python\">");

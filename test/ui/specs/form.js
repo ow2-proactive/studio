@@ -79,7 +79,7 @@ module.exports = {
     	// Input values
     	var _hostNameVal = 'host_name';
     	var _operatingSystemVal = 'linux';
-    	var _reqMemVal = '1000000'
+    	var _reqMemVal = '1000000';
     	
         browser
             .login()
@@ -103,7 +103,9 @@ module.exports = {
             .waitForElementVisible("input[name='Required amount of memory (in mb)']")
             .setValue("input[name='Required amount of memory (in mb)']", _reqMemVal)
             .waitForElementVisible("input[name='Dedicated Host']")
+            .pause(browser.globals.menuAnimationTime)
             .click("input[name='Dedicated Host']")
+            .pause(browser.globals.menuAnimationTime)
             .checkExport(function (select, jobXmlDocument) {
                 var hostNameXml = select("string(//p:genericInformation/p:info[@name='Host Name']/@value)",
                 		jobXmlDocument);
