@@ -53,20 +53,16 @@ module.exports = {
                 this.assert.ok(true, "jobXmlDocument: " + jobXmlDocument);
                 var taskName = select("//p:task/@name", jobXmlDocument)[0].value;
                 this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name");
-                var selected = select("//p:scriptExecutable", jobXmlDocument);
+                var selected = select("//p:scriptExecutable/p:script/p:code[@language='python']", jobXmlDocument);
                 this.assert.ok(true, "selected scriptExecutable: " + selected);
 
                 var data = selected[0];
-                var pythonExpectedScript = "<scriptExecutable>"
-                pythonExpectedScript = pythonExpectedScript.concat("\n        <script>");
-                pythonExpectedScript = pythonExpectedScript.concat("\n          <code language=\"python\">");
+                var pythonExpectedScript = "<code language=\"python\">";
                 pythonExpectedScript = pythonExpectedScript.concat("\n            <![CDATA[");
                 pythonExpectedScript = pythonExpectedScript.concat("\nfor x in range(1, 11):");
                 pythonExpectedScript = pythonExpectedScript.concat("\n    print x");
                 pythonExpectedScript = pythonExpectedScript.concat("\n]]>");
                 pythonExpectedScript = pythonExpectedScript.concat("\n          </code>");
-                pythonExpectedScript = pythonExpectedScript.concat("\n        </script>");
-                pythonExpectedScript = pythonExpectedScript.concat("\n      </scriptExecutable>");
                 
                 this.assert.equal(data, pythonExpectedScript, "Data value")
                 
