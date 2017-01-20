@@ -54,16 +54,19 @@ module.exports = {
                 var taskName = select("//p:task/@name", jobXmlDocument)[0].value;
                 this.assert.ok(taskName.indexOf("Python_Task") > -1, "Task name");
                 var selected = select("//p:scriptExecutable/p:script/p:code[@language='python']", jobXmlDocument);
-                this.assert.ok(true, "selected scriptExecutable: " + selected);
+                this.assert.ok(true, "selected code: " + selected);
 
-                var data = selected[0];
-                var pythonExpectedScript = "<code language=\"python\">";
+                var data = selected[0].toString().replace(" xmlns=\"urn:proactive:jobdescriptor:3.7\"", "");
+
+                this.assert.ok(true, "selected data: " + data);
+
+                var pythonExpectedScript = "<code language=\"python\">"
                 pythonExpectedScript = pythonExpectedScript.concat("\n            <![CDATA[");
                 pythonExpectedScript = pythonExpectedScript.concat("\nfor x in range(1, 11):");
                 pythonExpectedScript = pythonExpectedScript.concat("\n    print x");
                 pythonExpectedScript = pythonExpectedScript.concat("\n]]>");
                 pythonExpectedScript = pythonExpectedScript.concat("\n          </code>");
-                
+
                 this.assert.equal(data, pythonExpectedScript, "Data value")
                 
             })
