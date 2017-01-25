@@ -96,10 +96,8 @@ module.exports = {
             .click("#data-loss-continue")
             .waitForElementVisible('#simple-form')
             .assert.elementNotPresent("#accordion-properties")
-            
-            .click("button.btn.btn-default")
+            .pause(browser.globals.menuAnimationTime)
             .click('div[name="Variables"] button')
-
             .waitForElementVisible('#Name')
             .setValue("#Name", "aVariable")
             .setValue("#Value", "aValue")
