@@ -24,7 +24,7 @@
                     <code language="groovy">
                         <![CDATA[
 // Query a LDAP server requires authentication for connection
-// Please look at the following link for the configuration LDAP credentials:
+// Please look at the following link for configuring LDAP credentials:
 // http://doc.activeeon.com/latest/admin/ProActiveAdminGuide.html#_ldap_query
 
 // Please fill task variables in the studio GUI
