@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:proactive:jobdescriptor:3.7"
+        xsi:schemaLocation="urn:proactive:jobdescriptor:3.7 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.7/schedulerjob.xsd"
+        name="script_LDAP_Query"
+        priority="normal"
+        onTaskError="continueJobExecution"
+        maxNumberOfExecution="2"
+>
+    <taskFlow>
+        <task name="LDAP_Query_Task">
+            <description>
+                <![CDATA[ The task that makes query to a LDAP server ]]>
+            </description>
+            <scriptExecutable>
+                <script>
+                    <code language="groovy">
+                        <![CDATA[
+// Query a LDAP server requires authentication for connection
+// Please look at the following link for the configuration LDAP credentials:
+// http://doc.activeeon.com/latest/admin/ProActiveAdminGuide.html#_ldap_query
+
+// Please fill variables
+ldapUrl = "ldap://localhost:389"
+ldapSearchBase = "dc=yourOrganization,dc=com"
+ldapSearchFilter = "(objectclass=*)"
+ldapSelectedAttributes = "attributeName1,attributeName2"
+
+// Don't change code below
+variables.put("ldapUrl", ldapUrl);
+variables.put("ldapSearchBase", ldapSearchBase);
+variables.put("ldapSearchFilter", ldapSearchFilter);
+variables.put("ldapSelectedAttributes", ldapSelectedAttributes);
+
+import org.ow2.proactive.addons.ldap_query.LDAPClient;
+LDAPClient ldapClient  = new LDAPClient(variables, credentials);
+String ldapResult = ldapClient.searchQueryLDAP();
+result = ldapResult;
+
+System.out.println(result);
+]]>
+                    </code>
+                </script>
+            </scriptExecutable>
+        </task>
+    </taskFlow>
+</job>
