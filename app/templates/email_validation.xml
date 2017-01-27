@@ -19,15 +19,16 @@
       <description>
         <![CDATA[ Task to pause the job and send a validation email ]]>
       </description>
+      <variables>
+        <variable name="notification_message" value="Put your email validation message here" inherited="false" model=""/>
+        <variable name="email_to" value="user@domain.org" inherited="false" model=""/>
+        <variable name="user_to_login" value="user" inherited="false" model=""/>
+      </variables>
       <scriptExecutable>
         <script>
           <code language="python">
             <![CDATA[
-# Please fill variables
-
-notification_message = 'Put your email validation message here'
-email_to = 'user@domain.org'
-user_to_name = 'user'
+#Please setup the Task Variables!
 
 # Don't change code below unless you know what you are doing
 from org.ow2.proactive.addons.webhook import Webhook
@@ -48,7 +49,7 @@ schedulerapi.pauseJob(jobid)
 print "Sending email validation..."
 url = schedulerURL.replace("/rest", "") +'/notification-service/notifications'
 headers = '{\"Content-Type\" : \"application/json\"}'
-notification_content = '{\"description\": \"'+notification_message+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\", \"emailValidation\": \"'+email_to+'\" , \"userValidation\": \"'+user_to_name+'\", \"notificationServiceUrl\": \"'+url+'\", \"userName\" : \"'+variables.get("PA_USER")+'\", \"sessionId\": \"'+sessionid+'\" }'
+notification_content = '{\"description\": \"'+variables.get("notification_message")+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\", \"emailValidation\": \"'+variables.get("email_to")+'\" , \"userValidation\": \"'+variables.get("user_to_login")+'\", \"notificationServiceUrl\": \"'+url+'\", \"userName\" : \"'+variables.get("PA_USER")+'\", \"sessionId\": \"'+sessionid+'\" }'
 Webhook.execute ( 'POST', url, headers, notification_content);
 print "Email Validation sent"
 ]]>
