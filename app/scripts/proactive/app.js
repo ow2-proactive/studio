@@ -59,6 +59,13 @@ define(
                 console.log('Initializing the studio');
                 that.views.loginView = new LoginView({app:that});
             });
+
+            if (!String.prototype.startsWith) {
+                String.prototype.startsWith = function(searchString, position){
+                    position = position || 0;
+                    return this.substr(position, searchString.length) === searchString;
+                };
+            }
         },
         login: function() {
 
