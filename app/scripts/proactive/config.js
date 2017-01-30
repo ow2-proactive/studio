@@ -22,6 +22,7 @@ define(function () {
         manuals: {
             'Email Notification' : 'templates/email.xml',
             'Web Notification' : 'templates/webnotification.xml',
+            'Email Validation' : 'templates/email_validation.xml',
             'Web Validation' : 'templates/web_validation.xml'
         },
         controls: {

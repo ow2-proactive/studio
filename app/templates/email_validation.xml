@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:proactive:jobdescriptor:3.7"
+        xsi:schemaLocation="urn:proactive:jobdescriptor:3.7 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.7/schedulerjob.xsd"
+        name="Email Validation" projectName="Notifications"
+        priority="normal"
+        onTaskError="continueJobExecution"
+        maxNumberOfExecution="2"
+>
+  <description>
+    <![CDATA[ Workflow to pause the job and send a validation email ]]>
+  </description>
+  <taskFlow>
+    <task name="EmailValidation"
+    
+    
+    onTaskError="pauseJob" >
+      <description>
+        <![CDATA[ Task to pause the job and send a validation email ]]>
+      </description>
+      <variables>
+        <variable name="notification_message" value="Put your email validation message here" inherited="false" model=""/>
+        <variable name="email_to" value="user@domain.org" inherited="false" model=""/>
+        <variable name="user_to_login" value="user" inherited="false" model=""/>
+      </variables>
+      <scriptExecutable>
+        <script>
+          <code language="python">
+            <![CDATA[
+#Please setup the Task Variables!
+
+# Don't change code below unless you know what you are doing
+from org.ow2.proactive.addons.webhook import Webhook
+
+jobid = variables.get("PA_JOB_ID")
+schedulerURL =  variables.get("PA_SCHEDULER_REST_URL")
+
+print schedulerURL
+# get sessionid
+schedulerapi.connect()
+sessionid = schedulerapi.getSession()
+
+# pause job
+schedulerapi.pauseJob(jobid)
+
+
+# send web validation
+print "Sending email validation..."
+url = schedulerURL.replace("/rest", "") +'/notification-service/notifications'
+headers = '{\"Content-Type\" : \"application/json\"}'
+notification_content = '{\"description\": \"'+variables.get("notification_message")+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\", \"emailValidation\": \"'+variables.get("email_to")+'\" , \"userValidation\": \"'+variables.get("user_to_login")+'\", \"notificationServiceUrl\": \"'+url+'\", \"userName\" : \"'+variables.get("PA_USER")+'\", \"sessionId\": \"'+sessionid+'\" }'
+Webhook.execute ( 'POST', url, headers, notification_content);
+print "Email Validation sent"
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
