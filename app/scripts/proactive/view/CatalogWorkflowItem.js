@@ -14,18 +14,26 @@ define(
         return Backbone.View.extend({
             tagName: "li",
             events: {
+                "click #btn-add-workflow-xml": "addWorkflow",
                 "click #btn-pull-workflow-xml": "pullWorkflow",
-		        "click #btn-toggle-removal-state": "toggleRemovalState"
+                "click #btn-toggle-removal-state": "toggleRemovalState"
             },
-            // Pull from the Catalog to the Studio
-            pullWorkflow: function (e) {
+            internalWorkflowImport: function (e, modalSelector) {
                 e.preventDefault();
                 var xmlContent = this.model.getXml();
                 var StudioApp = require('StudioApp');
                 $.when(xmlContent).done(function () {
                     StudioApp.xmlToImport = xmlContent.responseText;
-                    $('#import-workflow-confirmation-modal').modal();
+                    $(modalSelector).modal();
                 });
+            },
+            // Add from the Catalog to the current workflow
+            addWorkflow: function (e) {
+                this.internalWorkflowImport(e, '#add-workflow-confirmation-modal');
+            },
+            // Pull from the Catalog to the Studio
+            pullWorkflow: function (e) {
+                this.internalWorkflowImport(e, '#import-workflow-confirmation-modal');
             },
             toggleRemovalState: function (event) {
                 var StudioApp = require('StudioApp');
