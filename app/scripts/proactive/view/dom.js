@@ -62,7 +62,14 @@ define(
         }
 
         $("#import-button").click(function (event) {
+            add_or_import(event, '#import-file');
+        })
 
+        $("#add-button").click(function (event) {
+            add_or_import(event, '#add-file');
+        })
+        
+        function add_or_import(event, buttonSelector){
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (!studioApp.models.currentWorkflow) {
@@ -70,13 +77,23 @@ define(
                 return;
             }
             closeCollapsedMenu();
-            $('#import-file').parent('form').trigger('reset');
-            $('#import-file').click();
-        })
+            $(buttonSelector).parent('form').trigger('reset');
+            $(buttonSelector).click();
+        }
 
         $('#import-file').change(function (env) {
+            import_file(env, true);
+        })
+
+        $('#add-file').change(function (env) {
+            import_file(env, false);
+        })
+        
+        function import_file(env, clearFirst){
             var StudioApp = require('StudioApp');
-            StudioApp.clear();
+            if (clearFirst){
+                StudioApp.clear();
+            }
             var files = env.target.files;
             if (files.length > 0) {
                 var file = files[0];
@@ -95,7 +112,7 @@ define(
                 }
                 reader.readAsBinaryString(file);
             }
-        })
+        }
 
         $("#export-button").click(function (event) {
             event.preventDefault();
@@ -294,21 +311,11 @@ define(
         })
 
         $("#confirm-import-from-catalog").click(function () {
-            var StudioApp = require('StudioApp');
+            add_workflow_to_current(true);
+        })
 
-            // I should clear only if a workflow is currently open
-            if (StudioApp.isWorkflowOpen()) {
-                console.log("A workflow is already open, let's clear it first");
-                StudioApp.clear();
-                StudioApp.importFromCatalog();
-                $('#catalog-browser-close-button').click();
-            }
-            else {
-                // create a new workflow, open it and import the xml into it
-                var clickAndOpenEvent = jQuery.Event( "click" );
-                clickAndOpenEvent.openWorkflow = true;
-                $('.create-workflow-button').trigger(clickAndOpenEvent);
-            }
+        $("#confirm-add-from-catalog").click(function () {
+            add_workflow_to_current(false);
         })
 
         $("#confirm-publication-to-catalog").click(function () {
@@ -376,6 +383,26 @@ define(
                 $("#script-save-button").click();
             }
         });
+        
+        function add_workflow_to_current(clearCurrentFirst){
+            var StudioApp = require('StudioApp');
+
+            // Workflow should be clear only if a workflow is currently open
+            if (StudioApp.isWorkflowOpen()) {
+                if (clearCurrentFirst){
+                    console.log("A workflow is already open, let's clear it first");
+                    StudioApp.clear();
+                }
+                StudioApp.importFromCatalog();
+                $('#catalog-browser-close-button').click();
+            }
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+        }
 
         function publish_to_catalog (bucketId, xmlContent, layoutContent) {
 

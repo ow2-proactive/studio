@@ -71,7 +71,10 @@
                             </li>
                             <li><a id="import-button" href="" class="pointer"
                                    title="Import existing workflows (.xml files)."><i
-                                    class="glyphicon glyphicon-import"></i> Import</a></li>
+                                    class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
+                            <li><a id="add-button" href="#" class="pointer"
+                                   title="Add existing workflows (.xml files) to current one."><i
+                                    class="glyphicon glyphicon-plus"></i> Add to current workflow</a></li>
                             <li><a id="export-button" href="#" class="pointer"
                                    title="Export current workflow as .xml file."><i
                                     class="glyphicon glyphicon-export"></i> Export</a></li>
@@ -189,6 +192,10 @@
         <input type="file" id="import-file" style="display:none"/>
         </form>
 
+        <form>
+        <input type="file" id="add-file" style="display:none"/>
+        </form>
+
         <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -279,6 +286,24 @@
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-import-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="add-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Add Workflow from Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        You are about to add a Workflow from the Catalog to the current workflow in the Studio.
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-add-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>
