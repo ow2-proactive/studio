@@ -23,13 +23,17 @@ define(
             this.render();
         },
         events: {
-            'change #select-bucket': 'switchBucket'
+            'change #select-bucket': 'switchBucket',
+            'click #select-all-catalog-button': 'selectAll',
+            'click #deselect-all-catalog-button': 'deselectAll'
         },
         internalSwitchBucket: function (currentBucketID) {
             this.$('#catalog-workflow-list').empty();
             var emptyView = _.template(catalogEmpty);
+            var disabled;
             if (currentBucketID == -1) {
                 this.$('#catalog-workflow-list').append(emptyView);
+                disabled = true;
             }
             else {
                 var currentBucket = this.buckets.get(currentBucketID);
@@ -44,8 +48,27 @@ define(
                         this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
                     }, this);
                 }
+                disabled = false;
             }
+            //Enable or disable buttons for selecting/deselecting all workflows
+            this.$('#select-all-catalog-button').prop('disabled', disabled);
+            this.$('#deselect-all-catalog-button').prop('disabled', disabled);
+            
             require('StudioApp').resetDeleteCollection();
+        },
+        internalSelection: function(select){
+            $('#catalog-workflow-list li').each(function( index ) {
+                var buttonCheckbox = $( this ).find('#btn-toggle-removal-state');
+                if (buttonCheckbox.find(':checkbox').is(':checked') != select){
+                    buttonCheckbox.click();
+                }
+            });
+        },
+        selectAll: function(){
+            this.internalSelection(true);
+        },
+        deselectAll: function(){
+            this.internalSelection(false);
         },
         switchBucket: function(e){
             this.internalSwitchBucket(e.target.value);
