@@ -9,7 +9,7 @@
     <% if (job["Variables"] && job["Variables"].length>0) { %>
     <variables>
     <% _.each(job["Variables"], function(variable) { %>
-            <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable["Value"])%>"/>
+            <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable["Value"])%>" <% if (variable.hasOwnProperty("Model")) { %>model="<%=escapeHtml(variable["Model"])%>"<% }%>/>
     <% }) %>
     </variables>
     <% } %>
