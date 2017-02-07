@@ -324,7 +324,7 @@ define(
             var xmlToPublish = StudioApp.views.xmlView.generateXml();
             var layout = JSON.stringify(StudioApp.models.currentWorkflow.getMetadata());
             var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
-            add_workflow_to_collection(workflowPromise, xmlToPublish);
+            add_workflow_promise_to_collection(workflowPromise, xmlToPublish);
         })
 
         $("#publish-to-catalog-button").click(function (event) {
@@ -361,6 +361,86 @@ define(
                     StudioApp.views.catalogView.internalSwitchBucket(bucketId));
             }
             StudioApp.resetDeleteCollection();
+        })
+        
+        $("#export-as-archive-button").click(function (event) {
+            var StudioApp = require('StudioApp');
+            var wfToRemove = StudioApp.modelsToRemove;
+            var wfIds = "";
+            var first = true;
+            for (var wfIndex in wfToRemove){
+            	if (first) first = false;
+            	else wfIds += ","
+            	wfIds += wfToRemove[wfIndex].get('id');
+            }
+            var selectedBucketId = $("#select-bucket").val();
+            window.location.replace('/workflow-catalog/buckets/' + selectedBucketId + '/workflowsarchive/' + wfIds);
+            
+        })
+        
+        $("#import-archive-button").click(function (event) {
+            event.preventDefault();
+            var studioApp = require('StudioApp');
+            closeCollapsedMenu();
+            $("#import-archive-file").parent('form').trigger('reset');
+            $("#import-archive-file").click();
+        })
+        
+        $("#import-archive-file").change(function (event) {
+        	var StudioApp = require('StudioApp');
+            var files = event.target.files;
+            if (files.length > 0) {
+                var file = files[0];
+                if (!file.type.match('application/zip')) {
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onloadend = function (evt) {
+
+                    if (evt.target.readyState == FileReader.DONE) {
+                        var payload = new FormData();
+                        var blob = new Blob([file], { type: "application/zip" });
+                        payload.append('file', file);
+                        var selectedBucketId = $("#select-bucket").val();
+
+                        // TODO add the layout as a query parameter
+
+                        var createdListOfWorkflows = $.ajax({
+                            url: '/workflow-catalog/buckets/' + selectedBucketId + '/workflowsarchive',
+                            type: 'POST',
+                            contentType: false,
+                            processData: false,
+                            cache: false,
+                            data: payload
+                        }).success(function (response) {
+                            PNotify.removeAll();
+
+                            new PNotify({
+                                title: 'Published',
+                                text: "The Workflows contained into the archive have been published to the Catalog",
+                                type: 'success',
+                                text_escape: true,
+                                buttons: {
+                                    closer: true,
+                                    sticker: false
+                                },
+                                addclass: 'translucent', // is defined in studio.css
+                                width: '20%'
+                            });
+                            return response;
+                        });
+                        
+
+                        $.when(createdListOfWorkflows).then(function () {
+                            var newWorkflows = createdListOfWorkflows.responseJSON;
+                            for (var i = 0; i < newWorkflows.length; i++){
+                                add_workflow_to_collection(newWorkflows[i]);
+                            }
+                        });
+                    }
+                }
+                reader.readAsBinaryString(file);
+            }
         })
 
         // removing a task by del
@@ -439,31 +519,35 @@ define(
             return createdWorkflowPromise;
         }
 
-        function add_workflow_to_collection (createdWorkflowPromise, xmlContent) {
+        function add_workflow_promise_to_collection (createdWorkflowPromise, xmlContent) {
             $.when(createdWorkflowPromise).then(function () {
-                var StudioApp = require('StudioApp');
                 var newWorkflow = createdWorkflowPromise.responseJSON;
-                // We manually add the newly published workflow into the right bucket
-                // without relying on Backbone's persistence layer
-                StudioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
-                    {
-                        id: newWorkflow.id,
-                        name: newWorkflow.name,
-                        variables: newWorkflow.variables,
-                        generic_information: newWorkflow.generic_information,
-                        created_at: newWorkflow.created_at,
-                        revision_id: newWorkflow.revision_id,
-                        bucket_id: newWorkflow.bucket_id,
-                        project_name: newWorkflow.project_name,
-                        layout: newWorkflow.layout
-                    },
-                    {
-                        xmlContent: xmlContent,
-                        layout: newWorkflow.layout
-                    }
-                );
-                StudioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
+                add_workflow_to_collection(newWorkflow, xmlContent);
             });
+        }
+
+        function add_workflow_to_collection (newWorkflow, xmlContent) {
+            var StudioApp = require('StudioApp');
+            // We manually add the newly published workflow into the right bucket
+            // without relying on Backbone's persistence layer
+            StudioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
+                {
+                    id: newWorkflow.id,
+                    name: newWorkflow.name,
+                    variables: newWorkflow.variables,
+                    generic_information: newWorkflow.generic_information,
+                    created_at: newWorkflow.created_at,
+                    revision_id: newWorkflow.revision_id,
+                    bucket_id: newWorkflow.bucket_id,
+                    project_name: newWorkflow.project_name,
+                    layout: newWorkflow.layout
+                },
+                {
+                    xmlContent: xmlContent,
+                    layout: newWorkflow.layout
+                }
+            );
+            StudioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
         }
 
         function save_workflow() {
@@ -644,6 +728,10 @@ define(
                 pasteAllow = {left: e.pageX, top: e.pageY};
                 e.stopPropagation();
 
+                $.when(createdWorkflowPromise).then(function () {
+                    var newWorkflow = createdWorkflowPromise.responseJSON;
+                    add_workflow_to_collection(newWorkflow, xmlContent);
+                });
             })
         });
 

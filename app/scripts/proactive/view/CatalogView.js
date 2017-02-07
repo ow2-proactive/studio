@@ -53,6 +53,8 @@ define(
             //Enable or disable buttons for selecting/deselecting all workflows
             this.$('#select-all-catalog-button').prop('disabled', disabled);
             this.$('#deselect-all-catalog-button').prop('disabled', disabled);
+            //Enable or disable button for importing workflows archive
+            $('#import-archive-button').prop('disabled', disabled);
             
             require('StudioApp').resetDeleteCollection();
         },

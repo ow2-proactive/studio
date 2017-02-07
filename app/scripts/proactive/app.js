@@ -178,8 +178,11 @@ define(
         resetDeleteCollection: function () {
             this.modelsToRemove = [];
             var deleteButton = $('#delete-selection-catalog');
-            deleteButton.text('Delete');
+            deleteButton.text('Delete selected\nworkflows');
             deleteButton.prop('disabled', true);
+            var exportButton = $('#export-as-archive-button');
+            exportButton.text("Export selected\nworkflows");
+            exportButton.prop('disabled', true);
         },
         clear: function() {
             var jobXml = new JobXmlView().xml(new Job());
