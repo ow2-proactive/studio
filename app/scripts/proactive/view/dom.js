@@ -428,6 +428,23 @@ define(
                                 width: '20%'
                             });
                             return response;
+                        }).error(function (response) {
+                            PNotify.removeAll();
+
+                            new PNotify({
+                                title: 'Error',
+                                text: "Error importing the Workflows contained into the archive",
+                                type: 'error',
+                                text_escape: true,
+                                buttons: {
+                                    closer: true,
+                                    sticker: false
+                                },
+                                addclass: 'translucent', // is defined in studio.css
+                                width: '20%'
+                            });
+                            console.log(response.responseText)
+                            return response;
                         });
                         
 
