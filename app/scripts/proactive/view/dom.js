@@ -374,7 +374,7 @@ define(
             	wfIds += wfToRemove[wfIndex].get('id');
             }
             var selectedBucketId = $("#select-bucket").val();
-            window.location.replace('/workflow-catalog/buckets/' + selectedBucketId + '/workflowsarchive/' + wfIds);
+            window.location.replace('/workflow-catalog/buckets/' + selectedBucketId + '/workflows/' + wfIds + '?alt=zip');
             
         })
         
@@ -406,7 +406,7 @@ define(
                         // TODO add the layout as a query parameter
 
                         var createdListOfWorkflows = $.ajax({
-                            url: '/workflow-catalog/buckets/' + selectedBucketId + '/workflowsarchive',
+                            url: '/workflow-catalog/buckets/' + selectedBucketId + '/workflows?alt=zip',
                             type: 'POST',
                             contentType: false,
                             processData: false,
@@ -450,8 +450,8 @@ define(
 
                         $.when(createdListOfWorkflows).then(function () {
                             var newWorkflows = createdListOfWorkflows.responseJSON;
-                            for (var i = 0; i < newWorkflows.length; i++){
-                                add_workflow_to_collection(newWorkflows[i]);
+                            for (var i = 0; i < newWorkflows["workflow"].length; i++){
+                                add_workflow_to_collection(newWorkflows["workflow"][i]);
                             }
                         });
                     }
@@ -539,7 +539,7 @@ define(
         function add_workflow_promise_to_collection (createdWorkflowPromise, xmlContent) {
             $.when(createdWorkflowPromise).then(function () {
                 var newWorkflow = createdWorkflowPromise.responseJSON;
-                add_workflow_to_collection(newWorkflow, xmlContent);
+                add_workflow_to_collection(newWorkflow["workflow"][0], xmlContent);
             });
         }
 
