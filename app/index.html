@@ -196,6 +196,10 @@
         <input type="file" id="add-file" style="display:none"/>
         </form>
 
+        <form>
+        <input type="file" id="import-archive-file" style="display:none"/>
+        </form>
+
         <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -215,7 +219,7 @@
         </div>
 
         <div id="catalog-browser-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog" style="width:40%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -225,11 +229,17 @@
                         <div id="catalog-browser-container"></div>
                     </div>
                     <div class="modal-footer">
+                        <button id="export-as-archive-button" class="btn btn-primary" aria-hidden="true" disabled>
+                        	Export selected<br>workflows
+                        </button>
+                        <button id="import-archive-button" class="btn btn-primary" aria-hidden="true" disabled>
+                            Import archive<br>of workflows
+                        </button>
                         <button id="publish-to-catalog-button" class="btn btn-primary" aria-hidden="true" disabled>
-                            Add current workflow to this bucket
+                            Add open workflow<br>to this bucket
                         </button>
                         <button id="delete-selection-catalog" class="btn btn-primary" aria-hidden="true" disabled>
-                            Delete
+                            Delete selected<br>workflows
                         </button>
                         <button id="catalog-browser-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                             Close
@@ -248,6 +258,23 @@
                     </div>
                     <div class="modal-body" style="height:100%">
                         In order to perform this action you need to choose an existing workflow or create a new one.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="select-archive-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Please select a ZIP archive</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        In order to perform this action you need to choose an existing ZIP archive containing workflows.
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
