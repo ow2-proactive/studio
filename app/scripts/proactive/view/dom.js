@@ -241,22 +241,7 @@ define(
             closeCollapsedMenu();
             save_workflow();
 
-            PNotify.removeAll();
-
-            new PNotify({
-                title: 'Saved',
-                text: 'Workflow has been saved',
-                type: 'success',
-                buttons: {
-                    closer: true,
-                    sticker: false
-                },
-                addclass: 'translucent', // is defined in studio.css
-                width: '20%',
-                history: {
-                    history: false
-                }
-            });
+            notify_message('Saved', 'Workflow has been saved', true);
         });
 
         $("#close-button").click(function (event) {
@@ -364,6 +349,10 @@ define(
         })
         
         $("#export-as-archive-button").click(function (event) {
+            window.location.replace(get_workflows_archive_URL());
+        })
+        
+        function get_workflows_archive_URL(bucketId){
             var StudioApp = require('StudioApp');
             var wfToRemove = StudioApp.modelsToRemove;
             var wfIds = "";
@@ -373,9 +362,12 @@ define(
             	else wfIds += ","
             	wfIds += wfToRemove[wfIndex].get('id');
             }
-            var selectedBucketId = $("#select-bucket").val();
-            window.location.replace('/workflow-catalog/buckets/' + selectedBucketId + '/workflows/' + wfIds + '?alt=zip');
-            
+            var selectedBucketId = bucketId ? bucketId : $("#select-bucket").val();
+            return '/workflow-catalog/buckets/' + selectedBucketId + '/workflows/' + wfIds + '?alt=zip';
+        }
+        
+        $("#publish-to-remote").click(function (event) {
+            $('#send-to-remote-confirmation-modal').modal();
         })
         
         $("#import-archive-button").click(function (event) {
@@ -398,55 +390,8 @@ define(
                 reader.onloadend = function (evt) {
 
                     if (evt.target.readyState == FileReader.DONE) {
-                        var payload = new FormData();
-                        var blob = new Blob([file], { type: "application/zip" });
-                        payload.append('file', file);
-                        var selectedBucketId = $("#select-bucket").val();
-
-                        // TODO add the layout as a query parameter
-
-                        var createdListOfWorkflows = $.ajax({
-                            url: '/workflow-catalog/buckets/' + selectedBucketId + '/workflows?alt=zip',
-                            type: 'POST',
-                            contentType: false,
-                            processData: false,
-                            cache: false,
-                            data: payload
-                        }).success(function (response) {
-                            PNotify.removeAll();
-
-                            new PNotify({
-                                title: 'Published',
-                                text: "The Workflows contained into the archive have been published to the Catalog",
-                                type: 'success',
-                                text_escape: true,
-                                buttons: {
-                                    closer: true,
-                                    sticker: false
-                                },
-                                addclass: 'translucent', // is defined in studio.css
-                                width: '20%'
-                            });
-                            return response;
-                        }).error(function (response) {
-                            PNotify.removeAll();
-
-                            new PNotify({
-                                title: 'Error',
-                                text: "Error importing the Workflows contained into the archive",
-                                type: 'error',
-                                text_escape: true,
-                                buttons: {
-                                    closer: true,
-                                    sticker: false
-                                },
-                                addclass: 'translucent', // is defined in studio.css
-                                width: '20%'
-                            });
-                            console.log(response.responseText)
-                            return response;
-                        });
-                        
+            			var blob = new Blob([file], { type: "application/zip" });
+                        var createdListOfWorkflows = send_archive_to_catalog(blob);
 
                         $.when(createdListOfWorkflows).then(function () {
                             var newWorkflows = createdListOfWorkflows.responseJSON;
@@ -459,6 +404,51 @@ define(
                 reader.readAsBinaryString(file);
             }
         })
+        
+        $("#confirm-send-to-remote").click(function( event ) {
+        	 $("#send-to-remote-form").submit();
+        	 $("#send-to-remote-form")[0].reset();
+        });
+        
+        $("#send-to-remote-form").submit(function( event ) {
+        	var remoteURL = $( "input[name='remoteURL']" ).val();
+        	var bucketId = $( "input[name='bucketId']" ).val();
+        	
+        	//Can't use AJAX for download
+        	var xhr = new XMLHttpRequest();
+			xhr.open('GET', get_workflows_archive_URL(), true);
+			xhr.responseType = 'blob';
+			xhr.onload = function(e) {
+			    if (this.status == 200) {
+                    send_archive_to_catalog(this.response, remoteURL, bucketId);
+			    } 
+			};
+			xhr.send(null);
+        });
+        
+        function send_archive_to_catalog(blob, remoteURL, bucketId){
+            var payload = new FormData();
+            payload.append('file', blob);
+            var selectedBucketId = bucketId ? bucketId : $("#select-bucket").val();
+            var server = remoteURL ? remoteURL : "";
+            var url = server + '/workflow-catalog/buckets/' + selectedBucketId + '/workflows?alt=zip';
+            
+            return $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                crossDomain: true,
+                data: payload
+            }).success(function (response) {
+                notify_message('Published', 'The Workflows have been successfully published to the Catalog', true);
+                return response;
+            }).error(function (response) {
+                notify_message('Error', 'Error importing the Workflows into the Catalog', false);
+                return response;
+            });
+        }
 
         // removing a task by del
         $('body').keyup(function (e) {
@@ -517,20 +507,7 @@ define(
                 cache: false,
                 data: payload
             }).success(function (response) {
-                PNotify.removeAll();
-
-                new PNotify({
-                    title: 'Published',
-                    text: "The Workflow has been published to the Catalog",
-                    type: 'success',
-                    text_escape: true,
-                    buttons: {
-                        closer: true,
-                        sticker: false
-                    },
-                    addclass: 'translucent', // is defined in studio.css
-                    width: '20%'
-                });
+                notify_message('Published', 'The Workflow has been published to the Catalog', true);
                 return response;
             });
             return createdWorkflowPromise;
@@ -637,6 +614,26 @@ define(
             undoManager._enable();
             undoManager.save();
         });
+        
+        function notify_message(title, text, typeSuccess){
+        	PNotify.removeAll();
+        	var type = typeSuccess ? 'success' : 'error';
+        	new PNotify({
+        	    title: title,
+        	    text: text,
+        	    type: type,
+        	    text_escape: true,
+        	    buttons: {
+        	        closer: true,
+        	        sticker: false
+        	    },
+        	    addclass: 'translucent', // is defined in studio.css
+        	    width: '20%',
+        	    history: {
+        	        history: false
+        	    }
+        	});
+        }
 
         (function scriptManagement() {
             $(document).on("click", '.edit-full-screen', function () {

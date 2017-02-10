@@ -1095,6 +1095,6 @@ li.success {
     opacity: .8;
 }
 
-#delete-selection-catalog, #export-as-archive-button, #delete-selection-catalog {
+#delete-selection-catalog, #export-as-archive-button, #publish-to-remote {
 	white-space: pre-line;
 }

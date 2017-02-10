@@ -183,6 +183,9 @@ define(
             var exportButton = $('#export-as-archive-button');
             exportButton.text("Export selected\nworkflows");
             exportButton.prop('disabled', true);
+            var publishButton = $('#publish-to-remote');
+            publishButton.text("Send to another\nScheduler");
+            publishButton.prop('disabled', true);
         },
         clear: function() {
             var jobXml = new JobXmlView().xml(new Job());
