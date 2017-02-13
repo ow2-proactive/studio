@@ -135,9 +135,9 @@ define(
             StudioApp.modelsToRemove = [];
             var publishButton = $('#publish-to-catalog-button');
             StudioApp.views.catalogView.render();
-            if (StudioApp.isWorkflowOpen()) {
+            if (StudioApp.isWorkflowOpen() && $("#select-bucket").val() != -1) {
                 publishButton.prop('disabled', false);
-            }
+            }  
             else {
                 publishButton.prop('disabled', true);
             }
@@ -311,20 +311,30 @@ define(
             var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
             add_workflow_promise_to_collection(workflowPromise, xmlToPublish);
         })
-
-        $("#publish-to-catalog-button").click(function (event) {
-            if ($("#select-bucket").val()== -1) {
-                $('#select-bucket-modal').modal();
+        
+        $("#catalog-action-button").click(function (event) {
+        	var actionID = $("#catalog-select-action").val();
+        	console.log(actionID)
+            switch (actionID){
+            case "0": $('#send-to-remote-confirmation-modal').modal(); break;
+            case "1": window.location.replace(get_workflows_archive_URL()); break;
+            case "2": {
+	            var studioApp = require('StudioApp');
+	            closeCollapsedMenu();
+	            $("#import-archive-file").parent('form').trigger('reset');
+	            $("#import-archive-file").click();
             }
-            else {
-                $('#publish-workflow-confirmation-modal').modal();
+            break;
+            case "3": $('#delete-workflow-confirmation-modal').modal(); break;
+            case "4": {
+	            if ($("#select-bucket").val()== -1) {
+	                $('#select-bucket-modal').modal();
+	            }
+	            else {
+	                $('#publish-workflow-confirmation-modal').modal();
+	            }
+            } break;
             }
-        })
-
-        // click event will only happen if the button is enabled
-        // so the StudioApp.modelsToRemove array is not empty
-        $("#delete-selection-catalog").click(function (event) {
-            $('#delete-workflow-confirmation-modal').modal();
         })
 
         $("#confirm-delete-from-catalog").click(function (event) {
@@ -348,10 +358,6 @@ define(
             StudioApp.resetDeleteCollection();
         })
         
-        $("#export-as-archive-button").click(function (event) {
-            window.location.replace(get_workflows_archive_URL());
-        })
-        
         function get_workflows_archive_URL(bucketId){
             var StudioApp = require('StudioApp');
             var wfToRemove = StudioApp.modelsToRemove;
@@ -365,18 +371,6 @@ define(
             var selectedBucketId = bucketId ? bucketId : $("#select-bucket").val();
             return '/workflow-catalog/buckets/' + selectedBucketId + '/workflows/' + wfIds + '?alt=zip';
         }
-        
-        $("#publish-to-remote").click(function (event) {
-            $('#send-to-remote-confirmation-modal').modal();
-        })
-        
-        $("#import-archive-button").click(function (event) {
-            event.preventDefault();
-            var studioApp = require('StudioApp');
-            closeCollapsedMenu();
-            $("#import-archive-file").parent('form').trigger('reset');
-            $("#import-archive-file").click();
-        })
         
         $("#import-archive-file").change(function (event) {
         	var StudioApp = require('StudioApp');
