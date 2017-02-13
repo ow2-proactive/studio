@@ -6,6 +6,14 @@ define(function () {
     
     return {
         restApiUrl: '/rest/studio',
+        docUrl: 'http://doc.activeeon.com/' + (function () {
+            if (conf.studioVersion.indexOf("SNAPSHOT") > -1) {
+                return "dev";
+            }
+            else {
+                return conf.studioVersion;
+            }
+        })(),
         tasks: {
             'Linux Bash': 'templates/script_bash.xml',
             'Windows Cmd': 'templates/script_cmd.xml',
