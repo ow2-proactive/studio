@@ -22,10 +22,12 @@ define(
         'proactive/router',
         'proactive/view/dom',
         'proactive/jsplumb',
-        'jquery.ui.touch-punch'
+        'jquery.ui.touch-punch',
+        '../studio-conf'
+        
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
