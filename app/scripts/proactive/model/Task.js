@@ -1,24 +1,25 @@
 define(
 		[
-		 'backbone',
-		 'proactive/model/SchemaModel',
-		 'proactive/model/ScriptExecutable',
-		 'proactive/model/NativeExecutable',
-		 'proactive/model/JavaExecutable',
-		 'proactive/model/ForkEnvironment',
-		 'proactive/model/Script',
-		 'proactive/model/SelectionScript',
-		 'proactive/model/BranchWithScript',
-		 'proactive/view/utils/undo',
-		 'text!proactive/templates/selection-script-host-template.html',
-		 'text!proactive/templates/selection-script-os-template.html',
-		 'text!proactive/templates/selection-script-totalmem-template.html',
-		 'proactive/model/utils'
-		 ],
+		'backbone',
+		'proactive/model/SchemaModel',
+		'proactive/model/ScriptExecutable',
+		'proactive/model/NativeExecutable',
+		'proactive/model/JavaExecutable',
+		'proactive/model/ForkEnvironment',
+		'proactive/model/Script',
+		'proactive/model/SelectionScript',
+		'proactive/model/BranchWithScript',
+		'proactive/view/utils/undo',
+		'text!proactive/templates/selection-script-host-template.html',
+		'text!proactive/templates/selection-script-os-template.html',
+		'text!proactive/templates/selection-script-totalmem-template.html',
+		'proactive/model/utils',
+		'proactive/config'
+		],
 
 		 // TODO REMOVE undoManager dependency - comes from view
 		 function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript,
-				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils) {
+				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config) {
 
 			"use strict";
 
@@ -55,7 +56,7 @@ define(
 		                "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
 		                "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
 		                "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
-		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (Integer, String, Boolean, ...)', type: 'Text', editorClass: 'popup-input-text-field' }
+		                "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'Text', editorClass: 'popup-input-text-field' }
 		            }},
 					"Description": {
 						type: "Text",
