@@ -314,7 +314,6 @@ define(
         
         $("#catalog-action-button").click(function (event) {
         	var actionID = $("#catalog-select-action").val();
-        	console.log(actionID)
             switch (actionID){
             case "0": $('#send-to-remote-confirmation-modal').modal(); break;
             case "1": window.location.replace(get_workflows_archive_URL()); break;
@@ -400,14 +399,8 @@ define(
         })
         
         $("#confirm-send-to-remote").click(function( event ) {
-        	 $("#send-to-remote-form").submit();
-        	 $("#send-to-remote-form")[0].reset();
-        });
-        
-        $("#send-to-remote-form").submit(function( event ) {
-        	var remoteURL = $( "input[name='remoteURL']" ).val();
-        	var bucketId = $( "input[name='bucketId']" ).val();
-        	
+        	var remoteURL = $( "#remoteCatalogURL" ).val();
+        	var bucketId = $( "#remoteCatalogBucketId" ).val();
         	//Can't use AJAX for download
         	var xhr = new XMLHttpRequest();
 			xhr.open('GET', get_workflows_archive_URL(), true);
