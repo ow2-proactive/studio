@@ -190,7 +190,7 @@ define(
             executeIfConnected(function () {
                 var oldJobVariables = studioApp.models.jobModel.get('Variables');
                 var jobVariables = $('#job-variables').find('input').map(function() {
-                    return {'Name': $(this).attr('name'), 'Value': $(this).val()};
+                    return {'Name': $(this).attr('name'), 'Value': $(this).val(), 'Model': $(this).attr('placeholder')};
                 });
                 studioApp.models.jobModel.set('Variables', jobVariables);
                 submit();
