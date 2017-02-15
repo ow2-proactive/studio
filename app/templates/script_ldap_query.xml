@@ -15,7 +15,9 @@
             </description>
             <variables>
                 <variable name="ldapUrl" value="ldap://localhost:389" inherited="false" model="String"/>
-                <variable name="ldapSearchBase" value="dc=yourOrganization,dc=com" inherited="false" model="String"/>
+                <variable name="ldapDnBase" value="dc=yourOrganization,dc=com" inherited="false" model="String"/>
+                <variable name="ldapUsername" value="cn=username,ou=users" inherited="false" model="String"/>
+                <variable name="ldapSearchBase" value="dc=sophia" inherited="false" model="String"/>
                 <variable name="ldapSearchFilter" value="(objectclass=*)" inherited="false" model="String"/>
                 <variable name="ldapSelectedAttributes" value="attributeName1,attributeName2" inherited="false" model="String"/>
             </variables>
