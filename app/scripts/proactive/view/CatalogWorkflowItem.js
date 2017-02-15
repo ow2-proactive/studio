@@ -62,22 +62,27 @@ define(
             _notifyDeleteAndExportButtons: function() {
                 var deleteButton = $('#delete-selection-catalog');
                 var exportButton = $('#export-as-archive-button');
+                var publishButton = $('#publish-to-remote');
 
                 // how many workflowitems are ticked ?
                 var nbTickedWorkflows = $('#catalog-workflow-list li').has('input:checkbox:checked').length;
 
                 // if there's at least one ticked workflow item, enable the button
                 if (nbTickedWorkflows > 0) {
-                    deleteButton.text("Delete selected\nworkflows (" + nbTickedWorkflows + ")");
-                    exportButton.text("Export selected\nworkflows (" + nbTickedWorkflows + ")");
+                    deleteButton.text("Delete selected workflows (" + nbTickedWorkflows + ")");
+                    exportButton.text("Export selected workflows (" + nbTickedWorkflows + ")");
+                    publishButton.text("Send to another Scheduler (" + nbTickedWorkflows + ")");
                     deleteButton.prop('disabled', false);
                     exportButton.prop('disabled', false);
+                    publishButton.prop('disabled', false);
                 }
                 else {
-                    deleteButton.text("Delete selected\nworkflows");
+                    deleteButton.text("Delete selected workflows");
                     deleteButton.prop('disabled', true);
-                    exportButton.text("Export selected\nworkflows");
+                    exportButton.text("Export selected workflows");
                     exportButton.prop('disabled', true);
+                    publishButton.text("Send to another Scheduler");
+                    publishButton.prop('disabled', true);
                 }
             },
             render: function () {
