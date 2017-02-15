@@ -2,7 +2,7 @@
     <% _.each(jobVariables, function(variable) { %>
         <li class="formLayout">
             <label for="<%- variable.Name %>"><%- variable.Name %></label>
-            <input type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" id="<%- variable.Name %>" />
+            <input type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" placeholder="<%- variable.Model %>" id="<%- variable.Name %>" />
         </li>
     <% }) %>
 </ul>
