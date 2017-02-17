@@ -57,22 +57,32 @@ define(
                         .addClass('state-icon glyphicon glyphicon-check');
                     StudioApp.modelsToRemove.push(this.model);
                 }
-                this._notifyDeleteButton();
+                this._notifyDeleteAndExportButtons();
             },
-            _notifyDeleteButton: function() {
+            _notifyDeleteAndExportButtons: function() {
                 var deleteButton = $('#delete-selection-catalog');
+                var exportButton = $('#export-as-archive-button');
+                var publishButton = $('#publish-to-remote');
 
                 // how many workflowitems are ticked ?
                 var nbTickedWorkflows = $('#catalog-workflow-list li').has('input:checkbox:checked').length;
 
                 // if there's at least one ticked workflow item, enable the button
                 if (nbTickedWorkflows > 0) {
-                    deleteButton.text("Delete (" + nbTickedWorkflows + ")");
+                    deleteButton.text("Delete selected Workflows (" + nbTickedWorkflows + ")");
+                    exportButton.text("Export selected Workflows (" + nbTickedWorkflows + ")");
+                    publishButton.text("Send to another Workflow Catalog (" + nbTickedWorkflows + ")");
                     deleteButton.prop('disabled', false);
+                    exportButton.prop('disabled', false);
+                    publishButton.prop('disabled', false);
                 }
                 else {
-                    deleteButton.text("Delete");
+                    deleteButton.text("Delete selected Workflows");
                     deleteButton.prop('disabled', true);
+                    exportButton.text("Export selected Workflows");
+                    exportButton.prop('disabled', true);
+                    publishButton.text("Send to another Workflow Catalog");
+                    publishButton.prop('disabled', true);
                 }
             },
             render: function () {

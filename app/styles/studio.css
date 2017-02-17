@@ -1094,3 +1094,7 @@ li.success {
 .ui-pnotify.translucent.ui-pnotify-fade-in {
     opacity: .8;
 }
+
+#delete-selection-catalog, #export-as-archive-button, #publish-to-remote {
+	white-space: pre-line;
+}

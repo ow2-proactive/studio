@@ -30,10 +30,13 @@ define(
         internalSwitchBucket: function (currentBucketID) {
             this.$('#catalog-workflow-list').empty();
             var emptyView = _.template(catalogEmpty);
+            var publishButton = $('#publish-to-catalog-button');
+            var studioApp = require('StudioApp');
             var disabled;
             if (currentBucketID == -1) {
                 this.$('#catalog-workflow-list').append(emptyView);
                 disabled = true;
+                publishButton.prop('disabled', true);
             }
             else {
                 var currentBucket = this.buckets.get(currentBucketID);
@@ -49,12 +52,16 @@ define(
                     }, this);
                 }
                 disabled = false;
+                
+                publishButton.prop('disabled', !studioApp.isWorkflowOpen());
             }
             //Enable or disable buttons for selecting/deselecting all workflows
             this.$('#select-all-catalog-button').prop('disabled', disabled);
             this.$('#deselect-all-catalog-button').prop('disabled', disabled);
+            //Enable or disable button for importing workflows archive
+            $('#import-archive-button').prop('disabled', disabled);
             
-            require('StudioApp').resetDeleteCollection();
+            studioApp.resetDeleteCollection();
         },
         internalSelection: function(select){
             $('#catalog-workflow-list li').each(function( index ) {

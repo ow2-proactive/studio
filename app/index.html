@@ -196,6 +196,10 @@
         <input type="file" id="add-file" style="display:none"/>
         </form>
 
+        <form>
+        <input type="file" id="import-archive-file" style="display:none"/>
+        </form>
+
         <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -225,15 +229,21 @@
                         <div id="catalog-browser-container"></div>
                     </div>
                     <div class="modal-footer">
-                        <button id="publish-to-catalog-button" class="btn btn-primary" aria-hidden="true" disabled>
-                            Add current workflow to this bucket
-                        </button>
-                        <button id="delete-selection-catalog" class="btn btn-primary" aria-hidden="true" disabled>
-                            Delete
-                        </button>
-                        <button id="catalog-browser-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    	<table style="width:100%;"><tr><td>
+		                <table><tr><td><select class="form-control" id="catalog-select-action">
+		                    <option value="-1" selected="selected">Please choose an action</option>
+		                    <option value="0" id="publish-to-remote">Send to another Workflow Catalog</option>
+		                    <option value="1" id="export-as-archive-button">Export selected Workflows</option>
+		                    <option value="2" id="import-archive-button">Import archive of Workflows</option>
+		                    <option value="3" id="delete-selection-catalog">Delete selected Workflows</option>
+		                    <option value="4" id="publish-to-catalog-button">Add open Workflow to this bucket</option>
+		                </select></td>
+		                <td><button id="catalog-action-button" class="btn btn-primary" aria-hidden="true">
+                            OK
+                        </button></td></tr></table></td>
+                        <td colspan="2"><button id="catalog-browser-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                             Close
-                        </button>
+                        </button></td></tr></table>
                     </div>
                 </div>
             </div>
@@ -248,6 +258,23 @@
                     </div>
                     <div class="modal-body" style="height:100%">
                         In order to perform this action you need to choose an existing workflow or create a new one.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="select-archive-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Please select a ZIP archive</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        In order to perform this action you need to choose an existing ZIP archive containing workflows.
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -318,7 +345,7 @@
                         <h3>Delete the selected workflow from current Bucket</h3>
                     </div>
                     <div class="modal-body" style="height:100%">
-                        Attention! You are going to delete the selected workflows. This step can not be reversed.
+                        Warning! You are going to delete the selected workflows. This step can not be reversed.
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-delete-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
@@ -339,6 +366,25 @@
                         In order to perform this action you need to choose an existing bucket.
                     </div>
                     <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="send-to-remote-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Send selected Workflows to a remote Workflow Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        <table style="width:100%"><tr><td>Remote Workflow Catalog URL<br>(http://IP:port/workflow-catalog)</td><td style="width:50%"><input type="text" id="remoteCatalogURL" style="width:100%"></td></tr>
+                        <tr><td>ID of the bucket on the remote<br>Workflow Catalog</td><td><input type="text" id="remoteCatalogBucketId" style="width:100%"></td></tr></table>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-send-to-remote" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Send</button>
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>
