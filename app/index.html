@@ -232,11 +232,11 @@
                     	<table style="width:100%;"><tr><td>
 		                <table><tr><td><select class="form-control" id="catalog-select-action">
 		                    <option value="-1" selected="selected">Please choose an action</option>
-		                    <option value="0" id="publish-to-remote">Send to another Scheduler</option>
-		                    <option value="1" id="export-as-archive-button">Export selected workflows</option>
-		                    <option value="2" id="import-archive-button">Import archive of workflows</option>
-		                    <option value="3" id="delete-selection-catalog">Delete selected workflows</option>
-		                    <option value="4" id="publish-to-catalog-button">Add open workflow to this bucket</option>
+		                    <option value="0" id="publish-to-remote">Send to another Workflow Catalog</option>
+		                    <option value="1" id="export-as-archive-button">Export selected Workflows</option>
+		                    <option value="2" id="import-archive-button">Import archive of Workflows</option>
+		                    <option value="3" id="delete-selection-catalog">Delete selected Workflows</option>
+		                    <option value="4" id="publish-to-catalog-button">Add open Workflow to this bucket</option>
 		                </select></td>
 		                <td><button id="catalog-action-button" class="btn btn-primary" aria-hidden="true">
                             OK
@@ -377,11 +377,11 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Send selected Workflows to a remote scheduler</h3>
+                        <h3>Send selected Workflows to a remote Workflow Catalog</h3>
                     </div>
                     <div class="modal-body" style="height:100%">
-                        <table style="width:100%"><tr><td>Please enter the remote Scheduler<br>URL (http://xxx.xxx.xxx.xxx:port)</td><td><input type="text" id="remoteCatalogURL"></td></tr>
-                        <tr><td>Please enter the id of the bucket<br>on the remote scheduler</td><td><input type="text" id="remoteCatalogBucketId"></td></tr></table>
+                        <table style="width:100%"><tr><td>Remote Workflow Catalog URL<br>(http://IP:port/workflow-catalog)</td><td style="width:50%"><input type="text" id="remoteCatalogURL" style="width:100%"></td></tr>
+                        <tr><td>ID of the bucket on the remote<br>Workflow Catalog</td><td><input type="text" id="remoteCatalogBucketId" style="width:100%"></td></tr></table>
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-send-to-remote" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Send</button>
