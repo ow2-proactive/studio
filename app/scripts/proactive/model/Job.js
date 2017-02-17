@@ -9,11 +9,12 @@ define(
         'proactive/model/BranchWithScript',
         'proactive/model/utils',
         'proactive/view/utils/undo', // TODO remove
-        'proactive/config'
+        'proactive/config',
+        'proactive/rest/studio-client'
     ],
 
     // TODO REMOVE undoManager dependency - comes from view
-    function (Backbone, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config) {
+    function (Backbone, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient) {
 
     "use strict";
 
@@ -57,11 +58,46 @@ define(
             this.set({"On Task Error Policy": "continueJobExecution"});
             this.set({"Maximum Number of Execution Attempts": 2});
             this.set({"If An Error Occurs Restart Task": "anywhere"});
+
+            var that = this;
+            this.schema.Variables.subSchema.Model.validators = [
+                function checkVariableValue(value, formValues) {
+                    if (formValues.Model.length > 0) {
+                        var StudioApp = require('StudioApp');
+                        if (StudioApp.isWorkflowOpen()) {
+                            that.updateVariable(formValues);
+                            var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+                            if (!validationData.valid) {
+                                var err = {
+                                    type: 'Validation',
+                                    message: "<br><br>" + validationData.errorMessage
+                                };
+                                return err;
+                            }
+                        }
+                    }
+                }
+            ]
+
             this.tasks = [];
             this.on("change", function (eventName, event) {
                 undoManager.save()
             });
 
+        },
+        updateVariable: function (variable) {
+            var variables = this.attributes.Variables;
+            var index = -1
+            for (var i = 0; i < variables.length ; i++) {
+                if (variables[i].Name == variable.Name) {
+                    index = i;
+                }
+            }
+            if (index == -1) {
+                this.attributes.Variables.push(variable)
+            } else {
+                this.attributes.Variables[index] = variable
+            }
         },
         addTask: function (task) {
             console.log("Adding task", task)

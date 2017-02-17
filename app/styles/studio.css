@@ -830,6 +830,11 @@ li.success {
     font-size: 12px;
 }
 
+[data-error] {
+    color: red;
+    font-size: 12px;
+}
+
 .navbar .divider-vertical {
     height: 35px;
     margin-top: 10px;
@@ -1023,10 +1028,21 @@ li.success {
     width: auto;
 }
 
-.formLayout label {
+.formLayout label.Name {
     text-align: right;
     padding-right: 5px;
-    width: 50%;
+    width: 30%;
+
+}
+
+.formLayout input {
+    width: 45%;
+
+}
+
+.formLayout label.Extra {
+    text-align: left;
+    width: 20%;
 
 }
 
