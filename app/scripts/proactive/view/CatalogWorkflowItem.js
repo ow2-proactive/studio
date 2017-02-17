@@ -69,19 +69,19 @@ define(
 
                 // if there's at least one ticked workflow item, enable the button
                 if (nbTickedWorkflows > 0) {
-                    deleteButton.text("Delete selected workflows (" + nbTickedWorkflows + ")");
-                    exportButton.text("Export selected workflows (" + nbTickedWorkflows + ")");
-                    publishButton.text("Send to another Scheduler (" + nbTickedWorkflows + ")");
+                    deleteButton.text("Delete selected Workflows (" + nbTickedWorkflows + ")");
+                    exportButton.text("Export selected Workflows (" + nbTickedWorkflows + ")");
+                    publishButton.text("Send to another Workflow Catalog (" + nbTickedWorkflows + ")");
                     deleteButton.prop('disabled', false);
                     exportButton.prop('disabled', false);
                     publishButton.prop('disabled', false);
                 }
                 else {
-                    deleteButton.text("Delete selected workflows");
+                    deleteButton.text("Delete selected Workflows");
                     deleteButton.prop('disabled', true);
-                    exportButton.text("Export selected workflows");
+                    exportButton.text("Export selected Workflows");
                     exportButton.prop('disabled', true);
-                    publishButton.text("Send to another Scheduler");
+                    publishButton.text("Send to another Workflow Catalog");
                     publishButton.prop('disabled', true);
                 }
             },

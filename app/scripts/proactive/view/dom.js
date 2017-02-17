@@ -417,8 +417,8 @@ define(
             var payload = new FormData();
             payload.append('file', blob);
             var selectedBucketId = bucketId ? bucketId : $("#select-bucket").val();
-            var server = remoteURL ? remoteURL : "";
-            var url = server + '/workflow-catalog/buckets/' + selectedBucketId + '/workflows?alt=zip';
+            var server = remoteURL ? remoteURL : "/workflow-catalog";
+            var url = server + '/buckets/' + selectedBucketId + '/workflows?alt=zip';
             
             return $.ajax({
                 url: url,
@@ -429,10 +429,16 @@ define(
                 crossDomain: true,
                 data: payload
             }).success(function (response) {
-                notify_message('Published', 'The Workflows have been successfully published to the Catalog', true);
+            	if (remoteURL)
+            		notify_message('Sending successful', 'The Workflows have been successfully sent to the remote Catalog', true);
+            	else
+                    notify_message('Import successful', 'The Workflows have been successfully imported into the Catalog', true);
                 return response;
             }).error(function (response) {
-                notify_message('Error', 'Error importing the Workflows into the Catalog', false);
+            	if (remoteURL)
+            		notify_message('Error', 'Error sending the Workflows to the remote Catalog', false);
+            	else
+                    notify_message('Error', 'Error importing the Workflows into the Catalog', false);
                 return response;
             });
         }
