@@ -430,13 +430,13 @@ define(
                 data: payload
             }).success(function (response) {
             	if (remoteURL)
-            		notify_message('Sending successful', 'The Workflows have been successfully sent to the remote Catalog', true);
+                    notify_message('Sending successful', 'The Workflows have been successfully sent to the remote Catalog', true);
             	else
                     notify_message('Import successful', 'The Workflows have been successfully imported into the Catalog', true);
                 return response;
             }).error(function (response) {
             	if (remoteURL)
-            		notify_message('Error', 'Error sending the Workflows to the remote Catalog', false);
+                    notify_message('Error', 'Error sending the Workflows to the remote Catalog', false);
             	else
                     notify_message('Error', 'Error importing the Workflows into the Catalog', false);
                 return response;
