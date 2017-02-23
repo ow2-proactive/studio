@@ -211,10 +211,10 @@ define(
                 } else {
                     that.alert("Job submission", request.responseText, 'error');
                 }
-            });
+            }, true);
         },
 
-        validate: function (jobXml, jobModel, automaticValidation) {
+        validateWithPopup: function (jobXml, jobModel, automaticValidation) {
             if (!localStorage['pa.session']) return;
             
             if (automaticValidation && (jobModel.getTasksCount() == 0)) return;
@@ -245,19 +245,27 @@ define(
                     that.alert("Workflow is valid", "It can be executed now", 'success');
                 }
                 that.lastResult = result;
-            })
+            }, true)
+        },
+        validate: function (jobXml, jobModel) {
+            if (!localStorage['pa.session']) return;
+
+            if (jobModel.getTasksCount() == 0) return;
+
+            var that = this;
+            return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, null, false);
         },
         resetLastValidationResult: function () {
             this.lastResult = undefined;
         },
-        send_multipart_request: function (url, content, headers, callback) {
+        send_multipart_request: function (url, content, headers, callback, async) {
 
             var that = this;
 
             var request = new XMLHttpRequest();
             var multipart = "";
 
-            request.open("POST", url, true);
+            request.open("POST", url, async);
 
             var boundary = Math.random().toString().substr(2);
 
@@ -277,21 +285,33 @@ define(
 
             multipart += "--" + boundary + "--\r\n";
 
-            request.onreadystatechange = function () {
-                if (request.readyState == 4) {
-                    console.log("Response", request)
-                    try {
-                        var result = JSON.parse(request.responseText)
-                    } catch (err) {
-                        console.log("Cannot parse json response", err)
-                        that.alert(request.responseText, 'error');
-                        return;
+            if (async) {
+                request.onreadystatechange = function () {
+                    if (request.readyState == 4) {
+                        console.log("Response", request)
+                        try {
+                            var result = JSON.parse(request.responseText)
+                        } catch (err) {
+                            console.log("Cannot parse json response", err)
+                            that.alert(request.responseText, 'error');
+                            return;
+                        }
+                        callback(result);
                     }
-                    callback(result);
                 }
             }
 
             request.send(multipart);
+            
+            if (!async) {
+                try {
+                    return JSON.parse(request.responseText)
+                } catch (err) {
+                    console.log("Cannot parse json response", err)
+                    that.alert(request.responseText, 'error');
+                    return;
+                } 
+            }
         },
 
         setVisualization: function (jobId, visualization) {
