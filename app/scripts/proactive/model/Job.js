@@ -86,17 +86,21 @@ define(
 
         },
         updateVariable: function (variable) {
-            var variables = this.attributes.Variables;
-            var index = -1
-            for (var i = 0; i < variables.length ; i++) {
-                if (variables[i].Name == variable.Name) {
-                    index = i;
+            if (this.attributes.hasOwnProperty('Variables')) {
+                var variables = this.attributes.Variables;
+                var index = -1
+                for (var i = 0; i < variables.length; i++) {
+                    if (variables[i].Name == variable.Name) {
+                        index = i;
+                    }
                 }
-            }
-            if (index == -1) {
-                this.attributes.Variables.push(variable)
+                if (index == -1) {
+                    this.attributes.Variables.push(variable)
+                } else {
+                    this.attributes.Variables[index] = variable
+                }
             } else {
-                this.attributes.Variables[index] = variable
+                this.attributes.Variables = [variable];
             }
         },
         addTask: function (task) {
