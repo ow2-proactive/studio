@@ -86,6 +86,9 @@ define(
 
         },
         updateVariable: function (variable) {
+            if (!variable.hasOwnProperty('Value') || !variable.Value) {
+                variable.Value = "";
+            }
             if (this.attributes.hasOwnProperty('Variables')) {
                 var variables = this.attributes.Variables;
                 var index = -1

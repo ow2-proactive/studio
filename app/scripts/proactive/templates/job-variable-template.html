@@ -1,10 +1,14 @@
 <ul>
-    <% _.each(jobVariables, function(variable) { %>
+    <% for (var key in jobVariables) {
+         if (jobVariables.hasOwnProperty(key)) {
+            var variable = jobVariables[key];
+    %>
         <li class="formLayout">
-            <label for="<%- variable.Name %>" class="Name"><%- variable.Name %></label>
-            <input type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" placeholder="<%- variable.Model %>" id="<%- variable.Name %>" />
-            <label class="Extra"><%- variable.Model %></label>
+            <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- key %></label>
+            <input type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" placeholder="<%- variable.Model %>" id="<%- key %>" />
+            <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
         </li>
-    <% }) %>
+    <%} }%>
 </ul>
 <label style="color:red;text-align:center;width:100%"><%- errorMessage %></label>
+<label style="color:green;text-align:center;width:100%"><%- infoMessage %></label>
