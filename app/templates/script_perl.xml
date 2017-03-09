@@ -15,7 +15,10 @@
 	<script>
 	  <code language="perl">
 	    <![CDATA[
-		     TODO
+		     use strict;
+		     use warnings;
+
+                     print "Hello world ! \n";
 	    ]]>
 	  </code>
 	</script>
