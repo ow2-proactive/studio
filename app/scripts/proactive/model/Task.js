@@ -14,12 +14,13 @@ define(
 		'text!proactive/templates/selection-script-os-template.html',
 		'text!proactive/templates/selection-script-totalmem-template.html',
 		'proactive/model/utils',
-		'proactive/config'
+		'proactive/config', 
+		'proactive/rest/studio-client'
 		],
 
 		 // TODO REMOVE undoManager dependency - comes from view
 		 function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript,
-				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config) {
+				 BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config, StudioClient) {
 
 			"use strict";
 
@@ -341,6 +342,25 @@ define(
 					this.set({"If An Error Occurs Restart Task": "anywhere"});
 					this.set({"Store Task Logs in a File": false});
 					this.set({"Number of Nodes": 1});
+					var that = this;
+					this.schema.Variables.subSchema.Model.validators = [
+						function checkVariableValue(value, formValues) {
+							if (formValues.Model.length > 0) {
+								var StudioApp = require('StudioApp');
+								if (StudioApp.isWorkflowOpen()) {
+									that.updateVariable(formValues);
+									var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+									if (!validationData.valid) {
+										var err = {
+											type: 'Validation',
+											message: "<br><br>" + validationData.errorMessage
+										};
+										return err;
+									}
+								}
+							}
+						}
+					]
 
 					this.controlFlow = {};
 					this.on("change", function (eventName, event) {
@@ -356,6 +376,24 @@ define(
 						this.dependencies.push(task)
 						this.trigger("change")
 						console.log("Adding dependency to", this, "from", task)
+					}
+				},
+				updateVariable: function (variable) {
+					if (this.attributes.hasOwnProperty('Variables')) {
+						var variables = this.attributes.Variables;
+						var index = -1
+						for (var i = 0; i < variables.length; i++) {
+							if (variables[i].Name == variable.Name) {
+								index = i;
+							}
+						}
+						if (index == -1) {
+							this.attributes.Variables.push(variable)
+						} else {
+							this.attributes.Variables[index] = variable
+						}
+					} else {
+						this.attributes.Variables = [variable];
 					}
 				},
 				removeDependency: function (task) {

@@ -180,7 +180,7 @@ define(
                 return;
             }
 
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables});
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':''});
             $('#job-variables').html(template);
             $('#execute-workflow-modal').modal();
         });
@@ -193,7 +193,14 @@ define(
                     return {'Name': $(this).attr('name'), 'Value': $(this).val(), 'Model': $(this).attr('placeholder')};
                 });
                 studioApp.models.jobModel.set('Variables', jobVariables);
-                submit();
+                var validationData = validate();
+                if (!validationData.valid) {
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage': validationData.errorMessage});
+                    $('#job-variables').html(template);
+                } else {
+                    $('#execute-workflow-modal').modal("hide");
+                    submit();
+                }
                 studioApp.models.jobModel.set('Variables', oldJobVariables);
             })
         });
@@ -211,6 +218,12 @@ define(
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization);
+        }
+
+        function validate() {
+            var studioApp = require('StudioApp');
+            var xml = studioApp.views.xmlView.generateXml();
+            return StudioClient.validate(xml, studioApp.models.jobModel);
         }
 
         $("#clear-button").click(function (event) {
@@ -556,7 +569,7 @@ define(
             $(".invalid-task").removeClass("invalid-task");
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()) {
-                StudioClient.validate(studioApp.views.xmlView.generateXml(), studioApp.models.jobModel, automaticValidation);
+                StudioClient.validateWithPopup(studioApp.views.xmlView.generateXml(), studioApp.models.jobModel, automaticValidation);
             }
         }
 
