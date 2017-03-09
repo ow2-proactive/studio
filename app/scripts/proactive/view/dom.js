@@ -175,7 +175,7 @@ define(
             closeCollapsedMenu();
 
             var jobVariables = readOrStoreVariablesInModel();
-            if (jobVariables == null || jobVariables.length == 0) {
+            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
                 executeIfConnected(submit);
                 return;
             }
