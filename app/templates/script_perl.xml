@@ -15,10 +15,10 @@
 	<script>
 	  <code language="perl">
 	    <![CDATA[
-		     use strict;
-		     use warnings;
+use strict;
+use warnings;
 
-                     print "Hello world ! \n";
+print "Hello world ! \n";
 	    ]]>
 	  </code>
 	</script>
