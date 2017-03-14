@@ -68,7 +68,7 @@ define(
 							"data-help": 'A small textual description of what task does.'
 						}
 					},
-					"Maximum Number of Execution Attempts": {
+					"Number of Automatic Restarts": {
 						type: 'Number',
 						fieldAttrs: {
 							'placeholder': '@attributes->maxNumberOfExecution',
@@ -100,13 +100,13 @@ define(
 						type: 'Select',
 						fieldAttrs: {
 							'placeholder': '@attributes->onTaskError',
-							"data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- cancel job after all execution attempts<br>&nbsp;&nbsp;- continue job (try all execution attempts)<br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- suspend task after first error and continue others<br>&nbsp;&nbsp;- suspend task after first error and pause job immediately.'
+							"data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Kill job (running tasks are killed).'
 						},
 						options: [
-						          {val: "cancelJob", label: "cancel job after all execution attempts"},
-						          {val: "suspendTask", label: "suspend task after first error and continue others"},
-						          {val: "pauseJob", label: "suspend task after first error and pause job immediately"},
-						          {val: "continueJobExecution", label: "continue job (try all execution attempts)"},
+                            	  {val: "continueJobExecution", label: "Ignore error and continue job execution"},
+                            	  {val: "suspendTask", label: "Only suspend dependencies of In-Error tasks"},
+                                  {val: "pauseJob", label: "Pause job execution (running tasks can terminate)"},
+						          {val: "cancelJob", label: "Kill job (running tasks are killed)"},
 						          {val: "none", label: "default (defined at job level)"}
 						          ]
 					},
