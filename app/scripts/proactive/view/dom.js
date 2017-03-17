@@ -174,36 +174,106 @@ define(
             save_workflow();
             closeCollapsedMenu();
 
-            var jobVariables = studioApp.models.jobModel.get('Variables');
-            if (jobVariables == null || jobVariables.length == 0) {
+            var jobVariables = readOrStoreVariablesInModel();
+            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
                 executeIfConnected(submit);
                 return;
             }
 
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':''});
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
             $('#execute-workflow-modal').modal();
         });
 
         $("#exec-button").click(function (event) {
+            executeOrCheck(event, false)
+        });
+
+        $("#check-button").click(function (event) {
+            executeOrCheck(event, true)
+        });
+
+        function executeOrCheck(event, check) {
             var studioApp = require('StudioApp');
             executeIfConnected(function () {
-                var oldJobVariables = studioApp.models.jobModel.get('Variables');
-                var jobVariables = $('#job-variables').find('input').map(function() {
-                    return {'Name': $(this).attr('name'), 'Value': $(this).val(), 'Model': $(this).attr('placeholder')};
-                });
-                studioApp.models.jobModel.set('Variables', jobVariables);
+                var oldVariables = readOrStoreVariablesInModel();
+                var inputVariables = {};
+                var inputReceived = $('#job-variables').find('input');
+                for (var i = 0; i < inputReceived.length; i++) {
+                    var input = inputReceived[i];
+                    inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': input.placeholder}
+                }
+                readOrStoreVariablesInModel(inputVariables);
+                
                 var validationData = validate();
+
                 if (!validationData.valid) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage': validationData.errorMessage});
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    $('#job-variables').html(template);
+                } else if (check) {
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                     $('#job-variables').html(template);
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     submit();
                 }
-                studioApp.models.jobModel.set('Variables', oldJobVariables);
+                readOrStoreVariablesInModel(oldVariables);
             })
-        });
+        }
+        
+        function extractUpdatedVariables(inputVariables, validationData) {
+            if (validationData.hasOwnProperty('updatedVariables')) {
+                var updatedVariables = validationData.updatedVariables;
+                if (updatedVariables != null) {
+                    for (var key in inputVariables) {
+                        if (inputVariables.hasOwnProperty(key)) {
+                            var variable = inputVariables[key];
+                            variable.Value = updatedVariables[key];
+                        }
+                    }
+                }
+            } 
+            return inputVariables;
+        }
+
+        function readOrStoreVariablesInModel(updatedVariables) {
+            var studioApp = require('StudioApp');
+            var jobVariables = {};
+            if (studioApp.models.jobModel.has('Variables')) {
+                var variables = studioApp.models.jobModel.get('Variables');
+
+                for (var i = 0; i < variables.length; i++) {
+                    var variable = variables[i];
+                    if (!(!updatedVariables || updatedVariables === null)) {
+                        variables[i] = updatedVariables[variable.Name];
+                    }
+                    jobVariables[variable.Name] = variable;
+                }
+            }
+            var tasks = studioApp.models.jobModel.tasks;
+            for (var i = 0; i < tasks.length; i++) {
+                var task = tasks[i];
+                if (task.has('Variables')) {
+                    var variables = task.get('Variables');
+                    for (var j = 0; j < variables.length; j++) {
+                        var variable = variables[j];
+                        var isInherited;
+                        if (typeof variable.Inherited === 'string' || variable.Inherited instanceof String) {
+                            isInherited = (variable.Inherited == "true");
+                        } else {
+                            isInherited = variable.Inherited;
+                        }
+                        if (!isInherited) {
+                            if (!(!updatedVariables || updatedVariables === null)) {
+                                variables[j] = updatedVariables[task.get('Task Name') + ":" + variable.Name];
+                            }
+                            jobVariables[task.get('Task Name') + ":" + variable.Name] = variable;
+                        }
+                    }
+                }
+            }
+            return jobVariables;
+        }
 
         function executeIfConnected(action) {
             var studioApp = require('StudioApp');
