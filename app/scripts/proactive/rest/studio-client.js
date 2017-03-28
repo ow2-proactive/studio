@@ -220,25 +220,21 @@ define(
                         xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                     },
                     success: function (data) {
-                        console.log("Should not be there", data);
+                        console.log("Success", data);
+                        that.alert("Cron Workflow", "submitted", 'success');
                     },
                     error: function (data) {
-                        if (data.status == 200) {
-                            console.log("Success", data);
-                            that.alert("Cron Workflow", "submitted", 'success');
-                        } else {
-                            console.log("Error", data);
-                            var reason = "Unknown reason";
-                            try {
-                                var err = JSON.parse(data.responseText);
-                                if (err.errorMessage) {
-                                    reason = err.errorMessage;
-                                }
-                            } catch (e) {
+                        console.log("Error", data);
+                        var reason = "Unknown reason";
+                        try {
+                            var err = JSON.parse(data.responseText);
+                            if (err.errorMessage) {
+                                reason = err.errorMessage;
                             }
-
-                            that.alert("Cannot upload a file", reason, 'error');
+                        } catch (e) {
                         }
+
+                        that.alert("Cannot upload a file", reason, 'error');
                     }
 
                 });
