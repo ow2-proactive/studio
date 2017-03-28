@@ -6,6 +6,7 @@ define(function () {
     
     return {
         restApiUrl: '/rest/studio',
+        execution_scheduler_restApiUrl: '/execution-scheduler/scheduled-workflows',
         docUrl: 'http://doc.activeeon.com/' + (function () {
             if (conf.studioVersion.indexOf("SNAPSHOT") > -1) {
                 return "dev";

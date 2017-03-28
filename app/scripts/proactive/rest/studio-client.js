@@ -202,16 +202,55 @@ define(
             if (!localStorage['pa.session']) return;
 
             var that = this;
-            that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
-                if (result.errorMessage) {
-                    that.alert("Cannot submit the job", result.errorMessage, 'error');
-                } else if (result.id) {
-                    that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id +")</a></html>", 'success');
-                    that.setVisualization(result.id, visualization);
-                } else {
-                    that.alert("Job submission", request.responseText, 'error');
-                }
-            }, true);
+
+            if (jobXml.indexOf("EXECUTION_CALENDARS") >= 0 ) {
+                var xmlDoc = $.parseXML( jobXml );
+                var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
+                var jsonData = { "xmlContentString" : xmlString };
+                var jsonString = JSON.stringify(jsonData);
+
+                $.ajax({
+                    url: config.execution_scheduler_restApiUrl,
+                    data: jsonString,
+                    dataType: 'json',
+                    contentType: "application/json",
+                    cache: false,
+                    type: 'POST',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                    },
+                    success: function (data) {
+                        console.log("Success", data);
+                        that.alert("Cron Workflow", "submitted", 'success');
+                    },
+                    error: function (data) {
+                        console.log("Error", data);
+                        var reason = "Unknown reason";
+                        try {
+                            var err = JSON.parse(data.responseText);
+                            if (err.errorMessage) {
+                                reason = err.errorMessage;
+                            }
+                        } catch (e) {
+                        }
+
+                        that.alert("Cannot upload a file", reason, 'error');
+                    }
+
+                });
+            } else {
+                that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
+                    if (result.errorMessage) {
+                        that.alert("Cannot submit the job", result.errorMessage, 'error');
+                    } else if (result.id) {
+                        that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id +")</a></html>", 'success');
+                        that.setVisualization(result.id, visualization);
+                    } else {
+                        that.alert("Job submission", request.responseText, 'error');
+                    }
+                }, true);
+            }
+
         },
 
         validateWithPopup: function (jobXml, jobModel, automaticValidation) {
