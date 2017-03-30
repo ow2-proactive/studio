@@ -250,6 +250,12 @@ define(
                     jobVariables[variable.Name] = variable;
                 }
             }
+            // task variables are for now disabled in the job execution form
+            // readOrStoreTaskVariablesInModel(studioApp, updatedVariables, jobVariables);
+            return jobVariables;
+        }
+
+        function readOrStoreTaskVariablesInModel(studioApp, updatedVariables, jobVariables) {
             var tasks = studioApp.models.jobModel.tasks;
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
@@ -272,7 +278,6 @@ define(
                     }
                 }
             }
-            return jobVariables;
         }
 
         function executeIfConnected(action) {
