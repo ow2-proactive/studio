@@ -44,8 +44,8 @@ define(
             "Input Space Url": {type: "Text", fieldAttrs: {'placeholder': 'inputSpace->@attributes->url', "data-help":"A private read-only Data Space started manually by user with the proactive-dataserver command."}},
             "Output Space Url": {type: "Text", fieldAttrs: {'placeholder': 'outputSpace->@attributes->url', "data-help":"A private Data Space started manually by user with the proactive-dataserver command."}},
             "Number of Automatic Restarts": {type: 'Number', fieldAttrs: {"data-tab": "Error Handling", 'data-tab-help': 'Configure workflow behavior upon errors', 'placeholder': '@attributes->maxNumberOfExecution', "data-help":"Defines the maximum number of execution attempts for the tasks."}},
-            "On Task Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->onTaskError', "data-help":"Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Kill job (running tasks are killed)."}, options: [
-                {val: "continueJobExecution", label: "Ignore error and continue job execution"},
+            "On Task Error Policy": {type: 'Select', fieldAttrs: {'placeholder': '@attributes->onTaskError', "data-help":"Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Kill job (running tasks are killed)."}, options: [
+                {val: "continueJobExecution", label: "Ignore error and continue job execution (Default)"},
                 {val: "suspendTask", label: "Only suspend dependencies of In-Error tasks"},
                 {val: "pauseJob", label: "Pause job execution (running tasks can terminate)"},
                 {val: "cancelJob", label: "Kill job (running tasks are killed)"}
@@ -55,7 +55,7 @@ define(
         initialize: function () {
             this.set({"Name": "Untitled Workflow 1"});
             this.set({"Job Priority": "normal"});
-            this.set({"On Task Error Policy": "suspendTask"});
+            this.set({"On Task Error Policy": "continueJobExecution"});
             this.set({"Number of Automatic Restarts": 2});
             this.set({"If An Error Occurs Restart Task": "anywhere"});
 
