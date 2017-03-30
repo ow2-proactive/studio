@@ -210,7 +210,7 @@ define(
                 var jsonString = JSON.stringify(jsonData);
 
                 $.ajax({
-                    url: config.execution_scheduler_restApiUrl,
+                    url: "http://localhost:8080/execution-scheduler/scheduled-workflows",
                     data: jsonString,
                     dataType: 'json',
                     contentType: "application/json",
