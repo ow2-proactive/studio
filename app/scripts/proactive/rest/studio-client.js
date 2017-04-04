@@ -210,7 +210,7 @@ define(
                 var jsonString = JSON.stringify(jsonData);
 
                 $.ajax({
-                    url: "/execution-scheduler/scheduled-workflows/",
+                    url: "/job-planner/planned_jobs/",
                     data: jsonString,
                     dataType: 'json',
                     contentType: "application/json",
