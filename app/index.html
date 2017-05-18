@@ -61,14 +61,13 @@
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" id="file-dropdown" > File <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li>
-                            <a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
-                                <i class="glyphicon glyphicon-hdd"></i> Save </a>
-                            </li>
-                            <li>
-                                <a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
-                                <i class="glyphicon glyphicon-folder-close"></i> Close</a>
-                            </li>
+			  <li><a id="validate-button" href="#" class="pointer"
+                           title="Check the validity of current workflow."><i
+                            class="glyphicon glyphicon-ok "></i> Check</a></li>
+                            <li><a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
+                                <i class="glyphicon glyphicon-hdd"></i> Save </a></li>
+                            <li><a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
+                                <i class="glyphicon glyphicon-folder-close"></i> Close</a></li>
                             <li><a id="import-button" href="" class="pointer"
                                    title="Import existing workflows (.xml files)."><i
                                     class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
@@ -104,9 +103,7 @@
                            title="Browse the Workflow Catalog."><i
                             class="glyphicon glyphicon-folder-open"></i> Catalog</a></li>
                     <li class="divider-vertical"></li>
-                    <li><a id="validate-button" href="#" class="pointer"
-                           title="Check the validity of current workflow."><i
-                            class="glyphicon glyphicon-ok "></i> Check</a></li>
+
                     <li><a id="submit-button" href="#" class="pointer"
                            title="Execute current workflow on the Scheduler you are connected to."><i
                             class="glyphicon glyphicon-share "></i> Execute</a></li>
