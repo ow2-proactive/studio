@@ -259,7 +259,7 @@ define(
                 });
             } else {
 		console.log("normal submit");
-		that.alert("Cannot upload a file", "Cannot planned a workflow without EXECUTION_CALENDAR", 'error');
+		that.alert("Cannot upload a file", "Cannot plan a workflow without EXECUTION_CALENDAR", 'error');
             }
 
         },
