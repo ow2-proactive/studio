@@ -185,6 +185,28 @@ define(
             $('#execute-workflow-modal').modal();
         });
 
+	$("#plan-button").click(function (event) {
+            event.preventDefault();
+	    
+            var studioApp = require('StudioApp');
+            if (!studioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
+            save_workflow();
+            closeCollapsedMenu();
+
+            var jobVariables = readOrStoreVariablesInModel();
+            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
+                executeIfConnected(planned_submit);
+                return;
+            }
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
+            $('#job-variables').html(template);
+            $('#execute-workflow-modal').modal();
+        });
+
         $("#exec-button").click(function (event) {
             executeOrCheck(event, false)
         });
@@ -293,6 +315,13 @@ define(
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization);
+        }
+
+	function planned_submit() {
+            var studioApp = require('StudioApp');
+            var xml = studioApp.views.xmlView.generateXml();
+            var htmlVisualization = studioApp.views.xmlView.generateHtml();
+            StudioClient.planned_submit(xml, htmlVisualization);
         }
 
         function validate() {
