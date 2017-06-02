@@ -182,6 +182,8 @@ define(
 
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
+            $("#exec-plan-button").hide();
+            $("#exec-button").show();
             $('#execute-workflow-modal').modal();
         });
 
@@ -204,18 +206,24 @@ define(
             }
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
+            $("#exec-button").hide();
+            $("#exec-plan-button").show();
             $('#execute-workflow-modal').modal();
         });
 
         $("#exec-button").click(function (event) {
-            executeOrCheck(event, false)
+            executeOrCheck(event, false, false)
+        });
+        
+        $("#exec-plan-button").click(function (event) {
+            executeOrCheck(event, false, true)
         });
 
         $("#check-button").click(function (event) {
-            executeOrCheck(event, true)
+            executeOrCheck(event, true, false)
         });
 
-        function executeOrCheck(event, check) {
+        function executeOrCheck(event, check, plan) {
             var studioApp = require('StudioApp');
             executeIfConnected(function () {
                 var oldVariables = readOrStoreVariablesInModel();
@@ -237,7 +245,12 @@ define(
                     $('#job-variables').html(template);
                 } else {
                     $('#execute-workflow-modal').modal("hide");
-                    submit();
+                    if(!plan){
+                    	submit();	
+                    }else{
+                    	planned_submit();
+                    }
+                    
                 }
                 readOrStoreVariablesInModel(oldVariables);
             })
