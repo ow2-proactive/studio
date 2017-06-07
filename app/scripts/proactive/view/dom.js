@@ -141,7 +141,7 @@ define(
             else {
                 publishButton.prop('disabled', true);
             }
-            $('#catalog-browser-view-modal').modal();
+            $('#workflow-catalog-browser-view-modal').modal();
         })
 
         $("#get-from-catalog-button").click(function (event) {
@@ -454,8 +454,8 @@ define(
             add_workflow_promise_to_collection(workflowPromise, xmlToPublish);
         })
         
-        $("#catalog-action-button").click(function (event) {
-        	var actionID = $("#catalog-select-action").val();
+        $("#workflow-catalog-action-button").click(function (event) {
+        	var actionID = $("#workflow-catalog-select-action").val();
             switch (actionID){
             case "0": $('#send-to-remote-confirmation-modal').modal(); break;
             case "1": window.location.replace(get_workflows_archive_URL()); break;
@@ -616,7 +616,7 @@ define(
                     studioApp.clear();
                 }
                 studioApp.importFromCatalog();
-                $('#catalog-browser-close-button').click();
+                $('#workflow-catalog-browser-close-button').click();
             }
             else {
                 // create a new workflow, open it and import the xml into it

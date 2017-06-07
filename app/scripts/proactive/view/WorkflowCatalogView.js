@@ -17,8 +17,8 @@ define(
     return Backbone.View.extend({
         template: _.template(catalogBrowser),
         initialize: function (options) {
-            this.$el = $("<div id='catalog-browser-container'></div>");
-            $("#catalog-browser-body").append(this.$el);
+            this.$el = $("<div id='workflow-catalog-browser-container'></div>");
+            $("#workflow-catalog-browser-body").append(this.$el);
             this.buckets = options.buckets;
             this.render();
         },
