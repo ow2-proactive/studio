@@ -7,7 +7,7 @@ define(
         'xml2json',
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
-        'proactive/view/CatalogView',
+        'proactive/view/WorkflowCatalogView',
         'pnotify',
         'pnotify.buttons',
         'codemirrorJs',
@@ -21,7 +21,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView, PNotify) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, WorkflowCatalogView, PNotify) {
 
         "use strict";
 
@@ -134,7 +134,7 @@ define(
             studioApp.models.catalogBuckets.fetch({reset: true});
             studioApp.modelsToRemove = [];
             var publishButton = $('#publish-to-workflow-catalog-button');
-            studioApp.views.catalogView.render();
+            studioApp.views.workflowCatalogView.render();
             if (studioApp.isWorkflowOpen() && $("#select-bucket").val() != -1) {
                 publishButton.prop('disabled', false);
             }  
@@ -489,12 +489,12 @@ define(
                 bucketId = wfToRemove[wId].get('bucket_id');
                 workflowId = wfToRemove[wId].get('id');
                 workflowsCollection = studioApp.models.catalogBuckets.get(bucketId).get('workflows');
-                studioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                    studioApp.views.catalogView.internalSwitchBucket(bucketId));
+                studioApp.views.workflowCatalogView.listenTo(workflowsCollection, 'remove',
+                    studioApp.views.workflowCatalogView.internalSwitchBucket(bucketId));
                 wfToRemove[wId].destroy();
                 workflowsCollection.remove(workflowId);
-                studioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                    studioApp.views.catalogView.internalSwitchBucket(bucketId));
+                studioApp.views.workflowCatalogView.listenTo(workflowsCollection, 'remove',
+                    studioApp.views.workflowCatalogView.internalSwitchBucket(bucketId));
             }
             studioApp.resetDeleteCollection();
         })
@@ -676,7 +676,7 @@ define(
                     layout: newWorkflow.layout
                 }
             );
-            studioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
+            studioApp.views.workflowCatalogView.internalSwitchBucket(newWorkflow.bucket_id);
         }
 
         function save_workflow() {

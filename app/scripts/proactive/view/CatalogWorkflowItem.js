@@ -4,10 +4,10 @@ define(
         'backbone',
         'xml2json',
         'text!proactive/templates/catalog-workflow.html',
-        'proactive/view/CatalogView'
+        'proactive/view/WorkflowCatalogView'
     ],
 
-    function ($, Backbone, xml2json, catalogWorkflowList, CatalogView) {
+    function ($, Backbone, xml2json, catalogWorkflowList, WorkflowCatalogView) {
 
         "use strict";
 
