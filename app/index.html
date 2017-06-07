@@ -99,9 +99,29 @@
 
                     <li class="divider-vertical"></li>
 
-                    <li><a id="browse-catalog-button" href="#" class="pointer"
+                    <li><a id="browse-workflow-catalog-button" href="#" class="pointer"
                            title="Browse the Workflow Catalog.">
-			<i class="glyphicon glyphicon-folder-open"></i> Catalog</a></li>
+			<i class="glyphicon glyphicon-folder-open"></i> Workflow Catalog</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" id="catalog-dropdown" >
+                        	<i class="glyphicon glyphicon-folder-open"></i> Catalog <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                          	<li>
+                          		<a id="get-from-catalog-button" href="#" class="pointer">
+			      					<i class="glyphicon glyphicon-arrow-left"></i>
+			      					 Get a Workflow from the Catalog
+			      				</a>
+			      			</li>
+                          	<li>
+                          		<a id="publish-to-catalog-button" href="#" class="pointer">
+			      					<i class="glyphicon glyphicon-arrow-right"></i>
+			      					 Publish a Workflow to the Catalog
+			      				</a>
+			      			</li>
+                        </ul>
+                    </li>
                     <li class="divider-vertical"></li>
 
                     <li><a id="submit-button" href="#" class="pointer"
@@ -236,7 +256,7 @@
 		                    <option value="1" id="export-as-archive-button">Export selected Workflows</option>
 		                    <option value="2" id="import-archive-button">Import archive of Workflows</option>
 		                    <option value="3" id="delete-selection-catalog">Delete selected Workflows</option>
-		                    <option value="4" id="publish-to-catalog-button">Add open Workflow to this bucket</option>
+		                    <option value="4" id="publish-to-workflow-catalog-button">Add open Workflow to this bucket</option>
 		                </select></td>
 		                <td><button id="catalog-action-button" class="btn btn-primary" aria-hidden="true">
                             OK

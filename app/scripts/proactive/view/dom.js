@@ -128,12 +128,12 @@ define(
             $('#xml-view-modal').modal();
         })
 
-        $("#browse-catalog-button").click(function (event) {
+        $("#browse-workflow-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.fetch({reset: true});
             studioApp.modelsToRemove = [];
-            var publishButton = $('#publish-to-catalog-button');
+            var publishButton = $('#publish-to-workflow-catalog-button');
             studioApp.views.catalogView.render();
             if (studioApp.isWorkflowOpen() && $("#select-bucket").val() != -1) {
                 publishButton.prop('disabled', false);
@@ -142,6 +142,18 @@ define(
                 publishButton.prop('disabled', true);
             }
             $('#catalog-browser-view-modal').modal();
+        })
+
+        $("#get-from-catalog-button").click(function (event) {
+            event.preventDefault();
+            //TODO
+        	console.log("get-from-catalog-button")
+        })
+
+        $("#publish-to-catalog-button").click(function (event) {
+            event.preventDefault();
+            //TODO
+        	console.log("publish-to-catalog-button")
         })
 
         $("#layout-button").click(function (event) {

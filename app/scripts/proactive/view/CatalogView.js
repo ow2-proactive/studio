@@ -30,7 +30,7 @@ define(
         internalSwitchBucket: function (currentBucketID) {
             this.$('#catalog-workflow-list').empty();
             var emptyView = _.template(catalogEmpty);
-            var publishButton = $('#publish-to-catalog-button');
+            var publishButton = $('#publish-to-workflow-catalog-button');
             var studioApp = require('StudioApp');
             var disabled;
             if (currentBucketID == -1) {
