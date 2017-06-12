@@ -20,7 +20,7 @@ define(
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
         	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
-        		   "Language R": "images/LanguageR.png", "python": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png"},
+        		   "R": "images/LanguageR.png", "python": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
         initialize: function () {

@@ -25,7 +25,7 @@ define(function () {
             'Ruby': 'templates/script_ruby.xml',
             'Python': 'templates/script_python.xml',
 	    'Perl': 'templates/script_perl.xml',
-	    'Language R': 'templates/script_r.xml',
+	    'R': 'templates/script_r.xml',
 	    'Cron': 'templates/script_cron.xml',
             'LDAP Query': 'templates/script_ldap_query.xml'
         },
