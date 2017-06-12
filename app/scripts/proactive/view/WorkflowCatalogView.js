@@ -2,15 +2,15 @@ define(
     [
         'jquery',
         'backbone',
-        'text!proactive/templates/catalog-browser.html',
-        'text!proactive/templates/catalog-list.html',
+        'text!proactive/templates/workflow-catalog-browser.html',
+        'text!proactive/templates/workflow-catalog-list.html',
         'text!proactive/templates/catalog-bucket-empty.html',
-        'proactive/view/CatalogWorkflowItem',
-        'proactive/model/CatalogBucketCollection',
-        'proactive/model/CatalogWorkflowCollection',
+        'proactive/view/WorkflowCatalogWorkflowItem',
+        'proactive/model/WorkflowCatalogBucketCollection',
+        'proactive/model/WorkflowCatalogWorkflowCollection',
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogEmpty, CatalogWorkflowItem, catalogBucket, catalogWorkflow) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogEmpty, WorkflowCatalogWorkflowItem, catalogBucket, catalogWorkflow) {
 
     "use strict";
 
@@ -46,7 +46,7 @@ define(
                 }
                 else {
                     _(currentBucket.get("workflows").models).each(function (workflow) {
-                        var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
+                        var catalogWorkflowItem = new WorkflowCatalogWorkflowItem({model: workflow});
                         catalogWorkflowItem.render();
                         this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
                     }, this);

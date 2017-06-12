@@ -1,0 +1,20 @@
+<div>
+	<table>
+		<tr style="width:50%;">
+			<td style="width:40%;">Workflow name</td>
+			<td><%= revision.name %></td>
+		</tr>
+		<tr>
+			<td>Project name</td>
+			<td><%= projectname %></td>
+		</tr>
+		<tr>
+			<td>Commit message</td>
+			<td><%= revision.commit_message %></td>
+		</tr>
+		<tr>
+			<td>Direct URL</td>
+			<td><a href="<%= revision._links.content.href%>"><%= revision._links.content.href%></a></td>
+		</tr>
+	</table>	
+</div>

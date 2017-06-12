@@ -3,7 +3,7 @@ define(
         'jquery',
         'backbone',
         'xml2json',
-        'text!proactive/templates/catalog-workflow.html',
+        'text!proactive/templates/workflow-catalog-workflow.html',
         'proactive/view/WorkflowCatalogView'
     ],
 

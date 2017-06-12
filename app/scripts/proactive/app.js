@@ -8,6 +8,8 @@ define(
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
         'proactive/model/TemplateCollection',
+        'proactive/model/WorkflowCatalogBucketCollection',
+        'proactive/model/WorkflowCatalogWorkflowCollection',
         'proactive/model/CatalogBucketCollection',
         'proactive/model/CatalogWorkflowCollection',
         'proactive/view/PaletteView',
@@ -16,6 +18,7 @@ define(
         'proactive/view/xml/JobXmlView',
         'proactive/view/LoginView',
         'proactive/view/LogoutView',
+        'proactive/view/CatalogGetView',
         'proactive/view/WorkflowCatalogView',
         'proactive/view/WorkflowListView',
         'xml2json',
@@ -27,7 +30,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, WorkflowCatalogView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, WorkflowCatalogBucketCollection, WorkflowCatalogWorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, WorkflowCatalogView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -38,8 +41,8 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
-            catalogBuckets: undefined,
-            catalogWorkflows: undefined
+            workflowCatalogBuckets: undefined,
+            catalogBuckets: undefined
         },
 
         views : {
@@ -49,6 +52,7 @@ define(
             xmlView : undefined,
             loginView : undefined,
             logoutView : undefined,
+            catalogGetView : undefined,
             workflowCatalogView : undefined
         },
 
@@ -73,17 +77,20 @@ define(
 
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
+            this.models.workflowCatalogBuckets = new WorkflowCatalogBucketCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
             
             // TODO Handle pagination
             this.models.catalogBuckets.fetch();
+            this.models.workflowCatalogBuckets.fetch();
             this.modelsToRemove = [];
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
-            this.views.workflowCatalogView = new WorkflowCatalogView({buckets: this.models.catalogBuckets});
+            this.views.catalogGetView = new CatalogGetView({buckets: this.models.catalogBuckets});
+            this.views.workflowCatalogView = new WorkflowCatalogView({buckets: this.models.workflowCatalogBuckets});
 
             this.router = new StudioRouter(this);
         },

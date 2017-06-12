@@ -131,7 +131,7 @@ define(
         $("#browse-workflow-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
-            studioApp.models.catalogBuckets.fetch({reset: true});
+            studioApp.models.workflowCatalogBuckets.fetch({reset: true});
             studioApp.modelsToRemove = [];
             var publishButton = $('#publish-to-workflow-catalog-button');
             studioApp.views.workflowCatalogView.render();
@@ -146,15 +146,22 @@ define(
 
         $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
-            //TODO
-        	console.log("get-from-catalog-button")
-        })
-
-        $("#publish-to-catalog-button").click(function (event) {
-            event.preventDefault();
-            //TODO
-        	console.log("publish-to-catalog-button")
-        })
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.fetch({reset: true});
+            studioApp.modelsToRemove = [];
+            var getAsNewButton = $('#catalog-get-as-new-button');
+            var getAppendButton = $('#catalog-get-append-button');
+            studioApp.views.catalogGetView.render();
+            if (studioApp.isWorkflowOpen()) {
+            	getAsNewButton.prop('disabled', false);
+            	getAppendButton.prop('disabled', false);
+            }  
+            else {
+            	getAsNewButton.prop('disabled', true);
+            	getAppendButton.prop('disabled', true);
+            }
+            $('#catalog-get-modal').modal();
+        });
 
         $("#layout-button").click(function (event) {
             event.preventDefault();
@@ -488,7 +495,7 @@ define(
             for (wId in wfToRemove) {
                 bucketId = wfToRemove[wId].get('bucket_id');
                 workflowId = wfToRemove[wId].get('id');
-                workflowsCollection = studioApp.models.catalogBuckets.get(bucketId).get('workflows');
+                workflowsCollection = studioApp.models.workflowCatalogBuckets.get(bucketId).get('workflows');
                 studioApp.views.workflowCatalogView.listenTo(workflowsCollection, 'remove',
                     studioApp.views.workflowCatalogView.internalSwitchBucket(bucketId));
                 wfToRemove[wId].destroy();
@@ -659,7 +666,7 @@ define(
             var studioApp = require('StudioApp');
             // We manually add the newly published workflow into the right bucket
             // without relying on Backbone's persistence layer
-            studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
+            studioApp.models.workflowCatalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
                 {
                     id: newWorkflow.id,
                     name: newWorkflow.name,
@@ -817,8 +824,7 @@ define(
         	var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
-                console.log('conf:');
-                console.log(conf);
+                console.log('conf:', conf);
                 if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
                     result = result + "dev";
                 }
