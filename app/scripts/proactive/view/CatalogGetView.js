@@ -27,9 +27,7 @@ define(
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-workflows-table tr': 'selectWorkflow',
-            'click #catalog-get-revisions-table tr': 'selectRevision',
-            'click #select-all-catalog-button': 'selectAll',
-            'click #deselect-all-catalog-button': 'deselectAll'
+            'click #catalog-get-revisions-table tr': 'selectRevision'
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-get-workflows-table').empty();
@@ -104,7 +102,6 @@ define(
 		            		//Go through all metadata to find project name
 		            		_.each(revision.object_key_values, function(keyValue){
 		            			if (keyValue.key == "project_name" && keyValue.label == "job_information"){
-		            				console.log(keyValue.value)
 		            				projectName = keyValue.value
 		            			}
 		            		});
@@ -136,17 +133,14 @@ define(
         	return ($(($(tableSelector))[0])).data(dataName);
         },
         selectBucket: function(e){
-        	console.log("selectBucket");
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
         },
         selectWorkflow: function(e){
-        	console.log("selectWorkflow");
         	var row = $(e.currentTarget);
             this.internalSelectWorkflow(row);
         },
         selectRevision: function(e){
-        	console.log("selectRevision");
         	var row = $(e.currentTarget);
             this.internalSelectRevision(row);
         },

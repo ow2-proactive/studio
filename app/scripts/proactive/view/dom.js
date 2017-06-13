@@ -152,16 +152,35 @@ define(
             var getAsNewButton = $('#catalog-get-as-new-button');
             var getAppendButton = $('#catalog-get-append-button');
             studioApp.views.catalogGetView.render();
-            if (studioApp.isWorkflowOpen()) {
-            	getAsNewButton.prop('disabled', false);
-            	getAppendButton.prop('disabled', false);
-            }  
-            else {
-            	getAsNewButton.prop('disabled', true);
-            	getAppendButton.prop('disabled', true);
-            }
+        	getAsNewButton.prop('disabled', !studioApp.isWorkflowOpen());
+        	getAppendButton.prop('disabled', !studioApp.isWorkflowOpen());
             $('#catalog-get-modal').modal();
         });
+
+        $("#catalog-get-as-new-button").click(function (event) {
+            workflowImport(event, '#import-workflow-confirmation-modal');
+        });
+
+        $("#catalog-get-append-button").click(function (event) {
+        	workflowImport(event, '#add-workflow-confirmation-modal');
+        });
+        
+        function workflowImport(e, modalSelector) {
+            var studioApp = require('StudioApp');
+            var url = $("#catalog-revision-description").data("selectedrawurl");
+            
+            return $.ajax({
+                url: url,
+                type: 'GET'
+            }).success(function (response) {
+            	studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
+                $(modalSelector).modal();
+                return response;
+            }).error(function (response) {
+                notify_message('Error', 'Error importing selected Workflow', false);
+                return response;
+            });
+        }
 
         $("#layout-button").click(function (event) {
             event.preventDefault();

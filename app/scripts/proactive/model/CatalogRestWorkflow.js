@@ -16,13 +16,6 @@ define(
                 revision_id: "",
                 bucket_id: "",
                 layout: ""
-            },
-            getXml: function() {
-                return $.ajax({
-                    url: this.collection.url() + '/' + this.id + '/raw'
-                }).done(function (response) {
-                    return new XMLSerializer().serializeToString(response);
-                });
             }
         });
     })
