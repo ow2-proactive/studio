@@ -103,7 +103,8 @@ define(
 		            		var projectName = "";
 		            		//Go through all metadata to find project name
 		            		_.each(revision.object_key_values, function(keyValue){
-		            			if (keyValue.label == "project_name"){
+		            			if (keyValue.key == "project_name" && keyValue.label == "job_information"){
+		            				console.log(keyValue.value)
 		            				projectName = keyValue.value
 		            			}
 		            		});
