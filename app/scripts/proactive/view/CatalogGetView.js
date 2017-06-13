@@ -86,7 +86,7 @@ define(
             
             if (currentRevisionRow){
 	        	var currentRevisionId = $(currentRevisionRow).data("revisionid");
-	            this.highlightSelectedRow('#catalog-get-revision-table', currentRevisionRow);
+	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
 
 	        	var currentBucketId = this.getSelectedBucketId();
 	        	var currentWorkflowId = this.getSelectedWorkflowId();
