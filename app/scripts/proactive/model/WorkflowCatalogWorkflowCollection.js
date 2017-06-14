@@ -1,7 +1,7 @@
 define(
     [
         'backbone',
-        'proactive/model/CatalogRestWorkflow'
+        'proactive/model/WorkflowCatalogRestWorkflow'
     ],
 
     function (Backbone, RestWorkflow) {
@@ -14,11 +14,11 @@ define(
                 this.id = options.id;
             },
             url: function() {
-                return '/catalog/buckets/' + this.id + '/resources';
+                return '/workflow-catalog/buckets/' + this.id + '/workflows';
             },
             parse: function(data) {
                 if (data.page.totalElements > 0) {
-                    return data._embedded.catalogObjectMetadataList;
+                    return data._embedded.workflowMetadataList;
                 }
                 else {
                     return [];

@@ -2,23 +2,23 @@ define(
     [
         'jquery',
         'backbone',
-        'text!proactive/templates/catalog-browser.html',
-        'text!proactive/templates/catalog-list.html',
+        'text!proactive/templates/workflow-catalog-browser.html',
+        'text!proactive/templates/workflow-catalog-list.html',
         'text!proactive/templates/catalog-bucket-empty.html',
-        'proactive/view/CatalogWorkflowItem',
-        'proactive/model/CatalogBucketCollection',
-        'proactive/model/CatalogWorkflowCollection',
+        'proactive/view/WorkflowCatalogWorkflowItem',
+        'proactive/model/WorkflowCatalogBucketCollection',
+        'proactive/model/WorkflowCatalogWorkflowCollection',
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogEmpty, CatalogWorkflowItem, catalogBucket, catalogWorkflow) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogEmpty, WorkflowCatalogWorkflowItem, catalogBucket, catalogWorkflow) {
 
     "use strict";
 
     return Backbone.View.extend({
         template: _.template(catalogBrowser),
         initialize: function (options) {
-            this.$el = $("<div id='catalog-browser-container'></div>");
-            $("#catalog-browser-body").append(this.$el);
+            this.$el = $("<div id='workflow-catalog-browser-container'></div>");
+            $("#workflow-catalog-browser-body").append(this.$el);
             this.buckets = options.buckets;
             this.render();
         },
@@ -30,7 +30,7 @@ define(
         internalSwitchBucket: function (currentBucketID) {
             this.$('#catalog-workflow-list').empty();
             var emptyView = _.template(catalogEmpty);
-            var publishButton = $('#publish-to-catalog-button');
+            var publishButton = $('#publish-to-workflow-catalog-button');
             var studioApp = require('StudioApp');
             var disabled;
             if (currentBucketID == -1) {
@@ -46,7 +46,7 @@ define(
                 }
                 else {
                     _(currentBucket.get("workflows").models).each(function (workflow) {
-                        var catalogWorkflowItem = new CatalogWorkflowItem({model: workflow});
+                        var catalogWorkflowItem = new WorkflowCatalogWorkflowItem({model: workflow});
                         catalogWorkflowItem.render();
                         this.$('#catalog-workflow-list').append(catalogWorkflowItem.el);
                     }, this);

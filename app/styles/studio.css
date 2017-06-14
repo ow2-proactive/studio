@@ -293,6 +293,11 @@ a:hover {
     color: orange !important;
 }
 
+.catalog-selected-row{
+	color: black;
+	background-color: #4A90D9;
+}
+
 .task, .label {
     text-align: center;
     z-index: 24;

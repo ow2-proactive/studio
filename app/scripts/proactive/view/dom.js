@@ -7,7 +7,7 @@ define(
         'xml2json',
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
-        'proactive/view/CatalogView',
+        'proactive/view/WorkflowCatalogView',
         'pnotify',
         'pnotify.buttons',
         'codemirrorJs',
@@ -21,7 +21,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView, PNotify) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, WorkflowCatalogView, PNotify) {
 
         "use strict";
 
@@ -128,21 +128,59 @@ define(
             $('#xml-view-modal').modal();
         })
 
-        $("#browse-catalog-button").click(function (event) {
+        $("#browse-workflow-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
-            studioApp.models.catalogBuckets.fetch({reset: true});
+            studioApp.models.workflowCatalogBuckets.fetch({reset: true});
             studioApp.modelsToRemove = [];
-            var publishButton = $('#publish-to-catalog-button');
-            studioApp.views.catalogView.render();
+            var publishButton = $('#publish-to-workflow-catalog-button');
+            studioApp.views.workflowCatalogView.render();
             if (studioApp.isWorkflowOpen() && $("#select-bucket").val() != -1) {
                 publishButton.prop('disabled', false);
             }  
             else {
                 publishButton.prop('disabled', true);
             }
-            $('#catalog-browser-view-modal').modal();
+            $('#workflow-catalog-browser-view-modal').modal();
         })
+
+        $("#get-from-catalog-button").click(function (event) {
+            event.preventDefault();
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.fetch({reset: true});
+            studioApp.modelsToRemove = [];
+            var getAsNewButton = $('#catalog-get-as-new-button');
+            var getAppendButton = $('#catalog-get-append-button');
+            studioApp.views.catalogGetView.render();
+        	getAsNewButton.prop('disabled', !studioApp.isWorkflowOpen());
+        	getAppendButton.prop('disabled', !studioApp.isWorkflowOpen());
+            $('#catalog-get-modal').modal();
+        });
+
+        $("#catalog-get-as-new-button").click(function (event) {
+            workflowImport(event, '#import-workflow-confirmation-modal');
+        });
+
+        $("#catalog-get-append-button").click(function (event) {
+        	workflowImport(event, '#add-workflow-confirmation-modal');
+        });
+        
+        function workflowImport(e, modalSelector) {
+            var studioApp = require('StudioApp');
+            var url = $("#catalog-revision-description").data("selectedrawurl");
+            
+            return $.ajax({
+                url: url,
+                type: 'GET'
+            }).success(function (response) {
+            	studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
+                $(modalSelector).modal();
+                return response;
+            }).error(function (response) {
+                notify_message('Error', 'Error importing selected Workflow', false);
+                return response;
+            });
+        }
 
         $("#layout-button").click(function (event) {
             event.preventDefault();
@@ -442,8 +480,8 @@ define(
             add_workflow_promise_to_collection(workflowPromise, xmlToPublish);
         })
         
-        $("#catalog-action-button").click(function (event) {
-        	var actionID = $("#catalog-select-action").val();
+        $("#workflow-catalog-action-button").click(function (event) {
+        	var actionID = $("#workflow-catalog-select-action").val();
             switch (actionID){
             case "0": $('#send-to-remote-confirmation-modal').modal(); break;
             case "1": window.location.replace(get_workflows_archive_URL()); break;
@@ -476,13 +514,13 @@ define(
             for (wId in wfToRemove) {
                 bucketId = wfToRemove[wId].get('bucket_id');
                 workflowId = wfToRemove[wId].get('id');
-                workflowsCollection = studioApp.models.catalogBuckets.get(bucketId).get('workflows');
-                studioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                    studioApp.views.catalogView.internalSwitchBucket(bucketId));
+                workflowsCollection = studioApp.models.workflowCatalogBuckets.get(bucketId).get('workflows');
+                studioApp.views.workflowCatalogView.listenTo(workflowsCollection, 'remove',
+                    studioApp.views.workflowCatalogView.internalSwitchBucket(bucketId));
                 wfToRemove[wId].destroy();
                 workflowsCollection.remove(workflowId);
-                studioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                    studioApp.views.catalogView.internalSwitchBucket(bucketId));
+                studioApp.views.workflowCatalogView.listenTo(workflowsCollection, 'remove',
+                    studioApp.views.workflowCatalogView.internalSwitchBucket(bucketId));
             }
             studioApp.resetDeleteCollection();
         })
@@ -604,7 +642,7 @@ define(
                     studioApp.clear();
                 }
                 studioApp.importFromCatalog();
-                $('#catalog-browser-close-button').click();
+                $('#workflow-catalog-browser-close-button').click();
             }
             else {
                 // create a new workflow, open it and import the xml into it
@@ -647,7 +685,7 @@ define(
             var studioApp = require('StudioApp');
             // We manually add the newly published workflow into the right bucket
             // without relying on Backbone's persistence layer
-            studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
+            studioApp.models.workflowCatalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
                 {
                     id: newWorkflow.id,
                     name: newWorkflow.name,
@@ -664,7 +702,7 @@ define(
                     layout: newWorkflow.layout
                 }
             );
-            studioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
+            studioApp.views.workflowCatalogView.internalSwitchBucket(newWorkflow.bucket_id);
         }
 
         function save_workflow() {
@@ -805,8 +843,7 @@ define(
         	var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
-                console.log('conf:');
-                console.log(conf);
+                console.log('conf:', conf);
                 if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
                     result = result + "dev";
                 }

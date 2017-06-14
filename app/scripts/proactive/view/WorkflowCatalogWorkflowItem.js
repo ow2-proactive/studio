@@ -3,11 +3,11 @@ define(
         'jquery',
         'backbone',
         'xml2json',
-        'text!proactive/templates/catalog-workflow.html',
-        'proactive/view/CatalogView'
+        'text!proactive/templates/workflow-catalog-workflow.html',
+        'proactive/view/WorkflowCatalogView'
     ],
 
-    function ($, Backbone, xml2json, catalogWorkflowList, CatalogView) {
+    function ($, Backbone, xml2json, catalogWorkflowList, WorkflowCatalogView) {
 
         "use strict";
 
