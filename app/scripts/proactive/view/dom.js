@@ -142,19 +142,33 @@ define(
                 publishButton.prop('disabled', true);
             }
             $('#workflow-catalog-browser-view-modal').modal();
-        })
+        });
 
         $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
-            var studioApp = require('StudioApp');
-            studioApp.models.catalogBuckets.fetch({reset: true});
-            studioApp.modelsToRemove = [];
-            var getAsNewButton = $('#catalog-get-as-new-button');
-            var getAppendButton = $('#catalog-get-append-button');
-            studioApp.views.catalogGetView.render();
-        	getAsNewButton.prop('disabled', !studioApp.isWorkflowOpen());
-        	getAppendButton.prop('disabled', !studioApp.isWorkflowOpen());
-            $('#catalog-get-modal').modal();
+	        var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+	            var studioApp = require('StudioApp');
+	            studioApp.models.catalogBuckets.fetch({reset: true});
+	            studioApp.modelsToRemove = [];
+	            studioApp.views.catalogGetView.render();
+	            $('#catalog-get-modal').modal();
+            }else{
+            	$('#open-a-workflow-modal').modal();
+            }
+        });
+
+        $("#publish-to-catalog-button").click(function (event) {
+            event.preventDefault();
+		    var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+		        studioApp.models.catalogBuckets.fetch({reset: true});
+		        studioApp.modelsToRemove = [];
+		        studioApp.views.catalogPublishView.render();
+		        $('#catalog-publish-modal').modal();
+            }else{
+            	$('#open-a-workflow-modal').modal();
+            }
         });
 
         $("#catalog-get-as-new-button").click(function (event) {
@@ -167,9 +181,9 @@ define(
         
         function workflowImport(e, modalSelector) {
             var studioApp = require('StudioApp');
-            var url = $("#catalog-revision-description").data("selectedrawurl");
+            var url = $("#catalog-get-revision-description").data("selectedrawurl");
             
-            return $.ajax({
+            $.ajax({
                 url: url,
                 type: 'GET'
             }).success(function (response) {
@@ -181,6 +195,10 @@ define(
                 return response;
             });
         }
+
+        $("#catalog-publish-current").click(function (event) {
+            $('#publish-current-confirmation-modal').modal();
+        });
 
         $("#layout-button").click(function (event) {
             event.preventDefault();
@@ -471,13 +489,57 @@ define(
             add_workflow_to_current(false);
         })
 
-        $("#confirm-publication-to-catalog").click(function () {
+        $("#confirm-publication-to-workflow-catalog").click(function () {
             var selectedBucketId = $("#select-bucket").val();
             var studioApp = require('StudioApp');
             var xmlToPublish = studioApp.views.xmlView.generateXml();
             var layout = JSON.stringify(studioApp.models.currentWorkflow.getMetadata());
-            var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
+            var workflowPromise = publish_to_workflow_catalog(selectedBucketId, xmlToPublish, layout);
             add_workflow_promise_to_collection(workflowPromise, xmlToPublish);
+        })
+        
+
+        $("#confirm-publication-to-catalog").click(function () {
+            var bucketId = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketid");
+            
+            var studioApp = require('StudioApp');
+            var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
+            
+            var payload = new FormData();
+            payload.append('file', blob);
+            payload.append('kind', 'workflow');
+            payload.append('name', studioApp.models.currentWorkflow.attributes.name);
+            payload.append('commitMessage', $("#catalog-publish-commit-message").val());
+            payload.append('contentType', "application/xml");
+            
+            
+            var postData = {
+                    url: '/catalog/buckets/' + bucketId + '/resources',
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    data: payload
+                };
+            
+            var workflowId = $("#catalog-publish-description").data("workflowid");            
+            if (workflowId){
+            	postData.url = postData.url + "/" + workflowId + "/revisions";
+                payload.append('objectId', workflowId);
+            }
+            
+            var promise = $.ajax(postData).success(function (response) {
+                notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
+                return response;
+            }).error(function (response) {
+                notify_message('Error', 'Error publishing the Workflow to the Catalog', false);
+                return response;
+            });
+            
+            $.when(promise).then(function () {
+                var newWorkflow = promise.responseJSON;
+                add_workflow_to_catalog_collection(newWorkflow);
+            });
         })
         
         $("#workflow-catalog-action-button").click(function (event) {
@@ -557,7 +619,7 @@ define(
                         $.when(createdListOfWorkflows).then(function () {
                             var newWorkflows = createdListOfWorkflows.responseJSON;
                             for (var i = 0; i < newWorkflows["workflow"].length; i++){
-                                add_workflow_to_collection(newWorkflows["workflow"][i]);
+                                add_workflow_to_workflow_catalog_collection(newWorkflows["workflow"][i]);
                             }
                         });
                     }
@@ -652,7 +714,7 @@ define(
             }
         }
 
-        function publish_to_catalog (bucketId, xmlContent, layoutContent) {
+        function publish_to_workflow_catalog (bucketId, xmlContent, layoutContent) {
 
             var payload = new FormData();
             var blob = new Blob([xmlContent], { type: "text/xml" });
@@ -677,11 +739,11 @@ define(
         function add_workflow_promise_to_collection (createdWorkflowPromise, xmlContent) {
             $.when(createdWorkflowPromise).then(function () {
                 var newWorkflow = createdWorkflowPromise.responseJSON;
-                add_workflow_to_collection(newWorkflow["workflow"][0], xmlContent);
+                add_workflow_to_workflow_catalog_collection(newWorkflow["workflow"][0], xmlContent);
             });
         }
 
-        function add_workflow_to_collection (newWorkflow, xmlContent) {
+        function add_workflow_to_workflow_catalog_collection (newWorkflow, xmlContent) {
             var studioApp = require('StudioApp');
             // We manually add the newly published workflow into the right bucket
             // without relying on Backbone's persistence layer
@@ -703,6 +765,22 @@ define(
                 }
             );
             studioApp.views.workflowCatalogView.internalSwitchBucket(newWorkflow.bucket_id);
+        }
+
+        function add_workflow_to_catalog_collection (newWorkflow) {
+            var studioApp = require('StudioApp');
+            // We manually add the newly published workflow into the right bucket
+            // without relying on Backbone's persistence layer
+            console.log(newWorkflow)
+            studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
+                {
+                    id: newWorkflow.id,
+                    name: newWorkflow.name,
+                    created_at: newWorkflow.created_at,
+                    revision_id: newWorkflow.commit_id,
+                    bucket_id: newWorkflow.bucket_id
+                }
+            );
         }
 
         function save_workflow() {
@@ -904,7 +982,7 @@ define(
 
                 $.when(createdWorkflowPromise).then(function () {
                     var newWorkflow = createdWorkflowPromise.responseJSON;
-                    add_workflow_to_collection(newWorkflow, xmlContent);
+                    add_workflow_to_workflow_catalog_collection(newWorkflow, xmlContent);
                 });
             })
         });

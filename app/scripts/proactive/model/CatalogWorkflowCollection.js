@@ -17,8 +17,8 @@ define(
                 return '/catalog/buckets/' + this.id + '/resources';
             },
             parse: function(data) {
-                if (data.page.totalElements > 0) {
-                    return data._embedded.catalogObjectMetadataList;
+                if (data.object) {
+                    return data.object;
                 }
                 else {
                     return [];

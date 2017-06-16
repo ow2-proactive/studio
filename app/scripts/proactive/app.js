@@ -19,6 +19,7 @@ define(
         'proactive/view/LoginView',
         'proactive/view/LogoutView',
         'proactive/view/CatalogGetView',
+        'proactive/view/CatalogPublishView',
         'proactive/view/WorkflowCatalogView',
         'proactive/view/WorkflowListView',
         'xml2json',
@@ -30,7 +31,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, WorkflowCatalogBucketCollection, WorkflowCatalogWorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, WorkflowCatalogView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, WorkflowCatalogBucketCollection, WorkflowCatalogWorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, WorkflowCatalogView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -53,6 +54,7 @@ define(
             loginView : undefined,
             logoutView : undefined,
             catalogGetView : undefined,
+            catalogPublishView : undefined,
             workflowCatalogView : undefined
         },
 
@@ -90,6 +92,7 @@ define(
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
             this.views.catalogGetView = new CatalogGetView({buckets: this.models.catalogBuckets});
+            this.views.catalogPublishView = new CatalogPublishView({buckets: this.models.catalogBuckets});
             this.views.workflowCatalogView = new WorkflowCatalogView({buckets: this.models.workflowCatalogBuckets});
 
             this.router = new StudioRouter(this);
