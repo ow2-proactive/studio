@@ -294,6 +294,28 @@
             </div>
         </div>
 
+        <div id="catalog-publish-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Publish current Workflow to the Catalog</h3>
+                    </div>
+                    <div id="catalog-publish-body" class="modal-body" style="height:100%">
+                    	<div id="catalog-publish-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                    	<button id="catalog-publish-current" class="btn btn-primary" aria-hidden="true">
+                            Publish
+                        </button>
+                        <button id="catalog-publish-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -337,6 +359,41 @@
                     </div>
                     <div class="modal-body" style="height:100%">
                         Do you want to publish your workflow into the Catalog ?
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-publication-to-workflow-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Yes</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="open-a-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Please open a Workflow</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        In order to perform this action you need to open a Workflow.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="publish-current-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Publish current Workflow to Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        Do you want to publish your Workflow into the Catalog ?
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Yes</button>

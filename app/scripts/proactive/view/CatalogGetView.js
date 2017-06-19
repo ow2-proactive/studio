@@ -4,15 +4,14 @@ define(
         'backbone',
         'text!proactive/templates/catalog-get.html',
         'text!proactive/templates/catalog-bucket.html',
-        'text!proactive/templates/catalog-bucket-empty.html',
-        'text!proactive/templates/catalog-workflow.html',
-        'text!proactive/templates/catalog-revision.html',
-        'text!proactive/templates/catalog-revision-description.html',
+        'text!proactive/templates/catalog-get-workflow.html',
+        'text!proactive/templates/catalog-get-revision.html',
+        'text!proactive/templates/catalog-get-revision-description.html',
         'proactive/model/CatalogWorkflowRevisionCollection',
         'proactive/model/CatalogWorkflowRevisionDescription'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogEmpty, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection, CatalogWorkflowRevisionDescription) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection, CatalogWorkflowRevisionDescription) {
 
     "use strict";
 
@@ -33,24 +32,28 @@ define(
             this.$('#catalog-get-workflows-table').empty();
             var studioApp = require('StudioApp');
             
-            var getAsNewButton = $('#catalog-get-as-new-button');
-            var getAppendButton = $('#catalog-get-append-button');
+            this.disableActionButtons(true);
             
             if (currentBucketRow){
 	        	var currentBucketID = $(currentBucketRow).data("bucketid");
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
 	            
                 var currentBucket = this.buckets.get(currentBucketID);
+                console.log(currentBucket.get("workflows"))
                 this.workflows = currentBucket.get("workflows").models;
                 _(this.workflows).each(function (workflow) {
                     var WorkflowList = _.template(catalogWorkflow);
                     this.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
                 }, this);
+            }else{
+            	
             }
             this.internalSelectWorkflow(this.$('#catalog-get-workflows-table tr')[0]);
             
-            getAsNewButton.prop('disabled', !currentBucketRow || !studioApp.isWorkflowOpen());
-            getAppendButton.prop('disabled', !currentBucketRow || !studioApp.isWorkflowOpen());       
+        },
+        disableActionButtons: function (enable){
+        	 $('#catalog-get-as-new-button').prop('disabled', enable);
+        	 $('#catalog-get-append-button').prop('disabled', enable);       
         },
         internalSelectWorkflow: function (currentWorkflowRow) {
             this.$('#catalog-get-revisions-table').empty();
@@ -110,6 +113,7 @@ define(
 		            	}
 	            	});
 	            revisionsModel.fetch();
+	            this.disableActionButtons(false);
             }  
         },
         highlightSelectedRow: function(tableId, row){

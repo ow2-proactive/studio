@@ -4,7 +4,7 @@ define(
         'backbone',
         'text!proactive/templates/workflow-catalog-browser.html',
         'text!proactive/templates/workflow-catalog-list.html',
-        'text!proactive/templates/catalog-bucket-empty.html',
+        'text!proactive/templates/workflow-catalog-bucket-empty.html',
         'proactive/view/WorkflowCatalogWorkflowItem',
         'proactive/model/WorkflowCatalogBucketCollection',
         'proactive/model/WorkflowCatalogWorkflowCollection',
