@@ -8,8 +8,6 @@ define(
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
         'proactive/model/TemplateCollection',
-        'proactive/model/WorkflowCatalogBucketCollection',
-        'proactive/model/WorkflowCatalogWorkflowCollection',
         'proactive/model/CatalogBucketCollection',
         'proactive/model/CatalogWorkflowCollection',
         'proactive/view/PaletteView',
@@ -20,7 +18,6 @@ define(
         'proactive/view/LogoutView',
         'proactive/view/CatalogGetView',
         'proactive/view/CatalogPublishView',
-        'proactive/view/WorkflowCatalogView',
         'proactive/view/WorkflowListView',
         'xml2json',
         'proactive/router',
@@ -31,7 +28,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, WorkflowCatalogBucketCollection, WorkflowCatalogWorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, WorkflowCatalogView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -42,7 +39,6 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
-            workflowCatalogBuckets: undefined,
             catalogBuckets: undefined
         },
 
@@ -54,8 +50,7 @@ define(
             loginView : undefined,
             logoutView : undefined,
             catalogGetView : undefined,
-            catalogPublishView : undefined,
-            workflowCatalogView : undefined
+            catalogPublishView : undefined
         },
 
         router: undefined,
@@ -79,12 +74,10 @@ define(
 
             this.models.workflows = new WorkflowCollection();
             this.models.templates = new TemplateCollection();
-            this.models.workflowCatalogBuckets = new WorkflowCatalogBucketCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
             
             // TODO Handle pagination
             this.models.catalogBuckets.fetch();
-            this.models.workflowCatalogBuckets.fetch();
             this.modelsToRemove = [];
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
@@ -93,7 +86,6 @@ define(
             this.views.workflowView = new EmptyWorkflowView();
             this.views.catalogGetView = new CatalogGetView({buckets: this.models.catalogBuckets});
             this.views.catalogPublishView = new CatalogPublishView({buckets: this.models.catalogBuckets});
-            this.views.workflowCatalogView = new WorkflowCatalogView({buckets: this.models.workflowCatalogBuckets});
 
             this.router = new StudioRouter(this);
         },
@@ -186,18 +178,6 @@ define(
             }
             this.closeWorkflow();
             this.views.workflowView = new EmptyWorkflowView();
-        },
-        resetDeleteCollection: function () {
-            this.modelsToRemove = [];
-            var deleteButton = $('#delete-selection-catalog');
-            deleteButton.text('Delete selected Workflows');
-            deleteButton.prop('disabled', true);
-            var exportButton = $('#export-as-archive-button');
-            exportButton.text("Export selected Workflows");
-            exportButton.prop('disabled', true);
-            var publishButton = $('#publish-to-remote');
-            publishButton.text("Send to another Workflow Catalog");
-            publishButton.prop('disabled', true);
         },
         clear: function() {
             var jobXml = new JobXmlView().xml(new Job());
