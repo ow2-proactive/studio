@@ -32,14 +32,13 @@ define(
             this.$('#catalog-get-workflows-table').empty();
             var studioApp = require('StudioApp');
             
-            this.disableActionButtons(true);
+            this.disableActionButtons(true, true);
             
             if (currentBucketRow){
 	        	var currentBucketID = $(currentBucketRow).data("bucketid");
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
 	            
                 var currentBucket = this.buckets.get(currentBucketID);
-                console.log(currentBucket.get("workflows"))
                 this.workflows = currentBucket.get("workflows").models;
                 _(this.workflows).each(function (workflow) {
                     var WorkflowList = _.template(catalogWorkflow);
@@ -51,9 +50,9 @@ define(
             this.internalSelectWorkflow(this.$('#catalog-get-workflows-table tr')[0]);
             
         },
-        disableActionButtons: function (enable){
-        	 $('#catalog-get-as-new-button').prop('disabled', enable);
-        	 $('#catalog-get-append-button').prop('disabled', enable);       
+        disableActionButtons: function (enableGetAsNew, enableAppend){
+        	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
+        	 $('#catalog-get-append-button').prop('disabled', enableAppend);       
         },
         internalSelectWorkflow: function (currentWorkflowRow) {
             this.$('#catalog-get-revisions-table').empty();
@@ -113,7 +112,7 @@ define(
 		            	}
 	            	});
 	            revisionsModel.fetch();
-	            this.disableActionButtons(false);
+	            this.disableActionButtons(false, !studioApp.isWorkflowOpen());
             }  
         },
         highlightSelectedRow: function(tableId, row){
