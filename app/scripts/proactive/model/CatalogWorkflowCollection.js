@@ -14,7 +14,7 @@ define(
                 this.id = options.id;
             },
             url: function() {
-                return '/workflow-catalog/buckets/' + this.id + '/workflows';
+                return '/workflow-catalog/buckets/' + this.id + '/workflows/?size=5000';
             },
             parse: function(data) {
                 if (data.page.totalElements > 0) {
