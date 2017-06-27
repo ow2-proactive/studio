@@ -21,7 +21,7 @@ define(
             },
             getXml: function() {
                 return $.ajax({
-                    url: this.collection.url() + '/' + this.id + '?alt=xml'
+                    url: this.collection.urlWithoutSize() + '/' + this.id + '?alt=xml'
                 }).done(function (response) {
                     return new XMLSerializer().serializeToString(response);
                 });
