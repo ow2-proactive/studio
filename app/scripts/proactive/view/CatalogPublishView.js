@@ -37,20 +37,22 @@ define(
 	            this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
 	            
                 var currentBucket = this.buckets.get(currentBucketId);
-                this.workflows = currentBucket.get("workflows").models;
+                var workflows = currentBucket.get("workflows");
                 var editedWorkflow = null;
                 var name = studioApp.models.currentWorkflow.attributes.name
-                _(this.workflows).each(function (workflow) {
-                	if (workflow.get('name') == name){
-                		editedWorkflow = workflow;
-                	}
-                }, this);
+                _.each(
+                		workflows,
+                		function (workflow) {
+		                	if (workflow.name == name){
+		                		editedWorkflow = workflow;
+		                	}
+                		});
                 
                 if (editedWorkflow){
 		            var revisionsModel = new CatalogLastWorkflowRevisionDescription(
 		            	{
 		            		bucketid: currentBucketId, 
-		            		workflowid: editedWorkflow.id,
+		            		workflowname: editedWorkflow.name,
 			            	callback: function (revision) {
 	            				var WorkflowDescription = _.template(workflowDescription);
 	            				$('#catalog-publish-description-container').append(WorkflowDescription({revision: revision, name: name}));

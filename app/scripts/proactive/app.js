@@ -76,7 +76,6 @@ define(
             this.models.templates = new TemplateCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
             
-            // TODO Handle pagination
             this.models.catalogBuckets.fetch();
             this.modelsToRemove = [];
 

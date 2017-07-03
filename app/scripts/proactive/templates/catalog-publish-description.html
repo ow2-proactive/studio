@@ -1,10 +1,10 @@
-<div id="catalog-publish-description" data-workflowid="<%= revision.id %>">
+<div id="catalog-publish-description">
 	<table>
 		<tr>
 			<td colspan="2" style="padding-bottom: 3em">You are about to add a <b>new Version</b> of the existing &quot;<%= name %>&quot; Workflow to this bucket.</td>
 		</tr>
 		<tr>
-			<td>Last update: </td><td><%= revision.commit_date %></td>
+			<td>Last update: </td><td><%= revision.commit_time %></td>
 		</tr>
 		<tr>
 			<td style="padding-bottom: 3em; width: 40%">Last commit message: </td><td style="padding-bottom: 3em"><%= revision.commit_message %></td>

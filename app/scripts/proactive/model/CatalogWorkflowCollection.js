@@ -12,18 +12,14 @@ define(
             model: RestWorkflow,
             initialize: function(options) {
                 this.id = options.id;
+                this.callback = options.callback;
             },
             url: function() {
                 return '/catalog/buckets/' + this.id + '/resources';
             },
             parse: function(data) {
-                if (data.object) {
-                    return data.object;
-                }
-                else {
-                    return [];
-                }
-
+            	this.callback(data);
+                return data;
             }
         });
     })

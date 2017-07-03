@@ -12,11 +12,11 @@ define(
             model: RestWorkflow,
             initialize: function(options) {
                 this.bucketid = options.bucketid;
-                this.workflowid = options.workflowid;
+                this.workflowname = options.workflowname;
                 this.callback = options.callback;
             },
             url: function() {
-                return '/catalog/buckets/' + this.bucketid + '/resources/' + this.workflowid;
+                return '/catalog/buckets/' + this.bucketid + '/resources/' + this.workflowname;
             },
             parse: function(data) {
             	this.callback(data);
