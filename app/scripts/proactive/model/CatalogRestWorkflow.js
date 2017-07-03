@@ -11,11 +11,7 @@ define(
             defaults: {
                 id: "",
                 name: "",
-                key_value_metadata: [],
-                created_at: "",
-                revision_id: "",
-                bucket_id: "",
-                layout: ""
+                bucket_id: ""
             }
         });
     })

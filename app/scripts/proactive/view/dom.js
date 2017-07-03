@@ -492,17 +492,24 @@ define(
             
             var studioApp = require('StudioApp');
             var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
+            var workflowName = studioApp.models.currentWorkflow.attributes.name;
             
             var payload = new FormData();
             payload.append('file', blob);
             payload.append('kind', 'workflow');
-            payload.append('name', studioApp.models.currentWorkflow.attributes.name);
+            payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('contentType', "application/xml");
             
+            var url = '/catalog/buckets/' + bucketId + '/resources';
+            var isRevision = ($("#catalog-publish-description").data("first") != true)
+           
+            if (isRevision){
+            	url += "/" + workflowName + "/revisions"
+            }
             
             var postData = {
-                    url: '/catalog/buckets/' + bucketId + '/resources',
+                    url: url,
                     type: 'POST',
                     processData: false,
                     contentType: false,
@@ -524,25 +531,24 @@ define(
                 return response;
             });
             
-            $.when(promise).then(function () {
-                var newWorkflow = promise.responseJSON;
-                add_workflow_to_catalog_collection(newWorkflow);
-            });
+            if (!isRevision){
+	            $.when(promise).then(function () {
+	                var newWorkflow = promise.responseJSON;
+	                add_workflow_to_catalog_collection(newWorkflow.object[0]);
+	            });
+            }
         })
 
         function add_workflow_to_catalog_collection (newWorkflow) {
             var studioApp = require('StudioApp');
             // We manually add the newly published workflow into the right bucket
             // without relying on Backbone's persistence layer
-            studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
-                {
-                    id: newWorkflow.id,
-                    name: newWorkflow.name,
-                    created_at: newWorkflow.created_at,
-                    revision_id: newWorkflow.commit_id,
-                    bucket_id: newWorkflow.bucket_id
-                }
-            );
+            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get("workflows");
+            workflows[workflows.length] = {
+                id: newWorkflow.id,
+                name: newWorkflow.name,
+                bucket_id: newWorkflow.bucket_id
+            };
         }
 
         // removing a task by del

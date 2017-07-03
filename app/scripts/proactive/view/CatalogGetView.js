@@ -7,11 +7,10 @@ define(
         'text!proactive/templates/catalog-get-workflow.html',
         'text!proactive/templates/catalog-get-revision.html',
         'text!proactive/templates/catalog-get-revision-description.html',
-        'proactive/model/CatalogWorkflowRevisionCollection',
-        'proactive/model/CatalogWorkflowRevisionDescription'
+        'proactive/model/CatalogWorkflowRevisionCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection, CatalogWorkflowRevisionDescription) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection) {
 
     "use strict";
 
@@ -38,14 +37,15 @@ define(
 	        	var currentBucketID = $(currentBucketRow).data("bucketid");
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
 	            
+	            var that = this;
                 var currentBucket = this.buckets.get(currentBucketID);
-                this.workflows = currentBucket.get("workflows").models;
-                _(this.workflows).each(function (workflow) {
-                    var WorkflowList = _.template(catalogWorkflow);
-                    this.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
-                }, this);
-            }else{
-            	
+                var workflows = currentBucket.get("workflows");
+                _.each(
+                		workflows,
+                		function (workflow) {
+            				var WorkflowList = _.template(catalogWorkflow);
+            				that.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
+                		});
             }
             this.internalSelectWorkflow(this.$('#catalog-get-workflows-table tr')[0]);
             
@@ -59,7 +59,7 @@ define(
             var studioApp = require('StudioApp');
             
             if (currentWorkflowRow){
-	        	var currentWorkflowID = $(currentWorkflowRow).data("workflowid");
+	        	var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
 	            this.highlightSelectedRow('#catalog-get-workflows-table', currentWorkflowRow);
 	            var that = this;
 
@@ -67,13 +67,21 @@ define(
 	            var revisionsModel = new CatalogWorkflowRevisionCollection(
 	            	{
 	            		bucketid: bucketId, 
-	            		workflowid: currentWorkflowID,
+	            		workflowname: currentWorkflowName,
 		            	callback: function (revisions) {
 		            		_.each(
 		            			revisions, 
 		            			function (revision) {
+		            				var projectName = "";
+		                    		//Go through all metadata to find project name
+		                    		_.each(revision.object_key_values, function(keyValue){
+		                    			if (keyValue.key == "project_name" && keyValue.label == "job_information"){
+		                    				projectName = keyValue.value;
+		                    			}
+		                    		});
+		                    		
 		            				var RevisionList = _.template(catalogRevision);
-		            				$('#catalog-get-revisions-table').append(RevisionList({revision: revision}));
+		            				$('#catalog-get-revisions-table').append(RevisionList({revision: revision, projectname: projectName}));
 		            			}
 	            			);
             				that.internalSelectRevision(that.$('#catalog-get-revisions-table tr')[0])
@@ -87,31 +95,21 @@ define(
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
-	        	var currentRevisionId = $(currentRevisionRow).data("revisionid");
+	        	var rawurl = $(currentRevisionRow).data("rawurl");
+	        	var name = $(currentRevisionRow).data("name");
+	        	var commitmessage = $(currentRevisionRow).data("commitmessage");
+        		var projectName = $(currentRevisionRow).data("projectname");
+        		
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
+        		
+				var RevisionDescription = _.template(catalogRevisionDescription);
+				$('#catalog-get-description-container').append(RevisionDescription({
+					rawurl: rawurl, 
+					name: name,
+					commitmessage: commitmessage,
+					projectname: projectName
+					}));
 
-	        	var currentBucketId = this.getSelectedBucketId();
-	        	var currentWorkflowId = this.getSelectedWorkflowId();
-	            var that = this;
-
-	            var revisionsModel = new CatalogWorkflowRevisionDescription(
-	            	{
-	            		bucketid: currentBucketId, 
-	            		workflowid: currentWorkflowId,
-	            		revisionid: currentRevisionId,
-		            	callback: function (revision) {
-		            		var projectName = "";
-		            		//Go through all metadata to find project name
-		            		_.each(revision.object_key_values, function(keyValue){
-		            			if (keyValue.key == "project_name" && keyValue.label == "job_information"){
-		            				projectName = keyValue.value
-		            			}
-		            		});
-            				var RevisionDescription = _.template(catalogRevisionDescription);
-            				$('#catalog-get-description-container').append(RevisionDescription({revision: revision, projectname: projectName}));
-		            	}
-	            	});
-	            revisionsModel.fetch();
 	            this.disableActionButtons(false, !studioApp.isWorkflowOpen());
             }  
         },
@@ -126,11 +124,8 @@ define(
         getSelectedBucketId: function(){
         	return this.getSelectedRowId("#catalog-get-buckets-table .catalog-selected-row", "bucketid");
         },
-        getSelectedWorkflowId: function(){
-        	return this.getSelectedRowId("#catalog-get-workflows-table .catalog-selected-row", "workflowid");
-        },
-        getSelectedRevisionId: function(){
-        	return this.getSelectedRowId("#catalog-get-revisions-table .catalog-selected-row", "revisionid");
+        getSelectedWorkflowName: function(){
+        	return this.getSelectedRowId("#catalog-get-workflows-table .catalog-selected-row", "workflowname");
         },
         getSelectedRowId: function(tableSelector, dataName){
         	return ($(($(tableSelector))[0])).data(dataName);

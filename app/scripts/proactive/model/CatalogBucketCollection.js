@@ -10,14 +10,9 @@ define(
 
         return Backbone.Collection.extend({
             model: RestBucket,
-            url: '/catalog/buckets',
+            url: '/catalog/buckets/?kind=workflow',
             parse: function(data) {
-                if (data.page.totalElements > 0) {
-                    return data._embedded.bucketMetadataList;
-                }
-                else {
-                    return [];
-                }
+                return data;
             }
         });
     })
