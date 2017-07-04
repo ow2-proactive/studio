@@ -225,14 +225,12 @@ define(
 		
                 var xmlDoc = $.parseXML( jobXml );
                 var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
-                var jsonData = { "xmlContentString" : xmlString };
-                var jsonString = JSON.stringify(jsonData);
 
                 $.ajax({
                     url: "/job-planner/planned_jobs/",
-                    data: jsonString,
+                    data: xmlString,
                     dataType: 'json',
-                    contentType: "application/json",
+                    contentType: "application/xml",
                     cache: false,
                     type: 'POST',
                     beforeSend: function (xhr) {
