@@ -21,7 +21,7 @@
     <% if (job["Generic Info"] && job["Generic Info"].length>0) { %>
     <genericInformation>
     <% _.each(job["Generic Info"], function(gi) { %>
-            <info name="<%=gi["Property Name"]%>" value="<%= _.escape(gi["Property Value"]) %> "/>
+            <info name="<%=gi["Property Name"]%>" value="<%= _.escape(gi["Property Value"]) %>"/>
     <% }) %>
     </genericInformation>
     <% } %>
