@@ -100,12 +100,6 @@ icons div {
 	padding-right: 0px;
 }
 
-.catalog-workflow-item {
-    padding: 0;
-    list-style-type: none;
-    text-align: left;
-}
-
 .draggable {
     z-index: 100;
 }
@@ -291,6 +285,11 @@ a:hover {
 
 .selected {
     color: orange !important;
+}
+
+.catalog-selected-row{
+	color: black;
+	background-color: #4A90D9;
 }
 
 .task, .label {
@@ -1109,8 +1108,4 @@ li.success {
 
 .ui-pnotify.translucent.ui-pnotify-fade-in {
     opacity: .8;
-}
-
-#delete-selection-catalog, #export-as-archive-button, #publish-to-remote {
-	white-space: pre-line;
 }
