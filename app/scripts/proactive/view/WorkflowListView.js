@@ -113,7 +113,7 @@ define(['jquery',
                             console.log('Open workflow ' + workflowId);
                             that.open(workflowId);
                             StudioApp.importFromCatalog();
-                            $('#catalog-browser-close-button').click();
+                            $('#catalog-get-close-button').click();
                         }
                     }
                 });
