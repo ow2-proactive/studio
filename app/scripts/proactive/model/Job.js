@@ -66,7 +66,7 @@ define(
                         if (StudioApp.isWorkflowOpen()) {
                             that.updateVariable(formValues);
                             var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
-                            if (!validationData.valid) {
+                            if (!validationData || !validationData.valid) {
                                 var err = {
                                     type: 'Validation',
                                     message: "<br><br>" + validationData.errorMessage

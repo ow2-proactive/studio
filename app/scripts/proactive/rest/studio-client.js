@@ -298,8 +298,6 @@ define(
         validate: function (jobXml, jobModel) {
             if (!localStorage['pa.session']) return;
 
-            if (jobModel.getTasksCount() == 0) return;
-
             var that = this;
             return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, null, false);
         },
