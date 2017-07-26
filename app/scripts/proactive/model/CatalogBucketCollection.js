@@ -1,7 +1,7 @@
 define(
     [
         'backbone',
-        'proactive/model/RestBucket'
+        'proactive/model/CatalogRestBucket'
     ],
 
     function (Backbone, RestBucket) {
@@ -10,14 +10,9 @@ define(
 
         return Backbone.Collection.extend({
             model: RestBucket,
-            url: '/workflow-catalog/buckets',
+            url: '/catalog/buckets/?kind=workflow',
             parse: function(data) {
-                if (data.page.totalElements > 0) {
-                    return data._embedded.bucketMetadataList;
-                }
-                else {
-                    return [];
-                }
+                return data;
             }
         });
     })

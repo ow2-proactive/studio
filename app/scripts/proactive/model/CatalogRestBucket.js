@@ -17,9 +17,13 @@ define(
                 workflows: ""
             },
             initialize: function(options) {
-                var workflows = new CatalogWorkflowCollection({id: this.id});
+            	var that = this;
+                var workflows = new CatalogWorkflowCollection({
+                	id: this.id,
+                	callback: function(data){
+                		that.set("workflows", data);
+                	}});
                 workflows.fetch();
-                this.set("workflows", workflows);
             }
         });
     })

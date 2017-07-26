@@ -61,23 +61,22 @@
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" id="file-dropdown" > File <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li>
-                            <a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
-                                <i class="glyphicon glyphicon-hdd"></i> Save </a>
-                            </li>
-                            <li>
-                                <a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
-                                <i class="glyphicon glyphicon-folder-close"></i> Close</a>
-                            </li>
+			  <li><a id="validate-button" href="#" class="pointer"
+				 title="Check the validity of current workflow.">
+			      <i class="glyphicon glyphicon-ok "></i> Check</a></li>
+                            <li><a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
+                                <i class="glyphicon glyphicon-hdd"></i> Save </a></li>
+                            <li><a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
+                                <i class="glyphicon glyphicon-folder-close"></i> Close</a></li>
                             <li><a id="import-button" href="" class="pointer"
-                                   title="Import existing workflows (.xml files)."><i
-                                    class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
+                                   title="Import existing workflows (.xml files).">
+				<i class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
                             <li><a id="add-button" href="#" class="pointer"
-                                   title="Add existing workflows (.xml files) to current one."><i
-                                    class="glyphicon glyphicon-plus"></i> Add to current workflow</a></li>
+                                   title="Add existing workflows (.xml files) to current one.">
+				<i class="glyphicon glyphicon-plus"></i> Add to current workflow</a></li>
                             <li><a id="export-button" href="#" class="pointer"
-                                   title="Export current workflow as .xml file."><i
-                                    class="glyphicon glyphicon-export"></i> Export</a></li>
+                                   title="Export current workflow as .xml file.">
+				<i class="glyphicon glyphicon-export"></i> Export</a></li>
 
                         </ul>
                     </li>
@@ -88,28 +87,45 @@
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" id="edit-dropdown" > Edit <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a id="clear-button" href="#" class="pointer" title="Clear current workflow."><i
-                                    class="glyphicon glyphicon-repeat "></i> Clear</a></li>
-                            <li><a id="undo-button" href="#" class="pointer"><i
-                                    class="glyphicon glyphicon-arrow-left "></i> Undo</a></li>
-                            <li><a id="redo-button" href="#" class="pointer"><i
-                                    class="glyphicon glyphicon-arrow-right "></i> Redo</a></li>
+                          <li><a id="clear-button" href="#" class="pointer" title="Clear current workflow.">
+			      <i class="glyphicon glyphicon-repeat"></i> Clear</a></li>
+                          <li><a id="undo-button" href="#" class="pointer">
+			      <i class="glyphicon glyphicon-arrow-left"></i> Undo</a></li>
+                          <li><a id="redo-button" href="#" class="pointer">
+			      <i class="glyphicon glyphicon-arrow-right"></i> Redo</a></li>
 
                         </ul>
                     </li>
 
                     <li class="divider-vertical"></li>
 
-                    <li><a id="browse-catalog-button" href="#" class="pointer"
-                           title="Browse the Workflow Catalog."><i
-                            class="glyphicon glyphicon-folder-open"></i> Catalog</a></li>
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown" id="catalog-dropdown" >
+                        	<i class="glyphicon glyphicon-folder-open"></i> Catalog <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                          	<li>
+                          		<a id="get-from-catalog-button" href="#" class="pointer">
+			      					<i class="glyphicon glyphicon-arrow-left"></i>
+			      					 Get a Workflow from the Catalog
+			      				</a>
+			      			</li>
+                          	<li>
+                          		<a id="publish-to-catalog-button" href="#" class="pointer">
+			      					<i class="glyphicon glyphicon-arrow-right"></i>
+			      					 Publish current Workflow to the Catalog
+			      				</a>
+			      			</li>
+                        </ul>
+                    </li>
                     <li class="divider-vertical"></li>
-                    <li><a id="validate-button" href="#" class="pointer"
-                           title="Check the validity of current workflow."><i
-                            class="glyphicon glyphicon-ok "></i> Check</a></li>
+
                     <li><a id="submit-button" href="#" class="pointer"
-                           title="Execute current workflow on the Scheduler you are connected to."><i
-                            class="glyphicon glyphicon-share "></i> Execute</a></li>
+                           title="Execute current workflow on the Scheduler you are connected to.">
+			<i class="glyphicon glyphicon-share"></i> Execute</a></li>
+		    <li><a id="plan-button" href="#" class="pointer"
+                           title="Execute current worklfow at the scheduled dates.">
+			<i class="glyphicon glyphicon-calendar"></i> Plan</a></li>
                     <li class="divider-vertical"></li>
                     <li class="dropdown">
 						    <a href="#" data-toggle="dropdown" > Help <b class="caret"></b></a>
@@ -218,32 +234,48 @@
             </div>
         </div>
 
-        <div id="catalog-browser-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="catalog-get-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="width:1050px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Get a Workflow from the Catalog</h3>
+                    </div>
+                    <div id="catalog-get-body" class="modal-body" style="height:100%">
+                    	<div id="catalog-get-container"></div>
+                    </div>
+                    <div class="modal-footer">
+                    	<button id="catalog-get-as-new-button" class="btn btn-primary" aria-hidden="true">
+                            Open as a new<br>Workflow
+                        </button>
+                    	<button id="catalog-get-append-button" class="btn btn-primary" aria-hidden="true">
+                            Append to current<br>Workflow
+                        </button>
+                        <button id="catalog-get-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="catalog-publish-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Workflow Catalog</h3>
+                        <h3>Publish current Workflow to the Catalog</h3>
                     </div>
-                    <div id="catalog-browser-body" class="modal-body" style="height:100%">
-                        <div id="catalog-browser-container"></div>
+                    <div id="catalog-publish-body" class="modal-body" style="height:100%">
+                    	<div id="catalog-publish-container"></div>
                     </div>
                     <div class="modal-footer">
-                    	<table style="width:100%;"><tr><td>
-		                <table><tr><td><select class="form-control" id="catalog-select-action">
-		                    <option value="-1" selected="selected">Please choose an action</option>
-		                    <option value="0" id="publish-to-remote">Send to another Workflow Catalog</option>
-		                    <option value="1" id="export-as-archive-button">Export selected Workflows</option>
-		                    <option value="2" id="import-archive-button">Import archive of Workflows</option>
-		                    <option value="3" id="delete-selection-catalog">Delete selected Workflows</option>
-		                    <option value="4" id="publish-to-catalog-button">Add open Workflow to this bucket</option>
-		                </select></td>
-		                <td><button id="catalog-action-button" class="btn btn-primary" aria-hidden="true">
-                            OK
-                        </button></td></tr></table></td>
-                        <td colspan="2"><button id="catalog-browser-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    	<button id="catalog-publish-current" class="btn btn-primary" aria-hidden="true">
+                            Publish
+                        </button>
+                        <button id="catalog-publish-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                             Close
-                        </button></td></tr></table>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -283,15 +315,32 @@
             </div>
         </div>
 
-        <div id="publish-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="open-a-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Publish Workflow to Catalog</h3>
+                        <h3>Please open a Workflow</h3>
                     </div>
                     <div class="modal-body" style="height:100%">
-                        Do you want to publish your workflow into the Catalog ?
+                        In order to perform this action you need to open a Workflow.
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="publish-current-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Publish current Workflow to Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        Do you want to publish your Workflow into the Catalog ?
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Yes</button>
@@ -331,60 +380,6 @@
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-add-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
-                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="delete-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Delete the selected workflow from current Bucket</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        Warning! You are going to delete the selected workflows. This step can not be reversed.
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-delete-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
-                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="select-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Please select a bucket</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        In order to perform this action you need to choose an existing bucket.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="send-to-remote-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Send selected Workflows to a remote Workflow Catalog</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        <table style="width:100%"><tr><td>Remote Workflow Catalog URL<br>(http://IP:port/workflow-catalog)</td><td style="width:50%"><input type="text" id="remoteCatalogURL" style="width:100%"></td></tr>
-                        <tr><td>ID of the bucket on the remote<br>Workflow Catalog</td><td><input type="text" id="remoteCatalogBucketId" style="width:100%"></td></tr></table>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-send-to-remote" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Send</button>
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>
@@ -431,9 +426,9 @@
                     <div class="modal-body" id="job-variables" style="height:100%">
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" id="check-button" type="button" aria-hidden="true">Check</button>
-                        <button class="btn btn-primary" id="exec-button" type="button" aria-hidden="true">Execute</button>
-
+                        <button class="btn btn-primary" id="check-button" type="button">Check</button>
+                        <button class="btn btn-primary" id="exec-button" type="button">Execute</button>
+                        <button class="btn btn-primary" id="exec-plan-button" type="button">Plan</button>
                     </div>
                 </div>
             </div>

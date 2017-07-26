@@ -7,7 +7,6 @@ define(
         'xml2json',
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
-        'proactive/view/CatalogView',
         'pnotify',
         'pnotify.buttons',
         'codemirrorJs',
@@ -21,7 +20,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, CatalogView, PNotify) {
+    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, PNotify) {
 
         "use strict";
 
@@ -128,21 +127,56 @@ define(
             $('#xml-view-modal').modal();
         })
 
-        $("#browse-catalog-button").click(function (event) {
+        $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
-            var studioApp = require('StudioApp');
+	        var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.fetch({reset: true});
             studioApp.modelsToRemove = [];
-            var publishButton = $('#publish-to-catalog-button');
-            studioApp.views.catalogView.render();
-            if (studioApp.isWorkflowOpen() && $("#select-bucket").val() != -1) {
-                publishButton.prop('disabled', false);
-            }  
-            else {
-                publishButton.prop('disabled', true);
+            studioApp.views.catalogGetView.render();
+            $('#catalog-get-modal').modal();
+        });
+
+        $("#publish-to-catalog-button").click(function (event) {
+            event.preventDefault();
+		    var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+		        studioApp.models.catalogBuckets.fetch({reset: true});
+		        studioApp.modelsToRemove = [];
+		        studioApp.views.catalogPublishView.render();
+		        $('#catalog-publish-modal').modal();
+            }else{
+            	$('#open-a-workflow-modal').modal();
             }
-            $('#catalog-browser-view-modal').modal();
-        })
+        });
+
+        $("#catalog-get-as-new-button").click(function (event) {
+            workflowImport(event, '#import-workflow-confirmation-modal');
+        });
+
+        $("#catalog-get-append-button").click(function (event) {
+        	workflowImport(event, '#add-workflow-confirmation-modal');
+        });
+        
+        function workflowImport(e, modalSelector) {
+            var studioApp = require('StudioApp');
+            var url = $("#catalog-get-revision-description").data("selectedrawurl");
+            
+            $.ajax({
+                url: url,
+                type: 'GET'
+            }).success(function (response) {
+            	studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
+                $(modalSelector).modal();
+                return response;
+            }).error(function (response) {
+                notify_message('Error', 'Error importing selected Workflow', false);
+                return response;
+            });
+        }
+
+        $("#catalog-publish-current").click(function (event) {
+            $('#publish-current-confirmation-modal').modal();
+        });
 
         $("#layout-button").click(function (event) {
             event.preventDefault();
@@ -182,18 +216,48 @@ define(
 
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
+            $("#exec-plan-button").hide();
+            $("#exec-button").show();
+            $('#execute-workflow-modal').modal();
+        });
+
+	$("#plan-button").click(function (event) {
+            event.preventDefault();
+	    
+            var studioApp = require('StudioApp');
+            if (!studioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
+            save_workflow();
+            closeCollapsedMenu();
+
+            var jobVariables = readOrStoreVariablesInModel();
+            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
+                executeIfConnected(planned_submit);
+                return;
+            }
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
+            $('#job-variables').html(template);
+            $("#exec-button").hide();
+            $("#exec-plan-button").show();
             $('#execute-workflow-modal').modal();
         });
 
         $("#exec-button").click(function (event) {
-            executeOrCheck(event, false)
+            executeOrCheck(event, false, false)
+        });
+        
+        $("#exec-plan-button").click(function (event) {
+            executeOrCheck(event, false, true)
         });
 
         $("#check-button").click(function (event) {
-            executeOrCheck(event, true)
+            executeOrCheck(event, true, false)
         });
 
-        function executeOrCheck(event, check) {
+        function executeOrCheck(event, check, plan) {
             var studioApp = require('StudioApp');
             executeIfConnected(function () {
                 var oldVariables = readOrStoreVariablesInModel();
@@ -215,7 +279,12 @@ define(
                     $('#job-variables').html(template);
                 } else {
                     $('#execute-workflow-modal').modal("hide");
-                    submit();
+                    if(!plan){
+                    	submit();	
+                    }else{
+                    	planned_submit();
+                    }
+                    
                 }
                 readOrStoreVariablesInModel(oldVariables);
             })
@@ -293,6 +362,13 @@ define(
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization);
+        }
+
+	function planned_submit() {
+            var studioApp = require('StudioApp');
+            var xml = studioApp.views.xmlView.generateXml();
+            var htmlVisualization = studioApp.views.xmlView.generateHtml();
+            StudioClient.planned_submit(xml, htmlVisualization);
         }
 
         function validate() {
@@ -385,150 +461,94 @@ define(
 
         $("#confirm-import-from-catalog").click(function () {
             add_workflow_to_current(true);
-        })
+        });
 
         $("#confirm-add-from-catalog").click(function () {
             add_workflow_to_current(false);
-        })
+        });    
+        
+        function add_workflow_to_current(clearCurrentFirst){
+            var studioApp = require('StudioApp');
+
+            // Workflow should be clear only if a workflow is currently open
+            if (studioApp.isWorkflowOpen()) {
+                if (clearCurrentFirst){
+                    console.log("A workflow is already open, let's clear it first");
+                    studioApp.clear();
+                }
+                studioApp.importFromCatalog();
+                $('#catalog-get-close-button').click();
+            }
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+        }
 
         $("#confirm-publication-to-catalog").click(function () {
-            var selectedBucketId = $("#select-bucket").val();
+            var bucketId = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketid");
+            
             var studioApp = require('StudioApp');
-            var xmlToPublish = studioApp.views.xmlView.generateXml();
-            var layout = JSON.stringify(studioApp.models.currentWorkflow.getMetadata());
-            var workflowPromise = publish_to_catalog(selectedBucketId, xmlToPublish, layout);
-            add_workflow_promise_to_collection(workflowPromise, xmlToPublish);
-        })
-        
-        $("#catalog-action-button").click(function (event) {
-        	var actionID = $("#catalog-select-action").val();
-            switch (actionID){
-            case "0": $('#send-to-remote-confirmation-modal').modal(); break;
-            case "1": window.location.replace(get_workflows_archive_URL()); break;
-            case "2": {
-	            var studioApp = require('StudioApp');
-	            closeCollapsedMenu();
-	            $("#import-archive-file").parent('form').trigger('reset');
-	            $("#import-archive-file").click();
-            }
-            break;
-            case "3": $('#delete-workflow-confirmation-modal').modal(); break;
-            case "4": {
-	            if ($("#select-bucket").val()== -1) {
-	                $('#select-bucket-modal').modal();
-	            }
-	            else {
-	                $('#publish-workflow-confirmation-modal').modal();
-	            }
-            } break;
-            }
-        })
-
-        $("#confirm-delete-from-catalog").click(function (event) {
-            var studioApp = require('StudioApp');
-            var wfToRemove = studioApp.modelsToRemove;
-            var wId;
-            var bucketId;
-            var workflowId;
-            var workflowsCollection;
-            for (wId in wfToRemove) {
-                bucketId = wfToRemove[wId].get('bucket_id');
-                workflowId = wfToRemove[wId].get('id');
-                workflowsCollection = studioApp.models.catalogBuckets.get(bucketId).get('workflows');
-                studioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                    studioApp.views.catalogView.internalSwitchBucket(bucketId));
-                wfToRemove[wId].destroy();
-                workflowsCollection.remove(workflowId);
-                studioApp.views.catalogView.listenTo(workflowsCollection, 'remove',
-                    studioApp.views.catalogView.internalSwitchBucket(bucketId));
-            }
-            studioApp.resetDeleteCollection();
-        })
-        
-        function get_workflows_archive_URL(bucketId){
-            var studioApp = require('StudioApp');
-            var wfToRemove = studioApp.modelsToRemove;
-            var wfIds = "";
-            var first = true;
-            for (var wfIndex in wfToRemove){
-            	if (first) first = false;
-            	else wfIds += ","
-            	wfIds += wfToRemove[wfIndex].get('id');
-            }
-            var selectedBucketId = bucketId ? bucketId : $("#select-bucket").val();
-            return '/workflow-catalog/buckets/' + selectedBucketId + '/workflows/' + wfIds + '?alt=zip';
-        }
-        
-        $("#import-archive-file").change(function (event) {
-        	var studioApp = require('StudioApp');
-            var files = event.target.files;
-            if (files.length > 0) {
-                var file = files[0];
-                if (!file.type.match('application/zip')) {
-                    return;
-                }
-                var reader = new FileReader();
-                reader.onloadend = function (evt) {
-
-                    if (evt.target.readyState == FileReader.DONE) {
-            			var blob = new Blob([file], { type: "application/zip" });
-                        var createdListOfWorkflows = send_archive_to_catalog(blob);
-
-                        $.when(createdListOfWorkflows).then(function () {
-                            var newWorkflows = createdListOfWorkflows.responseJSON;
-                            for (var i = 0; i < newWorkflows["workflow"].length; i++){
-                                add_workflow_to_collection(newWorkflows["workflow"][i]);
-                            }
-                        });
-                    }
-                }
-                reader.readAsBinaryString(file);
-            }
-        })
-        
-        $("#confirm-send-to-remote").click(function( event ) {
-        	var remoteURL = $( "#remoteCatalogURL" ).val();
-        	var bucketId = $( "#remoteCatalogBucketId" ).val();
-        	//Can't use AJAX for download
-        	var xhr = new XMLHttpRequest();
-			xhr.open('GET', get_workflows_archive_URL(), true);
-			xhr.responseType = 'blob';
-			xhr.onload = function(e) {
-			    if (this.status == 200) {
-                    send_archive_to_catalog(this.response, remoteURL, bucketId);
-			    } 
-			};
-			xhr.send(null);
-        });
-        
-        function send_archive_to_catalog(blob, remoteURL, bucketId){
+            var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
+            var workflowName = studioApp.models.currentWorkflow.attributes.name;
+            
             var payload = new FormData();
             payload.append('file', blob);
-            var selectedBucketId = bucketId ? bucketId : $("#select-bucket").val();
-            var server = remoteURL ? remoteURL : "/workflow-catalog";
-            var url = server + '/buckets/' + selectedBucketId + '/workflows?alt=zip';
+            payload.append('kind', 'workflow');
+            payload.append('name', workflowName);
+            payload.append('commitMessage', $("#catalog-publish-commit-message").val());
+            payload.append('contentType', "application/xml");
             
-            return $.ajax({
-                url: url,
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                cache: false,
-                crossDomain: true,
-                data: payload
-            }).success(function (response) {
-            	if (remoteURL)
-                    notify_message('Sending successful', 'The Workflows have been successfully sent to the remote Catalog', true);
-            	else
-                    notify_message('Import successful', 'The Workflows have been successfully imported into the Catalog', true);
+            var url = '/catalog/buckets/' + bucketId + '/resources';
+            var isRevision = ($("#catalog-publish-description").data("first") != true)
+           
+            if (isRevision){
+            	url += "/" + workflowName + "/revisions"
+            }
+            
+            var postData = {
+                    url: url,
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    data: payload
+                };
+            
+            var workflowId = $("#catalog-publish-description").data("workflowid");            
+            if (workflowId){
+            	postData.url = postData.url + "/" + workflowId + "/revisions";
+                payload.append('objectId', workflowId);
+            }
+            
+            var promise = $.ajax(postData).success(function (response) {
+                notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
                 return response;
             }).error(function (response) {
-            	if (remoteURL)
-                    notify_message('Error', 'Error sending the Workflows to the remote Catalog', false);
-            	else
-                    notify_message('Error', 'Error importing the Workflows into the Catalog', false);
+                notify_message('Error', 'Error publishing the Workflow to the Catalog', false);
                 return response;
             });
+            
+            if (!isRevision){
+	            $.when(promise).then(function () {
+	                var newWorkflow = promise.responseJSON;
+	                add_workflow_to_catalog_collection(newWorkflow.object[0]);
+	            });
+            }
+        })
+
+        function add_workflow_to_catalog_collection (newWorkflow) {
+            var studioApp = require('StudioApp');
+            // We manually add the newly published workflow into the right bucket
+            // without relying on Backbone's persistence layer
+            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get("workflows");
+            workflows[workflows.length] = {
+                id: newWorkflow.id,
+                name: newWorkflow.name,
+                bucket_id: newWorkflow.bucket_id
+            };
         }
 
         // removing a task by del
@@ -551,79 +571,6 @@ define(
                 $("#script-save-button").click();
             }
         });
-        
-        function add_workflow_to_current(clearCurrentFirst){
-            var studioApp = require('StudioApp');
-
-            // Workflow should be clear only if a workflow is currently open
-            if (studioApp.isWorkflowOpen()) {
-                if (clearCurrentFirst){
-                    console.log("A workflow is already open, let's clear it first");
-                    studioApp.clear();
-                }
-                studioApp.importFromCatalog();
-                $('#catalog-browser-close-button').click();
-            }
-            else {
-                // create a new workflow, open it and import the xml into it
-                var clickAndOpenEvent = jQuery.Event( "click" );
-                clickAndOpenEvent.openWorkflow = true;
-                $('.create-workflow-button').trigger(clickAndOpenEvent);
-            }
-        }
-
-        function publish_to_catalog (bucketId, xmlContent, layoutContent) {
-
-            var payload = new FormData();
-            var blob = new Blob([xmlContent], { type: "text/xml" });
-            payload.append('file', blob);
-
-            // TODO add the layout as a query parameter
-
-            var createdWorkflowPromise = $.ajax({
-                url: '/workflow-catalog/buckets/' + bucketId + '/workflows',
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                cache: false,
-                data: payload
-            }).success(function (response) {
-                notify_message('Published', 'The Workflow has been published to the Catalog', true);
-                return response;
-            });
-            return createdWorkflowPromise;
-        }
-
-        function add_workflow_promise_to_collection (createdWorkflowPromise, xmlContent) {
-            $.when(createdWorkflowPromise).then(function () {
-                var newWorkflow = createdWorkflowPromise.responseJSON;
-                add_workflow_to_collection(newWorkflow["workflow"][0], xmlContent);
-            });
-        }
-
-        function add_workflow_to_collection (newWorkflow, xmlContent) {
-            var studioApp = require('StudioApp');
-            // We manually add the newly published workflow into the right bucket
-            // without relying on Backbone's persistence layer
-            studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get('workflows').add(
-                {
-                    id: newWorkflow.id,
-                    name: newWorkflow.name,
-                    variables: newWorkflow.variables,
-                    generic_information: newWorkflow.generic_information,
-                    created_at: newWorkflow.created_at,
-                    revision_id: newWorkflow.revision_id,
-                    bucket_id: newWorkflow.bucket_id,
-                    project_name: newWorkflow.project_name,
-                    layout: newWorkflow.layout
-                },
-                {
-                    xmlContent: xmlContent,
-                    layout: newWorkflow.layout
-                }
-            );
-            studioApp.views.catalogView.internalSwitchBucket(newWorkflow.bucket_id);
-        }
 
         function save_workflow() {
             var studioApp = require('StudioApp');
@@ -763,8 +710,7 @@ define(
         	var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
-                console.log('conf:');
-                console.log(conf);
+                console.log('conf:', conf);
                 if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
                     result = result + "dev";
                 }
@@ -822,11 +768,6 @@ define(
             $('#workflow-designer-outer').mousedown(function (e) {
                 pasteAllow = {left: e.pageX, top: e.pageY};
                 e.stopPropagation();
-
-                $.when(createdWorkflowPromise).then(function () {
-                    var newWorkflow = createdWorkflowPromise.responseJSON;
-                    add_workflow_to_collection(newWorkflow, xmlContent);
-                });
             })
         });
 

@@ -202,18 +202,35 @@ define(
             if (!localStorage['pa.session']) return;
 
             var that = this;
+	  
+            that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
+                if (result.errorMessage) {
+                    that.alert("Cannot submit the job", result.errorMessage, 'error');
+                } else if (result.id) {
+                    that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id +")</a></html>", 'success');
+                    that.setVisualization(result.id, visualization);
+                } else {
+                    that.alert("Job submission", request.responseText, 'error');
+                }
+            }, true);
 
+        },
+
+	planned_submit: function (jobXml, visualization) {
+            if (!localStorage['pa.session']) return;
+
+            var that = this;
+	    
             if (jobXml.indexOf("EXECUTION_CALENDARS") >= 0 ) {
+		
                 var xmlDoc = $.parseXML( jobXml );
                 var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
-                var jsonData = { "xmlContentString" : xmlString };
-                var jsonString = JSON.stringify(jsonData);
 
                 $.ajax({
                     url: "/job-planner/planned_jobs/",
-                    data: jsonString,
+                    data: xmlString,
                     dataType: 'json',
-                    contentType: "application/json",
+                    contentType: "application/xml",
                     cache: false,
                     type: 'POST',
                     beforeSend: function (xhr) {
@@ -239,16 +256,8 @@ define(
 
                 });
             } else {
-                that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
-                    if (result.errorMessage) {
-                        that.alert("Cannot submit the job", result.errorMessage, 'error');
-                    } else if (result.id) {
-                        that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id +")</a></html>", 'success');
-                        that.setVisualization(result.id, visualization);
-                    } else {
-                        that.alert("Job submission", request.responseText, 'error');
-                    }
-                }, true);
+		console.log("normal submit");
+		that.alert("Cannot upload a file", "Cannot plan a workflow without EXECUTION_CALENDAR", 'error');
             }
 
         },

@@ -195,12 +195,21 @@
     background-size: 10px 9px;
 }
 
-.task-status-failed, .task-status-faulty, .task-status-faulty, .task-status-aborted {
+
+.task-status-in-error {
+    background-color: #E8F0F8;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAB8ElEQVR42qWSX0hTURzHvw/G2e4Gyz9g0WJdakMGsilr+nDZCjJ7GDU2KN0VxnoY1wbZGjIDI+ZLLCgGhvRY9CiN3nvooQRxsCQiiJLSQQOVRRSkmPt2DBxN7MkDh8M53/M9v+/5nAMcsB2a7OvLvE8kXjpMJnWveLGj4+yiYcw99HovNQnnFSXM6elNzs/zTTJZOinEqV3tQmurtjI1VWG5zPXx8VUX4GkYAy0t2U9+PzkzQ87OshyLlY4B9qCinK6m01UWi2Q+z4WuLh6XARpGBfAZQOWj203mcmShwHeh0NuKrn+RSchsliW7nRFgTm63N8W1ysJjwOcPqkomk+TExN++FY+z1NnJGLAgAOf+hADvY0WpMBIhR0fJVIrboRDvCrEo5SP/RTtmNl9Z07QaR0ZY13XujBwe5nJPz8plIc7ta7pvsdz44XBs0Ofj9uAglxwOLjudrMuKDAa57vF8u9XeHm8y3TOb079U9Tf7+8lolBUJ6TrwYhJ4vbpD2zDIcJg//f6Nm21tVxvGp0K8Ync3OTTEam8vs0BRLttkP3pbHlALBMhMhhwY4AOr9XnDGAbufJWxajLmNeDJGeDwrmaRUNLAs++axiWXqx6QKP5Nq+g2Wz4hROEEYNp7f7d8rZQQj6JWa05OxYE+9x/l/NCdELAfpQAAAABJRU5ErkJggg==');
+    background-repeat: no-repeat;
+    background-position: 4px 2px;
+}
+
+.task-status-failed, .task-status-faulty, .task-status-aborted {
     background-color: #F8E0E0;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAB8ElEQVR42qWSX0hTURzHvw/G2e4Gyz9g0WJdakMGsilr+nDZCjJ7GDU2KN0VxnoY1wbZGjIDI+ZLLCgGhvRY9CiN3nvooQRxsCQiiJLSQQOVRRSkmPt2DBxN7MkDh8M53/M9v+/5nAMcsB2a7OvLvE8kXjpMJnWveLGj4+yiYcw99HovNQnnFSXM6elNzs/zTTJZOinEqV3tQmurtjI1VWG5zPXx8VUX4GkYAy0t2U9+PzkzQ87OshyLlY4B9qCinK6m01UWi2Q+z4WuLh6XARpGBfAZQOWj203mcmShwHeh0NuKrn+RSchsliW7nRFgTm63N8W1ysJjwOcPqkomk+TExN++FY+z1NnJGLAgAOf+hADvY0WpMBIhR0fJVIrboRDvCrEo5SP/RTtmNl9Z07QaR0ZY13XujBwe5nJPz8plIc7ta7pvsdz44XBs0Ofj9uAglxwOLjudrMuKDAa57vF8u9XeHm8y3TOb079U9Tf7+8lolBUJ6TrwYhJ4vbpD2zDIcJg//f6Nm21tVxvGp0K8Ync3OTTEam8vs0BRLttkP3pbHlALBMhMhhwY4AOr9XnDGAbufJWxajLmNeDJGeDwrmaRUNLAs++axiWXqx6QKP5Nq+g2Wz4hROEEYNp7f7d8rZQQj6JWa05OxYE+9x/l/NCdELAfpQAAAABJRU5ErkJggg==');
     background-repeat: no-repeat;
     background-position: 4px 2px;
 }
+
 
 .task-status-finished {
     background-color: #E8F0F8;

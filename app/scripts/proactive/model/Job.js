@@ -18,8 +18,7 @@ define(
 
     "use strict";
 
-	var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>', 
-    		null, Backbone.Form.templateSettings);
+	var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>');
 
     return SchemaModel.extend({
         schema: {
