@@ -11,15 +11,15 @@ define(
         return Backbone.Collection.extend({
             model: RestWorkflow,
             initialize: function(options) {
-                this.id = options.id;
+                this.bucketid = options.bucketid;
+                this.workflowname = options.workflowname;
                 this.callback = options.callback;
             },
             url: function() {
-                return '/catalog/buckets/' + this.id + '/resources';
+                return '/catalog/buckets/' + this.bucketid + '/resources/' + this.workflowname + '/revisions';
             },
             parse: function(data) {
             	this.callback(data);
-                return data;
             }
         });
     })

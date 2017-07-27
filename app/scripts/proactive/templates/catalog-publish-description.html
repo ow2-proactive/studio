@@ -1,0 +1,19 @@
+<div id="catalog-publish-description">
+	<table>
+		<tr>
+			<td colspan="2" style="padding-bottom: 3em">You are about to add a <b>new Version</b> of the existing &quot;<%= name %>&quot; Workflow to this bucket.</td>
+		</tr>
+		<tr>
+			<td>Last update: </td><td><%= revision.commit_time %></td>
+		</tr>
+		<tr>
+			<td style="padding-bottom: 3em; width: 40%">Last commit message: </td><td style="padding-bottom: 3em"><%= revision.commit_message %></td>
+		</tr>
+		<tr>
+			<td>Commit message:</td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="text" id="catalog-publish-commit-message" style="width: 100%"></input></td>
+		</tr>
+	</table>	
+</div>
