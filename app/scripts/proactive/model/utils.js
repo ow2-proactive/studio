@@ -16,7 +16,7 @@ define(function (require) {
             "\"><input class='input-property-field' type=\"text\"  value=\""+ value + "\">";
         },
         inlineNameValueInherited: function(prop) {
-        	prop['Inherited'] = (prop['Inherited'] && prop['Inherited'] == "true");
+        	prop['Inherited'] = (prop['Inherited'] && (prop['Inherited'] == true || prop['Inherited'] == "true"));
         	
         	var value = prop['Value'] ? prop['Value'] : "";
         	var checked = "";
