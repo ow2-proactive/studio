@@ -81,10 +81,23 @@ define(
             ]
 
             this.tasks = [];
+            this.genericInfo=[];
+
+            this.getTasksGenericInfo()
+
             this.on("change", function (eventName, event) {
                 undoManager.save()
             });
 
+        },
+        getTasksGenericInfo: function () {
+        //    download("test","test","String");
+            var numberGI = this.attributes.Variables;
+            console.log("Fetching GI...")
+            var genericInformation = this.get("Generic Info")
+            console.log("generic information " + genericInformation)
+
+           // return this.variables.length;
         },
         updateVariable: function (variable) {
             if (!variable.hasOwnProperty('Value') || !variable.Value) {
@@ -243,5 +256,23 @@ define(
         getBasicFields: function() {
             return ["Name", "Variables"]
         }
+
+        download: function(data, filename, type) {
+        var file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+            window.navigator.msSaveOrOpenBlob(file, filename);
+        else { // Others
+            var a = document.createElement("a"),
+            url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);  
+            }, 0); 
+    }
+}
     })
 })
