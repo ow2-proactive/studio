@@ -18,7 +18,7 @@ define(
             },
             initialize: function(options) {
                 var workflows = new CatalogWorkflowCollection({id: this.id});
-                workflows.fetch();
+                workflows.fetch({ data: $.param({ size: 5000}) });
                 this.set("workflows", workflows);
             }
         });
