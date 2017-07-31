@@ -76,7 +76,7 @@ define(
             this.models.catalogBuckets = new CatalogBucketCollection();
             
             // TODO Handle pagination
-            this.models.catalogBuckets.fetch();
+            this.models.catalogBuckets.fetch({ data: $.param({ size: 5000}) });
             this.modelsToRemove = [];
 
             this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
