@@ -95,7 +95,7 @@ define(
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
-	        	var rawurl = $(currentRevisionRow).data("rawurl");
+	        	var rawurl = window.location.origin + '/catalog/' + $(currentRevisionRow).data("rawurl") + '/raw';
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitmessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
@@ -103,6 +103,10 @@ define(
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
         		
 				var RevisionDescription = _.template(catalogRevisionDescription);
+				console.log('currentRevisionRow');
+				console.log('------------------');
+				console.log(currentRevisionRow);
+                console.log('------------------');
 				$('#catalog-get-description-container').append(RevisionDescription({
 					rawurl: rawurl, 
 					name: name,
