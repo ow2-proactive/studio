@@ -1,0 +1,44 @@
+{
+  "revisions": [
+    {
+      "name": "File Trigger",
+      "links": [
+        {
+          "rel": "content",
+          "href": "http://localhost:8080/buckets/1000/resources/File+Trigger/revisions/1501579244800/raw"
+        },
+        {
+          "rel": "relative",
+          "href": "buckets/1000/resources/File+Trigger/revisions/1501579244800"
+        }
+      ],
+      "kind": "workflow",
+      "bucket_id": 1000,
+      "commit_time": "2017-08-01T11:20:44.8",
+      "content_type": "application/xml",
+      "commit_message": "First commit",
+      "object_key_values": [
+        {
+          "key": "FOLDER_TO_MONITOR",
+          "value": "/tmp",
+          "label": "variable"
+        },
+        {
+          "key": "WORKFLOW_URL",
+          "value": "https://try.activeeon.com/catalog/buckets/1/resources/11/raw",
+          "label": "variable"
+        },
+        {
+          "key": "name",
+          "value": "File Trigger",
+          "label": "job_information"
+        },
+        {
+          "key": "project_name",
+          "value": "1. Basic Workflows",
+          "label": "job_information"
+        }
+      ]
+    }
+  ]
+}

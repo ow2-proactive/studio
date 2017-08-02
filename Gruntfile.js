@@ -368,6 +368,11 @@ module.exports = function (grunt) {
                 cmd: 'pkill -f selenium-standalone',
                 bg: false
             },
+            jsonServerStartSynchronously: {
+                cmd: 'node test/json-server-data/mock-scheduler-rest.js',
+                bg: false,
+                stdout: true
+            },
             jsonServerStart: {
                 cmd: 'node test/json-server-data/mock-scheduler-rest.js',
                 stdout: true
@@ -392,6 +397,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-selenium-standalone');
     grunt.loadNpmTasks('grunt-bg-shell');
     grunt.loadNpmTasks('grunt-nightwatch-report');
+
+    grunt.registerTask('mock:run', 'Expose the studio with a mocked scheduler in a very hacky way but it should be fine', function () {
+            grunt.task.run([
+                'publishJsonServerFiles',
+                'bgShell:jsonServerStartSynchronously'
+            ]);
+        });
 
     grunt.registerTask('test:ui:dev', 'Run the ui tests using a mocked REST scheduler', function () {
         grunt.task.run([
