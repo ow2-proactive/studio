@@ -131,7 +131,7 @@ define(
         $("#browse-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
-            studioApp.models.catalogBuckets.fetch({reset: true});
+            studioApp.models.catalogBuckets.fetch({reset: true, data: $.param({ size: 5000})});
             studioApp.modelsToRemove = [];
             var publishButton = $('#publish-to-catalog-button');
             studioApp.views.catalogView.render();
