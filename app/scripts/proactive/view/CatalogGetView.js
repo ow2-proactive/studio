@@ -103,10 +103,6 @@ define(
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
         		
 				var RevisionDescription = _.template(catalogRevisionDescription);
-				console.log('currentRevisionRow');
-				console.log('------------------');
-				console.log(currentRevisionRow);
-                console.log('------------------');
 				$('#catalog-get-description-container').append(RevisionDescription({
 					rawurl: rawurl, 
 					name: name,
