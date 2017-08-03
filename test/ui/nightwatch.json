@@ -34,7 +34,7 @@
         "acceptSslCerts": true
       },
       "globals": {
-        "studio_url": "http://localhost:8080/studio",
+        "studio_url": "http://localhost:9000/studio",
         "waitForConditionTimeout": 5000,
         "numberOfTries": 50,
         "menuAnimationTime": 2000,
