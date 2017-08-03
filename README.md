@@ -42,8 +42,10 @@ Then let's assume you did some changes to the code, you want to check for regres
 
 ## How to run a specific test case
 The test will assume you have a running studio instance (either in a real release that is running locally, or using method B). Method B doesn't require any running release, you have to run the following command `node test/json-server-data/mock-scheduler-rest.js` from your studio respository. Then you can run a single test file using `node_modules/nightwatch/bin/nightwatch --config test/ui/nightwatch.json --test test/ui/specs/login.js --testcase "PWS-159 The dialog Please open a workflow appears behind the no workflow open panel"`
-if you don't specify the --testcase it will run the whole test file
+if you don't specify the --testcase it will run the whole test file.
 
 ## Notes
-You can also run a mocked json-server to simulate a running instance of the Studio, of course nothing will be submitted or modified server-side.
-`node test/json-server-data/mock-scheduler-rest.js`
+You can also run a mocked json-server to simulate a running instance of the Studio, of course nothing will be submitted or modified server-side:
+`grunt mock:run`
+or along with a full compilation:
+`grunt clean build mock:run`

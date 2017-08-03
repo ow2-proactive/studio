@@ -1,0 +1,169 @@
+{
+  "resources": [
+    {
+      "name": "ProActive",
+      "links": [
+        {
+          "rel": "content",
+          "href": "http://localhost:8080/buckets/1001/resources/ProActive/raw"
+        },
+        {
+          "rel": "relative",
+          "href": "buckets/1001/resources/ProActive"
+        }
+      ],
+      "kind": "workflow",
+      "bucket_id": 1001,
+      "commit_time": "2017-08-01T11:20:44.945",
+      "content_type": "application/xml",
+      "commit_message": "First commit",
+      "object_key_values": [
+        {
+          "key": "infrastructure_name",
+          "value": "local",
+          "label": "variable"
+        },
+        {
+          "key": "instance_name",
+          "value": "My Hello World Service",
+          "label": "variable"
+        },
+        {
+          "key": "name",
+          "value": "ProActive",
+          "label": "job_information"
+        },
+        {
+          "key": "pca.action.description",
+          "value": "A service doing nothing",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.icon",
+          "value": "../studio/images/about_115.png",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.name",
+          "value": "create",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.origin_state",
+          "value": "null",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.type",
+          "value": "create",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.description",
+          "value": "A service doing nothing",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.model",
+          "value": "9",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.name",
+          "value": "ProActive",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.type",
+          "value": "platform",
+          "label": "generic_information"
+        }
+      ]
+    },
+    {
+      "name": "ProActive delete",
+      "links": [
+        {
+          "rel": "content",
+          "href": "http://localhost:8080/buckets/1001/resources/ProActive+delete/raw"
+        },
+        {
+          "rel": "relative",
+          "href": "buckets/1001/resources/ProActive+delete"
+        }
+      ],
+      "kind": "workflow",
+      "bucket_id": 1001,
+      "commit_time": "2017-08-01T11:20:44.952",
+      "content_type": "application/xml",
+      "commit_message": "First commit",
+      "object_key_values": [
+        {
+          "key": "infrastructure_name",
+          "value": "local",
+          "label": "variable"
+        },
+        {
+          "key": "instance_name",
+          "value": "terminateProActiveService",
+          "label": "variable"
+        },
+        {
+          "key": "name",
+          "value": "ProActive delete",
+          "label": "job_information"
+        },
+        {
+          "key": "pca.action.description",
+          "value": "delete Hello World Service instance",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.icon",
+          "value": "../studio/images/about_115.png",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.name",
+          "value": "delete",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.origin_state",
+          "value": "null",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.action.type",
+          "value": "delete",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.description",
+          "value": "killHelloService",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.model",
+          "value": "9",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.name",
+          "value": "ProActive",
+          "label": "generic_information"
+        },
+        {
+          "key": "pca.service.type",
+          "value": "platform",
+          "label": "generic_information"
+        },
+        {
+          "key": "project_name",
+          "value": "Cloud Automation - Lifecycle",
+          "label": "job_information"
+        }
+      ]
+    }
+  ]
+}

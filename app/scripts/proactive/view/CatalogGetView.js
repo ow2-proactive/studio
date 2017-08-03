@@ -95,7 +95,7 @@ define(
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
-	        	var rawurl = $(currentRevisionRow).data("rawurl");
+	        	var rawurl = window.location.origin + '/catalog/' + $(currentRevisionRow).data("rawurl") + '/raw';
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitmessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");

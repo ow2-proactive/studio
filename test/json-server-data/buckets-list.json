@@ -1,0 +1,22 @@
+{
+ "buckets": [
+    {
+      "name": "Mock-Examples",
+      "owner": "object-catalog",
+      "links": [],
+      "id": 1000
+    },
+    {
+      "name": "Mock-Cloud-automation",
+      "owner": "object-catalog",
+      "links": [],
+      "id": 1001
+    },
+    {
+      "name": "Mock-PCW-rules",
+      "owner": "object-catalog",
+      "links": [],
+      "id": 1002
+    }
+  ]
+}
