@@ -62,9 +62,18 @@ define(
                 try {
                     // Parse recieved value
                     var parsedValue = JSON.parse(value);
+                    if (parsedValue.name.length < 40){
+                        this.$el[0].innerHTML = parsedValue.name;
+                    }
+                    else
+                    {
+                        this.$el[0].innerHTML= parsedValue.name.substring(0, 37)+ "...";
+                    } 
 
+
+                  //  console.log("substring = " + parsedValue.name.substring(0, 40));
                     // Set InnerHTML and href
-                    this.$el[0].innerHTML = parsedValue.name;
+                   
                     this.$el[0].href = parsedValue.url;
 
                 } catch (e) {
