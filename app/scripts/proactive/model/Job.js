@@ -42,7 +42,7 @@ define(
                     }
                 },
                 "Description": {
-                    type: "Text",
+                    type: "TextArea",
                     fieldAttrs: {
                         'placeholder': ['description->#cdata-section', 'description->#text'],
                         "data-help": "Small textual explanation of what this job does."
@@ -458,6 +458,7 @@ define(
                 var genericInformation = this.attributes["Generic Info"];
                 var fileContent="";
                 var linkName = "Undefined";
+                var documentationValue="Undefined";
 
                 if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
                     for (var i in genericInformation) {
@@ -466,6 +467,7 @@ define(
                             console.log(genericInformation[i]["Property Name"] + " " + genericInformation[i]["Property Value"]);
                             fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                             linkName = genericInformation[i]["Property Value"];
+                            documentationValue=genericInformation[i]["Property Value"];
                         }
                     }
                 } else {
@@ -474,21 +476,25 @@ define(
 
                 // Set Value
                 this.set({
-                    "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(fileContent) + "\"}"
+                    "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
                 });
 
             },
             generateUrl: function(data) {
                 var url;
+
                 if (data) {
                     var file = new Blob([data], {
                         type: String
                     });
 
-                    url = URL.createObjectURL(file);
-                } else {
-                    url = config.docUrl + '/user/ProActiveUserGuide.html#_generic_information';
+                if (data.toLowerCase() === 'undefined') {
+                    url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
                 }
+                else {
+                     url = data;
+                }
+            }
 
                 return url;
             },
@@ -496,6 +502,7 @@ define(
                 var file = new Blob([data], {
                     type: type
                 });
+
                 if (window.navigator.msSaveOrOpenBlob) // IE10+
                     window.navigator.msSaveOrOpenBlob(file, filename);
                 else { // Others
