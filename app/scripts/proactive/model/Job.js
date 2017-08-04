@@ -42,7 +42,7 @@ define(
                     }
                 },
                 "Description": {
-                    type: "Text",
+                    type: "TextArea",
                     fieldAttrs: {
                         'placeholder': ['description->#cdata-section', 'description->#text'],
                         "data-help": "Small textual explanation of what this job does."
