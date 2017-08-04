@@ -67,7 +67,7 @@ define(
                     }
                     else
                     {
-                        this.$el[0].innerHTML= parsedValue.name.substring(0, 40)+ "...";
+                        this.$el[0].innerHTML= parsedValue.name.substring(0, 37)+ "...";
                     } 
 
 
