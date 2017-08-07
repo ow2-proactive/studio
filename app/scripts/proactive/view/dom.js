@@ -488,6 +488,7 @@ define(
         }
 
         $("#confirm-publication-to-catalog").click(function () {
+            var headers = { 'sessionID': localStorage['pa.session'] };
             var bucketId = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketid");
             
             var studioApp = require('StudioApp');
@@ -511,6 +512,7 @@ define(
             var postData = {
                     url: url,
                     type: 'POST',
+                    headers: headers,
                     processData: false,
                     contentType: false,
                     cache: false,
