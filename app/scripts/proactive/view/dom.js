@@ -159,11 +159,13 @@ define(
         
         function workflowImport(e, modalSelector) {
             var studioApp = require('StudioApp');
+            var headers = { 'sessionID': localStorage['pa.session'] };
             var url = $("#catalog-get-revision-description").data("selectedrawurl");
-            
+
             $.ajax({
                 url: url,
-                type: 'GET'
+                type: 'GET',
+                headers: headers
             }).success(function (response) {
             	studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
                 $(modalSelector).modal();
