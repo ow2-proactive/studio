@@ -159,20 +159,25 @@ define(
         
         function workflowImport(e, modalSelector) {
             var studioApp = require('StudioApp');
-            var headers = { 'sessionID': localStorage['pa.session'] };
             var url = $("#catalog-get-revision-description").data("selectedrawurl");
+
+            getWorkflowFromCatalog(url, function (response) {
+                studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
+                $(modalSelector).modal();
+            });
+        }
+
+         function getWorkflowFromCatalog(url, successCallback) {
+            var headers = { 'sessionID': localStorage['pa.session'] };
 
             $.ajax({
                 url: url,
                 type: 'GET',
                 headers: headers
             }).success(function (response) {
-            	studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
-                $(modalSelector).modal();
-                return response;
+                  successCallback(response);
             }).error(function (response) {
-                notify_message('Error', 'Error importing selected Workflow', false);
-                return response;
+                notify_message('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), false);
             });
         }
 
@@ -479,6 +484,7 @@ define(
                     studioApp.clear();
                 }
                 studioApp.importFromCatalog();
+                console.log("A workflow was imported!");
                 $('#catalog-get-close-button').click();
             }
             else {
@@ -529,6 +535,19 @@ define(
             
             var promise = $.ajax(postData).success(function (response) {
                 notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
+
+                var createdObjectMetaData = promise.responseJSON.object[0];
+                var rawUrlFromResponse = createdObjectMetaData.links[0].href
+                console.log('the url of published object to catalog:', rawUrlFromResponse);
+
+                var studioApp = require('StudioApp');
+
+                getWorkflowFromCatalog(rawUrlFromResponse, function (response) {
+                    studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
+                    add_workflow_to_current(true);
+                    $('#catalog-publish-close-button').click();
+                });
+
                 return response;
             }).error(function (response) {
                 notify_message('Error', 'Error publishing the Workflow to the Catalog', false);
