@@ -536,13 +536,12 @@ define(
             var promise = $.ajax(postData).success(function (response) {
                 notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
 
-                var createdObjectMetaData = promise.responseJSON.object[0];
-                var rawUrlFromResponse = createdObjectMetaData.links[0].href
-                console.log('the url of published object to catalog:', rawUrlFromResponse);
+                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketId + '/resources/' + workflowName + '/raw'
+                console.log('the url of published object to catalog:', urlOfRawObjectFromCatalog);
 
                 var studioApp = require('StudioApp');
 
-                getWorkflowFromCatalog(rawUrlFromResponse, function (response) {
+                getWorkflowFromCatalog(urlOfRawObjectFromCatalog, function (response) {
                     studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
                     add_workflow_to_current(true);
                     $('#catalog-publish-close-button').click();
