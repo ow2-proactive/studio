@@ -168,6 +168,7 @@ define(
         }
 
          function getWorkflowFromCatalog(url, successCallback) {
+        	 
             var headers = { 'sessionID': localStorage['pa.session'] };
 
             $.ajax({
@@ -175,7 +176,7 @@ define(
                 type: 'GET',
                 headers: headers
             }).success(function (response) {
-                  successCallback(response);
+                successCallback(response);
             }).error(function (response) {
                 notify_message('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), false);
             });
@@ -500,7 +501,8 @@ define(
             var bucketId = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketid");
             
             var studioApp = require('StudioApp');
-            var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
+            var jobXmlWithoutAnds = studioApp.views.xmlView.generateXml().replace(/&/g, '&amp;');
+            var blob = new Blob([jobXmlWithoutAnds], { type: "text/xml" });
             var workflowName = studioApp.models.currentWorkflow.attributes.name;
             
             var payload = new FormData();
