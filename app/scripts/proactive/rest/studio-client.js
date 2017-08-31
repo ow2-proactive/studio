@@ -202,7 +202,7 @@ define(
             if (!localStorage['pa.session']) return;
 
             var that = this;
-	  
+      
             that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
                 if (result.errorMessage) {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
@@ -216,13 +216,13 @@ define(
 
         },
 
-	planned_submit: function (jobXml, visualization) {
+    planned_submit: function (jobXml, visualization) {
             if (!localStorage['pa.session']) return;
 
             var that = this;
-	    
+        
             if (jobXml.indexOf("EXECUTION_CALENDARS") >= 0 ) {
-		
+        
                 var xmlDoc = $.parseXML( jobXml );
                 var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
 
@@ -256,8 +256,8 @@ define(
 
                 });
             } else {
-		console.log("normal submit");
-		that.alert("Cannot upload a file", "Cannot plan a workflow without EXECUTION_CALENDAR", 'error');
+        console.log("normal submit");
+        that.alert("Cannot upload a file", "Cannot plan a workflow without EXECUTION_CALENDAR", 'error');
             }
 
         },
