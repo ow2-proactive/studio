@@ -239,7 +239,6 @@ define(
                 this.schema.Variables.subSchema.Model.validators = [
                     function checkVariableValue(value, formValues) {
                         if (formValues.Model.length > 0) {
-                            console.log('Updating a variable, will be calling validate')
                             if (StudioApp.isWorkflowOpen()) {
                                 that.updateVariable(formValues);
                                 var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
@@ -258,32 +257,31 @@ define(
                 this.tasks = [];
 
                 this.on("change", function(updatedData, error) {
-                    console.log('change event raised', updatedData);
-                    //console.log('model has been changed !', error);
-
                     if(updatedData){
                         if(updatedData._changing){
                             // Check if Generic Info doc has been changed and generate new link if needed
-                            if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"] != "" && updatedData.changed.hasOwnProperty('Generic Info') && !updatedData.changed.hasOwnProperty('Generic Info Documentation')) {
-                                
-                                var genericInformation = updatedData.changed["Generic Info"];
-                                // Regenerate new documentation url
+                            if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"] != "" && updatedData.changed.hasOwnProperty('Generic Info')) {
 
+                                var genericInformation = updatedData.changed["Generic Info"];
+
+                                // Regenerate new documentation url
                                 for (var i in genericInformation) {
                                     if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
                                         var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                                        console.log(genericInformation[i]["Property Name"] + " " + genericInformation[i]["Property Value"]);
                                         var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                                         var linkName = genericInformation[i]["Property Value"];
                                         var documentationValue = genericInformation[i]["Property Value"];
                                     }
                                 }
-                                
-                                // Set New Value
-                                console.log('Seeting new GenericInfoDoc', documentationValue);
+
+                                // Set New Value, needed for persistance
                                 this.set({
                                     "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
                                 });
+
+                                // Needed to update UI
+                                $('a[name="Generic Info Documentation"]').text(documentationValue);
+                                $('a[name="Generic Info Documentation"]').attr(documentationValue);
                             }
 
                             if (StudioApp.views.xmlView) {
@@ -297,7 +295,6 @@ define(
             },
 
             updateVariable: function(variable) {
-                console.log('Updating variable', variable);
                 if (!variable.hasOwnProperty('Value') || !variable.Value) {
                     variable.Value = "";
                 }
@@ -493,7 +490,7 @@ define(
             generateDocumentUrl: function() {
                 console.log("Fetching documentation in GI...");
 
-                // Get the job name and put it as name for the generated file 
+                // Get the job name and put it as name for the generated file
                 var genericInformation = this.attributes["Generic Info"];
                 var fileContent = "";
                 var linkName = "Undefined";
@@ -503,10 +500,9 @@ define(
                     for (var i in genericInformation) {
                         if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
                             fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                            console.log(genericInformation[i]["Property Name"] + " " + genericInformation[i]["Property Value"]);
                             fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                             linkName = genericInformation[i]["Property Value"];
-                            
+
                             documentationValue = genericInformation[i]["Property Value"];
                         }
                     }
