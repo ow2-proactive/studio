@@ -29,6 +29,7 @@ define(
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-get-workflows-table').empty();
+            this.$('#catalog-get-description-container').empty();
             var studioApp = require('StudioApp');
             
             this.disableActionButtons(true, true);
