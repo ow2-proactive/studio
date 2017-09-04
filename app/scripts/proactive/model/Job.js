@@ -209,6 +209,8 @@ define(
             },
             initialize: function() {
 
+                var StudioApp = require('StudioApp');
+
                 this.set({
                     "Name": "Untitled Workflow 1"
                 });
@@ -237,7 +239,6 @@ define(
                 this.schema.Variables.subSchema.Model.validators = [
                     function checkVariableValue(value, formValues) {
                         if (formValues.Model.length > 0) {
-                            var StudioApp = require('StudioApp');
                             if (StudioApp.isWorkflowOpen()) {
                                 that.updateVariable(formValues);
                                 var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
@@ -255,8 +256,41 @@ define(
 
                 this.tasks = [];
 
-                this.on("change", function(eventName, event) {
-                    undoManager.save()
+                this.on("change", function(updatedData, error) {
+                    if(updatedData){
+                        if(updatedData._changing){
+                            // Check if Generic Info doc has been changed and generate new link if needed
+                            if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"] != "" && updatedData.changed.hasOwnProperty('Generic Info')) {
+
+                                var genericInformation = updatedData.changed["Generic Info"];
+
+                                // Regenerate new documentation url
+                                for (var i in genericInformation) {
+                                    if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
+                                        var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
+                                        var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
+                                        var linkName = genericInformation[i]["Property Value"];
+                                        var documentationValue = genericInformation[i]["Property Value"];
+                                    }
+                                }
+
+                                // Set New Value, needed for persistance
+                                this.set({
+                                    "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
+                                });
+
+                                // Needed to update UI
+                                $('a[name="Generic Info Documentation"]').text(documentationValue);
+                                $('a[name="Generic Info Documentation"]').attr(documentationValue);
+                            }
+
+                            if (StudioApp.views.xmlView) {
+                                undoManager.save(true);
+                            }
+                        }
+                    }else{
+                        undoManager.save();
+                    }
                 });
             },
 
@@ -264,6 +298,7 @@ define(
                 if (!variable.hasOwnProperty('Value') || !variable.Value) {
                     variable.Value = "";
                 }
+
                 if (this.attributes.hasOwnProperty('Variables')) {
                     var variables = this.attributes.Variables;
                     var index = -1
@@ -331,6 +366,7 @@ define(
                     this.populateSchema(obj, merging);
                 }
                 this.convertCancelJobOnErrorToOnTaskError(obj);
+
                 var that = this;
 
                 if (obj.taskFlow && obj.taskFlow.task) {
@@ -452,22 +488,22 @@ define(
                 return ["Name", "Variables"]
             },
             generateDocumentUrl: function() {
-                console.log("Fetching documentation in GI...")
+                console.log("Fetching documentation in GI...");
 
-                // Get the job name and put it as name for the generated file 
+                // Get the job name and put it as name for the generated file
                 var genericInformation = this.attributes["Generic Info"];
-                var fileContent="";
+                var fileContent = "";
                 var linkName = "Undefined";
-                var documentationValue="Undefined";
+                var documentationValue = "Undefined";
 
                 if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
                     for (var i in genericInformation) {
                         if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
                             fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                            console.log(genericInformation[i]["Property Name"] + " " + genericInformation[i]["Property Value"]);
                             fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                             linkName = genericInformation[i]["Property Value"];
-                            documentationValue=genericInformation[i]["Property Value"];
+
+                            documentationValue = genericInformation[i]["Property Value"];
                         }
                     }
                 } else {
@@ -497,27 +533,6 @@ define(
             }
 
                 return url;
-            },
-            generateFile: function(data, filename, type) {
-                var file = new Blob([data], {
-                    type: type
-                });
-
-                if (window.navigator.msSaveOrOpenBlob) // IE10+
-                    window.navigator.msSaveOrOpenBlob(file, filename);
-                else { // Others
-                    var a = document.createElement("a"),
-                        url = URL.createObjectURL(file);
-                    a.href = url;
-                    console.log("URL = " + url)
-                    // a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(function() {
-                        document.body.removeChild(a);
-                        window.URL.revokeObjectURL(url);
-                    }, 0);
-                }
             }
         })
     })

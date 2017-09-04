@@ -129,7 +129,7 @@ define(
 
         $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
-	        var studioApp = require('StudioApp');
+            var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.fetch({reset: true});
             studioApp.modelsToRemove = [];
             studioApp.views.catalogGetView.render();
@@ -138,14 +138,14 @@ define(
 
         $("#publish-to-catalog-button").click(function (event) {
             event.preventDefault();
-		    var studioApp = require('StudioApp');
+            var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
-		        studioApp.models.catalogBuckets.fetch({reset: true});
-		        studioApp.modelsToRemove = [];
-		        studioApp.views.catalogPublishView.render();
-		        $('#catalog-publish-modal').modal();
+                studioApp.models.catalogBuckets.fetch({reset: true});
+                studioApp.modelsToRemove = [];
+                studioApp.views.catalogPublishView.render();
+                $('#catalog-publish-modal').modal();
             }else{
-            	$('#open-a-workflow-modal').modal();
+                $('#open-a-workflow-modal').modal();
             }
         });
 
@@ -154,7 +154,7 @@ define(
         });
 
         $("#catalog-get-append-button").click(function (event) {
-        	workflowImport(event, '#add-workflow-confirmation-modal');
+            workflowImport(event, '#add-workflow-confirmation-modal');
         });
         
         function workflowImport(e, modalSelector) {
@@ -228,9 +228,9 @@ define(
             $('#execute-workflow-modal').modal();
         });
 
-	$("#plan-button").click(function (event) {
+    $("#plan-button").click(function (event) {
             event.preventDefault();
-	    
+        
             var studioApp = require('StudioApp');
             if (!studioApp.isWorkflowOpen()) {
                 $('#select-workflow-modal').modal();
@@ -287,9 +287,9 @@ define(
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
-                    	submit();	
+                        submit();   
                     }else{
-                    	planned_submit();
+                        planned_submit();
                     }
                     
                 }
@@ -371,7 +371,7 @@ define(
             StudioClient.submit(xml, htmlVisualization);
         }
 
-	function planned_submit() {
+    function planned_submit() {
             var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
@@ -400,7 +400,7 @@ define(
         });
 
         $("#save-button").click(function (event) {
-        	
+            
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -421,8 +421,8 @@ define(
 
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()) {
-            	studioApp.emptyWorkflowView(true);
-            	studioApp.router.gotoWorkflows();
+                studioApp.emptyWorkflowView(true);
+                studioApp.router.gotoWorkflows();
                 $('#breadcrumb-list-workflows').click();
             }
 
@@ -431,14 +431,14 @@ define(
         
         
         $("#about-button").click(function (event) {
-        	      	
+                    
             event.preventDefault();
             
             
             jQuery.get('file.txt', function(data) {
-            	   alert(data);
-            	   //process text file line by line
-            	   $('#div').html(data.replace('n',''));
+                   alert(data);
+                   //process text file line by line
+                   $('#div').html(data.replace('n',''));
             });
             
             
@@ -514,7 +514,7 @@ define(
             var isRevision = ($("#catalog-publish-description").data("first") != true)
            
             if (isRevision){
-            	url += "/" + workflowName + "/revisions"
+                url += "/" + workflowName + "/revisions"
             }
             
             var postData = {
@@ -529,7 +529,7 @@ define(
             
             var workflowId = $("#catalog-publish-description").data("workflowid");            
             if (workflowId){
-            	postData.url = postData.url + "/" + workflowId + "/revisions";
+                postData.url = postData.url + "/" + workflowId + "/revisions";
                 payload.append('objectId', workflowId);
             }
             
@@ -554,10 +554,10 @@ define(
             });
             
             if (!isRevision){
-	            $.when(promise).then(function () {
-	                var newWorkflow = promise.responseJSON;
-	                add_workflow_to_catalog_collection(newWorkflow.object[0]);
-	            });
+                $.when(promise).then(function () {
+                    var newWorkflow = promise.responseJSON;
+                    add_workflow_to_catalog_collection(newWorkflow.object[0]);
+                });
             }
         })
 
@@ -597,7 +597,7 @@ define(
         function save_workflow() {
             var studioApp = require('StudioApp');
             if (studioApp.models.jobModel) {
-            	studioApp.views.propertiesView.saveCurrentWorkflow(
+                studioApp.views.propertiesView.saveCurrentWorkflow(
                     studioApp.models.jobModel.get("Name"),
                     studioApp.views.xmlView.generateXml(),
                     {
@@ -666,23 +666,23 @@ define(
         });
         
         function notify_message(title, text, typeSuccess){
-        	PNotify.removeAll();
-        	var type = typeSuccess ? 'success' : 'error';
-        	new PNotify({
-        	    title: title,
-        	    text: text,
-        	    type: type,
-        	    text_escape: true,
-        	    buttons: {
-        	        closer: true,
-        	        sticker: false
-        	    },
-        	    addclass: 'translucent', // is defined in studio.css
-        	    width: '20%',
-        	    history: {
-        	        history: false
-        	    }
-        	});
+            PNotify.removeAll();
+            var type = typeSuccess ? 'success' : 'error';
+            new PNotify({
+                title: title,
+                text: text,
+                type: type,
+                text_escape: true,
+                buttons: {
+                    closer: true,
+                    sticker: false
+                },
+                addclass: 'translucent', // is defined in studio.css
+                width: '20%',
+                history: {
+                    history: false
+                }
+            });
         }
 
         (function scriptManagement() {
@@ -728,8 +728,8 @@ define(
         })();
 
         $(document).ready(function () {
-        	
-        	var result = "http://doc.activeeon.com/" ;
+            
+            var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
                 console.log('conf:', conf);
@@ -744,7 +744,7 @@ define(
             });
 
 
-        	
+            
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
             var copied = false;

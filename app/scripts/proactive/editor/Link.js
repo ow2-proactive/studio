@@ -59,27 +59,42 @@ define(
             },
             // Value: JSON of name and url, where name is the link name and the url is the value for the href attribute
             setValue: function(value) {
+                console.log('Setting new value', value);
                 try {
                     // Parse recieved value
                     var parsedValue = JSON.parse(value);
+
+                    // Set InnerHTML and href
                     if (parsedValue.name.length < 40){
                         this.$el[0].innerHTML = parsedValue.name;
-                    }
-                    else
-                    {
+                    }else{
                         this.$el[0].innerHTML= parsedValue.name.substring(0, 37)+ "...";
                     } 
-
-
-                  //  console.log("substring = " + parsedValue.name.substring(0, 40));
-                    // Set InnerHTML and href
                    
                     this.$el[0].href = parsedValue.url;
 
                 } catch (e) {
-                    console.log('error parsing json', e);
-                    // Default Link name: Undefined
-                    this.$el[0].innerHTML = 'Undefined';
+                    if (typeof value === "string") {
+                        var parsedValue = {
+                            name: value,
+                            url: value
+                        }
+
+                        //var parsedValue = JSON.parse(value);
+
+                        // Set InnerHTML and href
+                        if (parsedValue.name.length < 40){
+                            this.$el[0].innerHTML = parsedValue.name;
+                        }else{
+                            this.$el[0].innerHTML= parsedValue.name.substring(0, 37)+ "...";
+                        } 
+                       
+                        this.$el[0].href = parsedValue.url;
+                    }else{
+                        // console.log('error parsing json', e);
+                        // Default Link name: Undefined
+                        this.$el[0].innerHTML = 'Undefined';
+                    }
                 }
             },
 
