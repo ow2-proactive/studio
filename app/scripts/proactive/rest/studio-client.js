@@ -51,7 +51,7 @@ define(
                 error: function (data) {
                     // even id successful we are here
                     if (data.status == 200) {
-                        that.alert("Connected", "Successfully connected", 'success');
+                        that.alert("Connected", "Successfully connected user", 'success');
                         console.log("Session ID is " + data.responseText)
                         localStorage['pa.session'] = data.responseText;
                         localStorage['pa.login'] = creds['user'];
@@ -202,7 +202,7 @@ define(
             if (!localStorage['pa.session']) return;
 
             var that = this;
-	  
+      
             that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {"sessionid": localStorage['pa.session']}, function (result) {
                 if (result.errorMessage) {
                     that.alert("Cannot submit the job", result.errorMessage, 'error');
@@ -216,13 +216,13 @@ define(
 
         },
 
-	planned_submit: function (jobXml, visualization) {
+    planned_submit: function (jobXml, visualization) {
             if (!localStorage['pa.session']) return;
 
             var that = this;
-	    
+        
             if (jobXml.indexOf("EXECUTION_CALENDARS") >= 0 ) {
-		
+        
                 var xmlDoc = $.parseXML( jobXml );
                 var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
 
@@ -256,8 +256,8 @@ define(
 
                 });
             } else {
-		console.log("normal submit");
-		that.alert("Cannot upload a file", "Cannot plan a workflow without EXECUTION_CALENDAR", 'error');
+        console.log("normal submit");
+        that.alert("Cannot upload a file", "Cannot plan a workflow without EXECUTION_CALENDAR", 'error');
             }
 
         },
@@ -297,8 +297,6 @@ define(
         },
         validate: function (jobXml, jobModel) {
             if (!localStorage['pa.session']) return;
-
-            if (jobModel.getTasksCount() == 0) return;
 
             var that = this;
             return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, null, false);

@@ -29,6 +29,7 @@ define(
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-get-workflows-table').empty();
+            this.$('#catalog-get-description-container').empty();
             var studioApp = require('StudioApp');
             
             this.disableActionButtons(true, true);
@@ -95,7 +96,7 @@ define(
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
-	        	var rawurl = $(currentRevisionRow).data("rawurl");
+	        	var rawurl = window.location.origin + '/catalog/' + $(currentRevisionRow).data("rawurl") + '/raw';
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitmessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");

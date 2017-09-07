@@ -1,0 +1,39 @@
+{
+  "revisions": [
+    {
+      "name": "Data Management",
+      "links": [
+        {
+          "rel": "content",
+          "href": "http://localhost:8080/buckets/1000/resources/Data+Management/revisions/1501579244818/raw"
+        },
+        {
+          "rel": "relative",
+          "href": "buckets/1000/resources/Data+Management/revisions/1501579244818"
+        }
+      ],
+      "kind": "workflow",
+      "bucket_id": 1000,
+      "commit_time": "2017-08-01T11:20:44.818",
+      "content_type": "application/xml",
+      "commit_message": "First commit",
+      "object_key_values": [
+        {
+          "key": "name",
+          "value": "Data Management",
+          "label": "job_information"
+        },
+        {
+          "key": "pca.action.icon",
+          "value": "/cloud-automation/styles/patterns/img/data-management.png",
+          "label": "generic_information"
+        },
+        {
+          "key": "project_name",
+          "value": "2. Advanced Workflows",
+          "label": "job_information"
+        }
+      ]
+    }
+  ]
+}

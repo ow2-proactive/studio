@@ -1,0 +1,219 @@
+{
+  "resources": [
+      {
+        "name": "2 Minutes Cron",
+        "links": [
+          {
+            "rel": "content",
+            "href": "http://localhost:8080/buckets/1000/resources/2+Minutes+Cron/raw"
+          },
+          {
+            "rel": "relative",
+            "href": "buckets/1000/resources/2+Minutes+Cron"
+          }
+        ],
+        "kind": "workflow",
+        "bucket_id": 1000,
+        "commit_time": "2017-08-01T11:20:44.778",
+        "content_type": "application/xml",
+        "commit_message": "First commit",
+        "object_key_values": [
+          {
+            "key": "name",
+            "value": "2 Minutes Cron",
+            "label": "job_information"
+          },
+          {
+            "key": "pca.action.icon",
+            "value": "/cloud-automation/styles/patterns/img/cronjobs-icon.png",
+            "label": "generic_information"
+          },
+          {
+            "key": "project_name",
+            "value": "1. Basic Workflows",
+            "label": "job_information"
+          }
+        ]
+      },
+      {
+        "name": "Cloud Automation",
+        "links": [
+          {
+            "rel": "content",
+            "href": "http://localhost:8080/buckets/1000/resources/Cloud+Automation/raw"
+          },
+          {
+            "rel": "relative",
+            "href": "buckets/1000/resources/Cloud+Automation"
+          }
+        ],
+        "kind": "workflow",
+        "bucket_id": 1000,
+        "commit_time": "2017-08-01T11:20:44.81",
+        "content_type": "application/xml",
+        "commit_message": "First commit",
+        "object_key_values": [
+          {
+            "key": "name",
+            "value": "Cloud Automation",
+            "label": "job_information"
+          },
+          {
+            "key": "pca.action.icon",
+            "value": "/cloud-automation/styles/patterns/img/cloud-automation_try.png",
+            "label": "generic_information"
+          },
+          {
+            "key": "project_name",
+            "value": "4. Cloud Automation Workflows",
+            "label": "job_information"
+          }
+        ]
+      },
+      {
+        "name": "Data Management",
+        "links": [
+          {
+            "rel": "content",
+            "href": "http://localhost:8080/buckets/1000/resources/Data+Management/raw"
+          },
+          {
+            "rel": "relative",
+            "href": "buckets/1000/resources/Data+Management"
+          }
+        ],
+        "kind": "workflow",
+        "bucket_id": 1000,
+        "commit_time": "2017-08-01T11:20:44.818",
+        "content_type": "application/xml",
+        "commit_message": "First commit",
+        "object_key_values": [
+          {
+            "key": "name",
+            "value": "Data Management",
+            "label": "job_information"
+          },
+          {
+            "key": "pca.action.icon",
+            "value": "/cloud-automation/styles/patterns/img/data-management.png",
+            "label": "generic_information"
+          },
+          {
+            "key": "project_name",
+            "value": "2. Advanced Workflows",
+            "label": "job_information"
+          }
+        ]
+      },
+      {
+        "name": "Distributed Computing",
+        "links": [
+          {
+            "rel": "content",
+            "href": "http://localhost:8080/buckets/1000/resources/Distributed+Computing/raw"
+          },
+          {
+            "rel": "relative",
+            "href": "buckets/1000/resources/Distributed+Computing"
+          }
+        ],
+        "kind": "workflow",
+        "bucket_id": 1000,
+        "commit_time": "2017-08-01T11:20:44.827",
+        "content_type": "application/xml",
+        "commit_message": "First commit",
+        "object_key_values": [
+          {
+            "key": "name",
+            "value": "Distributed Computing",
+            "label": "job_information"
+          },
+          {
+            "key": "pca.action.icon",
+            "value": "/cloud-automation/styles/patterns/img/distributed-computing.png",
+            "label": "generic_information"
+          },
+          {
+            "key": "project_name",
+            "value": "2. Advanced Workflows",
+            "label": "job_information"
+          }
+        ]
+      },
+      {
+        "name": "Docker Exec. Env.",
+        "links": [
+          {
+            "rel": "content",
+            "href": "http://localhost:8080/buckets/1000/resources/Docker+Exec.+Env./raw"
+          },
+          {
+            "rel": "relative",
+            "href": "buckets/1000/resources/Docker+Exec.+Env."
+          }
+        ],
+        "kind": "workflow",
+        "bucket_id": 1000,
+        "commit_time": "2017-08-01T11:20:44.836",
+        "content_type": "application/xml",
+        "commit_message": "First commit",
+        "object_key_values": [
+          {
+            "key": "name",
+            "value": "Docker Exec. Env.",
+            "label": "job_information"
+          },
+          {
+            "key": "pca.action.icon",
+            "value": "/cloud-automation/styles/patterns/img/docker-exec-env.png",
+            "label": "generic_information"
+          },
+          {
+            "key": "project_name",
+            "value": "4. Cloud Automation Workflows",
+            "label": "job_information"
+          }
+        ]
+      },
+      {
+        "name": "File Trigger",
+        "links": [
+          {
+            "rel": "content",
+            "href": "http://localhost:8080/buckets/1000/resources/File+Trigger/raw"
+          },
+          {
+            "rel": "relative",
+            "href": "buckets/1000/resources/File+Trigger"
+          }
+        ],
+        "kind": "workflow",
+        "bucket_id": 1000,
+        "commit_time": "2017-08-01T11:20:44.8",
+        "content_type": "application/xml",
+        "commit_message": "First commit",
+        "object_key_values": [
+          {
+            "key": "FOLDER_TO_MONITOR",
+            "value": "/tmp",
+            "label": "variable"
+          },
+          {
+            "key": "WORKFLOW_URL",
+            "value": "https://try.activeeon.com/catalog/buckets/1/resources/11/raw",
+            "label": "variable"
+          },
+          {
+            "key": "name",
+            "value": "File Trigger",
+            "label": "job_information"
+          },
+          {
+            "key": "project_name",
+            "value": "1. Basic Workflows",
+            "label": "job_information"
+          }
+        ]
+      }
+    ]
+}
