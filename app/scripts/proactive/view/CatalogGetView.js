@@ -20,7 +20,7 @@ define(
             this.$el = $("<div id='catalog-get-container'></div>");
             $("#catalog-get-body").append(this.$el);
             this.buckets = options.buckets;
-            this.render();
+	    this.buckets.on('change', this.render, this);      
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
@@ -147,6 +147,7 @@ define(
             this.$el.html(this.template());
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
+		console.log("XXXXX : " + bucket.get("name"));
                 var id = bucket.get("id");
                 this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketid: id}));
             }, this);
