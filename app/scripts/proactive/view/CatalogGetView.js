@@ -20,7 +20,7 @@ define(
             this.$el = $("<div id='catalog-get-container'></div>");
             $("#catalog-get-body").append(this.$el);
             this.buckets = options.buckets;
-            this.render();
+	    this.buckets.on('change', this.render, this);      
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
