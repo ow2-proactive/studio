@@ -23,7 +23,7 @@ define(
                 	callback: function(data){
                 		that.set("workflows", data);
                 	}});
-                workflows.fetch();
+                workflows.fetch({async: false});
             }
         });
     })
