@@ -20,7 +20,6 @@ define(
             this.$el = $("<div id='catalog-get-container'></div>");
             $("#catalog-get-body").append(this.$el);
             this.buckets = options.buckets;
-	    this.buckets.on('change', this.render, this);      
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
@@ -60,7 +59,7 @@ define(
             var studioApp = require('StudioApp');
             
             if (currentWorkflowRow){
-	        	var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
+                var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
 	            this.highlightSelectedRow('#catalog-get-workflows-table', currentWorkflowRow);
 	            var that = this;
 
@@ -112,7 +111,7 @@ define(
 					}));
 
 	            this.disableActionButtons(false, !studioApp.isWorkflowOpen());
-            }  
+            }
         },
         highlightSelectedRow: function(tableId, row){
         	var selectedClassName = 'catalog-selected-row';
