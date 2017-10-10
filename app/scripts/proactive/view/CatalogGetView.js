@@ -27,7 +27,6 @@ define(
             'click #catalog-get-revisions-table tr': 'selectRevision'
         },
         internalSelectBucket: function (currentBucketRow) {
-
             this.$('#catalog-get-workflows-table').empty();
             this.$('#catalog-get-description-container').empty();
             var studioApp = require('StudioApp');
@@ -60,9 +59,7 @@ define(
             var studioApp = require('StudioApp');
             
             if (currentWorkflowRow){
-
-	        	var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
-
+                var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
 	            this.highlightSelectedRow('#catalog-get-workflows-table', currentWorkflowRow);
 	            var that = this;
 

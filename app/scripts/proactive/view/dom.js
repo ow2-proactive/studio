@@ -134,8 +134,6 @@ define(
             studioApp.modelsToRemove = [];
             studioApp.views.catalogGetView.render();
             $('#catalog-get-modal').modal();
-
-
         });
 
         $("#publish-to-catalog-button").click(function (event) {
