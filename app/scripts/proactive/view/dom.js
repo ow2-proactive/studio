@@ -130,9 +130,7 @@ define(
         $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
-            $('#catalog-loading-modal').modal();
             studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-            $('#catalog-loading-modal').modal('hide');
             studioApp.modelsToRemove = [];
             studioApp.views.catalogGetView.render();
             $('#catalog-get-modal').modal();
@@ -142,9 +140,7 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
-                $('#catalog-loading-modal').modal();
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                $('#catalog-loading-modal').modal('hide');
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
