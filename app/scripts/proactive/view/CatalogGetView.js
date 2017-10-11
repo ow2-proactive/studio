@@ -7,10 +7,11 @@ define(
         'text!proactive/templates/catalog-get-workflow.html',
         'text!proactive/templates/catalog-get-revision.html',
         'text!proactive/templates/catalog-get-revision-description.html',
-        'proactive/model/CatalogWorkflowRevisionCollection'
+        'proactive/model/CatalogWorkflowRevisionCollection',
+        'proactive/model/CatalogWorkflowCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection, CatalogWorkflowCollection) {
 
     "use strict";
 
@@ -36,16 +37,23 @@ define(
             if (currentBucketRow){
 	        	var currentBucketID = $(currentBucketRow).data("bucketid");
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
-	            
+
 	            var that = this;
                 var currentBucket = this.buckets.get(currentBucketID);
-                var workflows = currentBucket.get("workflows");
-                _.each(
-                		workflows,
-                		function (workflow) {
-            				var WorkflowList = _.template(catalogWorkflow);
-            				that.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
-                		});
+                var bucketId = that.getSelectedBucketId();
+                var workflowsModel = new CatalogWorkflowCollection(
+                {
+                    id: bucketId,
+                    callback: function (workflows) {
+                        _.each(
+                        workflows,
+                        function (workflow) {
+                            var WorkflowList = _.template(catalogWorkflow);
+                            that.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
+                        });
+                    }
+                });
+                workflowsModel.fetch({async:false});
             }
             this.internalSelectWorkflow(this.$('#catalog-get-workflows-table tr')[0]);
             
