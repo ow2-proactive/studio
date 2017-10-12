@@ -6,10 +6,11 @@ define(
         'text!proactive/templates/catalog-bucket.html',
         'text!proactive/templates/catalog-publish-description.html',
         'text!proactive/templates/catalog-publish-description-first.html',
-        'proactive/model/CatalogLastWorkflowRevisionDescription'
+        'proactive/model/CatalogLastWorkflowRevisionDescription',
+        'proactive/model/CatalogWorkflowCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, workflowDescription, workflowDescriptionFirst, CatalogLastWorkflowRevisionDescription) {
+    function ($, Backbone, catalogBrowser, catalogList, workflowDescription, workflowDescriptionFirst, CatalogLastWorkflowRevisionDescription, CatalogWorkflowCollection) {
 
     "use strict";
 
@@ -27,31 +28,39 @@ define(
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-description-container').empty();
             var studioApp = require('StudioApp');
-            
+
             var publishCurrentButton = $('#catalog-publish-current');
             publishCurrentButton.prop('disabled', !currentBucketRow);
-            
+
             if (currentBucketRow){
 	        	var currentBucketId= $(currentBucketRow).data("bucketid");
 	            var studioApp = require('StudioApp');
 	            this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
-	            
+
                 var currentBucket = this.buckets.get(currentBucketId);
                 var workflows = currentBucket.get("workflows");
                 var editedWorkflow = null;
-                var name = studioApp.models.currentWorkflow.attributes.name
-                _.each(
-                		workflows,
-                		function (workflow) {
-		                	if (workflow.name == name){
-		                		editedWorkflow = workflow;
-		                	}
-                		});
-                
+                var name = studioApp.models.currentWorkflow.attributes.name;
+                var workflowsModel = new CatalogWorkflowCollection(
+                {
+                    id: currentBucket.id,
+                    callback: function (workflows) {
+                        _.each(
+                        workflows,
+                        function (workflow) {
+                            if (workflow.name == name){
+                                editedWorkflow = workflow;
+                            }
+                        });
+                    }
+                });
+                workflowsModel.fetch({async:false});
+
+
                 if (editedWorkflow){
 		            var revisionsModel = new CatalogLastWorkflowRevisionDescription(
 		            	{
-		            		bucketid: currentBucketId, 
+		            		bucketid: currentBucketId,
 		            		workflowname: editedWorkflow.name,
 			            	callback: function (revision) {
 	            				var WorkflowDescription = _.template(workflowDescription);
@@ -64,7 +73,7 @@ define(
                   this.$('#catalog-publish-description-container').append(WorkflowDescription({name: name}));
                 }
             }
-            
+
         },
         highlightSelectedRow: function(tableId, row){
         	var selectedClassName = 'catalog-selected-row';
