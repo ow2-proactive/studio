@@ -192,9 +192,12 @@ define(
 						type: 'List',
 						itemType: 'NestedModel',
 						model: SelectionScript,
-						itemToString: function () {
-							return "Node Selection"
-						},
+						itemToString: function (selectionScript) {
+                            if (selectionScript.Type)
+                                return "<u style='cursor: pointer;'>Selection script ("+ selectionScript.Type +") </u>";
+                            else
+                                return "<u style='cursor: pointer;'>Selection script </u>";
+                        },
 						fieldAttrs: {
 							"data-tab": "Node Selection",
 							'placeholder': 'selection->script',
