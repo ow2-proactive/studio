@@ -58,7 +58,7 @@ define(
                     "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
                     "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'Text', editorClass: 'popup-input-text-field' }
                     },
-                    confirmDelete: 'Are you sure you want to remove this variable?'
+                    confirmDelete: 'You are about to remove a variable.'
                 },
                 "Generic Info": {
                     type: 'List',
@@ -78,7 +78,7 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->value'}
                         }
                     },
-                    confirmDelete: 'Are you sure you want to remove this property?'
+                    confirmDelete: 'You are about to remove a property.'
                 },
                 "Run as me": {
                     type: "Checkbox",
@@ -292,7 +292,7 @@ define(
                         'placeholder': 'selection->script',
                         "data-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
                     },
-                    confirmDelete: 'Are you sure you want to remove this Selection script?'
+                    confirmDelete: 'You are about to remove a Selection script.'
                 },
                 // Add the Fork Execution Environment select before the Fork Environment model. Because
                 // that is the only way to receive precise events. If something changes in the
