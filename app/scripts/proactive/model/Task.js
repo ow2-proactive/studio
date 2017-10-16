@@ -28,7 +28,7 @@ define(
 
         var Task = SchemaModel.extend({
             schema: {
-                "Name": {
+                "Task Name": {
                     type: "Text",
                     fieldAttrs: {
                         'placeholder': '@attributes->name',
