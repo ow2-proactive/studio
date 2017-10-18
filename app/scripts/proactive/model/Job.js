@@ -258,7 +258,7 @@ define(
         this.tasks = [];
 
         this.on("change", function(updatedData, error) {
-          console.log('Event Change ', updatedData)
+         // console.log('Event Change ', updatedData)
           if (updatedData) {
             if (updatedData._changing) {
               // Check if Generic Info doc has been changed and generate new link if needed
@@ -532,6 +532,7 @@ define(
               linkName = genericInformation[i]["Property Value"];
 
               documentationValue = genericInformation[i]["Property Value"];
+              console.log("here testing GI change");
             }
           }
         } else {
