@@ -258,11 +258,11 @@ define(
         this.tasks = [];
 
         this.on("change", function(updatedData, error) {
-          console.log('Event Change', updatedData)
+          console.log('Event Change ', updatedData)
           if (updatedData) {
             if (updatedData._changing) {
               // Check if Generic Info doc has been changed and generate new link if needed
-              if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"] != "") {
+              if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"]["Property Value"] != "") {
 
                 var genericInformation = updatedData.changed["Generic Info"];
                 var hasDocumentation;
