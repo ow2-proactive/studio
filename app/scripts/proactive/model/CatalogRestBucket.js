@@ -15,15 +15,6 @@ define(
                 owner: "",
                 created_at: "",
                 workflows: ""
-            },
-            initialize: function(options) {
-            	var that = this;
-                var workflows = new CatalogWorkflowCollection({
-                	id: this.id,
-                	callback: function(data){
-                		that.set("workflows", data);
-                	}});
-                workflows.fetch();
             }
         });
     })
