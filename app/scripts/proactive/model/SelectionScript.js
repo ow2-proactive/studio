@@ -15,7 +15,7 @@ define(
         // TODO inherit from Script - first attempt did not work because schema is shared - type appears in pre/post scripts as well
         schema: {
             "Script": {type: "TextArea", fieldAttrs: {'placeholder': ['code->#cdata-section', 'code->#text']}, template: scriptTemplate},
-            "Language": {type: 'Select', options: [" ", "bash", "cmd", "groovy", "javascript", "python", "ruby", "perl", "powershell", "R"], fieldAttrs: {'placeholder': 'code->@attributes->language'}},
+            "Language": {type: 'Select', options: [" ", "bash", "cmd", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"], fieldAttrs: {'placeholder': 'code->@attributes->language'}},
             "Or Path": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->path'}},
             "Arguments": {type: 'Hidden', itemType: 'Text', fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}},
             "Or Url": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->url'}},
