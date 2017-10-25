@@ -19,7 +19,7 @@
             <![CDATA[
 #By default the version of python you are using is the default python version on your machine
 #To change it to another version, you need to put a key 'PYTHON_COMMAND' in Generic Info,
-#and its value is the version you are going to use (for example 'python3')
+#and its value is the path to the python executable that you want to use (for example 'python3')
 import platform
 print("The current version of python you are using is: " + platform.python_version())
 print("Hello World")
