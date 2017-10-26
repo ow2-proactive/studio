@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.8"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.8 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.8/schedulerjob.xsd"
+    name="script_cpython"
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2"
+>
+  <taskFlow>
+    <task name="Python_Task">
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+#By default the version of python you are using is the default python version on your machine
+#To change it to another version, you need to put a key 'PYTHON_COMMAND' in Generic Info,
+#and its value is the path to the python executable that you want to use (for example 'python3')
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
