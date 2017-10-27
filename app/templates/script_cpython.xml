@@ -17,9 +17,8 @@
         <script>
           <code language="cpython">
             <![CDATA[
-#By default the version of python you are using is the default python version on your machine
-#To change it to another version, you need to put a key 'PYTHON_COMMAND' in Generic Info,
-#and its value is the path to the python executable that you want to use (for example 'python3')
+# Add 'PYTHON_COMMAND' Generic Info to run a specific Python version
+# Go to http://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_python_script_engine for more info
 import platform
 print("The current version of python you are using is: " + platform.python_version())
 print("Hello World")
