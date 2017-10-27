@@ -2,10 +2,11 @@ define(
     [
         'jquery',
         'backbone',
-        'proactive/config'
+        'proactive/config',
+        'proactive/model/CatalogWorkflowCollection'
     ],
 
-    function ($, Backbone, config) {
+    function ($, Backbone, config, CatalogWorkflowCollection) {
 
         "use strict";
 
@@ -19,7 +20,6 @@ define(
             this.options.templates.on('remove', this.render, this);
             this.options.templates.on('reset', this.render, this);
             this.options.templates.fetch();
-            this.render();
         },
         createMenuFromConfig: function (template, menu) {
             var that = this;

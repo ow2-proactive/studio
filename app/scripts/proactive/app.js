@@ -73,7 +73,14 @@ define(
         login: function() {
 
             this.models.workflows = new WorkflowCollection();
-            this.models.templates = new TemplateCollection();
+            this.models.templates = new CatalogWorkflowCollection({id : 1000, callback : function(workflows){
+                _.each(
+                workflows,
+                function (workflow) {
+                    //console.log("Name : "+ workflow.name);
+                    //console.log("nb obj key val " + workflow.object_key_values.length);
+                });
+            }});
             this.models.catalogBuckets = new CatalogBucketCollection();
             
             this.models.catalogBuckets.fetch();
