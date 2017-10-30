@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.8"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.8 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.8/schedulerjob.xsd"
+    name="script_cpython"
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2"
+>
+  <taskFlow>
+    <task name="Python_Task">
+      <description>
+        <![CDATA[ The simplest task, ran by a python engine. ]]>
+      </description>
+      <scriptExecutable>
+        <script>
+          <code language="cpython">
+            <![CDATA[
+# Add 'PYTHON_COMMAND' Generic Info to run a specific Python version
+# Go to http://doc.activeeon.com/latest/user/ProActiveUserGuide.html#_python_script_engine for more info
+import platform
+print("The current version of python you are using is: " + platform.python_version())
+print("Hello World")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>
