@@ -38,7 +38,8 @@ define(
                     }
                 },
                 "Description": {
-                    type: "Text",
+                    type: "TextArea",
+                    editorClass: "textareadescription",
                     fieldAttrs: {
                         'placeholder': ['description->#cdata-section', 'description->#text'],
                         "data-help": 'A small textual description of what task does.'
