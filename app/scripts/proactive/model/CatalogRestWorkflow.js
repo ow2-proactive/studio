@@ -22,20 +22,30 @@ define(
                 }
             },
             getOffsets: function () {
-                var offsets_object = this.getObjectKeyValues().find(function(obj) {
-                    return obj.key == "offsets_json_string";
-                });
-                if (!offsets_object)
-                    return {};
-                return offsets_object.value;
+                try {
+                    var offsets_object = this.getObjectKeyValues().find(function(obj) {
+                        return obj.key == "offsets_json_string";
+                    });
+                    if (!offsets_object)
+                        return {};
+                    return offsets_object.value;
+                } catch (e) {
+                    return "";
+                }
+
             },
             getProject: function () {
-                var project_object = this.getObjectKeyValues().find(function(obj) {
-                    return obj.key == "project_name";
-                });
-                if (!project_object)
+                try {
+                    var project_object = this.getObjectKeyValues().find(function(obj) {
+                        return obj.key == "project_name";
+                    });
+                    if (!project_object)
+                        return "";
+                    return project_object.value;
+                } catch (e) {
                     return "";
-                return project_object.value;
+                }
+
             },
             setOffsets: function (offsets) {
                 var changes_object_key_values =this.getObjectKeyValues();

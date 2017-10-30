@@ -95,7 +95,6 @@ define(
                         menuItem.tooltip();
                         menuContent.append(menuItem);
                         menuItem.data("templateName", template.get("name"));
-                        menuItem.data("templateId", template.get("id"));
                         menuItem.draggable({helper: "clone", scroll: true});
 
                         menuItem.click(function(event) {

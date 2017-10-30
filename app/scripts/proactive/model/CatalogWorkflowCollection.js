@@ -20,7 +20,8 @@ define(
                     return '/catalog/buckets/' + this.id + '/resources';
                 },
                 parse: function(data) {
-                    this.callback(data);
+                    if (this.callback)
+                        this.callback(data);
                     return data;
                 },
             GroupByProjectMixin

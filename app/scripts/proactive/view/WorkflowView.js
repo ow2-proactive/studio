@@ -6,10 +6,11 @@ define(
         'proactive/view/TaskView',
         'proactive/view/utils/undo',
         'pnotify',
-        'pnotify.buttons'
+        'proactive/model/CatalogRawWorkflow',
+        'pnotify.buttons',
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify) {
+    function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify, CatalogRawWorkflow) {
 
     "use strict";
 
@@ -67,9 +68,19 @@ define(
                             }
                         });
                     } else {
-                        console.log("Dropped element: ", elem.data("templateName"), elem.data("templateId"));
-                        var templateModel = that.options.app.models.templates.get({id: elem.data('templateId')})
-                        that.options.app.mergeTemplateXML(templateModel.get("xml"), ui);
+                        console.log("Dropped element: ", elem.data("templateName"));
+                        var elemname =  elem.data('templateName');
+                        var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == elemname});
+
+                        var rawTemplate = new CatalogRawWorkflow(
+                        {
+                            bucket_id: templateModel.attributes.bucket_id,
+                            workflow_name: templateModel.attributes.name,
+                            callback: function (rawWorkflow) {
+                                that.options.app.mergeTemplateXML(rawWorkflow, ui);
+                            }
+                        });
+                        rawTemplate.fetch({dataType:'text'});
                     }
                 }
             });
