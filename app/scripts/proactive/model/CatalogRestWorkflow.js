@@ -9,7 +9,6 @@ define(
 
         return Backbone.Model.extend({
             defaults: {
-                //id: "",
                 name: "",
                 bucket_id: "",
                 object_key_values: {}

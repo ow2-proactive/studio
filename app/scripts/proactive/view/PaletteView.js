@@ -14,7 +14,7 @@ define(
 
         initialize: function () {
             this.$el = $("<div></div>")
-            $("#palette-container").append(this.$el)
+            $("#palette-container").append(this.$el);
 
             this.options.templates.on('add', this.render, this);
             this.options.templates.on('remove', this.render, this);

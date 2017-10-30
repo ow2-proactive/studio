@@ -6,11 +6,10 @@ define(
         'proactive/view/TaskView',
         'proactive/view/utils/undo',
         'pnotify',
-        'proactive/model/CatalogRawWorkflow',
         'pnotify.buttons',
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify, CatalogRawWorkflow) {
+    function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify) {
 
     "use strict";
 
@@ -52,36 +51,24 @@ define(
                 if (elem.hasClass('task-menu')) {
                     that.createTask(ui)
                 } else {
-                    if (elem.data("templateUrl")) {
-                        console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
-                        $.ajax({
-                            type: "GET",
-                            dataType: "text",
-                            async: false,
-                            url: elem.data("templateUrl"),
-                            success: function (data) {
-                                that.options.app.mergeTemplateXML(data, ui);
-                            },
-                            error: function (data) {
-                                console.log("Cannot retrieve the template", data)
-                                that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
-                            }
-                        });
-                    } else {
-                        console.log("Dropped element: ", elem.data("templateName"));
-                        var elemname =  elem.data('templateName');
-                        var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == elemname});
-
-                        var rawTemplate = new CatalogRawWorkflow(
-                        {
-                            bucket_id: templateModel.attributes.bucket_id,
-                            workflow_name: templateModel.attributes.name,
-                            callback: function (rawWorkflow) {
-                                that.options.app.mergeTemplateXML(rawWorkflow, ui);
-                            }
-                        });
-                        rawTemplate.fetch({dataType:'text'});
-                    }
+                      console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
+                      var templateName =  elem.data('templateName');
+                      var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == templateName});
+                      var bucket_id = templateModel.attributes.bucket_id;
+                      var workflow_name = templateModel.attributes.name;
+                      $.ajax({
+                          type: "GET",
+                          dataType: "text",
+                          async: false,
+                          url: '/catalog/buckets/' + bucket_id + '/resources/'+workflow_name+'/raw',
+                          success: function (data) {
+                              that.options.app.mergeTemplateXML(data, ui);
+                          },
+                          error: function (data) {
+                              console.log("Cannot retrieve the template", data)
+                              that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
+                          }
+                      });
                 }
             });
         },
