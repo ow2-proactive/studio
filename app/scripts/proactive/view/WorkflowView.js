@@ -52,15 +52,21 @@ define(
                     that.createTask(ui)
                 } else {
                       console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
-                      var templateName =  elem.data('templateName');
-                      var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == templateName});
-                      var bucket_id = templateModel.attributes.bucket_id;
-                      var workflow_name = templateModel.attributes.name;
+                      var templateUrl;
+                      if (elem.data("templateUrl"))
+                        templateUrl = elem.data("templateUrl");
+                      else {
+                        var templateName =  elem.data('templateName');
+                        var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == templateName});
+                        var bucket_id = templateModel.attributes.bucket_id;
+                        var workflow_name = templateModel.attributes.name;
+                        templateUrl = '/catalog/buckets/' + bucket_id + '/resources/'+workflow_name+'/raw';
+                      }
                       $.ajax({
                           type: "GET",
                           dataType: "text",
                           async: false,
-                          url: '/catalog/buckets/' + bucket_id + '/resources/'+workflow_name+'/raw',
+                          url: templateUrl,
                           success: function (data) {
                               that.options.app.mergeTemplateXML(data, ui);
                           },
