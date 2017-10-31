@@ -55,5 +55,12 @@
       "metadata": "{\"offsets\":{\"CreateDataBaseVM\":{\"top\":419,\"left\":922},\"CreateApplicationVM\":{\"top\":419,\"left\":1050},\"ConfigureApplication\":{\"top\":547,\"left\":1050},\"RunApplication\":{\"top\":675,\"left\":986},\"ConfigDatabase\":{\"top\":547,\"left\":922}},\"project\":\"Advanced Workflows\"}"
     }
   ],
-  "workflows": []
+  "workflows": [
+    {
+      "name": "Untitled workflow 1",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<job\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n  xmlns=\"urn:proactive:jobdescriptor:3.8\"\r\n     xsi:schemaLocation=\"urn:proactive:jobdescriptor:3.8 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.8/schedulerjob.xsd\"\r\n    name=\"Untitled workflow 1\" \r\n    priority=\"normal\"\r\n    onTaskError=\"continueJobExecution\"\r\n     maxNumberOfExecution=\"2\"\r>\n  <taskFlow></taskFlow>\n</job>",
+      "metadata": "{\"offsets\":{}}",
+      "id": 1
+    }
+  ]
 }
