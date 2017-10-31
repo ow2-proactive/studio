@@ -6,7 +6,7 @@ define(
         'proactive/view/TaskView',
         'proactive/view/utils/undo',
         'pnotify',
-        'pnotify.buttons',
+        'pnotify.buttons'
     ],
 
     function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify) {
