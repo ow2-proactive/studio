@@ -21,6 +21,10 @@ define(
             this.options.templates.on('reset', this.render, this);
             this.options.templates.fetch();
         },
+        changeTemplates : function (bucket_id) {
+            this.options.templates =  new CatalogWorkflowCollection({id : bucket_id});
+            this.options.templates.fetch();
+        },
         createMenuFromConfig: function (template, menu) {
             var that = this;
 
@@ -84,7 +88,7 @@ define(
 
             var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
 
-            $(templateWidget).append(menuContent)
+            $(templateWidget).append(menuContent);
 
             this.options.templates.groupByProject(function (project, templates) {
                 var header = $('<li role="presentation" class="dropdown-header">'+project+'</li>');

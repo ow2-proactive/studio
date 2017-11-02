@@ -71,15 +71,12 @@ define(
         },
         login: function() {
 
-            var defaultBucketIdForTemplates = 1002;
-            this.models.templates = new CatalogWorkflowCollection({id : defaultBucketIdForTemplates});
             this.models.workflows = new WorkflowCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
             
             this.models.catalogBuckets.fetch();
             this.modelsToRemove = [];
 
-            this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
@@ -186,6 +183,48 @@ define(
         isWorkflowOpen: function() {
         
             return this.views.xmlView != null;
+        },
+        setTemplateBucket: function(bucketName){
+            var bucketId;
+            var bucketName;
+            var defaultBucketId = 1002;
+            var defaultBucketName = "Examples";
+            if (!bucketName){
+                bucketId = defaultBucketId;
+                bucketName = defaultBucketName;
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    headers : { 'sessionID': localStorage['pa.session'] },
+                    async: false,
+                    url: '/catalog/buckets/?kind=workflow',
+                    success: function (data) {
+                        var foundBucket = data.find(function(bucket){
+                            return bucket.name.toLowerCase() == bucketName.toLowerCase();
+                        });
+                        if (foundBucket){
+                            bucketId = foundBucket.id;
+                            bucketName = foundBucket.name;
+                        }
+                        else{
+                            bucketId = defaultBucketId;
+                            bucketName = defaultBucketName;
+                        }
+                    },
+                    error: function (data) {
+                      console.log("Cannot get buckets - ", data)
+                    }
+                });
+            }
+            var divBucketName = $("<div id='bucket-name-title'>"+bucketName+"</div>");
+            $("#studio-bucket-title").empty();
+            $("#studio-bucket-title").append(divBucketName);
+
+            this.models.templates = new CatalogWorkflowCollection({id : bucketId});
+            if (this.views.palleteView)
+                this.views.palleteView.remove();
+            this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
         }
     };
 });
