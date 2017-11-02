@@ -2,10 +2,11 @@ define(
     [
         'jquery',
         'backbone',
-        'proactive/config'
+        'proactive/config',
+        'proactive/model/CatalogWorkflowCollection'
     ],
 
-    function ($, Backbone, config) {
+    function ($, Backbone, config, CatalogWorkflowCollection) {
 
         "use strict";
 
@@ -13,13 +14,12 @@ define(
 
         initialize: function () {
             this.$el = $("<div></div>")
-            $("#palette-container").append(this.$el)
+            $("#palette-container").append(this.$el);
 
             this.options.templates.on('add', this.render, this);
             this.options.templates.on('remove', this.render, this);
             this.options.templates.on('reset', this.render, this);
             this.options.templates.fetch();
-            this.render();
         },
         createMenuFromConfig: function (template, menu) {
             var that = this;
@@ -95,7 +95,6 @@ define(
                         menuItem.tooltip();
                         menuContent.append(menuItem);
                         menuItem.data("templateName", template.get("name"));
-                        menuItem.data("templateId", template.get("id"));
                         menuItem.draggable({helper: "clone", scroll: true});
 
                         menuItem.click(function(event) {

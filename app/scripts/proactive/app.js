@@ -7,7 +7,6 @@ define(
         'jquery.ui.droppable',
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
-        'proactive/model/TemplateCollection',
         'proactive/model/CatalogBucketCollection',
         'proactive/model/CatalogWorkflowCollection',
         'proactive/view/PaletteView',
@@ -28,7 +27,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -72,8 +71,9 @@ define(
         },
         login: function() {
 
+            var defaultBucketIdForTemplates = 1002;
+            this.models.templates = new CatalogWorkflowCollection({id : defaultBucketIdForTemplates});
             this.models.workflows = new WorkflowCollection();
-            this.models.templates = new TemplateCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
             
             this.models.catalogBuckets.fetch();
@@ -184,6 +184,7 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
+        
             return this.views.xmlView != null;
         }
     };

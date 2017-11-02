@@ -20,7 +20,6 @@ define(
             this.$el = $("<div id='catalog-publish-container'></div>");
             $("#catalog-publish-body").append(this.$el);
             this.buckets = options.buckets;
-            this.render();
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket'
