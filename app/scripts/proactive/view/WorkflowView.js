@@ -65,6 +65,7 @@ define(
                       $.ajax({
                           type: "GET",
                           dataType: "text",
+                          headers : { 'sessionID': localStorage['pa.session'] },
                           async: false,
                           url: templateUrl,
                           success: function (data) {
