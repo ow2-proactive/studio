@@ -490,6 +490,10 @@ textarea {
     min-height: 5em !important;
 }
 
+.textareataskname {
+    min-height: 2em !important;
+}
+
 input {
     max-width: 90%;
     font-size: 13px !important;
