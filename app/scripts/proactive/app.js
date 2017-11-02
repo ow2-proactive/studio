@@ -71,7 +71,7 @@ define(
         },
         login: function() {
 
-            var defaultBucketIdForTemplates = 1000;
+            var defaultBucketIdForTemplates = 1002;
             this.models.templates = new CatalogWorkflowCollection({id : defaultBucketIdForTemplates});
             this.models.workflows = new WorkflowCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
@@ -184,6 +184,7 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
+        
             return this.views.xmlView != null;
         }
     };
