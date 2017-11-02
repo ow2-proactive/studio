@@ -743,7 +743,6 @@ define(
                 $("#documentationLinkId").attr("href", result);
             });
 
-
             
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
