@@ -148,9 +148,9 @@ define(['jquery',
                 } else {
                     this.collection = collection;
                     this.mode = modeName;
-                    var list = this;
-                    this.listenToCollection(function() { list.open(openAfterFetch) });
                 }
+                var list = this;
+                this.listenToCollection(function() { list.open(openAfterFetch) });
             },
             open: function (id) {
                 if (!id) {return;}

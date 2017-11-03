@@ -149,6 +149,19 @@ define(
             }
         });
 
+        $("#set-templates-bucket-button").click(function (event) {
+            event.preventDefault();
+            var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
+                studioApp.modelsToRemove = [];
+                studioApp.views.catalogSetTemplatesBucketView.render();
+                $('#set-templates-bucket-modal').modal();
+            }else{
+                $('#open-a-workflow-modal').modal();
+            }
+        });
+
         $("#catalog-get-as-new-button").click(function (event) {
             workflowImport(event, '#import-workflow-confirmation-modal');
         });
@@ -183,6 +196,12 @@ define(
 
         $("#catalog-publish-current").click(function (event) {
             $('#publish-current-confirmation-modal').modal();
+        });
+
+        $("#set-templates-bucket-select-button").click(function () {
+            var bucketName = ($(($("#catalog-set-templates-bucket-table .catalog-selected-row"))[0])).text();
+            var currentWfId = require('StudioApp').models.currentWorkflow.id;
+            require('StudioApp').router.navigate('workflows/'+currentWfId+'/templates/'+bucketName, {trigger: true});
         });
 
         $("#layout-button").click(function (event) {

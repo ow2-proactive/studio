@@ -21,6 +21,7 @@ footer {
     border-radius : 5px;
     background: #dd700c;
     font-size: 18px;
+    white-space: nowrap;
     color: white;
 }
 
