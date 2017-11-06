@@ -126,7 +126,7 @@ icons div {
     -moz-box-shadow: 2px 2px 19px #e0e0e0;
     -moz-border-radius: 0.5em;
     border-radius: 5px;
-    width: 110px;
+    width: fit-content;
     height: 40px;
     line-height: 30px;
     position: absolute;
@@ -310,7 +310,7 @@ a:hover {
     -o-box-shadow: 2px 2px 19px #aaa;
     -webkit-box-shadow: 2px 2px 19px #aaa;
     -moz-box-shadow: 2px 2px 19px #aaa;
-
+    width: fit-content;
 }
 
 path, ._jsPlumb_endpoint {
