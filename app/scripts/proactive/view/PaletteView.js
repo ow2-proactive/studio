@@ -52,13 +52,13 @@ define(
             var keepFromClosing = function(event){
                 return false;
             };
-            if(!menuElement.hasClass('pinned')){ //not pinned yet
-                menuElement.addClass('pinned');
+            if(menuElement.hasClass('dropdown')){ //not pinned yet
+                menuElement.removeClass('dropdown');
                 menuElement.bind('hide.bs.dropdown', keepFromClosing);
                 $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Unpin');
             } else { //pinned
-                menuElement.removeClass('pinned');
-                menuElement.unbind('hide.bs.dropdown', keepFromClosing);
+                menuElement.addClass('dropdown');
+                menuElement.unbind('hide.bs.dropdown');
                 menuElement.removeClass('open');//close the dropdown
                 $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Pin open');
             }
@@ -70,6 +70,7 @@ define(
         },
         initMenu: function(menu, config) {
             menu.draggable({helper: "original", distance : 20});
+            menu.addClass("dropdown");
             var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
             this.setPin(menuContent);
             this.createMenuFromConfig(config, menuContent);
@@ -98,8 +99,9 @@ define(
 
             var templateWidget = $(
                 '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
-                    '<img src="images/gears.png" width="20px" type="button" >Templates <span class="caret"></span></span></span>');
+                    '<img src="images/gears.png" width="20px" type="button" >'+ that.options.app.models.templatesBucketName+'<span class="caret"></span></span></span>');
             templateWidget.draggable({helper: "original", distance : 20});
+            templateWidget.addClass("dropdown");
             var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
             this.setPin(menuContent);
             $(templateWidget).append(menuContent);

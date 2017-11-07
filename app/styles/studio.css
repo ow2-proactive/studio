@@ -16,13 +16,12 @@ footer {
 }
 
 #bucket-name-title {
-    padding: 5px 10px;
-    border: 2px solid white;
-    border-radius : 5px;
-    background: #dd700c;
-    font-size: 18px;
+    padding: 6px 10px;
+    color: #50555b;
+    font-size: 20px;
     white-space: nowrap;
-    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 #workflow-designer {

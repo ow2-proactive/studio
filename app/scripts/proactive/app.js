@@ -39,7 +39,8 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
-            catalogBuckets: undefined
+            catalogBuckets: undefined,
+            templatesBucketName : undefined
         },
 
         views : {
@@ -75,7 +76,7 @@ define(
 
             this.models.workflows = new WorkflowCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
-            
+
             this.models.catalogBuckets.fetch();
             this.modelsToRemove = [];
 
@@ -184,43 +185,41 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
-        
+
             return this.views.xmlView != null;
         },
         setTemplateBucket: function(bucketName){
             var bucketId;
-            var bucketName;
-            var defaultBucketId = 1002;
             var defaultBucketName = "Examples";
-            if (!bucketName){
-                bucketId = defaultBucketId;
+            if (!bucketName)
                 bucketName = defaultBucketName;
-            }
-            else {
-                $.ajax({
-                    type: "GET",
-                    headers : { 'sessionID': localStorage['pa.session'] },
-                    async: false,
-                    url: '/catalog/buckets/?kind=workflow',
-                    success: function (data) {
-                        var foundBucket = data.find(function(bucket){
-                            return bucket.name.toLowerCase() == bucketName.toLowerCase();
-                        });
-                        if (foundBucket){
-                            bucketId = foundBucket.id;
-                            bucketName = foundBucket.name;
-                        }
-                        else{
-                            bucketId = defaultBucketId;
-                            bucketName = defaultBucketName;
-                        }
-                    },
-                    error: function (data) {
-                      console.log("Cannot get buckets - ", data)
+            $.ajax({
+                type: "GET",
+                headers : { 'sessionID': localStorage['pa.session'] },
+                async: false,
+                url: '/catalog/buckets/?kind=workflow',
+                success: function (data) {
+                    var foundBucket = data.find(function(bucket){
+                        return bucket.name.toLowerCase() == bucketName.toLowerCase();
+                    });
+                    if (foundBucket){
+                        bucketId = foundBucket.id;
+                        bucketName = foundBucket.name;
                     }
-                });
-            }
-            var divBucketName = $("<div id='bucket-name-title'>"+bucketName+"</div>");
+                    else {
+                        bucketId = 1000;
+                        bucketName = "Examples";
+                    }
+                },
+                error: function (data) {
+                  console.log("Cannot get buckets - ", data)
+                }
+            });
+            if (bucketName.length > 30)
+                this.models.templatesBucketName = bucketName.substr(0,27)+'...';
+            else
+                this.models.templatesBucketName = bucketName;
+            var divBucketName = $("<div id='bucket-name-title'>"+ this.models.templatesBucketName+"</div>");
             $("#studio-bucket-title").empty();
             $("#studio-bucket-title").append(divBucketName);
 
