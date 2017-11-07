@@ -42,52 +42,66 @@ define(
                         menu.append(subMenu);
                         subMenu.data("templateName", property);
                         subMenu.data("templateUrl", template[property]);
-                        subMenu.draggable({helper: "clone", scroll: true})
-
-                        subMenu.click(function(event) {
-                            // simulating drag and drop of this element
-                            var workflowView = that.options.app.views.workflowView
-                            workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
-                        })
+                        subMenu.draggable({helper: "clone", scroll: true, distance:0});
                     }
                 }
             }
         },
+        pinUnpin : function(e){
+            var menuElement = $(this).parent().parent();
+            var keepFromClosing = function(event){
+                return false;
+            };
+            if(!menuElement.hasClass('pinned')){ //not pinned yet
+                menuElement.addClass('pinned');
+                menuElement.bind('hide.bs.dropdown', keepFromClosing);
+                $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Unpin');
+            } else { //pinned
+                menuElement.removeClass('pinned');
+                menuElement.unbind('hide.bs.dropdown', keepFromClosing);
+                menuElement.removeClass('open');//close the dropdown
+                $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Pin open');
+            }
+        },
+        setPin : function(menu){
+            var pinOpen = $('<li role="presentation" class="dropdown-header"><span class="glyphicon glyphicon-pushpin"></span> Pin open</li>');
+            pinOpen.on('click', this.pinUnpin);
+            menu.append(pinOpen);
+        },
         initMenu: function(menu, config) {
-
+            menu.draggable({helper: "original", distance : 20});
             var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
-
+            this.setPin(menuContent);
             this.createMenuFromConfig(config, menuContent);
-            menu.append(menuContent)
-            menu.find(".dropdown-toggle").dropdown();
+            menu.append(menuContent);
         },
         render: function () {
             this.$el.html('');
             var that = this;
             var taskWidget = $(
-                '<span class="dropdown"><span id="task-menu" class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span ><span id="task-menu" class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="30px" type="button" >Tasks <span class="caret"></span></span></span>');
 
             this.initMenu($(taskWidget), config.tasks);
 
             var manualWidget = $(
-                '<span class="dropdown"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Manuals <span class="caret"></span></span></span>');
 
             this.initMenu($(manualWidget), config.manuals);
 
             var controlWidget = $(
-                '<span class="dropdown"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Controls <span class="caret"></span></span></span>');
 
             this.initMenu($(controlWidget), config.controls);
 
             var templateWidget = $(
-                '<span class="dropdown"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Templates <span class="caret"></span></span></span>');
-
+            templateWidget.draggable({helper: "original", distance : 20});
             var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
-
+            this.setPin(menuContent);
             $(templateWidget).append(menuContent);
 
             this.options.templates.groupByProject(function (project, templates) {
@@ -109,8 +123,6 @@ define(
                     }
                 })
             }, this);
-
-            $(templateWidget).find(".dropdown-toggle").dropdown();
 
             this.$el.append(taskWidget).append(manualWidget).append(controlWidget).append(templateWidget);
         }
