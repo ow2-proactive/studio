@@ -12,7 +12,7 @@ module.exports = {
             .createTask()
 
             .click(".task")
-            .assert.value('input[name="Task Name"]', 'Javascript_Task')
+            .assert.value('textarea[name="Task Name"]', 'Javascript_Task')
             .assert.containsText("#breadcrumb", 'Javascript_Task')
             .assert.containsText("#breadcrumb", 'Untitled workflow 1')
             .assert.containsText("#breadcrumb", 'Workflows')

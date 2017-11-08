@@ -219,9 +219,9 @@ define(
                 }
             });
             if (bucketName.length > 30)
-                this.models.templatesBucketName = bucketName.substr(0,27)+'...';
+                this.models.templatesBucketName = bucketName.substr(0,27)+'...'.replace('_',' ').replace('-',' ');
             else
-                this.models.templatesBucketName = bucketName;
+                this.models.templatesBucketName = bucketName.replace('_',' ').replace('-',' ');
             var divBucketName = $("<div id='bucket-name-title'>"+ this.models.templatesBucketName+"</div>");
             $("#studio-bucket-title").empty();
             $("#studio-bucket-title").append(divBucketName);

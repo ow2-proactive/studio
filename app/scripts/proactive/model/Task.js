@@ -29,7 +29,8 @@ define(
         var Task = SchemaModel.extend({
             schema: {
                 "Task Name": {
-                    type: "Text",
+                    type: "TextArea",
+                    editorClass: "textareataskname",
                     fieldAttrs: {
                         'placeholder': '@attributes->name',
                         "data-tab": "General Parameters",
@@ -39,7 +40,7 @@ define(
                 },
                 "Description": {
                     type: "TextArea",
-                    editorClass: "textareadescription",
+                    editorClass: "textareataskdescription",
                     fieldAttrs: {
                         'placeholder': ['description->#cdata-section', 'description->#text'],
                         "data-help": 'A small textual description of what task does.'
