@@ -489,14 +489,23 @@ button[data-action=remove] {
     padding-left: 15px;
 }
 
+.textareaworkflowdescription {
+    min-height: 5em !important;
+}
+
+.textareataskdescription {
+    min-height: 2em !important;
+}
+
+.textareataskname {
+    min-height: 0.1em !important;
+    height: 2.5em !important;
+}
+
 textarea {
     min-width: 90%;
     max-width: 90%;
     min-height: 200px !important;
-}
-
-.textareadescription {
-    min-height: 5em !important;
 }
 
 input {
