@@ -495,8 +495,16 @@ textarea {
     min-height: 200px !important;
 }
 
-.textareadescription {
+.textareaworkflowdescription {
     min-height: 5em !important;
+}
+
+.textareataskdescription {
+    min-height: 2em !important;
+}
+
+.textareataskname {
+    min-height: 0.1em !important;
 }
 
 input {
