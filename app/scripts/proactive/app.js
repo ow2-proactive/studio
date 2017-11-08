@@ -207,12 +207,15 @@ define(
                         bucketName = foundBucket.name;
                     }
                     else {
-                        bucketId = 1000;
-                        bucketName = "Examples";
+                        var defaultBucket = data.find(function(bucket){
+                            return bucket.name.toLowerCase() == defaultBucketName.toLowerCase();
+                        });
+                        bucketId = defaultBucket.id;
+                        bucketName = defaultBucket.name;
                     }
                 },
                 error: function (data) {
-                  console.log("Cannot get buckets - ", data)
+                  console.log("Cannot get buckets - ", data);
                 }
             });
             if (bucketName.length > 30)
