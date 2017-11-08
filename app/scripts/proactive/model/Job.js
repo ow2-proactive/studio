@@ -43,7 +43,7 @@ define(
         },
         "Description": {
           type: "TextArea",
-          editorClass: "textareadescription",
+          editorClass: "textareaworkflowdescription",
           fieldAttrs: {
             'placeholder': ['description->#cdata-section', 'description->#text'],
             "data-help": "Small textual explanation of what this job does."
