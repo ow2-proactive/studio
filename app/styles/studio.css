@@ -42,11 +42,12 @@ footer {
 }
 
 #left-panel-properties{
-    height:100%;
-    min-width:300px;
-    max-width: 350px;
-    width:25%;
-    padding:10px;
+    height: 100%;
+    min-width: 300px;
+    width: 25%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
 }
 
 #properties-container {
@@ -480,11 +481,6 @@ ANALOGIC SCHEME
     cursor: pointer;
 }
 
-button[data-action=remove] {
-    margin-bottom: 10px;
-    padding-top: 10px;
-}
-
 .syntaxhighlighter {
     max-height: 350px;
     overflow: auto;
@@ -497,6 +493,7 @@ button[data-action=remove] {
 .form-wrap {
     background-color: #f5f5f5;
     padding-left: 15px;
+    margin-top: 25px;
 }
 
 .textareaworkflowdescription {
@@ -582,16 +579,36 @@ label {
     padding-bottom: 20px;
 }
 
+button[data-action='remove'] {
+    margin: 2px 5px 5px 5px;
+    padding: 2px 5px 2px 5px;
+    font-size:15px;
+}
+
 button[data-action='add'] {
-    margin-bottom: 10px;
+    padding: 2px 5px 2px 5px;
+    float: right;
+    margin-right: 20px;
+}
+
+div[data-items] > div {
+    display : flex;
+}
+
+div[data-items] > div > span {
+    width: 85%;
 }
 
 div[name="Application Parameters"] {
     display: inline-block;
 }
 
-div[name="Node Selection"] {
-    display: inline-block;
+div[name="Environment Variables"] {
+    margin-top: 15px;
+}
+
+div[name="Fork Environment"] > form > fieldset > div {
+    margin-top: 20px;
 }
 
 ul[name="Type"] {
@@ -734,14 +751,6 @@ input[type="checkbox"] {
     background-color: #f5f5f5;
     /*border:none;*/
     margin-bottom: 5px;
-}
-
-button[data-action='remove'] {
-    background-color: #f5f5f5;
-    border: none;
-    margin-bottom: 4px;
-    padding-top:0px;
-
 }
 
 li {
@@ -1092,17 +1101,12 @@ li.success {
 
 .input-property-field {
     float:left;
-    width: 42%;
+    width: 40%;
     max-width: 42%;
     margin-right:10px;
     overflow: hidden;
     white-space: nowrap;
     resize: none;
-}
-
-.delete-button {
-   	height: 26px;
-   	top: -10px;
 }
 
 .list-editor-row {
