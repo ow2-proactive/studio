@@ -105,7 +105,9 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->accessMode'},
                             options: ["transferFromUserSpace", "transferFromGlobalSpace", "transferFromInputSpace", "transferFromOutputSpace","cacheFromUserSpace", "cacheFromGlobalSpace", "cacheFromInputSpace", "cacheFromOutputSpace", "none"]
                         }
-                    }
+                    },
+                    itemTemplate: bigCrossTemplate,
+                    confirmDelete: 'You are about to remove an input file.'
                 },
                 "Output Files": {
                     type: 'List',
@@ -122,7 +124,9 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->accessMode'},
                             options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]
                         }
-                    }
+                    },
+                    itemTemplate: bigCrossTemplate,
+                    confirmDelete: 'You are about to remove an output file.'
                 },
                 "Precious Result": {
                     type: "Checkbox",

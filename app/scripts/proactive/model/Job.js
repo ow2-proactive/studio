@@ -82,6 +82,7 @@ define(
             "data-tab-help": "Workflow variables that will be available in all tasks.",
             "data-help": "<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li>"
           },
+          confirmDelete: 'You are about to remove a variable.',
           itemToString: Utils.inlineNameValue,
           itemTemplate: bigCrossTemplate,
           subSchema: {
@@ -120,6 +121,7 @@ define(
           },
           itemToString: Utils.inlineNameValue,
           itemTemplate: bigCrossTemplate,
+          confirmDelete: 'You are about to remove a property.',
           subSchema: {
             "Property Name": {
               validators: ['required'],
