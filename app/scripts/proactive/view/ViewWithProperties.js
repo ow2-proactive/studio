@@ -285,6 +285,8 @@ define(
 					container.find("select").addClass("form-control");
 					container.find("textarea").addClass("form-control");
 					container.find("button").addClass("btn").addClass("btn-default");
+					container.find("button[data-action='add']").addClass("btn").addClass("btn-success");
+					container.find("button[data-action='remove']").addClass("btn").addClass("btn-danger");
 
 					// adding help info
 					var that = this;

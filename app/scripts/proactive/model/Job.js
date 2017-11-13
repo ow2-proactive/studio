@@ -19,8 +19,7 @@ define(
 
     "use strict";
 
-    var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>');
-
+    var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="btn btn-danger" data-action="remove">x</button></div>');
     var that = this;
 
     return SchemaModel.extend({
