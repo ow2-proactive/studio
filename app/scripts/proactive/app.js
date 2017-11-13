@@ -40,7 +40,8 @@ define(
             workflows: undefined,
             templates: undefined,
             catalogBuckets: undefined,
-            templatesBucketName : undefined
+            templatesBucketName : undefined,
+            openedAccordion : undefined
         },
 
         views : {
