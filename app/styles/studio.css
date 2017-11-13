@@ -61,6 +61,13 @@ footer {
     background-color: #ffffff;
 }
 
+#breadcrumb {
+    position: sticky;
+    width: 100%;
+    z-index: 99999;
+    top: 0;
+}
+
 #tools-table {
     position: absolute;
     top: 30px;

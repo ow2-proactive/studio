@@ -220,10 +220,10 @@ define(
 							var accId = "acc-" + i;
 							// defining if this accordion should be opened
 							var openAccordion = false;
-							if (i == 0 && !that.openedAccordion) {
+							if (i == 0 && !StudioApp.models.openedAccordion) {
 								openAccordion = true;
 							}
-							if (accId == that.openedAccordion) {
+							if (accId == StudioApp.models.openedAccordion) {
 								openAccordion = true;
 							}
 
@@ -269,10 +269,11 @@ define(
 					})
 
 					// saving expanded accordion
-					$('[data-toggle="collapse"]').click(function () {
+					accordion.find('[data-toggle="collapse"]').click(function () {
+					    console.log('___________-------------------------___________');
 						var accordionBody = $(this).parents(".panel").find(".panel-body");
 						if (!accordionBody.hasClass("in")) {
-							that.openedAccordion = accordionBody.attr('id')
+							StudioApp.models.openedAccordion = accordionBody.attr('id')
 						}
 					})
 
