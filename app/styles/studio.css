@@ -558,6 +558,11 @@ input {
 .panel-default {
     resize: none;
     margin-top: 2px !important;
+    background-color: #f5f5f5;
+}
+
+.panel-default .form-wrap:first-of-type {
+    margin-top: 2px;
 }
 
 .panel-body {
