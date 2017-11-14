@@ -213,6 +213,7 @@ define(
 					var accordion = $('<div class="panel-group" id="accordion-properties">');
 					var currentAccordionGroup = undefined;
 					var curLabel = "";
+					var isTask = this.model.get("Task Name") != undefined;
 
 					$.each(form.$el.children().children(), function (i, elem) {
 						var el = $(elem);
@@ -220,11 +221,16 @@ define(
 							var accId = "acc-" + i;
 							// defining if this accordion should be opened
 							var openAccordion = false;
-							if (i == 0 && !StudioApp.models.openedAccordion) {
-								openAccordion = true;
-							}
-							if (accId == StudioApp.models.openedAccordion) {
-								openAccordion = true;
+							if (isTask) {
+							    // Task properties panel : open the last one open or 1st one by default
+							    if ((i == 0 && !StudioApp.models.openedAccordion) || accId == StudioApp.models.openedAccordion) {
+                                    openAccordion = true;
+                                }
+							} else {
+							    // Workflow properties panel : 1st one open
+							    if (i == 0) {
+                                    openAccordion = true;
+                                }
 							}
 
 							// create data-help for tab
@@ -268,14 +274,16 @@ define(
 
 					})
 
-					// saving expanded accordion
-					accordion.find('[data-toggle="collapse"]').click(function () {
-					    console.log('___________-------------------------___________');
-						var accordionBody = $(this).parents(".panel").find(".panel-body");
-						if (!accordionBody.hasClass("in")) {
-							StudioApp.models.openedAccordion = accordionBody.attr('id')
-						}
-					})
+					// saving expanded accordion for tasks
+					if (this.model.get("Task Name")) {
+					    accordion.find('[data-toggle="collapse"]').click(function () {
+                            var accordionBody = $(this).parents(".panel").find(".panel-body");
+                            if (!accordionBody.hasClass("in")) {
+                                StudioApp.models.openedAccordion = accordionBody.attr('id');
+                            }
+                        });
+					}
+
 
 					accordion.find("[simple-view]").remove()
 					return accordion;
