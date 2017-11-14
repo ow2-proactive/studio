@@ -32,16 +32,6 @@ task packageDev(type: Zip) {
     classifier 'dev'
 }
 
-if (project.hasProperty('customizableSquaredLogoLocation')
-        && project.hasProperty('customizableImages')) {
-    task replaceCustomizableImage(type: ReplaceFilesTask) {
-        newFileUrl = project.customizableSquaredLogoLocation
-        commaSeparatedListFilesToOverwrite = project.customizableImages
-    }
-
-    build.finalizedBy(replaceCustomizableImage)
-}
-
 artifacts {
     if (file('dist').exists()) {
         archives packageDist, packageDev
@@ -63,7 +53,6 @@ buildscript {
     dependencies {
         classpath "com.diffplug.gradle.spotless:spotless:2.4.0"
         classpath "org.ow2.proactive:coding-rules:1.0.0"
-        classpath "org.ow2.proactive:replace-files-gradle-plugin:0.1.5"
         delete "gradle/ext"
         ant.unjar src: configurations.classpath.find { it.name.startsWith("coding-rules") }, dest: 'gradle/ext'
     }
