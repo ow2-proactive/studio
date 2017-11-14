@@ -61,6 +61,16 @@ footer {
     background-color: #ffffff;
 }
 
+.breadcrumb {
+    position: sticky;
+    width: 100%;
+    z-index: 99999;
+    top: 0;
+    background: #ffffff;
+    border-bottom: thin solid #e0e0e0;
+    border-radius: 0px;
+}
+
 #tools-table {
     position: absolute;
     top: 30px;
@@ -548,6 +558,11 @@ input {
 .panel-default {
     resize: none;
     margin-top: 2px !important;
+    background-color: #f5f5f5;
+}
+
+.panel-default .form-wrap:first-of-type {
+    margin-top: 2px;
 }
 
 .panel-body {
