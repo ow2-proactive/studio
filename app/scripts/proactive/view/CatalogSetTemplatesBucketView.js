@@ -13,22 +13,25 @@ define(
     return Backbone.View.extend({
         template: _.template(catalogBrowser),
         initialize: function (options) {
-            this.$el = $("<div id='set-templates-bucket-container'></div>");
-            $("#set-templates-bucket-body").append(this.$el);
+            this.$el = $("<div id='set-templates-"+ options.order +"-bucket-container'></div>");
+            $("#set-templates-"+ options.order +"-bucket-body").append(this.$el);
             this.buckets = options.buckets;
+            this.order = options.order;
         },
-        events: {
-            'click #catalog-set-templates-bucket-table tr': 'selectBucket'
+        events: function(){
+            var _events = {};
+            _events['click #catalog-set-templates-'+ this.order +'-bucket-table tr'] = 'selectBucket';
+            return _events;
         },
         internalSelectBucket: function (currentBucketRow) {
             var studioApp = require('StudioApp');
 
-            var setTemplatesBucketButton = $('#set-templates-bucket-select-button');
+            var setTemplatesBucketButton = $('#set-templates-'+ this.order +'-bucket-select-button');
             setTemplatesBucketButton.prop('disabled', !currentBucketRow);
 
             if (currentBucketRow){
 	        	var currentBucketId= $(currentBucketRow).data("bucketid");
-	            this.highlightSelectedRow('#catalog-set-templates-bucket-table', currentBucketRow);
+	            this.highlightSelectedRow('#catalog-set-templates-'+ this.order +'-bucket-table', currentBucketRow);
 
                 var currentBucket = this.buckets.get(currentBucketId);
             }
@@ -51,10 +54,10 @@ define(
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
                 var id = bucket.get("id");
-                this.$('#catalog-set-templates-bucket-table').append(BucketList({bucket: bucket, bucketid: id}));
+                this.$('#catalog-set-templates-'+ this.order +'-bucket-table').append(BucketList({bucket: bucket, bucketid: id}));
             }, this);
             // to open the browser on the first bucket
-            this.internalSelectBucket(this.$('#catalog-set-templates-bucket-table tr')[0]);
+            this.internalSelectBucket(this.$('#catalog-set-templates-'+ this.order +'-bucket-table tr')[0]);
             return this;
         },
     })

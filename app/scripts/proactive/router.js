@@ -16,9 +16,7 @@ define(
                 'workflows' : 'listWorkflows',
                 'workflows/:id' : 'openWorkflow',
                 'workflows/:id/templates/:bucketName' : 'openWorkflowWithTemplates',
-
-                'templates' : 'listTemplates',
-                'templates/:id' : 'openTemplate'
+                'workflows/:id/templates/' : 'openWorkflow'
             },
 
             initialize: function(app) {
@@ -33,23 +31,15 @@ define(
 
             listWorkflows: function() {
                 this.app.views.propertiesView.listWorkflows();
-                this.app.setTemplateBucket();
+                this.app.views.palleteView.setTemplateMainBucket();
             },
             openWorkflow: function(id) {
                 this.app.views.propertiesView.listWorkflows(id);
-                this.app.setTemplateBucket();
+                this.app.views.palleteView.setTemplateMainBucket();
             },
             openWorkflowWithTemplates: function(id, bucketName) {
                 this.app.views.propertiesView.listWorkflows(id);
-                this.app.setTemplateBucket(bucketName);
-            },
-            listTemplates: function() {
-                this.app.views.propertiesView.listTemplates();
-                this.app.setTemplateBucket();
-            },
-            openTemplate: function(id) {
-                this.app.views.propertiesView.listTemplates(id);
-                this.app.setTemplateBucket();
+                this.app.views.palleteView.setTemplateMainBucket(bucketName);
             }
         });
     });

@@ -85,6 +85,10 @@ footer {
     width: 80px;
 }
 
+.btn .caret {
+     margin-left: 4px
+ }
+
 #tools-table td {
     text-align: center;
 }
@@ -874,6 +878,18 @@ li.success {
 
 .templates-menu > li {
     background-color: white !important;
+}
+
+.remove-secondary-bucket-btn {
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+    margin-left : 0px;
+    border-left: solid #656d75 1px;
+}
+
+.secondary-palette > .dropdown-toggle{
+    border-top-right-radius: unset;
+    border-bottom-right-radius: unset;
 }
 
 .sub-menu > a {
