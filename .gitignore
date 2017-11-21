@@ -27,3 +27,8 @@ gradle/ext/
 *.iml
 .idea/
 /bin/
+
+### macOS ###
+*.DS_Store
+.AppleDouble
+.LSOverride
