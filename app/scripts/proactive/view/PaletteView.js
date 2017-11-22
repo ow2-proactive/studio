@@ -52,16 +52,16 @@ define(
             if(menuElement.hasClass('dropdown')){ //not pinned yet
                 menuElement.removeClass('dropdown');
                 menuElement.bind('hide.bs.dropdown', keepFromClosing);
-                $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Unpin');
+                $(this).html('<img src="images/icon-unpin.png"> Unpin');
             } else { //pinned
                 menuElement.addClass('dropdown');
                 menuElement.unbind('hide.bs.dropdown');
                 menuElement.removeClass('open');//close the dropdown
-                $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Pin open');
+                $(this).html('<img src="images/icon-pin.png"> Pin open');
             }
         },
         setPin : function(menu){
-            var pinOpen = $('<li role="presentation" class="dropdown-header"><span class="glyphicon glyphicon-pushpin"></span> Pin open</li>');
+            var pinOpen = $('<li role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
             pinOpen.on('click', this.pinUnpin);
             menu.append(pinOpen);
         },
