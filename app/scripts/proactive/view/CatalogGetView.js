@@ -7,10 +7,11 @@ define(
         'text!proactive/templates/catalog-get-workflow.html',
         'text!proactive/templates/catalog-get-revision.html',
         'text!proactive/templates/catalog-get-revision-description.html',
-        'proactive/model/CatalogWorkflowRevisionCollection'
+        'proactive/model/CatalogWorkflowRevisionCollection',
+        'proactive/model/CatalogWorkflowCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection) {
+    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection, CatalogWorkflowCollection) {
 
     "use strict";
 
@@ -20,7 +21,6 @@ define(
             this.$el = $("<div id='catalog-get-container'></div>");
             $("#catalog-get-body").append(this.$el);
             this.buckets = options.buckets;
-            this.render();
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
@@ -37,16 +37,23 @@ define(
             if (currentBucketRow){
 	        	var currentBucketID = $(currentBucketRow).data("bucketid");
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
-	            
+
 	            var that = this;
                 var currentBucket = this.buckets.get(currentBucketID);
-                var workflows = currentBucket.get("workflows");
-                _.each(
-                		workflows,
-                		function (workflow) {
-            				var WorkflowList = _.template(catalogWorkflow);
-            				that.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
-                		});
+                var bucketId = that.getSelectedBucketId();
+                var workflowsModel = new CatalogWorkflowCollection(
+                {
+                    id: bucketId,
+                    callback: function (workflows) {
+                        _.each(
+                        workflows,
+                        function (workflow) {
+                            var WorkflowList = _.template(catalogWorkflow);
+                            that.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
+                        });
+                    }
+                });
+                workflowsModel.fetch({async:false});
             }
             this.internalSelectWorkflow(this.$('#catalog-get-workflows-table tr')[0]);
             
@@ -60,7 +67,7 @@ define(
             var studioApp = require('StudioApp');
             
             if (currentWorkflowRow){
-	        	var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
+                var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
 	            this.highlightSelectedRow('#catalog-get-workflows-table', currentWorkflowRow);
 	            var that = this;
 
@@ -112,7 +119,7 @@ define(
 					}));
 
 	            this.disableActionButtons(false, !studioApp.isWorkflowOpen());
-            }  
+            }
         },
         highlightSelectedRow: function(tableId, row){
         	var selectedClassName = 'catalog-selected-row';

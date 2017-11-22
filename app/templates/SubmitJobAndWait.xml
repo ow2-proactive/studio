@@ -28,8 +28,14 @@ schedulerapi.connect()
 // get the job URL from Task Variables
 jobURL = new URL(variables.get("workflowURL"))
 
+// variables submitted to the workflow: Empty
+variables = Collections.EMPTY_MAP
+
+// add sessionId to request header map
+requestHeader = Collections.singletonMap("sessionId", schedulerapi.getSession())
+
 // submitting the job
-jobid = schedulerapi.submit(jobURL).value()
+jobid = schedulerapi.submit(jobURL, variables, requestHeader)
 
 variables.put("jobID", jobid)
 ]]>

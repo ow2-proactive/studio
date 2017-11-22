@@ -7,7 +7,6 @@ define(
         'jquery.ui.droppable',
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
-        'proactive/model/TemplateCollection',
         'proactive/model/CatalogBucketCollection',
         'proactive/model/CatalogWorkflowCollection',
         'proactive/view/PaletteView',
@@ -18,6 +17,7 @@ define(
         'proactive/view/LogoutView',
         'proactive/view/CatalogGetView',
         'proactive/view/CatalogPublishView',
+        'proactive/view/CatalogSetTemplatesBucketView',
         'proactive/view/WorkflowListView',
         'xml2json',
         'proactive/router',
@@ -28,7 +28,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, TemplateCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -39,7 +39,9 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
-            catalogBuckets: undefined
+            secondaryTemplates: undefined,
+            catalogBuckets: undefined,
+            openedAccordion : undefined
         },
 
         views : {
@@ -50,7 +52,9 @@ define(
             loginView : undefined,
             logoutView : undefined,
             catalogGetView : undefined,
-            catalogPublishView : undefined
+            catalogPublishView : undefined,
+            catalogSetMainTemplatesBucketView : undefined,
+            catalogSetSecondaryTemplatesBucketView : undefined
         },
 
         router: undefined,
@@ -73,18 +77,19 @@ define(
         login: function() {
 
             this.models.workflows = new WorkflowCollection();
-            this.models.templates = new TemplateCollection();
             this.models.catalogBuckets = new CatalogBucketCollection();
-            
+
             this.models.catalogBuckets.fetch();
             this.modelsToRemove = [];
 
-            this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
+            this.views.palleteView = new PaletteView({templatesBucketName: this.models.templatesBucketName, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
             this.views.catalogGetView = new CatalogGetView({buckets: this.models.catalogBuckets});
             this.views.catalogPublishView = new CatalogPublishView({buckets: this.models.catalogBuckets});
+            this.views.catalogSetMainTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets, order: 'main'});
+            this.views.catalogSetSecondaryTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets, order:'secondary'});
 
             this.router = new StudioRouter(this);
         },
@@ -184,6 +189,7 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
+
             return this.views.xmlView != null;
         }
     };
