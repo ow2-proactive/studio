@@ -149,30 +149,28 @@ define(
             }
         });
 
-        $("#set-templates-main-bucket-button").click(function (event) {
-            event.preventDefault();
+        function openSetTemplatesMenuModal(order){
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogSetMainTemplatesBucketView.render();
-                $('#set-templates-main-bucket-modal').modal();
+                if (order=='main')
+                    studioApp.views.catalogSetMainTemplatesBucketView.render();
+                else if (order=='secondary')
+                    studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
+                $('#set-templates-'+order+'-bucket-modal').modal();
             }else{
                 $('#open-a-workflow-modal').modal();
             }
+        }
+        $("#set-templates-main-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('main');
         });
 
         $("#set-templates-secondary-bucket-button").click(function (event) {
             event.preventDefault();
-            var studioApp = require('StudioApp');
-            if (studioApp.isWorkflowOpen()){
-                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                studioApp.modelsToRemove = [];
-                studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
-                $('#set-templates-secondary-bucket-modal').modal();
-            }else{
-                $('#open-a-workflow-modal').modal();
-            }
+            openSetTemplatesMenuModal('secondary');
         });
 
         $("#catalog-get-as-new-button").click(function (event) {
