@@ -39,8 +39,8 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
+            secondaryTemplates: undefined,
             catalogBuckets: undefined,
-            templatesBucketName : undefined,
             openedAccordion : undefined
         },
 
@@ -53,7 +53,8 @@ define(
             logoutView : undefined,
             catalogGetView : undefined,
             catalogPublishView : undefined,
-            catalogSetTemplatesBucketView : undefined
+            catalogSetMainTemplatesBucketView : undefined,
+            catalogSetSecondaryTemplatesBucketView : undefined
         },
 
         router: undefined,
@@ -82,11 +83,13 @@ define(
             this.modelsToRemove = [];
 
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
+            this.views.palleteView = new PaletteView({templatesBucketName: this.models.templatesBucketName, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
             this.views.catalogGetView = new CatalogGetView({buckets: this.models.catalogBuckets});
             this.views.catalogPublishView = new CatalogPublishView({buckets: this.models.catalogBuckets});
-            this.views.catalogSetTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets});
+            this.views.catalogSetMainTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets, order: 'main'});
+            this.views.catalogSetSecondaryTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets, order:'secondary'});
 
             this.router = new StudioRouter(this);
         },
@@ -188,49 +191,6 @@ define(
         isWorkflowOpen: function() {
 
             return this.views.xmlView != null;
-        },
-        setTemplateBucket: function(bucketName){
-            var bucketId;
-            var defaultBucketName = "Examples";
-            if (!bucketName)
-                bucketName = defaultBucketName;
-            $.ajax({
-                type: "GET",
-                headers : { 'sessionID': localStorage['pa.session'] },
-                async: false,
-                url: '/catalog/buckets/?kind=workflow',
-                success: function (data) {
-                    var foundBucket = data.find(function(bucket){
-                        return bucket.name.toLowerCase() == bucketName.toLowerCase();
-                    });
-                    if (foundBucket){
-                        bucketId = foundBucket.id;
-                        bucketName = foundBucket.name;
-                    }
-                    else {
-                        var defaultBucket = data.find(function(bucket){
-                            return bucket.name.toLowerCase() == defaultBucketName.toLowerCase();
-                        });
-                        bucketId = defaultBucket.id;
-                        bucketName = defaultBucket.name;
-                    }
-                },
-                error: function (data) {
-                  console.log("Cannot get buckets - ", data);
-                }
-            });
-            if (bucketName.length > 30)
-                this.models.templatesBucketName = bucketName.substr(0,27)+'...'.replace('_',' ').replace('-',' ');
-            else
-                this.models.templatesBucketName = bucketName.replace('_',' ').replace('-',' ');
-            var divBucketName = $("<div id='bucket-name-title'>"+ this.models.templatesBucketName+"</div>");
-            $("#studio-bucket-title").empty();
-            $("#studio-bucket-title").append(divBucketName);
-
-            this.models.templates = new CatalogWorkflowCollection({id : bucketId});
-            if (this.views.palleteView)
-                this.views.palleteView.remove();
-            this.views.palleteView = new PaletteView({templates: this.models.templates, app: this});
         }
     };
 });

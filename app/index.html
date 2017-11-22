@@ -119,9 +119,15 @@
 			      				</a>
 			      			</li>
                             <li>
-                                <a id="set-templates-bucket-button" href="#" class="pointer">
+                                <a id="set-templates-main-bucket-button" href="#" class="pointer">
                                     <i class="glyphicon glyphicon-cog"></i>
-                                    Set Bucket as Template Menu
+                                    Set Bucket as Main Catalog Menu
+                                </a>
+                            </li>
+                            <li>
+                                <a id="set-templates-secondary-bucket-button" href="#" class="pointer">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    Add Bucket as Extra Catalog Menu
                                 </a>
                             </li>
                         </ul>
@@ -289,27 +295,46 @@
             </div>
         </div>
 
-        <div id="set-templates-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="set-templates-main-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" style="width:30%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Set Bucket as Template Menu</h3>
+                        <h3>Set Bucket as Main Catalog Menu</h3>
                     </div>
-                    <div id="set-templates-bucket-body" class="modal-body" style="height:100%">
-                        <div id="set-templates-bucket-container"></div>
-                    </div>
+                    <div id="set-templates-main-bucket-body" class="modal-body" style="height:100%"></div>
                     <div class="modal-footer">
-                        <button id="set-templates-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                        <button id="set-templates-main-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                             Select
                         </button>
-                        <button id="set-templates-bucket-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                        <button id="set-templates-main-bucket-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                             Close
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div id="set-templates-secondary-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="width:30%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Add Bucket as Extra Catalog Menu</h3>
+                    </div>
+                    <div id="set-templates-secondary-bucket-body" class="modal-body" style="height:100%"></div>
+                    <div class="modal-footer">
+                        <button id="set-templates-secondary-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Select
+                        </button>
+                        <button id="set-templates-secondary-bucket-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">

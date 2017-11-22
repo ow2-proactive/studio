@@ -149,17 +149,28 @@ define(
             }
         });
 
-        $("#set-templates-bucket-button").click(function (event) {
-            event.preventDefault();
+        function openSetTemplatesMenuModal(order){
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogSetTemplatesBucketView.render();
-                $('#set-templates-bucket-modal').modal();
+                if (order=='main')
+                    studioApp.views.catalogSetMainTemplatesBucketView.render();
+                else if (order=='secondary')
+                    studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
+                $('#set-templates-'+order+'-bucket-modal').modal();
             }else{
                 $('#open-a-workflow-modal').modal();
             }
+        }
+        $("#set-templates-main-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('main');
+        });
+
+        $("#set-templates-secondary-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('secondary');
         });
 
         $("#catalog-get-as-new-button").click(function (event) {
@@ -198,10 +209,15 @@ define(
             $('#publish-current-confirmation-modal').modal();
         });
 
-        $("#set-templates-bucket-select-button").click(function () {
-            var bucketName = ($(($("#catalog-set-templates-bucket-table .catalog-selected-row"))[0])).text();
+        $("#set-templates-main-bucket-select-button").click(function () {
+            var bucketName = ($(($("#catalog-set-templates-main-bucket-table .catalog-selected-row"))[0])).text();
             var currentWfId = require('StudioApp').models.currentWorkflow.id;
             require('StudioApp').router.navigate('workflows/'+currentWfId+'/templates/'+bucketName, {trigger: true});
+        });
+
+        $("#set-templates-secondary-bucket-select-button").click(function () {
+            var bucketName = ($(($("#catalog-set-templates-secondary-bucket-table .catalog-selected-row"))[0])).text();
+            require('StudioApp').views.palleteView.setSecondaryTemplatesBucket(bucketName, false);
         });
 
         $("#layout-button").click(function (event) {

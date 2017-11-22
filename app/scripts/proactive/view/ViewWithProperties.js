@@ -44,8 +44,7 @@ define(
 
 					// TODO do not duplicate breadcrumbs (see another one in WorkflowListView)
 					var mode = StudioApp.views.propertiesView.mode;
-					var workflows = $('<li class="active"><span><a href="#" id="breadcrumb-list-workflows">' +
-							mode.charAt(0).toUpperCase() + mode.slice(1) + 's' + '</a></span></li>');
+					var workflows = $('<li class="active"><span><a href="#" id="breadcrumb-list-workflows"> Workflows </a></span></li>');
 					breadcrumb.append(workflows)
 
 					var jobBreadcrumb
