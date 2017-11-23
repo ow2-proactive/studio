@@ -230,7 +230,7 @@ define(
 
                         menuItem.click(function(event) {
                             // simulating drag and drop of this element
-                            var workflowView = this.options.app.views.workflowView
+                            var workflowView = that.options.app.views.workflowView
                             workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
                         })
                     }
