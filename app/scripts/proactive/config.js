@@ -43,7 +43,10 @@ define(function () {
             'Replicate': 'templates/05_workflow_replication.xml',
             'Task Dependencies': 'templates/02_task_dependencies.xml',
             'Submit Job No Wait': 'templates/SubmitJobNoWait.xml',
-            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml'
+            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml',
+            'Wait for Any': 'templates/wait_for_any.xml',
+            'Wait for Any Replicate': 'templates/wait_for_any_replicate.xml',
+            'Submit and Wait for Any': 'templates/submit_and_wait_for_any.xml'
         }
     };
 });
