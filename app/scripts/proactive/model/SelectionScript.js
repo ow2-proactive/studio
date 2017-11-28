@@ -18,7 +18,7 @@ define(
             "Language": {type: 'Select', options: [" ", "bash", "cmd", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"], fieldAttrs: {'placeholder': 'code->@attributes->language'}},
             "Or Path": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->path'}},
             "Arguments": {type: 'Hidden', itemType: 'Text', fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}},
-            "Or Url": {type: "Hidden", fieldAttrs: {'placeholder': 'file->@attributes->url'}},
+            "Or Import your Script from Url": {type: "Text", fieldAttrs: {'placeholder': 'file->@attributes->url'}},
             "Type": {type: 'Select', options: ["dynamic", "static"], fieldAttrs: {'placeholder': '@attributes->type'}}
         },
 

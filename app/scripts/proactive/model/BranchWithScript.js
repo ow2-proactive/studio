@@ -2,16 +2,16 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'proactive/model/Script'
+        'proactive/model/ControlFlow'
     ],
 
-    function (Backbone, SchemaModel, Script) {
+    function (Backbone, SchemaModel, ControlFlow) {
 
     "use strict";
 
     return SchemaModel.extend({
         schema: {
-            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'script', "data-tab": 'Control Flow'}}
+            "Script": {type: 'NestedModel', model: ControlFlow, fieldAttrs: {'placeholder': 'script', "data-tab": 'Control Flow'}}
         }
     })
 })
