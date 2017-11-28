@@ -180,7 +180,7 @@ define(
         },
         setTemplateMainBucket: function(bucketName){
             var bucketId;
-            var defaultBucketName = "Examples";
+            var defaultBucketName = "basic-examples";
                 if (!bucketName)
             bucketName = defaultBucketName;
 
