@@ -1,4 +1,4 @@
-<% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0 || model["Language"]) { %>
+<% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0 || model["Language"] || model["Or Import your Script from Url"]) { %>
     <% print("<sc"+"ript") %>
         <% if (model["Type"]) { %> type="<%=model["Type"]%>" <% }%>>
             <% if (model["Script"] && model["Script"].length>0 && !model["Library Path"] || model["Language"]) {%>
@@ -12,6 +12,10 @@
                     <file path="<%=model["Library Path"]%>">
                 <% }%>
 
+                <% if (model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length>0) { %>
+                    <file path="<%=model["Or Import your Script from Url"]%>">
+                <% }%>
+
                 <% if (model["Arguments"] && model["Arguments"].length>0) { %>
                     <arguments>
                     <% _.each(model["Arguments"], function(arg) { %>
@@ -19,7 +23,7 @@
                     <% }) %>
                     </arguments>
                 <% }%>
-            <% if (model["Library Path"] && model["Library Path"].length>0) { %>
+            <% if (model["Library Path"] && model["Library Path"].length>0 || model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length > 0) { %>
             </file>
          <% }%>
     <% } %>
