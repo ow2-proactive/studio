@@ -41,12 +41,14 @@ define(
             var hasGenericInfoIcon = false;
             var genericInfoIcon;
             
+            
             var genericInformation = this.model.get("Generic Info");
+            if (genericInformation){
             for (var i in genericInformation) {
                 if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
                 	hasGenericInfoIcon = true;
                 	genericInfoIcon = genericInformation[i]["Property Value"]; 
-            }
+            }}
             
             if (hasGenericInfoIcon)
             	iconPath = genericInfoIcon;
