@@ -599,15 +599,17 @@ label {
 }
 
 button[data-action='remove'] {
-    margin: 2px 5px 5px 5px;
+    margin: auto 5px 3px 5px;
     padding: 1px 3px 1px 3px;
-    font-size:15px;
+    height: 20px;
+    width: 15px;
 }
 
 button[data-action='add'] {
+    margin: auto 10px 3px 0px;
     padding: 1px 3px 1px 3px;
-    float: right;
-    margin-right: 20px;
+    height: 20px;
+    width: 30px;
 }
 
 div[data-items] > div {
@@ -616,6 +618,20 @@ div[data-items] > div {
 
 div[data-items] > div > span {
     width: 85%;
+    margin-top:5px;
+}
+
+div[data-items] input[type="checkbox"]{
+    margin-top: 10px;
+}
+
+span[data-editor] > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+form[data-fieldsets] {
+    width: 100%;
 }
 
 div[name="Application Parameters"] {
