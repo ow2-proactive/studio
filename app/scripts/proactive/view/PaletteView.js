@@ -52,16 +52,16 @@ define(
             if(menuElement.hasClass('dropdown')){ //not pinned yet
                 menuElement.removeClass('dropdown');
                 menuElement.bind('hide.bs.dropdown', keepFromClosing);
-                $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Unpin');
+                $(this).html('<img src="images/icon-unpin.png"> Unpin');
             } else { //pinned
                 menuElement.addClass('dropdown');
                 menuElement.unbind('hide.bs.dropdown');
                 menuElement.removeClass('open');//close the dropdown
-                $(this).html('<span class="glyphicon glyphicon-pushpin"></span> Pin open');
+                $(this).html('<img src="images/icon-pin.png"> Pin open');
             }
         },
         setPin : function(menu){
-            var pinOpen = $('<li role="presentation" class="dropdown-header"><span class="glyphicon glyphicon-pushpin"></span> Pin open</li>');
+            var pinOpen = $('<li role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
             pinOpen.on('click', this.pinUnpin);
             menu.append(pinOpen);
         },
@@ -180,7 +180,7 @@ define(
         },
         setTemplateMainBucket: function(bucketName){
             var bucketId;
-            var defaultBucketName = "Examples";
+            var defaultBucketName = "basic-examples";
                 if (!bucketName)
             bucketName = defaultBucketName;
 
@@ -230,7 +230,7 @@ define(
 
                         menuItem.click(function(event) {
                             // simulating drag and drop of this element
-                            var workflowView = this.options.app.views.workflowView
+                            var workflowView = that.options.app.views.workflowView
                             workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
                         })
                     }

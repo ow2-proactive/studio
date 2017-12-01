@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="urn:proactive:jobdescriptor:3.8"
+        xsi:schemaLocation="urn:proactive:jobdescriptor:3.8 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.8/schedulerjob.xsd"
+        name="Wait for any replicate"
+        priority="normal"
+        onTaskError="continueJobExecution"
+        maxNumberOfExecution="2"
+>
+  <variables>
+    <variable name="nb_runs" value="4" />
+  </variables>
+  <description>
+    <![CDATA[ Execute replicated processing tasks, and wait for one task to finish before continuing. The first terminated task kill the others using a kill script from the catalog. ]]>
+  </description>
+  <taskFlow>
+    <task name="First_process">
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println variables.get("PA_TASK_NAME") + " ..."
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+      <controlFlow >
+        <replicate>
+          <script>
+            <code language="groovy">
+              <![CDATA[
+runs = (variables["nb_runs"] as Integer)
+]]>
+            </code>
+          </script>
+        </replicate>
+      </controlFlow>
+    </task>
+    <task name="Process">
+      <depends>
+        <task ref="First_process"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+def sleep_duration_in_sec = (new Random().nextInt(30-10)+10)
+println "... " + variables.get("PA_TASK_NAME") + " ... (sleep during " + sleep_duration_in_sec + " seconds) ..."
+sleep(sleep_duration_in_sec * 1000)
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+      <post>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+// Retrieve the running catalog url
+schedulerapi.connect()
+def sessionId = schedulerapi.getSession()
+def scheduler_rest_url = variables.get("PA_SCHEDULER_REST_URL")
+def catalog_url = scheduler_rest_url.substring(0, scheduler_rest_url.length() - 4) + "catalog"
+
+// Retrieve the kill script from the catalog
+def kill_script_file = new File(localspace, "kill_other_replicated_tasks.groovy")
+def get_script_query = catalog_url + "/buckets/1008/resources/kill_other_replicated_tasks_groovy/raw"
+kill_script_file.text = new URL(get_script_query).getText(requestProperties: [sessionId: sessionId])
+
+// Execute the kill script
+new GroovyShell(binding).evaluate(kill_script_file)
+
+println variables.get("PA_TASK_NAME") + " terminated!"
+]]>
+          </code>
+        </script>
+      </post>
+    </task>
+    <task name="Next_process">
+      <depends>
+        <task ref="Process"/>
+      </depends>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println "... " + variables.get("PA_TASK_NAME")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+</job>

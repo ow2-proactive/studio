@@ -507,7 +507,7 @@ ANALOGIC SCHEME
 .form-wrap {
     background-color: #f5f5f5;
     padding-left: 15px;
-    margin-top: 25px;
+    margin-top: 5px;
 }
 
 .textareaworkflowdescription {
@@ -600,12 +600,12 @@ label {
 
 button[data-action='remove'] {
     margin: 2px 5px 5px 5px;
-    padding: 2px 5px 2px 5px;
+    padding: 1px 3px 1px 3px;
     font-size:15px;
 }
 
 button[data-action='add'] {
-    padding: 2px 5px 2px 5px;
+    padding: 1px 3px 1px 3px;
     float: right;
     margin-right: 20px;
 }
@@ -700,6 +700,10 @@ input[type="checkbox"] {
 
 .NativeExecutable {
     background-image: url("../images/command.png");
+}
+
+.UrlExecutable {
+    background-image: url("../images/url.png");
 }
 
 .ScriptExecutable {
@@ -878,6 +882,14 @@ li.success {
 
 .templates-menu > li {
     background-color: white !important;
+}
+
+.templates-menu .dropdown-header img {
+    width: 20px;
+}
+
+.templates-menu .dropdown-header {
+    font-style: italic;
 }
 
 .remove-secondary-bucket-btn {
