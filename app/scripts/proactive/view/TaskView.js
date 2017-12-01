@@ -38,7 +38,7 @@ define(
             this.modelType = this.model.get("Type");
             var iconPath ;
             
-            var hasGenericInfoIcon;
+            var hasGenericInfoIcon = false;
             var genericInfoIcon;
             
             var genericInformation = this.model.get("Generic Info");
