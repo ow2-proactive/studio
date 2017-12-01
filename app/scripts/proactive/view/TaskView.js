@@ -8,16 +8,18 @@ define(
         'proactive/view/ViewWithProperties',
         'proactive/model/NativeExecutable',
         'proactive/model/JavaExecutable',
-        'proactive/model/ScriptExecutable'
+        'proactive/model/UrlExecutable',
+        'proactive/model/ScriptExecutable',
+        'proactive/model/ScriptOrUrl'
     ],
 
-    function ($, Backbone, PNotify, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
+    function ($, Backbone, PNotify, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, UrlExecutable, ScriptExecutable, ScriptOrUrl) {
 
     "use strict";
 
     return ViewWithProperties.extend({
     	
-        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
+        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png", "UrlExecutable": "images/url.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
         	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
         		   "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png", "powershell": "images/PowerShell.png"},
@@ -32,31 +34,50 @@ define(
                 script.set("Language", "javascript");
                 this.model.get("Execute").set("Script", script);
             }
-            
-            
+           
             this.modelType = this.model.get("Type");
-            var iconPath = this.icons[this.modelType];
-            try{
-	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-            }catch(err){
-            	 try{
-     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
-                 }catch(err){}
+            var iconPath ;
+            
+            var hasGenericInfoIcon = false;
+            var genericInfoIcon;
+            
+            
+            var genericInformation = this.model.get("Generic Info");
+            if (genericInformation){
+            	for (var i in genericInformation) {
+            		if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
+            			hasGenericInfoIcon = true;
+            			iconPath = genericInformation[i]["Property Value"]; 
+            }}
+            
+            if (!hasGenericInfoIcon){
+	            try{
+		            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
+	            }catch(err){
+	            	 try{
+	     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
+	                 }catch(err){}
+	            }
             }
+            
             this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
+            this.model.on("change:Pre Script", this.changePreType, this);
+            this.model.on("change:Post Script", this.changePostType, this);
+            this.model.on("change:Clean Script", this.changeCleanType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
             // Register a handler, listening for changes on Fork Execution Environment,
             // sadly it gets executed at different change events as well.
             this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
+            
+            this.model.on("change:Generic Information", this.updateIconGi, this);
 
             this.model.on("invalid", this.setInvalid, this);
             
             var base_studio_url = window.location.origin + "/studio" ;
-
-                   	            
+                    
             this.element = $('<div class="task"><a class="task-name"><img src="'
             	+ base_studio_url+ "/" + iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
@@ -158,14 +179,85 @@ define(
                 iconPath = this.iconsPerLanguage[language];
             }
 
- 	       this.$el.find("img").attr('src', iconPath)
+ 	       this.$el.find("img").attr('src', iconPath);
+        },
+        
+        updateIconGi: function () {
+        	var iconPathGiValue;
+            var genericInformation = this.model.get("Generic Info");
+            for (var i in genericInformation) {
+                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){ 
+                	iconPathGiValue = genericInformation[i]["Property Value"]; 
+                	this.model.get('Generic Info')['ICON.TASK'] = iconPathGiValue;
+                	this.$el.find("img").attr('src',"");
+                	this.$el.find("img").attr('src', iconPathGiValue);
+            }
+            }
         },
 
         setInvalid: function () {
             this.$el.addClass("invalid-task")
         },
-        
-        
+
+        changePreType: function () {
+
+            var preExecutableTypeStr = this.model.get("Pre Script")["Type"];
+
+            if(preExecutableTypeStr){
+                var preType = require('proactive/model/'+preExecutableTypeStr);
+                var executable = new preType();
+
+                this.model.schema = $.extend(true, {}, this.model.schema);
+                if(preExecutableTypeStr == "ScriptExecutable") {
+                    this.model.schema['PreExecute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
+                } else {
+                    this.model.schema['PreExecute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
+                }
+                this.model.set({"PreExecute": executable});
+                this.$el.click();
+                this.preExecutableType = preExecutableTypeStr;
+            }
+        },
+
+        changePostType: function () {
+            var postExecutableTypeStr = this.model.get("Post Script")["Type"];
+
+            if(postExecutableTypeStr){
+                var postType = require('proactive/model/'+postExecutableTypeStr);
+                var executable = new postType();
+
+                this.model.schema = $.extend(true, {}, this.model.schema);
+                if(postExecutableTypeStr == "ScriptExecutable") {
+                    this.model.schema['PostExecute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
+                } else {
+                    this.model.schema['PostExecute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
+                }
+                this.model.set({"PostExecute": executable});
+                this.$el.click();
+
+                this.postExecutableType = postExecutableTypeStr;
+            }
+        },
+
+        changeCleanType: function () {
+            var cleanExecutableTypeStr = this.model.get("Clean Script")["Type"];
+
+            if(cleanExecutableTypeStr){
+                var cleanType = require('proactive/model/'+cleanExecutableTypeStr);
+                var executable = new cleanType();
+
+                this.model.schema = $.extend(true, {}, this.model.schema);
+                if(cleanExecutableTypeStr == "ScriptExecutable") {
+                    this.model.schema['CleanExecute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
+                } else {
+                    this.model.schema['CleanExecute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
+                }
+                this.model.set({"CleanExecute": executable});
+                this.$el.click();
+
+                this.cleanExecutableType = cleanExecutableTypeStr;
+            }
+        },
 
         changeTaskType: function () {
             var executableTypeStr = this.model.get("Type");
@@ -177,11 +269,13 @@ define(
                 this.model.schema = $.extend(true, {}, this.model.schema);
                 // TODO beautify
                 if (executableTypeStr == "JavaExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: JavaExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: JavaExecutable, title: ""};
                 } else if (executableTypeStr == "NativeExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable, title: ""};
+                } else if (executableTypeStr == "UrlExecutable") {
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
                 } else {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
                     executable["Script"] = {"Language": "bash"};
                 }
                 this.$el.find("img").attr('src', this.icons[executableTypeStr]);
@@ -190,6 +284,7 @@ define(
             }
             this.modelType = executableTypeStr;
         },
+
         controlFlowChanged: function (model, valu, handler) {
             var fromFormChange = handler.error; // its defined when form was
 												// changed

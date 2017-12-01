@@ -5,8 +5,10 @@ define(
     'proactive/model/ScriptExecutable',
     'proactive/model/NativeExecutable',
     'proactive/model/JavaExecutable',
+    'proactive/model/UrlExecutable',
     'proactive/model/ForkEnvironment',
     'proactive/model/Script',
+    'proactive/model/ScriptOrUrl',
     'proactive/model/SelectionScript',
     'proactive/model/BranchWithScript',
     'proactive/view/utils/undo',
@@ -19,7 +21,7 @@ define(
     ],
 
      // TODO REMOVE undoManager dependency - comes from view
-     function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript,
+     function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, UrlExecutable, ForkEnvironment, Script, ScriptOrUrl, SelectionScript,
              BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config, StudioClient) {
 
         "use strict";
@@ -221,15 +223,16 @@ define(
                     },
                     fieldClass: 'task-type',
                     options: [
-                              {val: "ScriptExecutable", label: "Script"},
+                              {val: "ScriptExecutable", label: "Code"},
+                              {val: "UrlExecutable", label: "Url"},
                               {val: "NativeExecutable", label: "Native"},
                               {val: "JavaExecutable", label: "Java"}
                               ]
                 },
-                "Execute": {type: 'NestedModel', model: ScriptExecutable},
+                "Execute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
                 "Pre Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: ScriptOrUrl,
                     fieldAttrs: {
                         "data-tab": "Pre/Post/Clean scripts",
                         'data-tab-help': 'Scripts executed before and after the task',
@@ -237,22 +240,25 @@ define(
                         "data-help": 'A script that is executed on computing node before executing the task. A script can be saved into a library when you are logged in.'
                     }
                 },
+                "PreExecute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
                 "Post Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: ScriptOrUrl,
                     fieldAttrs: {
                         'placeholder': 'post->script',
                         "data-help": 'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'
                     }
                 },
+                "PostExecute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
                 "Clean Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: ScriptOrUrl,
                     fieldAttrs: {
                         'placeholder': 'cleaning->script',
                         "data-help": 'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'
                     }
                 },
+                "CleanExecute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
                 "Number of Nodes": {
                     type: 'Text',
                     fieldAttrs: {
@@ -353,6 +359,12 @@ define(
 
                 this.set({"Type": "ScriptExecutable"});
                 this.set({"Execute": new ScriptExecutable()});
+                this.set({"Pre Script": "ScriptExecutable"});
+                this.set({"PreExecute": new ScriptExecutable()});
+                this.set({"Post Script": "ScriptExecutable"});
+                this.set({"PostExecute": new ScriptExecutable()});
+                this.set({"Clean Script": "ScriptExecutable"});
+                this.set({"CleanExecute": new ScriptExecutable()});
                 this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Task Name": "Task" + (++Task.counter)});
                 this.set({"Maximum Number of Execution Attempts": ""});
