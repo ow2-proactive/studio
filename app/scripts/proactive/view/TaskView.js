@@ -44,15 +44,13 @@ define(
             
             var genericInformation = this.model.get("Generic Info");
             if (genericInformation){
-            for (var i in genericInformation) {
-                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
-                	hasGenericInfoIcon = true;
-                	genericInfoIcon = genericInformation[i]["Property Value"]; 
+            	for (var i in genericInformation) {
+            		if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
+            			hasGenericInfoIcon = true;
+            			iconPath = genericInformation[i]["Property Value"]; 
             }}
             
-            if (hasGenericInfoIcon)
-            	iconPath = genericInfoIcon;
-            else {
+            if (!hasGenericInfoIcon){
 	            try{
 		            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
 	            }catch(err){
@@ -61,7 +59,6 @@ define(
 	                 }catch(err){}
 	            }
             }
-            
             
             this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
@@ -189,12 +186,13 @@ define(
         	var iconPathGiValue;
             var genericInformation = this.model.get("Generic Info");
             for (var i in genericInformation) {
-                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
+                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){ 
                 	iconPathGiValue = genericInformation[i]["Property Value"]; 
+                	this.model.get('Generic Info')['ICON.TASK'] = iconPathGiValue;
+                	this.$el.find("img").attr('src',"");
+                	this.$el.find("img").attr('src', iconPathGiValue);
             }
-            this.model.get('Generic Info')['ICON.TASK'] = iconPathGiValue;
-            this.$el.find("img").attr('src',"");
-        	this.$el.find("img").attr('src', iconPathGiValue);
+            }
         },
 
         setInvalid: function () {
