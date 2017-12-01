@@ -190,7 +190,7 @@ define(
                 if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
                 	iconPathGiValue = genericInformation[i]["Property Value"]; 
             }
-            this.model.get('Generic Info')['ICON'] = iconPathGiValue;
+            this.model.get('Generic Info')['ICON.TASK'] = iconPathGiValue;
             this.$el.find("img").attr('src',"");
         	this.$el.find("img").attr('src', iconPathGiValue);
         },
