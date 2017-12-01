@@ -34,17 +34,33 @@ define(
                 script.set("Language", "javascript");
                 this.model.get("Execute").set("Script", script);
             }
-            
-            
+           
             this.modelType = this.model.get("Type");
-            var iconPath = this.icons[this.modelType];
-            try{
-	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-            }catch(err){
-            	 try{
-     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
-                 }catch(err){}
+            var iconPath ;
+            
+            var hasGenericInfoIcon;
+            var genericInfoIcon;
+            
+            var genericInformation = this.model.get("Generic Info");
+            for (var i in genericInformation) {
+                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
+                	hasGenericInfoIcon = true;
+                	genericInfoIcon = genericInformation[i]["Property Value"]; 
             }
+            
+            if (hasGenericInfoIcon)
+            	iconPath = genericInfoIcon;
+            else {
+	            try{
+		            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
+	            }catch(err){
+	            	 try{
+	     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
+	                 }catch(err){}
+	            }
+            }
+            
+            
             this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
@@ -62,8 +78,7 @@ define(
             this.model.on("invalid", this.setInvalid, this);
             
             var base_studio_url = window.location.origin + "/studio" ;
-
-                   	            
+                    
             this.element = $('<div class="task"><a class="task-name"><img src="'
             	+ base_studio_url+ "/" + iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
@@ -172,9 +187,10 @@ define(
         	var iconPathGiValue;
             var genericInformation = this.model.get("Generic Info");
             for (var i in genericInformation) {
-                if (genericInformation[i]["Property Name"].toLowerCase() === 'icon') 
+                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
                 	iconPathGiValue = genericInformation[i]["Property Value"]; 
             }
+            this.model.get('Generic Info')['ICON'] = iconPathGiValue;
             this.$el.find("img").attr('src',"");
         	this.$el.find("img").attr('src', iconPathGiValue);
         },
