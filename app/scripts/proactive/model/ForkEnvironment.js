@@ -2,10 +2,11 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'proactive/model/Script'
+        'proactive/model/Script',
+        'proactive/model/utils'
     ],
 
-    function (Backbone, SchemaModel, Script) {
+    function (Backbone, SchemaModel, Script, Utils) {
 
         "use strict";
 
@@ -25,7 +26,8 @@ define(
                         'placeholder': 'jvmArgs->jvmArg',
                         'itemplaceholder': '@attributes->value',
                         "data-help": 'JVM properties e.g:<br/>-Xmx2G<br/>-Dprop.name=value'
-                    }
+                    },
+                    itemTemplate: Utils.bigCrossTemplate
                 },
                 "Working Folder": {
                     type: "Text",
@@ -41,7 +43,8 @@ define(
                         'placeholder': 'additionalClasspath->pathElement',
                         'itemplaceholder': '@attributes->path',
                         "data-help": 'The list of \"pathElement\" representing the classpath to be added when starting the new JVM.'
-                    }
+                    },
+                    itemTemplate: Utils.bigCrossTemplate
                 },
                 "Environment Variables": {
                     type: 'List',
@@ -53,7 +56,8 @@ define(
                     subSchema: {
                         "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
                         "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}},
-                    }
+                    },
+                    itemTemplate: Utils.bigCrossTemplate
                 },
                 "Environment Script": {
                     type: 'NestedModel',
