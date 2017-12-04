@@ -17,7 +17,7 @@ define(
                     this.callback = options.callback;
                 },
                 url: function() {
-                    return '/catalog/buckets/' + this.id + '/resources';
+                    return '/catalog/buckets/' + this.id + '/resources/?kind=workflow';
                 },
                 parse: function(data) {
                     if (this.callback)

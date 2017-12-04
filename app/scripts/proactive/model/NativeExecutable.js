@@ -2,10 +2,11 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'proactive/model/Script'
+        'proactive/model/Script',
+        'proactive/model/utils'
     ],
 
-    function (Backbone, SchemaModel, Script) {
+    function (Backbone, SchemaModel, Script, Utils) {
 
         "use strict";
 
@@ -20,12 +21,13 @@ define(
             },
             "Arguments": {
                 type: 'List', 
-                itemType: 'Text', 
+                itemType: 'Text',
                 fieldAttrs: {
                     'placeholder': 'staticCommand->arguments->argument', 
                     'itemplaceholder': '@attributes->value', 
                     "data-help":'Command line arguments. Do not use space as a separator for arguments. Rather add all of arguments one by one to the list.'
-                }
+                },
+                itemTemplate: Utils.bigCrossTemplate
             },
         }
     })
