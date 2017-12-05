@@ -20,7 +20,6 @@ define(
 
     "use strict";
 
-    var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="btn btn-danger" data-action="remove">x</button></div>');
     var that = this;
 
     return SchemaModel.extend({
@@ -85,7 +84,7 @@ define(
           },
           confirmDelete: 'You are about to remove a variable.',
           itemToString: Utils.inlineNameValue,
-          itemTemplate: bigCrossTemplate,
+          itemTemplate: Utils.bigCrossTemplate,
           subSchema: {
             "Name": {
               validators: ['required'],
@@ -121,7 +120,7 @@ define(
             "data-help": "Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this job to a node with token \"rack1\"."
           },
           itemToString: Utils.inlineNameValue,
-          itemTemplate: bigCrossTemplate,
+          itemTemplate: Utils.bigCrossTemplate,
           confirmDelete: 'You are about to remove a property.',
           subSchema: {
             "Property Name": {

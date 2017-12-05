@@ -21,6 +21,7 @@ define(
                 "Application Parameters": {
                     type: 'List',
                     itemType: 'Object',
+                    itemTemplate: Utils.bigCrossTemplate,
                     fieldAttrs: {
                         'placeholder': 'parameters->parameter',
                         "data-help": 'Java application parameters.'
