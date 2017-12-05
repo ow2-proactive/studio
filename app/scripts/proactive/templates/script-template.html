@@ -13,7 +13,10 @@
                 <% }%>
 
                 <% if (model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length>0) { %>
-                    <file path="<%=model["Or Import your Script from Url"]%>">
+                    <file url="<%=model["Or Import your Script from Url"]%>"<% if (model["Language"] && model["Language"].length>0) { %>
+language="<%=model["Language"]%>"
+<% }%>
+>
                 <% }%>
 
                 <% if (model["Arguments"] && model["Arguments"].length>0) { %>
@@ -23,10 +26,11 @@
                     <% }) %>
                     </arguments>
                 <% }%>
-            <% if (model["Library Path"] && model["Library Path"].length>0 || model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length > 0) { %>
-            </file>
-         <% }%>
-    <% } %>
+
+                <% if (model["Library Path"] && model["Library Path"].length>0 || model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length > 0) { %>
+                    </file>
+                <% }%>
+            <% } %>
 <% print("</sc"+"ript>") %>
 <% }
 %>

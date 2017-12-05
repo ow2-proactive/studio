@@ -1,6 +1,10 @@
 <% if (model["Script From Url"] && model["Script From Url"].length>0) { %>
 <script>
     <file
-url="<%-model["Script From Url"]%>"/>
+url="<%-model["Script From Url"]%>"
+<% if (model["Language"] && model["Language"].length>0) { %>
+                     language="<%=model["Language"]%>"
+                <% }%>
+                ></file>
     </script>
 <% } %>
