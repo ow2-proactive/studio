@@ -34,28 +34,28 @@ define(
                 script.set("Language", "javascript");
                 this.model.get("Execute").set("Script", script);
             }
-           
+
+            var base_studio_url = window.location.origin + "/studio" ;
             this.modelType = this.model.get("Type");
-            var iconPath ;
-            
+            var iconPath = base_studio_url+ "/" +this.icons[this.modelType];
             var hasGenericInfoIcon = false;
-            var genericInfoIcon;
-            
             
             var genericInformation = this.model.get("Generic Info");
             if (genericInformation){
             	for (var i in genericInformation) {
-            		if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') 
+            		if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
             			hasGenericInfoIcon = true;
-            			iconPath = genericInformation[i]["Property Value"]; 
-            }}
-            
+            			iconPath = genericInformation[i]["Property Value"];
+                    }
+                }
+            }
+
             if (!hasGenericInfoIcon){
 	            try{
-		            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
+		            iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
 	            }catch(err){
 	            	 try{
-	     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
+	     	            iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").Script.Language];
 	                 }catch(err){}
 	            }
             }
@@ -72,14 +72,12 @@ define(
             // sadly it gets executed at different change events as well.
             this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
             
-            this.model.on("change:Generic Information", this.updateIconGi, this);
+            this.model.on("change:Generic Information", this.updateIcon, this);
 
             this.model.on("invalid", this.setInvalid, this);
-            
-            var base_studio_url = window.location.origin + "/studio" ;
                     
             this.element = $('<div class="task"><a class="task-name"><img src="'
-            	+ base_studio_url+ "/" + iconPath + '" width="20px">&nbsp;<span class="name">'
+            	+ iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
@@ -178,21 +176,15 @@ define(
                 var language = this.model.get("Execute").Script.Language;
                 iconPath = this.iconsPerLanguage[language];
             }
-
- 	       this.$el.find("img").attr('src', iconPath);
-        },
-        
-        updateIconGi: function () {
-        	var iconPathGiValue;
             var genericInformation = this.model.get("Generic Info");
-            for (var i in genericInformation) {
-                if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){ 
-                	iconPathGiValue = genericInformation[i]["Property Value"]; 
-                	this.model.get('Generic Info')['ICON.TASK'] = iconPathGiValue;
-                	this.$el.find("img").attr('src',"");
-                	this.$el.find("img").attr('src', iconPathGiValue);
+            if (genericInformation){
+                for (var i in genericInformation) {
+                    if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
+                        iconPath = genericInformation[i]["Property Value"];
+                    }
+                }
             }
-            }
+ 	        this.$el.find("img").attr('src', iconPath);
         },
 
         setInvalid: function () {
