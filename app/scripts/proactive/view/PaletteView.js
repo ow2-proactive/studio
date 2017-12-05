@@ -183,18 +183,21 @@ define(
             var defaultBucketName = "basic-examples";
                 if (!bucketName)
             bucketName = defaultBucketName;
-
+            var that = this;
             this.getBucketId(bucketName, true, function(foundBucket){
                 if (foundBucket){
                     bucketId = foundBucket.id;
                     bucketName = foundBucket.name;
                 }
                 else {
-                    var defaultBucket = data.find(function(bucket){
-                        return bucket.name.toLowerCase() == defaultBucketName.toLowerCase();
+                    that.getBucketId(defaultBucketName, true, function(foundBucket){
+                        if (foundBucket){
+                            bucketId = foundBucket.id;
+                            bucketName = foundBucket.name;
+                        } else {
+                            console.error("Couldn't load default main bucket "+defaultBucketName);
+                        }
                     });
-                    bucketId = defaultBucket.id;
-                    bucketName = defaultBucket.name;
                 }
             });
 
