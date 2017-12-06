@@ -8,9 +8,6 @@ define(
         'proactive/view/xml/JavaExecutableXmlView',
         'proactive/view/xml/NativeExecutableXmlView',
         'proactive/view/xml/ScriptExecutableXmlView',
-        'proactive/view/xml/ScriptExecutablePPCXmlView',
-        'proactive/view/xml/UrlExecutablePPCXmlView',
-        'proactive/view/xml/UrlExecutableXmlView',
         'proactive/view/xml/ForkEnvironmentXmlView'
 
     ],
@@ -37,32 +34,10 @@ define(
                 })
             }
 
-            //var preScript = new TemplateView({model: this.model.get("PreExecute"), template: "script-template"}).render().$el.text();
-            var preScript = [];
-            var preExecutableType = this.model.get("Pre Script")["Type"];
-            if(preExecutableType) {
-                var preExecutableViewType = require('proactive/view/xml/' + preExecutableType + "PPCXmlView");
-                var preScriptView = new preExecutableViewType({model: this.model.get("PreExecute")});
-                preScript.push(preScriptView.render().$el.text());
-            }
+            var preScript = new TemplateView({model: this.model.get("Pre Script"), template: "script-template"}).render().$el.text();
+            var postScript = new TemplateView({model: this.model.get("Post Script"), template: "script-template"}).render().$el.text();
+            var cleanScript = new TemplateView({model: this.model.get("Clean Script"), template: "script-template"}).render().$el.text();
 
-            //var postScript = new TemplateView({model: this.model.get("Post Script"), template: "script-template"}).render().$el.text();
-            var postScript = [];
-            var postExecutableType = this.model.get("Post Script")["Type"];
-            if(postExecutableType) {
-                var postExecutableViewType = require('proactive/view/xml/' + postExecutableType + "PPCXmlView");
-                var postScriptView = new postExecutableViewType({model: this.model.get("PostExecute")});
-                postScript.push(postScriptView.render().$el.text());
-            }
-
-            //var cleanScript = new TemplateView({model: this.model.get("Clean Script"), template: "script-template"}).render().$el.text();
-            var cleanScript = [];
-            var cleanExecutableType = this.model.get("Clean Script")["Type"];
-            if(cleanExecutableType) {
-                var cleanExecutableViewType = require('proactive/view/xml/' + cleanExecutableType + "PPCXmlView");
-                var cleanScriptView = new cleanExecutableViewType({model: this.model.get("CleanExecute")});
-                cleanScript.push(cleanScriptView.render().$el.text());
-            }
 
             var that = this;
             if (this.model.controlFlow) {
@@ -81,9 +56,9 @@ define(
             var taskTemplate = _.template(TaskTemplate,
                 {'task': this.model.toJSON(),
                     'selectionScripts': selectionScripts,
-                    'preScript': preScript,
-                    'postScript': postScript,
-                    'cleanScript': cleanScript,
+                    'preScript': preScript.trim(),
+                    'postScript': postScript.trim(),
+                    'cleanScript': cleanScript.trim(),
                     'dependencies': this.model.dependencies,
                     'controlFlow': this.model.controlFlow,
                     'executable': executable,

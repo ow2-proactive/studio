@@ -1,36 +1,37 @@
 <% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0 || model["Language"] || model["Or Import your Script from Url"]) { %>
     <% print("<sc"+"ript") %>
         <% if (model["Type"]) { %> type="<%=model["Type"]%>" <% }%>>
-            <% if (model["Script"] && model["Script"].length>0 && !model["Library Path"] || model["Language"]) {%>
+            <% if (model["Script"] && model["Script"].length>0 || model["Or Url"] && model["Or Url"].length>0 && !model["Library Path"] || model["Language"]) {%>
+                <% if (model["Script"] && model["Script"].length>0) { %>
                 <code language="<%=model["Language"]%>">
 <![CDATA[
 <%= model["Script"] %>
 ]]>
                 </code>
+                <% }%>
+
+                <% if (model["Or Url"] && model["Or Url"].length>0) { %>
+                <file url="<%=model["Or Url"]%>" language="<%=model["Language"]%>">
+                </file>
+                <% }%>
+
             <% } else { %>
+
                 <% if (model["Library Path"] && model["Library Path"].length>0) { %>
                     <file path="<%=model["Library Path"]%>">
                 <% }%>
 
-                <% if (model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length>0) { %>
-                    <file url="<%=model["Or Import your Script from Url"]%>"<% if (model["Language"] && model["Language"].length>0) { %>
-language="<%=model["Language"]%>"
-<% }%>
->
-                <% }%>
-
                 <% if (model["Arguments"] && model["Arguments"].length>0) { %>
                     <arguments>
-                    <% _.each(model["Arguments"], function(arg) { %>
+                        <% _.each(model["Arguments"], function(arg) { %>
                     <argument value="<%=arg%>"/>
-                    <% }) %>
+                        <% }) %>
                     </arguments>
                 <% }%>
 
-                <% if (model["Library Path"] && model["Library Path"].length>0 || model["Or Import your Script from Url"] && model["Or Import your Script from Url"].length > 0) { %>
+                <% if (model["Library Path"] && model["Library Path"].length>0) { %>
                     </file>
                 <% }%>
             <% } %>
-<% print("</sc"+"ript>") %>
-<% }
-%>
+    <% print("</sc"+"ript>") %>
+<% }%>

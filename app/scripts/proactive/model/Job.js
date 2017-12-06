@@ -7,7 +7,6 @@ define(
     'proactive/model/ScriptExecutable',
     'proactive/model/NativeExecutable',
     'proactive/model/JavaExecutable',
-    'proactive/model/UrlExecutable',
     'proactive/model/BranchWithScript',
     'proactive/model/utils',
     'proactive/view/utils/undo', // TODO remove
@@ -16,7 +15,7 @@ define(
   ],
 
   // TODO REMOVE undoManager dependency - comes from view
-  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, UrlExecutable, BranchWithScript, Utils, undoManager, config, StudioClient) {
+  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient) {
 
     "use strict";
 
@@ -415,17 +414,6 @@ define(
               });
               taskModel.set({
                 Type: "JavaExecutable"
-              });
-            } else if (task.urlExecutable) {
-              taskModel.schema['Execute']['model'] = UrlExecutable;
-              taskModel.schema['Execute']['fieldAttrs'] = {
-                placeholder: 'urlExecutable'
-              }
-              taskModel.set({
-                'Execute': new UrlExecutable()
-              });
-              taskModel.set({
-                Type: "UrlExecutable"
               });
             } else if (task.nativeExecutable) {
               taskModel.schema['Execute']['model'] = NativeExecutable;
