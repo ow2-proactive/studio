@@ -8,18 +8,16 @@ define(
         'proactive/view/ViewWithProperties',
         'proactive/model/NativeExecutable',
         'proactive/model/JavaExecutable',
-        'proactive/model/UrlExecutable',
-        'proactive/model/ScriptExecutable',
-        'proactive/model/ScriptOrUrl'
+        'proactive/model/ScriptExecutable'
     ],
 
-    function ($, Backbone, PNotify, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, UrlExecutable, ScriptExecutable, ScriptOrUrl) {
+    function ($, Backbone, PNotify, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
 
     "use strict";
 
     return ViewWithProperties.extend({
     	
-        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png", "UrlExecutable": "images/url.png"},
+        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
         	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
         		   "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png", "powershell": "images/PowerShell.png"},
@@ -63,9 +61,6 @@ define(
             this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
-            this.model.on("change:Pre Script", this.changePreType, this);
-            this.model.on("change:Post Script", this.changePostType, this);
-            this.model.on("change:Clean Script", this.changeCleanType, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
             // Register a handler, listening for changes on Fork Execution Environment,
@@ -189,66 +184,6 @@ define(
 
         setInvalid: function () {
             this.$el.addClass("invalid-task")
-        },
-
-        changePreType: function () {
-
-            var preExecutableTypeStr = this.model.get("Pre Script")["Type"];
-
-            if(preExecutableTypeStr){
-                var preType = require('proactive/model/'+preExecutableTypeStr);
-                var executable = new preType();
-
-                this.model.schema = $.extend(true, {}, this.model.schema);
-                if(preExecutableTypeStr == "ScriptExecutable") {
-                    this.model.schema['PreExecute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
-                } else {
-                    this.model.schema['PreExecute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
-                }
-                this.model.set({"PreExecute": executable});
-                this.$el.click();
-                this.preExecutableType = preExecutableTypeStr;
-            }
-        },
-
-        changePostType: function () {
-            var postExecutableTypeStr = this.model.get("Post Script")["Type"];
-
-            if(postExecutableTypeStr){
-                var postType = require('proactive/model/'+postExecutableTypeStr);
-                var executable = new postType();
-
-                this.model.schema = $.extend(true, {}, this.model.schema);
-                if(postExecutableTypeStr == "ScriptExecutable") {
-                    this.model.schema['PostExecute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
-                } else {
-                    this.model.schema['PostExecute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
-                }
-                this.model.set({"PostExecute": executable});
-                this.$el.click();
-
-                this.postExecutableType = postExecutableTypeStr;
-            }
-        },
-
-        changeCleanType: function () {
-            var cleanExecutableTypeStr = this.model.get("Clean Script")["Type"];
-
-            if(cleanExecutableTypeStr){
-                var cleanType = require('proactive/model/'+cleanExecutableTypeStr);
-                var executable = new cleanType();
-
-                this.model.schema = $.extend(true, {}, this.model.schema);
-                if(cleanExecutableTypeStr == "ScriptExecutable") {
-                    this.model.schema['CleanExecute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
-                } else {
-                    this.model.schema['CleanExecute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
-                }
-                this.model.set({"CleanExecute": executable});
-                this.$el.click();
-
-                this.cleanExecutableType = cleanExecutableTypeStr;
-            }
         },
 
         changeTaskType: function () {
