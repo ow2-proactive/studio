@@ -21,7 +21,8 @@ define(
             },
             "Or Url": {
                 type: "Text",
-                fieldAttrs: {'placeholder': 'file->@attributes->url'}
+                fieldAttrs: {'placeholder': 'file->@attributes->url',
+                             "data-help":"The Url which contains the script to be executed."}
             },
             "Language": {
                 type: 'Select',
