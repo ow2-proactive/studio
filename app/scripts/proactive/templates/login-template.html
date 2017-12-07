@@ -1,3 +1,4 @@
+
 <div id="login-view">
     <div class="login-container">
         <img src="images/logo_350.png" class="login-logo-image"/>
@@ -5,17 +6,18 @@
         <div class="login-header-container">
             <div class="login-header">Studio <span class="login-font-normal">login</span></div>
             <div class="login-form-container">
-                <form class="form-horizontal" role="form" id="login-form">
+                <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
                     <div class="form-group">
                         <label class="control-label" for="user">User: </label>
                         <div class="controls">
-                            <input type="text" id="user" required autofocus>
+                            <input type="text" style="display:none;" value="">
+                            <input type="text" id="user" value="" required autofocus readonly onfocus="this.removeAttribute('readonly');">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="password">Password: </label>
                         <div class="controls">
-                            <input type="password" id="password" required>
+                            <input type="password" id="password" required readonly onfocus="this.removeAttribute('readonly');">
                         </div>
                     </div>
                     <div class="form-group">

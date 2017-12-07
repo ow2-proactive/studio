@@ -6,20 +6,35 @@ define(
         'text!proactive/templates/login-template.html'
     ],
 
-    function ($, Backbone, StudioClient, loginTemplate) {
+    function($, Backbone, StudioClient, loginTemplate) {
 
         "use strict";
 
         return Backbone.View.extend({
             template: _.template(loginTemplate),
 
-            initialize: function () {
+            initialize: function() {
+
+                // fill username with the cookie variable "username"
+                this.fill();
+
                 this.render();
             },
             events: {
-                "submit form": "login"
+                "submit form": "login",
             },
-            login: function (event) {
+
+            fill: function() {
+                console.log('[fill] cookie ' + this.getCookie('username'));
+                var username= this.getCookie('username');
+                
+                console.log('[fill] setting username: ' +  username);
+                $("#user").val(username);
+
+            },
+            login: function(event) {
+                var username= this.getCookie('username');
+                $("#user").val(username);
                 event.preventDefault();
                 var that = this;
                 var form = $(event.target);
@@ -27,27 +42,51 @@ define(
                 StudioClient.login({
                     user: $("#user").val(),
                     pass: $("#password").val()
-                }, function () {
+                }, function() {
                     // on success
                     that.remove();
                     that.options.app.login();
                 })
             },
-            render: function () {
-                var that = this;
 
+
+            getCookie: function(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            },
+
+            render: function() {
+                var that = this;
                 that.$el = $(that.template());
+                
+                var username= this.getCookie('username');
+
                 $('body').append(that.$el).show();
 
-                StudioClient.isConnected(function () {
+                StudioClient.isConnected(function() {
                     // logged in successfully - show user name
                     console.log("Logged in");
                     that.remove();
                     that.options.app.login();
                     $('body').show();
-                }, function () {
+                }, function() {
                     // failed to login - show login form
                     console.log("Login Required");
+
+                    $('body').show();
+                    // Set username
+                    $("#user").val(username);
                 });
 
                 return this;
