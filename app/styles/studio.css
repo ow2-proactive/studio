@@ -718,10 +718,6 @@ input[type="checkbox"] {
     background-image: url("../images/command.png");
 }
 
-.UrlExecutable {
-    background-image: url("../images/url.png");
-}
-
 .ScriptExecutable {
     background-image: url("../images/script.png");
 }
