@@ -1,4 +1,4 @@
-<% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0 || model["Language"] || model["Or Import your Script from Url"]) { %>
+<% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0 || model["Language"] || model["Or Url"]) { %>
     <% print("<sc"+"ript") %>
         <% if (model["Type"]) { %> type="<%=model["Type"]%>" <% }%>>
             <% if (model["Script"] && model["Script"].length>0 || model["Or Url"] && model["Or Url"].length>0 && !model["Library Path"] || model["Language"]) {%>
@@ -11,7 +11,7 @@
                 <% }%>
 
                 <% if (model["Or Url"] && model["Or Url"].length>0) { %>
-                <file url="<%=model["Or Url"]%>" language="<%=model["Language"]%>">
+                <file url="<%=model["Or Url"]%>"<% if (model["Language"] && model["Language"].length > 0) { %> language="<%=model["Language"]%>"<% } %>>
                 </file>
                 <% }%>
 
