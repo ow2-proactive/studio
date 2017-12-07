@@ -70,6 +70,7 @@ define(
                 var that = this;
                 that.$el = $(that.template());
                 
+                // get the cookie variable "username"
                 var username= this.getCookie('username');
 
                 $('body').append(that.$el).show();
@@ -85,7 +86,7 @@ define(
                     console.log("Login Required");
 
                     $('body').show();
-                    // Set username
+                    // Set username 
                     $("#user").val(username);
                 });
 
