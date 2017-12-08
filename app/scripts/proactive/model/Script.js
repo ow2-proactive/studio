@@ -19,6 +19,11 @@ define(
                     'placeholder': ['code->#cdata-section', 'code->#text']},
                     template: scriptTemplate
             },
+            "Or Url": {
+                type: "Text",
+                fieldAttrs: {'placeholder': 'file->@attributes->url',
+                             "data-help":"The Url which contains the script to be executed."}
+            },
             "Language": {
                 type: 'Select',
                 options: [" ", "bash", "cmd", "docker-compose", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
@@ -35,10 +40,6 @@ define(
                 type: 'Hidden',
                 itemType: 'Text',
                 fieldAttrs: {'placeholder': 'file->arguments->argument', 'itemplaceholder': '@attributes->value'}
-            },
-            "Or Url": {
-                type: "Hidden",
-                fieldAttrs: {'placeholder': 'file->@attributes->url'}
             }
         },
         populateSchema: function (obj) {

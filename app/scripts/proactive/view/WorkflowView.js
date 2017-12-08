@@ -58,6 +58,10 @@ define(
                       else {
                         var templateName =  elem.data('templateName');
                         var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == templateName});
+                        if (!templateModel) {
+                            var localStorageTemplates = JSON.parse(localStorage.getItem('secondaryBucketNames'));
+                            templateModel = that.options.app.models.secondaryTemplates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
+                        }
                         var bucket_id = templateModel.attributes.bucket_id;
                         var workflow_name = templateModel.attributes.name;
                         templateUrl = '/catalog/buckets/' + bucket_id + '/resources/'+workflow_name+'/raw';

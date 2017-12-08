@@ -32,17 +32,32 @@ define(
                 script.set("Language", "javascript");
                 this.model.get("Execute").set("Script", script);
             }
-            
-            
+
+            var base_studio_url = window.location.origin + "/studio" ;
             this.modelType = this.model.get("Type");
-            var iconPath = this.icons[this.modelType];
-            try{
-	            iconPath = this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-            }catch(err){
-            	 try{
-     	            iconPath = this.iconsPerLanguage[this.model.get("Execute").Script.Language];
-                 }catch(err){}
+            var iconPath = base_studio_url+ "/" +this.icons[this.modelType];
+            var hasGenericInfoIcon = false;
+            
+            var genericInformation = this.model.get("Generic Info");
+            if (genericInformation){
+            	for (var i in genericInformation) {
+            		if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
+            			hasGenericInfoIcon = true;
+            			iconPath = genericInformation[i]["Property Value"];
+                    }
+                }
             }
+
+            if (!hasGenericInfoIcon){
+	            try{
+		            iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
+	            }catch(err){
+	            	 try{
+	     	            iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").Script.Language];
+	                 }catch(err){}
+	            }
+            }
+            
             this.model.on("change:Execute", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
             this.model.on("change:Type", this.changeTaskType, this);
@@ -51,14 +66,13 @@ define(
             // Register a handler, listening for changes on Fork Execution Environment,
             // sadly it gets executed at different change events as well.
             this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
+            
+            this.model.on("change:Generic Information", this.updateIcon, this);
 
             this.model.on("invalid", this.setInvalid, this);
-            
-            var base_studio_url = window.location.origin + "/studio" ;
-
-                   	            
+                    
             this.element = $('<div class="task"><a class="task-name"><img src="'
-            	+ base_studio_url+ "/" + iconPath + '" width="20px">&nbsp;<span class="name">'
+            	+ iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
@@ -157,15 +171,20 @@ define(
                 var language = this.model.get("Execute").Script.Language;
                 iconPath = this.iconsPerLanguage[language];
             }
-
- 	       this.$el.find("img").attr('src', iconPath)
+            var genericInformation = this.model.get("Generic Info");
+            if (genericInformation){
+                for (var i in genericInformation) {
+                    if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
+                        iconPath = genericInformation[i]["Property Value"];
+                    }
+                }
+            }
+ 	        this.$el.find("img").attr('src', iconPath);
         },
 
         setInvalid: function () {
             this.$el.addClass("invalid-task")
         },
-        
-        
 
         changeTaskType: function () {
             var executableTypeStr = this.model.get("Type");
@@ -177,11 +196,13 @@ define(
                 this.model.schema = $.extend(true, {}, this.model.schema);
                 // TODO beautify
                 if (executableTypeStr == "JavaExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: JavaExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: JavaExecutable, title: ""};
                 } else if (executableTypeStr == "NativeExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable, title: ""};
+                } else if (executableTypeStr == "UrlExecutable") {
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
                 } else {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable};
+                    this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
                     executable["Script"] = {"Language": "bash"};
                 }
                 this.$el.find("img").attr('src', this.icons[executableTypeStr]);
@@ -190,6 +211,7 @@ define(
             }
             this.modelType = executableTypeStr;
         },
+
         controlFlowChanged: function (model, valu, handler) {
             var fromFormChange = handler.error; // its defined when form was
 												// changed
