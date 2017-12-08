@@ -86,7 +86,7 @@ define(
                     console.log("Login Required");
 
                     $('body').show();
-                    // Set username 
+                    // Set username input field value
                     $("#user").val(username);
                 });
 
