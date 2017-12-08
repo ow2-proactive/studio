@@ -14,10 +14,6 @@ define(
             template: _.template(loginTemplate),
 
             initialize: function() {
-
-                // fill username with the cookie variable "username"
-                this.fill();
-
                 this.render();
             },
             events: {
@@ -25,16 +21,16 @@ define(
             },
 
             fill: function() {
-                console.log('[fill] cookie ' + this.getCookie('username'));
-                var username= this.getCookie('username');
-                
-                console.log('[fill] setting username: ' +  username);
-                $("#user").val(username);
+                var username = this.getCookie('username');
+                if (username == "null") {
+                    $("#user").val(" ");
+                } else {
+
+                    $("#user").val(username);
+                }
 
             },
             login: function(event) {
-                var username= this.getCookie('username');
-                $("#user").val(username);
                 event.preventDefault();
                 var that = this;
                 var form = $(event.target);
@@ -62,16 +58,16 @@ define(
                     if (c.indexOf(name) == 0) {
                         return c.substring(name.length, c.length);
                     }
+
                 }
-                return "";
             },
 
             render: function() {
                 var that = this;
                 that.$el = $(that.template());
-                
+
                 // get the cookie variable "username"
-                var username= this.getCookie('username');
+                var username = this.getCookie('username');
 
                 $('body').append(that.$el).show();
 
@@ -87,7 +83,7 @@ define(
 
                     $('body').show();
                     // Set username input field value
-                    $("#user").val(username);
+                    that.fill();
                 });
 
                 return this;
