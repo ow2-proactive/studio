@@ -23,7 +23,7 @@ define(
             fill: function() {
                 var username = this.getCookie('username');
                 if (username == "null") {
-                    $("#user").val(" ");
+                    $("#user").val("");
                 } else {
 
                     $("#user").val(username);
