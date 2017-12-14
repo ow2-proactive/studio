@@ -24,8 +24,6 @@ define(
 
         "use strict";
 
-        var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>');
-
         var Task = SchemaModel.extend({
             schema: {
                 "Task Name": {
@@ -38,7 +36,8 @@ define(
                     }
                 },
                 "Description": {
-                    type: "Text",
+                    type: "TextArea",
+                    editorClass: "textareataskdescription",
                     fieldAttrs: {
                         'placeholder': ['description->#cdata-section', 'description->#text'],
                         "data-help": 'A small textual description of what task does.'
@@ -51,7 +50,7 @@ define(
                     fieldAttrs: {
                         'placeholder': 'variables->variable',
                         "data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li><li><b>Inherited</b>: Job Variable&#39;s value will be used</li>"},
-                    itemToString: Utils.inlineNameValueInherited, itemTemplate: bigCrossTemplate,
+                    itemToString: Utils.inlineNameValueInherited, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
                     "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
                     "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
@@ -67,7 +66,7 @@ define(
                         'placeholder': 'genericInformation->info',
                         "data-help": 'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'
                     },
-                    itemToString: Utils.inlineNameValue, itemTemplate: bigCrossTemplate,
+                    itemToString: Utils.inlineNameValue, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
                         "Property Name": {
                             validators: ['required'],
@@ -104,7 +103,9 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->accessMode'},
                             options: ["transferFromUserSpace", "transferFromGlobalSpace", "transferFromInputSpace", "transferFromOutputSpace","cacheFromUserSpace", "cacheFromGlobalSpace", "cacheFromInputSpace", "cacheFromOutputSpace", "none"]
                         }
-                    }
+                    },
+                    itemTemplate: Utils.bigCrossTemplate,
+                    confirmDelete: 'You are about to remove an input file.'
                 },
                 "Output Files": {
                     type: 'List',
@@ -121,7 +122,9 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->accessMode'},
                             options: ["transferToUserSpace", "transferToGlobalSpace", "transferToOutputSpace", "none"]
                         }
-                    }
+                    },
+                    itemTemplate: Utils.bigCrossTemplate,
+                    confirmDelete: 'You are about to remove an output file.'
                 },
                 "Precious Result": {
                     type: "Checkbox",
@@ -216,12 +219,12 @@ define(
                     },
                     fieldClass: 'task-type',
                     options: [
-                              {val: "ScriptExecutable", label: "Script"},
+                              {val: "ScriptExecutable", label: "Code"},
                               {val: "NativeExecutable", label: "Native"},
                               {val: "JavaExecutable", label: "Java"}
                               ]
                 },
-                "Execute": {type: 'NestedModel', model: ScriptExecutable},
+                "Execute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
                 "Pre Script": {
                     type: 'NestedModel',
                     model: Script,
@@ -287,6 +290,7 @@ define(
                         else
                             return "<u style='cursor: pointer;'>Selection script </u>";
                     },
+                    itemTemplate: Utils.bigCrossTemplate,
                     fieldAttrs: {
                         "data-tab": "Node Selection",
                         'placeholder': 'selection->script',

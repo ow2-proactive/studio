@@ -15,6 +15,15 @@ footer {
     padding: 30px 0;
 }
 
+#bucket-name-title {
+    padding: 6px 10px;
+    color: #50555b;
+    font-size: 20px;
+    white-space: nowrap;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 #workflow-designer {
     height: 100%;
     position: relative;
@@ -32,6 +41,15 @@ footer {
     position: relative;
 }
 
+#left-panel-properties{
+    height: 100%;
+    min-width: 300px;
+    width: 25%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
 #properties-container {
     height: 100%;
     max-height: 100%;
@@ -41,6 +59,16 @@ footer {
     z-index: 100;
     position: relative;
     background-color: #ffffff;
+}
+
+.breadcrumb {
+    position: sticky;
+    width: 100%;
+    z-index: 99999;
+    top: 0;
+    background: #ffffff;
+    border-bottom: thin solid #e0e0e0;
+    border-radius: 0px;
 }
 
 #tools-table {
@@ -56,6 +84,10 @@ footer {
     margin: 0;
     width: 80px;
 }
+
+.btn .caret {
+     margin-left: 4px;
+ }
 
 #tools-table td {
     text-align: center;
@@ -116,7 +148,9 @@ icons div {
     -moz-box-shadow: 2px 2px 19px #e0e0e0;
     -moz-border-radius: 0.5em;
     border-radius: 5px;
-    width: 110px;
+    min-width: 100px;
+    max-width: 315px;
+    width: fit-content;
     height: 40px;
     line-height: 30px;
     position: absolute;
@@ -300,7 +334,7 @@ a:hover {
     -o-box-shadow: 2px 2px 19px #aaa;
     -webkit-box-shadow: 2px 2px 19px #aaa;
     -moz-box-shadow: 2px 2px 19px #aaa;
-
+    width: fit-content;
 }
 
 path, ._jsPlumb_endpoint {
@@ -461,11 +495,6 @@ ANALOGIC SCHEME
     cursor: pointer;
 }
 
-button[data-action=remove] {
-    margin-bottom: 10px;
-    padding-top: 10px;
-}
-
 .syntaxhighlighter {
     max-height: 350px;
     overflow: auto;
@@ -478,16 +507,21 @@ button[data-action=remove] {
 .form-wrap {
     background-color: #f5f5f5;
     padding-left: 15px;
+    margin-top: 5px;
+}
+
+.textareaworkflowdescription {
+    min-height: 5em !important;
+}
+
+.textareataskdescription {
+    min-height: 2em !important;
 }
 
 textarea {
     min-width: 90%;
     max-width: 90%;
     min-height: 200px !important;
-}
-
-.textareadescription {
-    min-height: 5em !important;
 }
 
 input {
@@ -528,6 +562,11 @@ input {
 .panel-default {
     resize: none;
     margin-top: 2px !important;
+    background-color: #f5f5f5;
+}
+
+.panel-default .form-wrap:first-of-type {
+    margin-top: 2px;
 }
 
 .panel-body {
@@ -559,16 +598,52 @@ label {
     padding-bottom: 20px;
 }
 
+button[data-action='remove'] {
+    margin: auto 5px 3px 5px;
+    padding: 1px 3px 1px 3px;
+    height: 20px;
+    width: 15px;
+}
+
 button[data-action='add'] {
-    margin-bottom: 10px;
+    margin: auto 10px 3px 0px;
+    padding: 1px 3px 1px 3px;
+    height: 20px;
+    width: 30px;
+}
+
+div[data-items] > div {
+    display : flex;
+}
+
+div[data-items] > div > span {
+    width: 85%;
+    margin-top:5px;
+}
+
+div[data-items] input[type="checkbox"]{
+    margin-top: 10px;
+}
+
+span[data-editor] > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+form[data-fieldsets] {
+    width: 100%;
 }
 
 div[name="Application Parameters"] {
     display: inline-block;
 }
 
-div[name="Node Selection"] {
-    display: inline-block;
+div[name="Environment Variables"] {
+    margin-top: 15px;
+}
+
+div[name="Fork Environment"] > form > fieldset > div {
+    margin-top: 20px;
 }
 
 ul[name="Type"] {
@@ -713,14 +788,6 @@ input[type="checkbox"] {
     margin-bottom: 5px;
 }
 
-button[data-action='remove'] {
-    background-color: #f5f5f5;
-    border: none;
-    margin-bottom: 4px;
-    padding-top:0px;
-
-}
-
 li {
     list-style-type: none;
 }
@@ -827,6 +894,26 @@ li.success {
 
 .templates-menu > li {
     background-color: white !important;
+}
+
+.templates-menu .dropdown-header img {
+    width: 20px;
+}
+
+.templates-menu .dropdown-header {
+    font-style: italic;
+}
+
+.remove-secondary-bucket-btn {
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+    margin-left : 0px;
+    border-left: solid #656d75 1px;
+}
+
+.secondary-palette > .dropdown-toggle{
+    border-top-right-radius: unset;
+    border-bottom-right-radius: unset;
 }
 
 .sub-menu > a {
@@ -1069,17 +1156,12 @@ li.success {
 
 .input-property-field {
     float:left;
-    width: 42%;
+    width: 40%;
     max-width: 42%;
     margin-right:10px;
     overflow: hidden;
     white-space: nowrap;
     resize: none;
-}
-
-.delete-button {
-   	height: 26px;
-   	top: -10px;
 }
 
 .list-editor-row {

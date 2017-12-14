@@ -23,7 +23,8 @@ define(function () {
             'Javascript': 'templates/script_javascript.xml',
             'Groovy': 'templates/script_groovy.xml',
             'Ruby': 'templates/script_ruby.xml',
-            'Python': 'templates/script_python.xml',
+            'Jython': 'templates/script_python.xml',
+            'Python': 'templates/script_cpython.xml',
 	        'Perl': 'templates/script_perl.xml',
 	    	'PowerShell': 'templates/script_powershell.xml',
 	        'R': 'templates/script_r.xml',
@@ -42,7 +43,10 @@ define(function () {
             'Replicate': 'templates/05_workflow_replication.xml',
             'Task Dependencies': 'templates/02_task_dependencies.xml',
             'Submit Job No Wait': 'templates/SubmitJobNoWait.xml',
-            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml'
+            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml',
+            'Wait for Any': 'templates/wait_for_any.xml',
+            'Wait for Any Replicate': 'templates/wait_for_any_replicate.xml',
+            'Submit and Wait for Any': 'templates/submit_and_wait_for_any.xml'
         }
     };
 });

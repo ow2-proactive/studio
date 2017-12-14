@@ -39,7 +39,7 @@ define(['jquery',
             open: function() {
                 var app = this.options.app;
                 app.import(this.model);
-                app.router.navigate(this.options.mode+"s/" + this.model.get('id'));
+                app.router.navigate("workflows/" + this.model.get('id'));
             },
             destroy: function (event) {
                 event.stopPropagation();
@@ -48,7 +48,7 @@ define(['jquery',
 
                 if (app.models.currentWorkflow && app.models.currentWorkflow.get("id") === this.model.get("id")) {
                     app.emptyWorkflowView();
-                    app.router.navigate(this.options.mode+"s", {trigger: true})
+                    app.router.navigate("workflows/" , {trigger: true})
                 }
             },
             clone: function (event) {
@@ -86,7 +86,7 @@ define(['jquery',
                         var model = models[i];
                         var modelName = model.attributes.name;
 
-                        if (modelName.startsWith("Untitled " + this.mode + " ")) {
+                        if (modelName.startsWith("Untitled workflow")) {
                             lastUntitledJobName = modelName;
 
                             var chunks = lastUntitledJobName.split(" ");
@@ -100,7 +100,7 @@ define(['jquery',
                     }
                 }
 
-                var jobName = "Untitled " + this.mode + " " + (lastUntitledJobIndex + 1);
+                var jobName = "Untitled workflow " + (lastUntitledJobIndex + 1);
                 jobModel.set("Name", jobName);
                 var jobXml = new XmlView().xml(jobModel);
                 var workflowId = -1;
@@ -119,7 +119,7 @@ define(['jquery',
                 });
             },
             addOne: function (model) {
-                var workflow = new WorkflowListEntry({model: model, app: this.options.app, mode:this.mode});
+                var workflow = new WorkflowListEntry({model: model, app: this.options.app});
                 this.$('#workflow-list ul').last().append(workflow.render().el)
             },
             addAll: function () {
@@ -128,7 +128,7 @@ define(['jquery',
                 if (currentWorkflow) {
                     var jobName = currentWorkflow.get("name");
                 }
-                this.$el.html(this.template({jobName: jobName, mode: this.mode}));
+                this.$el.html(this.template({jobName: jobName}));
                 var categoryTemplate = _.template(workflowListCategory);
                 this.collection.groupByProject(function(project, workflows) {
                     that.$('#workflow-list').append(categoryTemplate({project: project}));
@@ -137,29 +137,18 @@ define(['jquery',
                 });
             },
             listWorkflows: function (openAfterFetch) {
-                this.listMode("workflow", this.options.workflows, openAfterFetch);
-            },
-            listTemplates: function (openAfterFetch) {
-                this.listMode("template", this.options.templates, openAfterFetch);
-            },
-            listMode: function (modeName, collection, openAfterFetch) {
-                if (this.mode === modeName) {
-                    this.addAll();
-                } else {
-                    this.collection = collection;
-                    this.mode = modeName;
-                    var list = this;
-                    this.listenToCollection(function() { list.open(openAfterFetch) });
-                }
+                this.collection = this.options.workflows;
+                var list = this;
+                this.listenToCollection(function() { list.open(openAfterFetch) });
             },
             open: function (id) {
                 if (!id) {return;}
 
                 var model = this.collection.findWhere({'id':parseInt(id)});
                 if (!model) {
-                    console.log("WARN: trying to open non existing " + this.mode + " with id " + id)
+                    console.log("WARN: trying to open non existing workflow with id " + id)
                     var router = this.options.app.router;
-                    router.navigate(this.mode+"s", {trigger: true})
+                    router.navigate("workflows", {trigger: true})
                     return;
                 }
                 var app = this.options.app;
@@ -178,21 +167,6 @@ define(['jquery',
             },
             _currentWorkflow: function () {
                 return this.options.app.models.currentWorkflow;
-            },
-            switchMode: function (e) {
-                var newMode = e.target.value;
-                if (this.mode === newMode) {
-                    return;
-                }
-
-                var router = this.options.app.router;
-                this.options.app.emptyWorkflowView(true);
-
-                if (this.mode === "workflow") {
-                    router.navigate("templates", {trigger: true})
-                } else {
-                    router.navigate("workflows", {trigger: true})
-                }
             },
             listCurrent: function () {
                 this.addAll();

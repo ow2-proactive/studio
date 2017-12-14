@@ -38,6 +38,7 @@ define(
             var postScript = new TemplateView({model: this.model.get("Post Script"), template: "script-template"}).render().$el.text();
             var cleanScript = new TemplateView({model: this.model.get("Clean Script"), template: "script-template"}).render().$el.text();
 
+
             var that = this;
             if (this.model.controlFlow) {
                 $.each(['if', 'loop', 'replicate'], function (i, control) {

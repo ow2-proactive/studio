@@ -1,12 +1,8 @@
 <ul id="breadcrumb" class="breadcrumb">
-    <li class="active"><span><%= mode.charAt(0).toUpperCase() + mode.slice(1) + 's' %></span></li>
+    <li class="active"><span>Workflows</span></li>
 </ul>
 <form class="form-inline" role="form" id="workflow-list-controls">
     <div class="form-group">
-        <select class="form-control" id="select-mode">
-            <option value="workflow">Workflows</option>
-            <option value="template" <%= (mode == 'template') ? 'selected' : '' %>>Templates</option>
-        </select>
         <button type="button" class="btn create-workflow-button">Create</button>
     </div>
 </form>
