@@ -97,6 +97,7 @@ define(
             if (files.length > 0) {
                 var file = files[0];
                 if (!file.type.match('text/xml')) {
+                   StudioClient.alert("Job descriptor must be valid XML", "", 'error');
                     return;
                 }
                 var reader = new FileReader();
@@ -104,9 +105,11 @@ define(
 
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
+                        StudioClient.validateWithPopup(evt.target.result, json, false);
                         studioApp.merge(json, null);
                         studioApp.updateWorkflowName(json.job);
                         studioApp.views.workflowView.importNoReset();
+
                     }
                 }
                 reader.readAsBinaryString(file);
