@@ -508,7 +508,7 @@ define(
             payload.append('kind', 'workflow');
             payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
-            payload.append('contentType', "application/xml");
+            payload.append('objectContentType', "application/xml");
             
             var url = '/catalog/buckets/' + bucketId + '/resources';
             var isRevision = ($("#catalog-publish-description").data("first") != true)
