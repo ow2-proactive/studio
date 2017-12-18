@@ -267,23 +267,23 @@ define(
             
             if ( automaticValidation) {
                     if ((jobModel.getTasksCount() == 0)){
-                     return;
+                     return false;
                     }
 
             }
             var that = this;
-            that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
+            return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
 
                 if (that.lastResult) {
 
                     // avoiding similar messages in the log history
                     if (that.lastResult.errorMessage == result.errorMessage) {
                         // same error message
-                        return;
+                        return false;
                     }
                     if (result.valid && that.lastResult.valid == result.valid) {
                         // valid
-                        return;
+                        return true;
                     }
                 }
 
@@ -293,11 +293,13 @@ define(
                         var taskModel = jobModel.getTaskByName(result.taskName);
                         if (taskModel) taskModel.trigger("invalid")
                     }
+                    return false;
                 } else {
                     that.alert("Workflow is valid", "It can be executed now", 'success');
+                    return true;
                 }
                 that.lastResult = result;
-            }, true)
+            }, true);
         },
         validate: function (jobXml, jobModel) {
             if (!localStorage['pa.session']) return;
