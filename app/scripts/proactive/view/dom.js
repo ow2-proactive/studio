@@ -97,6 +97,7 @@ define(
             if (files.length > 0) {
                 var file = files[0];
                 if (!file.type.match('text/xml')) {
+                   StudioClient.alert("Job descriptor must be valid XML", "", 'error');
                     return;
                 }
                 var reader = new FileReader();
@@ -104,9 +105,11 @@ define(
 
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
+                        StudioClient.validateWithPopup(evt.target.result, json, false);
                         studioApp.merge(json, null);
                         studioApp.updateWorkflowName(json.job);
                         studioApp.views.workflowView.importNoReset();
+
                     }
                 }
                 reader.readAsBinaryString(file);
@@ -149,6 +152,30 @@ define(
             }
         });
 
+        function openSetTemplatesMenuModal(order){
+            var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
+                studioApp.modelsToRemove = [];
+                if (order=='main')
+                    studioApp.views.catalogSetMainTemplatesBucketView.render();
+                else if (order=='secondary')
+                    studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
+                $('#set-templates-'+order+'-bucket-modal').modal();
+            }else{
+                $('#open-a-workflow-modal').modal();
+            }
+        }
+        $("#set-templates-main-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('main');
+        });
+
+        $("#set-templates-secondary-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('secondary');
+        });
+
         $("#catalog-get-as-new-button").click(function (event) {
             workflowImport(event, '#import-workflow-confirmation-modal');
         });
@@ -183,6 +210,17 @@ define(
 
         $("#catalog-publish-current").click(function (event) {
             $('#publish-current-confirmation-modal').modal();
+        });
+
+        $("#set-templates-main-bucket-select-button").click(function () {
+            var bucketName = ($(($("#catalog-set-templates-main-bucket-table .catalog-selected-row"))[0])).text();
+            var currentWfId = require('StudioApp').models.currentWorkflow.id;
+            require('StudioApp').router.navigate('workflows/'+currentWfId+'/templates/'+bucketName, {trigger: true});
+        });
+
+        $("#set-templates-secondary-bucket-select-button").click(function () {
+            var bucketName = ($(($("#catalog-set-templates-secondary-bucket-table .catalog-selected-row"))[0])).text();
+            require('StudioApp').views.palleteView.setSecondaryTemplatesBucket(bucketName, false);
         });
 
         $("#layout-button").click(function (event) {
@@ -742,7 +780,6 @@ define(
 
                 $("#documentationLinkId").attr("href", result);
             });
-
 
             
             var ctrlDown = false;

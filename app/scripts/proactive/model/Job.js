@@ -19,8 +19,6 @@ define(
 
     "use strict";
 
-    var bigCrossTemplate = _.template('<div><span data-editor></span><button type="button" class="delete-button" data-action="remove">X</button></div>');
-
     var that = this;
 
     return SchemaModel.extend({
@@ -43,7 +41,7 @@ define(
         },
         "Description": {
           type: "TextArea",
-          editorClass: "textareadescription",
+          editorClass: "textareaworkflowdescription",
           fieldAttrs: {
             'placeholder': ['description->#cdata-section', 'description->#text'],
             "data-help": "Small textual explanation of what this job does."
@@ -83,8 +81,9 @@ define(
             "data-tab-help": "Workflow variables that will be available in all tasks.",
             "data-help": "<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li>"
           },
+          confirmDelete: 'You are about to remove a variable.',
           itemToString: Utils.inlineNameValue,
-          itemTemplate: bigCrossTemplate,
+          itemTemplate: Utils.bigCrossTemplate,
           subSchema: {
             "Name": {
               validators: ['required'],
@@ -120,7 +119,8 @@ define(
             "data-help": "Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this job to a node with token \"rack1\"."
           },
           itemToString: Utils.inlineNameValue,
-          itemTemplate: bigCrossTemplate,
+          itemTemplate: Utils.bigCrossTemplate,
+          confirmDelete: 'You are about to remove a property.',
           subSchema: {
             "Property Name": {
               validators: ['required'],
@@ -258,11 +258,10 @@ define(
         this.tasks = [];
 
         this.on("change", function(updatedData, error) {
-          console.log('Event Change', updatedData)
           if (updatedData) {
             if (updatedData._changing) {
               // Check if Generic Info doc has been changed and generate new link if needed
-              if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"] != "") {
+              if (updatedData.changed.hasOwnProperty('Generic Info') && updatedData.changed["Generic Info"]["Property Value"] != "") {
 
                 var genericInformation = updatedData.changed["Generic Info"];
                 var hasDocumentation;

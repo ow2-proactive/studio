@@ -44,10 +44,12 @@
                 </button>
                 <icons class="flex-center">
 				  <div>
-				    <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px">ProActive Workflow Studio</a>
-				  </div>
+                      <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px">ProActive Workflow Studio </a>
+
+                  </div>
+                    <p id="studio-bucket-title"/>
 				  <div style="padding-top: 0px;">
-				    <img src="images/company-icon-squared.png" style="height:40px;display:block;margin:auto;">
+                    <img src="images/company-icon-squared.png" style="height:40px;display:block;margin:auto;">
 				  </div>
 				  <div>
                       <a href="http://activeeon.com/" target="_blank" class="navbar-brand no-padding pull-right"><img src="images/AE-Logo.png" style="height:40px"></a>
@@ -116,6 +118,18 @@
 			      					 Publish current Workflow to the Catalog
 			      				</a>
 			      			</li>
+                            <li>
+                                <a id="set-templates-main-bucket-button" href="#" class="pointer">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    Set Bucket as Main Catalog Menu
+                                </a>
+                            </li>
+                            <li>
+                                <a id="set-templates-secondary-bucket-button" href="#" class="pointer">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    Add Bucket as Extra Catalog Menu
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="divider-vertical"></li>
@@ -173,12 +187,14 @@
                     <li id="logout-view-container" > </li>
                 </ul>
             </div>
+
+            <div style="height: 3px; background: #f47930;"></div>
         </div>
 
         <table id="body-container" style="min-width:100%;height:100%">
             <tbody style="height:100%">
             <tr style="height:100%">
-                <td style="height:100%;min-width:300px;width:25%; padding-left:10px; padding-right:10px; padding-top:10px">
+                <td id="left-panel-properties">
                     <div id="properties-container"></div>
                 </td>
                 <td style="height:100%;width:75%; padding-right:10px;">
@@ -280,6 +296,47 @@
                 </div>
             </div>
         </div>
+
+        <div id="set-templates-main-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="width:30%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Set Bucket as Main Catalog Menu</h3>
+                    </div>
+                    <div id="set-templates-main-bucket-body" class="modal-body" style="height:100%"></div>
+                    <div class="modal-footer">
+                        <button id="set-templates-main-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Select
+                        </button>
+                        <button id="set-templates-main-bucket-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="set-templates-secondary-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" style="width:30%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Add Bucket as Extra Catalog Menu</h3>
+                    </div>
+                    <div id="set-templates-secondary-bucket-body" class="modal-body" style="height:100%"></div>
+                    <div class="modal-footer">
+                        <button id="set-templates-secondary-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Select
+                        </button>
+                        <button id="set-templates-secondary-bucket-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
