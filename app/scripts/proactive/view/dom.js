@@ -97,6 +97,7 @@ define(
             if (files.length > 0) {
                 var file = files[0];
                 if (!file.type.match('text/xml')) {
+                   StudioClient.alert("Job descriptor must be valid XML. Content is not allowed in prolog", "", 'error');
                     return;
                 }
                 var reader = new FileReader();
@@ -104,9 +105,14 @@ define(
 
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
+                        StudioClient.resetLastValidationResult();
+                        if(!StudioClient.validateWithPopup(evt.target.result, json, false)){
+                            return;
+                        }
                         studioApp.merge(json, null);
                         studioApp.updateWorkflowName(json.job);
                         studioApp.views.workflowView.importNoReset();
+
                     }
                 }
                 reader.readAsBinaryString(file);
@@ -543,7 +549,7 @@ define(
             payload.append('kind', 'workflow');
             payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
-            payload.append('contentType', "application/xml");
+            payload.append('objectContentType', "application/xml");
             
             var url = '/catalog/buckets/' + bucketName + '/resources';
             var isRevision = ($("#catalog-publish-description").data("first") != true)
