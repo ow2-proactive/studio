@@ -115,11 +115,12 @@ define(
                 type: "GET",
                 headers : { 'sessionID': localStorage['pa.session'] },
                 async: false,
-                url: '/catalog/buckets/' + bucketName,
+                url: '/catalog/buckets/?kind=workflow',
                 success: function (data) {
-
-                 var foundBucket = data;
-                 callback(foundBucket);
+                    var foundBucket = data.find(function(bucket){
+                        return bucket.name.toLowerCase() == bucketName.toLowerCase();
+                    });
+                    callback(foundBucket);
                 },
 
                 error: function (data) {
