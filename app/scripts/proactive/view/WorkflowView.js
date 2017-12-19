@@ -62,9 +62,9 @@ define(
                             var localStorageTemplates = JSON.parse(localStorage.getItem('secondaryBucketNames'));
                             templateModel = that.options.app.models.secondaryTemplates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
                         }
-                        var bucket_id = templateModel.attributes.bucket_id;
+                        var bucket_name = templateModel.attributes.bucket_name;
                         var workflow_name = templateModel.attributes.name;
-                        templateUrl = '/catalog/buckets/' + bucket_id + '/resources/'+workflow_name+'/raw';
+                        templateUrl = '/catalog/buckets/' + bucket_name + '/resources/'+workflow_name+'/raw';
                       }
                       $.ajax({
                           type: "GET",

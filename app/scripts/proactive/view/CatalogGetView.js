@@ -35,15 +35,13 @@ define(
             this.disableActionButtons(true, true);
             
             if (currentBucketRow){
-	        	var currentBucketID = $(currentBucketRow).data("bucketid");
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
 
 	            var that = this;
-                var currentBucket = this.buckets.get(currentBucketID);
-                var bucketId = that.getSelectedBucketId();
+                var bucketName = that.getSelectedBucketName();
                 var workflowsModel = new CatalogWorkflowCollection(
                 {
-                    id: bucketId,
+                    bucketname: bucketName,
                     callback: function (workflows) {
                         _.each(
                         workflows,
@@ -71,10 +69,10 @@ define(
 	            this.highlightSelectedRow('#catalog-get-workflows-table', currentWorkflowRow);
 	            var that = this;
 
-	            var bucketId = that.getSelectedBucketId();
+	            var bucketName = that.getSelectedBucketName();
 	            var revisionsModel = new CatalogWorkflowRevisionCollection(
 	            	{
-	            		bucketid: bucketId, 
+	            		bucketname: bucketName,
 	            		workflowname: currentWorkflowName,
 		            	callback: function (revisions) {
 		            		_.each(
@@ -129,8 +127,8 @@ define(
         	}
         	$(row).addClass(selectedClassName);
         },
-        getSelectedBucketId: function(){
-        	return this.getSelectedRowId("#catalog-get-buckets-table .catalog-selected-row", "bucketid");
+        getSelectedBucketName: function(){
+        	return this.getSelectedRowId("#catalog-get-buckets-table .catalog-selected-row", "bucketname");
         },
         getSelectedWorkflowName: function(){
         	return this.getSelectedRowId("#catalog-get-workflows-table .catalog-selected-row", "workflowname");
@@ -154,8 +152,8 @@ define(
             this.$el.html(this.template());
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
-                var id = bucket.get("id");
-                this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketid: id}));
+                var bucketName = bucket.get("name");
+                this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
             }, this);
             // to open the browser on the first bucket
             this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);

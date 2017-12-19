@@ -110,18 +110,18 @@ define(
                 that.setSecondaryTemplatesBucket(secondaryBucketName, true);
             });
         },
-        getBucketId : function(bucketName, onPageLoad, callback){
+        checkAndGetBucketByName : function(bucketName, onPageLoad, callback){
             $.ajax({
                 type: "GET",
                 headers : { 'sessionID': localStorage['pa.session'] },
                 async: false,
-                url: '/catalog/buckets/?kind=workflow',
+                url: '/catalog/buckets/' + bucketName,
                 success: function (data) {
-                    var foundBucket = data.find(function(bucket){
-                        return bucket.name.toLowerCase() == bucketName.toLowerCase();
-                    });
-                    callback(foundBucket);
+
+                 var foundBucket = data;
+                 callback(foundBucket);
                 },
+
                 error: function (data) {
                     if (!onPageLoad)
                         alert('The bucket "'+ bucketName + '" couldn\'t be found.');
@@ -192,20 +192,17 @@ define(
             this.$el.append(templateWidget);
         },
         setTemplateMainBucket: function(bucketName){
-            var bucketId;
-            var defaultBucketName = "basic-examples";
+              var defaultBucketName = "basic-examples";
                 if (!bucketName)
             bucketName = defaultBucketName;
             var that = this;
-            this.getBucketId(bucketName, true, function(foundBucket){
+            this.checkAndGetBucketByName(bucketName, true, function(foundBucket){
                 if (foundBucket){
-                    bucketId = foundBucket.id;
                     bucketName = foundBucket.name;
                 }
                 else {
-                    that.getBucketId(defaultBucketName, true, function(foundBucket){
+                    that.checkAndGetBucketByName(defaultBucketName, true, function(foundBucket){
                         if (foundBucket){
-                            bucketId = foundBucket.id;
                             bucketName = foundBucket.name;
                         } else {
                             console.error("Couldn't load default main bucket "+defaultBucketName);
@@ -216,7 +213,7 @@ define(
 
             this.mainBucketName = bucketName;
 
-            var templates = new CatalogWorkflowCollection({id : bucketId});
+            var templates = new CatalogWorkflowCollection({bucketname : bucketName});
             templates.fetch({async : false});
             this.options.app.models.templates = templates;
             this.render();
@@ -280,10 +277,10 @@ define(
                 return;
             }
 
-            var bucketId;
-            this.getBucketId(bucketName, onPageLoad, function(foundBucket){
+            var foundBucketName;
+            this.checkAndGetBucketByName(bucketName, onPageLoad, function(foundBucket){
                 if (foundBucket)
-                    bucketId = foundBucket.id;
+                    foundBucketName = foundBucket.name;
                 else {
                     if (!onPageLoad)
                         alert('The bucket "'+ bucketName + '" couldn\'t be found.');
@@ -292,9 +289,9 @@ define(
                 }
             });
 
-            if(!bucketId)
+            if(!foundBucketName)
                 return;
-            var secondaryTemplates = new CatalogWorkflowCollection({id : bucketId});
+            var secondaryTemplates = new CatalogWorkflowCollection({bucketname : foundBucketName});
             secondaryTemplates.fetch({async: false});
             this.renderSecondaryBucket(secondaryTemplates, bucketName);
             if(!onPageLoad){
