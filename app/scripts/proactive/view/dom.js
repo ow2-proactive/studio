@@ -107,7 +107,7 @@ define(
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
                         StudioClient.resetLastValidationResult();
                         if(!StudioClient.validateWithPopup(evt.target.result, json, false)){
-                            return;
+                           return;
                         }
                         studioApp.merge(json, null);
                         studioApp.updateWorkflowName(json.job);
