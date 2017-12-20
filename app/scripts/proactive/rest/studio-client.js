@@ -263,8 +263,8 @@ define(
         },
 
         validateWithPopup: function (jobXml, jobModel, automaticValidation) {
-            if (!localStorage['pa.session']) return;
-            
+            if (!localStorage['pa.session']) return false;
+
             if ( automaticValidation) {
                     if ((jobModel.getTasksCount() == 0)){
                      return false;
@@ -272,7 +272,7 @@ define(
 
             }
             var that = this;
-            return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
+            return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function (result) {
 
                 if (that.lastResult) {
 
@@ -299,7 +299,7 @@ define(
                     return true;
                 }
                 that.lastResult = result;
-            }, true);
+            }, true)]);
         },
         validate: function (jobXml, jobModel) {
             if (!localStorage['pa.session']) return;
