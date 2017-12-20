@@ -22,10 +22,7 @@ define(
 
             fill: function() {
                 var username = this.getCookie('username');
-                if (username == "null") {
-                    $("#user").val("");
-                } else {
-
+                if (username != "null") {
                     $("#user").val(username);
                 }
 
@@ -82,7 +79,8 @@ define(
                     console.log("Login Required");
 
                     $('body').show();
-                    // Set username input field value
+                    // Set username input field value to "username" cookie variable if defined
+                    // Otherwise, keep the usual browser's behavior (stored credentials, cached login name)
                     that.fill();
                 });
 
