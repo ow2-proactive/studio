@@ -97,7 +97,7 @@ define(
             if (files.length > 0) {
                 var file = files[0];
                 if (!file.type.match('text/xml')) {
-                   StudioClient.alert("Job descriptor must be valid XML. Content is not allowed in prolog", "", 'error');
+                   StudioClient.alert("Job descriptor must be a valid XML. Content is not allowed in prolog", "", 'error');
                     return;
                 }
                 var reader = new FileReader();
