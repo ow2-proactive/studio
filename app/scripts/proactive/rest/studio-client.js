@@ -225,10 +225,7 @@ define(
             isExecutionCalendarDefined: function(jobXml) {
                 var that = this;
                 if (jobXml.indexOf("EXECUTION_CALENDARS") >= 0) {
-                    var xmlDoc = $.parseXML(jobXml);
-                    var xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
-                    console.log("EC defined");
-                    that.alert("The workflow contains EXECUTION_CALENDARS. Plan it instead?", '', 'warning');
+                    that.alert("EXECUTION_CALENDARS defined", 'The workflow contains EXECUTION_CALENDARS. Plan it instead?', 'warning');
                 }
 
 
