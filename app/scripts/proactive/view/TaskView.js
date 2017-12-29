@@ -122,20 +122,8 @@ define(
                 if ($(this).text() == newTaskName) {
                     if (duplicated) {
                         PNotify.removeAll();
-
-                        new PNotify({
-                            title: "Duplicated task name detected",
-                            text: "Task name must be unique per workflow.\nPlease fix the issue before submitting.",
-                            type: "error",
-                            text_escape: false,
-                            buttons: {
-                                closer: true,
-                                sticker: false
-                            },
-                            opacity: .8,
-                            width: '20%'
-                        });
-
+                        that.alert('Duplicated task name detected','Task name must be unique per workflow.\nPlease fix the issue before submitting.','error');
+                       
                         // TODO: improve by retrieving input text using Backbonejs methods
                         // and style using existing Bootstrap styles
                         // http://getbootstrap.com/css/?#forms-control-validation
