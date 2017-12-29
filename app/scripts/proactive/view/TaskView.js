@@ -119,7 +119,7 @@ define(
             // since variable existingTasks contains all tasks, including
             // the one for which duplicated names are checked
             existingTasks.each(function (index) {
-                if ($(this).text() == newTaskName) {
+                if ($(this).text() == newTaskName && $(this).text()) {
                     if (duplicated) {
                         PNotify.removeAll();
                         that.alert('Duplicated task name detected','Task name must be unique per workflow.\nPlease fix the issue before submitting.','error');
