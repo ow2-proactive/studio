@@ -88,6 +88,22 @@ define(
             PNotify.removeAll();
             taskNameInputField.css({ "border": "" });
 
+            // Prevent having empty task names. Nameless tasks do not affect the scheduler but cannot be removed from studio unless they get a name.
+            if (!newTaskName) {
+                new PNotify({
+                    title: "Task Name should not be empty",
+                    type: "error",
+                    text_escape: false,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    opacity: .8,
+                    width: '20%'
+                });
+                taskNameInputField.css({ "border": "1px solid #D2322D"});
+            }
+
             // if there is another task with same name as the current one
             // there will be at least two tasks detected with same name
             // since variable existingTasks contains all tasks, including
