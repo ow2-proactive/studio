@@ -16,10 +16,10 @@ define(
     "use strict";
 
     return ViewWithProperties.extend({
-        
+
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
-            "bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
+            "bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
                    "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png", "powershell": "images/PowerShell.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
@@ -123,7 +123,7 @@ define(
                     if (duplicated) {
                         PNotify.removeAll();
                         that.alert('Duplicated task name detected','Task name must be unique per workflow.\nPlease fix the issue before submitting.','error');
-                       
+
                         // TODO: improve by retrieving input text using Backbonejs methods
                         // and style using existing Bootstrap styles
                         // http://getbootstrap.com/css/?#forms-control-validation
