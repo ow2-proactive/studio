@@ -25,7 +25,7 @@
           },
           {
             "key": "pca.action.icon",
-            "value": "/cloud-automation/styles/patterns/img/cronjobs-icon.png",
+            "value": "/automation-dashboard/styles/patterns/img/wf-icons/cronjobs-icon.png",
             "label": "generic_information"
           },
           {
@@ -60,7 +60,7 @@
           },
           {
             "key": "pca.action.icon",
-            "value": "/cloud-automation/styles/patterns/img/cloud-automation_try.png",
+            "value": "/automation-dashboard/styles/patterns/img/wf-icons/cloud-automation_try.png",
             "label": "generic_information"
           },
           {
@@ -95,7 +95,7 @@
           },
           {
             "key": "pca.action.icon",
-            "value": "/cloud-automation/styles/patterns/img/data-management.png",
+            "value": "/automation-dashboard/styles/patterns/img/wf-icons/data-management.png",
             "label": "generic_information"
           },
           {
@@ -130,7 +130,7 @@
           },
           {
             "key": "pca.action.icon",
-            "value": "/cloud-automation/styles/patterns/img/distributed-computing.png",
+            "value": "/automation-dashboard/styles/patterns/img/wf-icons/distributed-computing.png",
             "label": "generic_information"
           },
           {
@@ -165,7 +165,7 @@
           },
           {
             "key": "pca.action.icon",
-            "value": "/cloud-automation/styles/patterns/img/docker-exec-env.png",
+            "value": "/automation-dashboard/styles/patterns/img/wf-icons/docker-exec-env.png",
             "label": "generic_information"
           },
           {

@@ -25,7 +25,7 @@
         },
         {
           "key": "pca.action.icon",
-          "value": "/cloud-automation/styles/patterns/img/cronjobs-icon.png",
+          "value": "/automation-dashboard/styles/patterns/img/wf-icons/cronjobs-icon.png",
           "label": "generic_information"
         },
         {
