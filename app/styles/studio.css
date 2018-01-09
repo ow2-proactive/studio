@@ -1010,10 +1010,6 @@ li.success {
     .navbar-collapse .nav > .divider-vertical {
         display: none;
     }
-
-    .form-control:not(#select-mode) {
-        display: block !important;
-    }
 }
 
 #navbar-fixed {
