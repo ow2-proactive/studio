@@ -13,6 +13,9 @@
             <description>
                 <![CDATA[ The task that makes query to a LDAP server ]]>
             </description>
+            <genericInformation>
+		        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/LDAPQuery.png"/>
+		      </genericInformation>
             <variables>
                 <variable name="ldapUrl" value="ldap://localhost:389" inherited="false" model="String"/>
                 <variable name="ldapDnBase" value="dc=yourOrganization,dc=com" inherited="false" model="String"/>
