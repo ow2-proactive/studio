@@ -8,11 +8,17 @@
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2"
 >
+   <genericInformation>
+    <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_bis.png"/>    
+  </genericInformation> 
   <taskFlow>
     <task name="SubmitJobAndWait">
       <description>
         <![CDATA[ The simplest task, ran by a groovy engine. ]]>
       </description>
+          <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_bis.png"/>
+     </genericInformation>
       <variables>
         <variable name="workflowURL" value="http://try.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="false" model="String"/>
       </variables>
@@ -47,6 +53,9 @@ variables.put("jobID", jobid)
       <description>
         <![CDATA[ Will run every minutes ]]>
       </description>
+                <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_bis.png"/>
+     </genericInformation>
       <depends>
         <task ref="SubmitJobAndWait"/>
       </depends>

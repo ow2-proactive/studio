@@ -11,8 +11,14 @@
   <description>
     <![CDATA[ Execute processing tasks, and wait for one task from the taskNames list to finish before continuing. ]]>
   </description>
+  <genericInformation>
+     <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_bis.png"/>    
+  </genericInformation> 
   <taskFlow>
     <task name="Wait_for_task">
+      <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_bis.png"/>
+     </genericInformation>
       <variables>
         <variable name="taskNames" value="Process_1,Process_2,Process_3" inherited="false" />
       </variables>
@@ -53,6 +59,9 @@ if(!variables.get("isFinished")){
       </controlFlow>
     </task>
     <task name="Next_process">
+          <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_bis.png"/>
+     </genericInformation>
       <depends>
         <task ref="Wait_for_task"/>
       </depends>

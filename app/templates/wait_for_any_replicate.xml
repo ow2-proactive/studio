@@ -14,8 +14,14 @@
   <description>
     <![CDATA[ Execute replicated processing tasks, and wait for one task to finish before continuing. The first terminated task kill the others using a kill script from the catalog. ]]>
   </description>
+    <genericInformation>
+     <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_bis.png"/>    
+  </genericInformation> 
   <taskFlow>
     <task name="First_process">
+          <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_bis.png"/>
+     </genericInformation>
       <scriptExecutable>
         <script>
           <code language="groovy">
@@ -38,6 +44,9 @@ runs = (variables["nb_runs"] as Integer)
       </controlFlow>
     </task>
     <task name="Process">
+    <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_bis.png"/>
+     </genericInformation>
       <depends>
         <task ref="First_process"/>
       </depends>
@@ -77,6 +86,9 @@ println variables.get("PA_TASK_NAME") + " terminated!"
       </post>
     </task>
     <task name="Next_process">
+    <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_bis.png"/>
+     </genericInformation>
       <depends>
         <task ref="Process"/>
       </depends>

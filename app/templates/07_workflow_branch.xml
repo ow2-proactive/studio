@@ -8,6 +8,9 @@
         A script is used to choose whether to run the If or the Else task.
         Then the continuation task is ran.
     </description>
+    <genericInformation>
+    <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_if.png"/>    
+  </genericInformation> 
     <taskFlow>
         <task name="Condition">
             <scriptExecutable>

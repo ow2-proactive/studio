@@ -8,8 +8,14 @@
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2"
 >
+  <genericInformation>
+    <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_no_wait_bis.png"/>    
+  </genericInformation> 
   <taskFlow>
     <task name="SubmitJobNoWait">
+    <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_no_wait_bis.png"/>
+     </genericInformation>
       <description>
         <![CDATA[ The simplest task, ran by a groovy engine. ]]>
       </description>

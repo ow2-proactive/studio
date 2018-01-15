@@ -7,6 +7,9 @@
         A loop is a set of tasks that will be duplicated and rescheduled.
         A script allows to control the number of replication by setting the variable 'loop' to true or false.
     </description>
+    <genericInformation>
+        <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop_1.png"/>    
+    </genericInformation> 
     <taskFlow>
         <task name="Start">
             <scriptExecutable>

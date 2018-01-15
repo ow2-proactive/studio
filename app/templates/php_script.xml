@@ -18,7 +18,7 @@
                 <variable name="phpArguments" value="" inherited="false" />
             </variables>
             <genericInformation>
-                <info name="TASK.ICON" value="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/PHP-logo.svg/100px-PHP-logo.svg.png"/>
+                <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/php_task.png"/>
             </genericInformation>
             <inputFiles>
                 <files  includes="$pathname" accessMode="transferFromGlobalSpace"/>

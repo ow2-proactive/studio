@@ -15,8 +15,14 @@
   <description>
     <![CDATA[ Submit a processing workflow, and wait for one task from the taskNames list to finish before continuing. ]]>
   </description>
+      <genericInformation>
+        <info name="pca.action.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any_bis.png"/>    
+    </genericInformation> 
   <taskFlow>
     <task name="Submit">
+    <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any_bis.png"/>
+     </genericInformation>
       <scriptExecutable>
         <script>
           <code language="groovy">
@@ -44,6 +50,9 @@ variables.put("jobID", jobid)
       </scriptExecutable>
     </task>
     <task name="Wait_for_task">
+    <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any_bis.png"/>
+     </genericInformation>
       <depends>
         <task ref="Submit"/>
       </depends>
@@ -96,6 +105,9 @@ if(!variables.get("isFinished")){
       </controlFlow>
     </task>
     <task name="Next_process">
+    <genericInformation>
+         <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any_bis.png"/>
+     </genericInformation>
       <depends>
         <task ref="Wait_for_task"/>
       </depends>
