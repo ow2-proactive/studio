@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="urn:proactive:jobdescriptor:3.9"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-     name="script_python" projectName="" priority="normal" onTaskError="continueJobExecution">
-    <description>
-        A workflow that executes python in JVM.
-    </description>
-    <taskFlow>
-        <task name="Python_Task">
-            <description>
-                The simplest task, ran by a python engine.
-            </description>
-            <scriptExecutable>
-                <script>
-                    <code language="python">
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.9"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
+	name="script_python" projectName="" priority="normal" onTaskError="continueJobExecution">
+	<description>
+		A workflow that executes python in JVM.
+	</description>
+	<taskFlow>
+		<task name="Python_Task">
+			<description>
+				The simplest task, ran by a python engine.
+			</description>
+			<scriptExecutable>
+				<script>
+					<code language="python">
                         <![CDATA[
 for x in range(1, 11):
     print x
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-    </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

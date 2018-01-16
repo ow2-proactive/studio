@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="urn:proactive:jobdescriptor:3.9"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-        name="PHP Prototype"
-        priority="normal"
-        onTaskError="continueJobExecution"
-        maxNumberOfExecution="2"
->
-    <taskFlow>
-        <task name="PHP_TASK">
-            <description>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.9"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
+	name="PHP Prototype" priority="normal" onTaskError="continueJobExecution"
+	maxNumberOfExecution="2">
+	<taskFlow>
+		<task name="PHP_TASK">
+			<description>
                 <![CDATA[ Executes a php script. The PHP script be changed through the variable 'pathname' in the task variables. ]]>
-            </description>
-            <variables>
-                <variable name="pathname" value="script.php" inherited="false" />
-                <variable name="phpArguments" value="" inherited="false" />
-            </variables>
-            <genericInformation>
-                <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/php_task.png"/>
-            </genericInformation>
-            <inputFiles>
-                <files  includes="$pathname" accessMode="transferFromGlobalSpace"/>
-            </inputFiles>
-            <selection>
-                <script
-                        type="static" >
-                    <code language="groovy">
+			</description>
+			<variables>
+				<variable name="pathname" value="script.php" inherited="false" />
+				<variable name="phpArguments" value="" inherited="false" />
+			</variables>
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/php_task.png" />
+			</genericInformation>
+			<inputFiles>
+				<files includes="$pathname" accessMode="transferFromGlobalSpace" />
+			</inputFiles>
+			<selection>
+				<script type="static">
+					<code language="groovy">
                         <![CDATA[
 String[] command = ['php', '-v']
 
@@ -46,12 +41,12 @@ try {
   selected = false
 }
 ]]>
-                    </code>
-                </script>
-            </selection>
-            <scriptExecutable>
-                <script>
-                    <code language="groovy">
+					</code>
+				</script>
+			</selection>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
                         <![CDATA[
 String[] phpArguments = variables.get('phpArguments').split(' ')
 String[] command = ['php', '-f', variables.get('pathname')]
@@ -65,9 +60,9 @@ if( process.exitValue() != 0 ) {
 	System.exit(process.exitValue())
 }
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-    </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

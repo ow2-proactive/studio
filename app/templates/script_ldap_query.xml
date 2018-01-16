@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="urn:proactive:jobdescriptor:3.9"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-        name="script_LDAP_Query"
-        priority="normal"
-        onTaskError="continueJobExecution"
-        maxNumberOfExecution="2"
->
-    <taskFlow>
-        <task name="LDAP_Query_Task">
-            <description>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.9"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
+	name="script_LDAP_Query" priority="normal" onTaskError="continueJobExecution"
+	maxNumberOfExecution="2">
+	<taskFlow>
+		<task name="LDAP_Query_Task">
+			<description>
                 <![CDATA[ The task that makes query to a LDAP server ]]>
-            </description>
-            <genericInformation>
-		        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/LDAPQuery.png"/>
-		      </genericInformation>
-            <variables>
-                <variable name="ldapUrl" value="ldap://localhost:389" inherited="false" model="String"/>
-                <variable name="ldapDnBase" value="dc=yourOrganization,dc=com" inherited="false" model="String"/>
-                <variable name="ldapUsername" value="cn=username,ou=users" inherited="false" model="String"/>
-                <variable name="ldapSearchBase" value="dc=sophia" inherited="false" model="String"/>
-                <variable name="ldapSearchFilter" value="(objectclass=*)" inherited="false" model="String"/>
-                <variable name="ldapSelectedAttributes" value="attributeName1,attributeName2" inherited="false" model="String"/>
-            </variables>
-            <scriptExecutable>
-                <script>
-                    <code language="groovy">
+			</description>
+			<genericInformation>
+				<info name="task.icon"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/LDAPQuery.png" />
+			</genericInformation>
+			<variables>
+				<variable name="ldapUrl" value="ldap://localhost:389"
+					inherited="false" model="String" />
+				<variable name="ldapDnBase" value="dc=yourOrganization,dc=com"
+					inherited="false" model="String" />
+				<variable name="ldapUsername" value="cn=username,ou=users"
+					inherited="false" model="String" />
+				<variable name="ldapSearchBase" value="dc=sophia"
+					inherited="false" model="String" />
+				<variable name="ldapSearchFilter" value="(objectclass=*)"
+					inherited="false" model="String" />
+				<variable name="ldapSelectedAttributes" value="attributeName1,attributeName2"
+					inherited="false" model="String" />
+			</variables>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
                         <![CDATA[
 // Query a LDAP server requires authentication for connection
 // Please look at the following link for configuring LDAP credentials:
@@ -42,9 +44,9 @@ result = ldapResult;
 
 System.out.println(result);
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-    </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="urn:proactive:jobdescriptor:3.9"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-     name="script_docker" projectName="" priority="normal" onTaskError="continueJobExecution">
-    <description>
-        A workflow that executes a Docker compose script.
-    </description>
-    <taskFlow>
-        <task name="Docker_Task">
-            <description>
-                Simple task running multi-container applications with Docker.
-            </description>
-            <scriptExecutable>
-                <script>
-                    <code language="docker-compose">
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.9"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
+	name="script_docker" projectName="" priority="normal" onTaskError="continueJobExecution">
+	<description>
+		A workflow that executes a Docker compose script.
+	</description>
+	<taskFlow>
+		<task name="Docker_Task">
+			<description>
+				Simple task running multi-container applications with Docker.
+			</description>
+			<scriptExecutable>
+				<script>
+					<code language="docker-compose">
                         <![CDATA[
 helloworld:
     image: busybox
     command: echo "Hello ProActive"
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-    </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>
