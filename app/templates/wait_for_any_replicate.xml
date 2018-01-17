@@ -11,13 +11,13 @@
 	</description>
 	<genericInformation>
 		<info name="pca.action.icon"
-			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_ter.png" />
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
 	</genericInformation>
 	<taskFlow>
 		<task name="First_process">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_ter.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
 			</genericInformation>
 			<scriptExecutable>
 				<script>
@@ -43,7 +43,7 @@ runs = (variables["nb_runs"] as Integer)
 		<task name="Process">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_ter.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
 			</genericInformation>
 			<depends>
 				<task ref="First_process" />
@@ -86,7 +86,7 @@ println variables.get("PA_TASK_NAME") + " terminated!"
 		<task name="Next_process">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate_ter.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
 			</genericInformation>
 			<depends>
 				<task ref="Process" />

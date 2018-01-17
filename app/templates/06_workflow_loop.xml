@@ -9,13 +9,13 @@
 	</description>
 	<genericInformation>
 		<info name="pca.action.icon"
-			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop_1.png" />
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop.png" />
 	</genericInformation>
 	<taskFlow>
 		<task name="Start">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop_1.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop.png" />
 			</genericInformation>
 			<scriptExecutable>
 				<script>
@@ -31,7 +31,7 @@ print('Loop block start ' + variables.get('PA_TASK_ITERATION'))
 		<task name="Loop">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop_1.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop.png" />
 			</genericInformation>
 			<depends>
 				<task ref="Start" />

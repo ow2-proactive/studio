@@ -7,13 +7,13 @@
 	</description>
 	<genericInformation>
 		<info name="pca.action.icon"
-			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate_bis.png" />
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 	</genericInformation>
 	<taskFlow>
 		<task name="Split">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate_bis.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 			</genericInformation>
 			<description>
 				This task defines some input, here strings to be processed.
@@ -42,7 +42,7 @@ runs=2
 		<task name="Process">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate_bis.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 			</genericInformation>
 			<description>
 				This task will be replicated according to the 'runs' value specified in

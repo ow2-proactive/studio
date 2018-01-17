@@ -8,13 +8,13 @@
 	</description>
 	<genericInformation>
 		<info name="pca.action.icon"
-			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_ter.png" />
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any.png" />
 	</genericInformation>
 	<taskFlow>
 		<task name="Wait_for_task">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_ter.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any.png" />
 			</genericInformation>
 			<variables>
 				<variable name="taskNames" value="Process_1,Process_2,Process_3"
@@ -59,7 +59,7 @@ if(!variables.get("isFinished")){
 		<task name="Next_process">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_ter.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any.png" />
 			</genericInformation>
 			<depends>
 				<task ref="Wait_for_task" />
