@@ -107,7 +107,7 @@ if(!variables.get("isFinished")){
 		<task name="Next_process">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any_bis.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
 			</genericInformation>
 			<depends>
 				<task ref="Wait_for_task" />

@@ -68,7 +68,7 @@ result = input.toUpperCase()
 		<task name="Merge">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate_bis.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 			</genericInformation>
 			<description>
 				As a merge operation, we simply print the results from previous tasks.
