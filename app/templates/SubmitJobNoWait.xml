@@ -5,13 +5,13 @@
 	maxNumberOfExecution="2">
 	<genericInformation>
 		<info name="pca.action.icon"
-			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_no_wait.png" />
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png" />
 	</genericInformation>
 	<taskFlow>
 		<task name="SubmitJobNoWait">
 			<genericInformation>
 				<info name="TASK.ICON"
-					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_no_wait.png" />
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png" />
 			</genericInformation>
 			<description>
         <![CDATA[ The simplest task, ran by a groovy engine. ]]>
