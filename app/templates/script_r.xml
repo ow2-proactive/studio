@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="urn:proactive:jobdescriptor:3.9"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-     name="script_r" projectName="" priority="normal" onTaskError="continueJobExecution">
-    <description>
-        A workflow that executes R in JVM.
-    </description>
-    <taskFlow>
-        <task name="Language_R_Task">
-            <description>
-                The simplest task, ran by a R engine.
-            </description>
-            <scriptExecutable>
-                <script>
-                    <code language="R">
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.10"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+	name="script_r" projectName="" priority="normal" onTaskError="continueJobExecution">
+	<description>
+		A workflow that executes R in JVM.
+	</description>
+	<taskFlow>
+		<task name="Language_R_Task">
+			<description>
+				The simplest task, ran by a R engine.
+			</description>
+			<scriptExecutable>
+				<script>
+					<code language="R">
                         <![CDATA[
 cat('Hello, world!\n')
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-    </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

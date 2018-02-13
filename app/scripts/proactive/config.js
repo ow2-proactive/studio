@@ -26,6 +26,7 @@ define(function () {
             'Jython': 'templates/script_python.xml',
             'Python': 'templates/script_cpython.xml',
 	        'Perl': 'templates/script_perl.xml',
+            'PHP' : 'templates/php_script.xml',
 	    	'PowerShell': 'templates/script_powershell.xml',
 	        'R': 'templates/script_r.xml',
 	        'Cron': 'templates/script_cron.xml',

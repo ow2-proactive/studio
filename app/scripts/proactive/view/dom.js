@@ -97,6 +97,7 @@ define(
             if (files.length > 0) {
                 var file = files[0];
                 if (!file.type.match('text/xml')) {
+                   StudioClient.alert("Job descriptor must be a valid XML. Content is not allowed in prolog", "", 'error');
                     return;
                 }
                 var reader = new FileReader();
@@ -104,9 +105,14 @@ define(
 
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
+                        StudioClient.resetLastValidationResult();
+                        if(!StudioClient.validateWithPopup(evt.target.result, json, false)){
+                           return;
+                        }
                         studioApp.merge(json, null);
                         studioApp.updateWorkflowName(json.job);
                         studioApp.views.workflowView.importNoReset();
+
                     }
                 }
                 reader.readAsBinaryString(file);
@@ -532,7 +538,7 @@ define(
 
         $("#confirm-publication-to-catalog").click(function () {
             var headers = { 'sessionID': localStorage['pa.session'] };
-            var bucketId = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketid");
+            var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
             
             var studioApp = require('StudioApp');
             var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
@@ -543,9 +549,9 @@ define(
             payload.append('kind', 'workflow');
             payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
-            payload.append('contentType', "application/xml");
+            payload.append('objectContentType', "application/xml");
             
-            var url = '/catalog/buckets/' + bucketId + '/resources';
+            var url = '/catalog/buckets/' + bucketName + '/resources';
             var isRevision = ($("#catalog-publish-description").data("first") != true)
            
             if (isRevision){
@@ -571,7 +577,7 @@ define(
             var promise = $.ajax(postData).success(function (response) {
                 notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
 
-                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketId + '/resources/' + workflowName + '/raw'
+                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketName + '/resources/' + workflowName + '/raw'
                 console.log('the url of published object to catalog:', urlOfRawObjectFromCatalog);
 
                 var studioApp = require('StudioApp');
@@ -600,11 +606,11 @@ define(
             var studioApp = require('StudioApp');
             // We manually add the newly published workflow into the right bucket
             // without relying on Backbone's persistence layer
-            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get("workflows");
+            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_name).get("workflows");
             workflows[workflows.length] = {
                 id: newWorkflow.id,
                 name: newWorkflow.name,
-                bucket_id: newWorkflow.bucket_id
+                bucket_name: newWorkflow.bucket_name
             };
         }
 

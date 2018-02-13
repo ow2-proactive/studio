@@ -16,11 +16,11 @@ define(
     "use strict";
 
     return ViewWithProperties.extend({
-    	
+
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
-        	"bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png", 
-        		   "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png", "powershell": "images/PowerShell.png"},
+            "bash": "images/LinuxBash.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
+                   "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png", "powershell": "images/PowerShell.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
         initialize: function () {
@@ -40,22 +40,22 @@ define(
             
             var genericInformation = this.model.get("Generic Info");
             if (genericInformation){
-            	for (var i in genericInformation) {
-            		if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
-            			hasGenericInfoIcon = true;
-            			iconPath = genericInformation[i]["Property Value"];
+                for (var i in genericInformation) {
+                    if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
+                        hasGenericInfoIcon = true;
+                        iconPath = genericInformation[i]["Property Value"];
                     }
                 }
             }
 
             if (!hasGenericInfoIcon){
-	            try{
-		            iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-	            }catch(err){
-	            	 try{
-	     	            iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").Script.Language];
-	                 }catch(err){}
-	            }
+                try{
+                    iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
+                }catch(err){
+                     try{
+                        iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").Script.Language];
+                     }catch(err){}
+                }
             }
             
             this.model.on("change:Execute", this.updateIcon, this);
@@ -72,15 +72,35 @@ define(
             this.model.on("invalid", this.setInvalid, this);
                     
             this.element = $('<div class="task"><a class="task-name"><img src="'
-            	+ iconPath + '" width="20px">&nbsp;<span class="name">'
+                + iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
         },
 
+        alert: function(caption, message, type) {
+                var text_escape = message.indexOf("<html>") == -1 ? true : false;
+
+                PNotify.removeAll();
+
+                new PNotify({
+                    title: caption,
+                    text: message,
+                    type: type,
+                    text_escape: text_escape,
+                    buttons: {
+                        closer: true,
+                        sticker: false
+                    },
+                    addclass: 'translucent', // defined in studio.css
+                    width: '20%'
+                });
+            },
+
         updateTaskName: function () {
             var newTaskName = this.model.get("Task Name");
             var existingTasks = $('.task-name .name');
+            var that = this;
 
             var duplicated = false;
             var taskNameInputField = $("input[id='" + this.model.cid + "_Task Name']");
@@ -88,27 +108,21 @@ define(
             PNotify.removeAll();
             taskNameInputField.css({ "border": "" });
 
+            // Prevent having empty task names. Nameless tasks do not affect the scheduler but cannot be removed from studio unless they get a name.
+            if (!newTaskName) {
+                that.alert('Task name is empty','Task Name should not be empty','error');
+                taskNameInputField.css({ "border": "1px solid #D2322D"});
+            }
+
             // if there is another task with same name as the current one
             // there will be at least two tasks detected with same name
             // since variable existingTasks contains all tasks, including
             // the one for which duplicated names are checked
             existingTasks.each(function (index) {
-                if ($(this).text() == newTaskName) {
+                if ($(this).text() == newTaskName && $(this).text()) {
                     if (duplicated) {
                         PNotify.removeAll();
-
-                        new PNotify({
-                            title: "Duplicated task name detected",
-                            text: "Task name must be unique per workflow.\nPlease fix the issue before submitting.",
-                            type: "error",
-                            text_escape: false,
-                            buttons: {
-                                closer: true,
-                                sticker: false
-                            },
-                            opacity: .8,
-                            width: '20%'
-                        });
+                        that.alert('Duplicated task name detected','Task name must be unique per workflow.\nPlease fix the issue before submitting.','error');
 
                         // TODO: improve by retrieving input text using Backbonejs methods
                         // and style using existing Bootstrap styles
@@ -179,7 +193,7 @@ define(
                     }
                 }
             }
- 	        this.$el.find("img").attr('src', iconPath);
+            this.$el.find("img").attr('src', iconPath);
         },
 
         setInvalid: function () {
@@ -214,7 +228,7 @@ define(
 
         controlFlowChanged: function (model, valu, handler) {
             var fromFormChange = handler.error; // its defined when form was
-												// changed
+                                                // changed
             var control = this.model.get("Control Flow");
             if (fromFormChange && control && control != 'none') {
 
@@ -230,7 +244,7 @@ define(
                         }
                         if (!connectionDetached) {
                             // if an endpoint had a connection it will be
-							// already removed at this point
+                            // already removed at this point
                             jsPlumb.deleteEndpoint(endPoint)
                         }
                     }

@@ -1,60 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="urn:proactive:jobdescriptor:3.9"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-        name="Wait for any replicate"
-        priority="normal"
-        onTaskError="continueJobExecution"
-        maxNumberOfExecution="2"
->
-  <variables>
-    <variable name="nb_runs" value="4" />
-  </variables>
-  <description>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.10"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+	name="Wait for any replicate" priority="normal" onTaskError="continueJobExecution"
+	maxNumberOfExecution="2">
+	<variables>
+		<variable name="nb_runs" value="4" />
+	</variables>
+	<description>
     <![CDATA[ Execute replicated processing tasks, and wait for one task to finish before continuing. The first terminated task kill the others using a kill script from the catalog. ]]>
-  </description>
-  <taskFlow>
-    <task name="First_process">
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+	</description>
+	<genericInformation>
+		<info name="pca.action.icon"
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
+	</genericInformation>
+	<taskFlow>
+		<task name="First_process">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 println variables.get("PA_TASK_NAME") + " ..."
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-      <controlFlow >
-        <replicate>
-          <script>
-            <code language="groovy">
+					</code>
+				</script>
+			</scriptExecutable>
+			<controlFlow>
+				<replicate>
+					<script>
+						<code language="groovy">
               <![CDATA[
 runs = (variables["nb_runs"] as Integer)
 ]]>
-            </code>
-          </script>
-        </replicate>
-      </controlFlow>
-    </task>
-    <task name="Process">
-      <depends>
-        <task ref="First_process"/>
-      </depends>
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+						</code>
+					</script>
+				</replicate>
+			</controlFlow>
+		</task>
+		<task name="Process">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
+			</genericInformation>
+			<depends>
+				<task ref="First_process" />
+			</depends>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 def sleep_duration_in_sec = (new Random().nextInt(30-10)+10)
 println "... " + variables.get("PA_TASK_NAME") + " ... (sleep during " + sleep_duration_in_sec + " seconds) ..."
 sleep(sleep_duration_in_sec * 1000)
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-      <post>
-        <script>
-          <code language="groovy">
+					</code>
+				</script>
+			</scriptExecutable>
+			<post>
+				<script>
+					<code language="groovy">
             <![CDATA[
 // Retrieve the running catalog url
 schedulerapi.connect()
@@ -72,23 +79,27 @@ new GroovyShell(binding).evaluate(kill_script_file)
 
 println variables.get("PA_TASK_NAME") + " terminated!"
 ]]>
-          </code>
-        </script>
-      </post>
-    </task>
-    <task name="Next_process">
-      <depends>
-        <task ref="Process"/>
-      </depends>
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+					</code>
+				</script>
+			</post>
+		</task>
+		<task name="Next_process">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
+			</genericInformation>
+			<depends>
+				<task ref="Process" />
+			</depends>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 println "... " + variables.get("PA_TASK_NAME")
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-    </task>
-  </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

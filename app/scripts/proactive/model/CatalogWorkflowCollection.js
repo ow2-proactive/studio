@@ -13,11 +13,11 @@ define(
             _.extend({}, GroupByProjectMixin, {
                 model: RestWorkflow,
                 initialize: function(options) {
-                    this.id = options.id;
+                    this.bucketname = options.bucketname;
                     this.callback = options.callback;
                 },
                 url: function() {
-                    return '/catalog/buckets/' + this.id + '/resources/?kind=workflow';
+                    return '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
                 },
                 parse: function(data) {
                     if (this.callback)

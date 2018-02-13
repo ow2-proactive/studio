@@ -10,7 +10,7 @@ define(
         return Backbone.Model.extend({
             defaults: {
                 name: "",
-                bucket_id: "",
+                bucket_name: "",
                 object_key_values: {}
             },
             getObjectKeyValues: function () {

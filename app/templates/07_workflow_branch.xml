@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns="urn:proactive:jobdescriptor:3.9"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-     name="07_workflow_branch">
-    <description>
-        The Branch construct allows to run a task or a set of tasks conditionally.
-        A script is used to choose whether to run the If or the Else task.
-        Then the continuation task is ran.
-    </description>
-    <taskFlow>
-        <task name="Condition">
-            <scriptExecutable>
-                <script>
-                    <code language="javascript">
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.10"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+	name="07_workflow_branch">
+	<description>
+		The Branch construct allows to run a task or a set of tasks
+		conditionally.
+		A script is used to choose whether to run the If or the Else task.
+		Then the continuation task is ran.
+	</description>
+	<genericInformation>
+		<info name="pca.action.icon"
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_if.png" />
+	</genericInformation>
+	<taskFlow>
+		<task name="Condition">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_if.png" />
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="javascript">
                         <![CDATA[
 print('I will run a script to select a branch')
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-            <controlFlow>
-                <if target="If"
-                    else="Else"
-                    continuation="Continuation">
-                    <script>
-                        <code language="javascript">
+					</code>
+				</script>
+			</scriptExecutable>
+			<controlFlow>
+				<if target="If" else="Else" continuation="Continuation">
+					<script>
+						<code language="javascript">
                             <![CDATA[
 if(java.lang.System.getProperty('os.name').toLowerCase().contains("win")){
     branch = "if";
@@ -32,43 +38,55 @@ if(java.lang.System.getProperty('os.name').toLowerCase().contains("win")){
     branch = "else";
 }
 ]]>
-                        </code>
-                    </script>
-                </if>
-            </controlFlow>
-        </task>
-        <task name="If">
-            <scriptExecutable>
-                <script>
-                    <code language="javascript">
+						</code>
+					</script>
+				</if>
+			</controlFlow>
+		</task>
+		<task name="If">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_if.png" />
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="javascript">
                         <![CDATA[
 print('I am running on Windows in the If branch')
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-        <task name="Else">
-            <scriptExecutable>
-                <script>
-                    <code language="javascript">
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+		<task name="Else">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_if.png" />
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="javascript">
                         <![CDATA[
 print('I am running on Linux in the If branch')
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-        <task name="Continuation">
-            <scriptExecutable>
-                <script>
-                    <code language="javascript">
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+		<task name="Continuation">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_if.png" />
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="javascript">
                         <![CDATA[
 print('I am ran after the If or the Else task')
 ]]>
-                    </code>
-                </script>
-            </scriptExecutable>
-        </task>
-    </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>
