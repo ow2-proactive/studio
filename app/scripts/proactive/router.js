@@ -15,9 +15,11 @@ define(
 
                 'workflows' : 'listWorkflows',
                 'workflows/:id' : 'openWorkflow',
+                'workflows/:id/' : 'openWorkflow',
                 'workflows/:id/templates/:bucketName' : 'openWorkflowWithTemplates',
                 'workflows/:id/templates/' : 'openWorkflow',
-                'workflows/templates/:bucketName' : 'listWorkflowsWithTemplates'
+                'workflows/templates/:bucketName' : 'listWorkflowsWithTemplates',
+                '*others' : 'gotoWorkflows'
             },
 
             initialize: function(app) {
