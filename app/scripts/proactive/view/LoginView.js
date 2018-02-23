@@ -15,6 +15,8 @@ define(
 
             initialize: function() {
                 this.render();
+                if (Backbone.history.location.hostname === 'try'|| Backbone.history.location.hostname === 'azure-try')
+                    $("#login-container").append("<a href='https://www.activeeon.com/register/web-download' target='_blank'>Or create an account</a>");
             },
             events: {
                 "submit form": "login",

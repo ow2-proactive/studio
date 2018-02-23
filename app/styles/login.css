@@ -6,7 +6,7 @@ html, body {
 .login-container {
     text-align: center;
     width: 370px;
-    height: 270px;
+    height: max-content;
     padding: 10px;
 
     border-color: rgb(204, 204, 204);
@@ -25,6 +25,7 @@ html, body {
 
 .login-header-container {
     margin-top: 10px;
+    margin-bottom: 10px;
     background-color: rgb(240, 240, 240);
     border-color: rgb(204, 204, 204);
     border-style: solid;
@@ -51,7 +52,6 @@ html, body {
     padding-top: 10px;
     width: 100%;
     position: relative;
-    left: -85px;
 }
 
 .login-logo-image {
