@@ -230,7 +230,7 @@ define(
 
 
             },
-
+//TODO : remove this function and everything related
             planned_submit: function(jobXml, visualization) {
                 if (!localStorage['pa.session']) return;
 
