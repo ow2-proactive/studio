@@ -412,11 +412,12 @@ define(
             StudioClient.submit(xml, htmlVisualization);
         }
 
-    function planned_submit() {
-            var studioApp = require('StudioApp');
+        function planned_submit() {
+            $("#plan-workflow-modal").modal();
+            /*var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
-            StudioClient.planned_submit(xml, htmlVisualization);
+            StudioClient.planned_submit(xml, htmlVisualization);*/
         }
 
         function validate() {
