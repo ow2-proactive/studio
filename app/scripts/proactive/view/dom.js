@@ -283,7 +283,7 @@ define(
 
             var jobVariables = readOrStoreVariablesInModel();
             if (jobVariables == null || $.isEmptyObject(jobVariables)) {
-                executeIfConnected(planned_submit);
+                executeIfConnected(function(){$("#plan-workflow-modal").modal();});
                 return;
             }
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
@@ -330,7 +330,7 @@ define(
                     if(!plan){
                         submit();   
                     }else{
-                        planned_submit();
+                        $("#plan-workflow-modal").modal();
                     }
                     
                 }
@@ -410,14 +410,6 @@ define(
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization);
-        }
-
-        function planned_submit() {
-            $("#plan-workflow-modal").modal();
-            /*var studioApp = require('StudioApp');
-            var xml = studioApp.views.xmlView.generateXml();
-            var htmlVisualization = studioApp.views.xmlView.generateHtml();
-            StudioClient.planned_submit(xml, htmlVisualization);*/
         }
 
         function validate() {
