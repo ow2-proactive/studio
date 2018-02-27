@@ -138,7 +138,7 @@
                            title="Execute current workflow on the Scheduler you are connected to.">
 			<i class="glyphicon glyphicon-share"></i> Execute</a></li>
 		    <li><a id="plan-button" href="#" class="pointer"
-                           title="Execute current worklfow at the scheduled dates.">
+                           title="Plan current worklfow with the job planner portal.">
 			<i class="glyphicon glyphicon-calendar"></i> Plan</a></li>
                     <li class="divider-vertical"></li>
                     <li class="dropdown">
@@ -486,6 +486,27 @@
                         <button class="btn btn-primary" id="check-button" type="button">Check</button>
                         <button class="btn btn-primary" id="exec-button" type="button">Execute</button>
                         <button class="btn btn-primary" id="exec-plan-button" type="button">Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="plan-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content" style="min-width: 900px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Plan your workflow as a job</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%; text-align: center;">
+                        <h4>Do you want to plan the current workflow?</h4>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;margin-top: unset;">
+                        <div>
+                            <button class="btn btn-primary" type="button" onclick="window.open('/automation-dashboard/#/portal/job-planner-calendar-def-workflows')"  data-dismiss="modal" >Yes</button>
+                            <button class="btn btn-primary" data-dismiss="modal" type="button">No</button>
+                        </div>
+                        <span class="glyphicon glyphicon-warning-sign" style="font-size: 1.5em;"></span> <i>Workflows need to be published to the Catalog in order to be planned</i>
                     </div>
                 </div>
             </div>
