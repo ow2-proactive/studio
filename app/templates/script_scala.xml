@@ -17,6 +17,7 @@
 					<code language="scala">
 						<![CDATA[
 val str = "Hello world!"
+println(str)
 ]]>
 					</code>
 				</script>
