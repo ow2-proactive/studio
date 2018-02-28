@@ -964,7 +964,7 @@ li.success {
     margin-right: 10px;
 }
 
-@media (max-width: 1320px) {
+@media (max-width: 1400px) {
     .navbar-header {
         float: none;
     }
@@ -1017,15 +1017,15 @@ li.success {
 }
 
 #navbar-fixed a {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .navbar-form {
     padding-left: 0px !important;
 }
 .right-padding{
-    padding-right: 10px;
+    padding-right: 5px;
 }
 
 .zero-right-padding{
