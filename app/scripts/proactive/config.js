@@ -20,6 +20,7 @@ define(function () {
             'Windows Cmd': 'templates/script_cmd.xml',
             'Docker': 'templates/script_docker_compose.xml',
             'Java': 'templates/java.xml',
+            'Scala': 'templates/script_scala.xml',
             'Javascript': 'templates/script_javascript.xml',
             'Groovy': 'templates/script_groovy.xml',
             'Ruby': 'templates/script_ruby.xml',
