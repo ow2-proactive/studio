@@ -1,1 +1,1 @@
-conf = { studioVersion: '8.0.0-rc.2'} 
+conf = { studioVersion: '8.0.0'} 
