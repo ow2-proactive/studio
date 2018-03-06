@@ -1010,6 +1010,13 @@ li.success {
     .navbar-collapse .nav > .divider-vertical {
         display: none;
     }
+
+    .navbar-collapse.in, .navbar-collapse.collapsing{
+        padding: 0px 20px;
+        margin-top : 4px;
+        float: right;
+        border-color: transparent;
+    }
 }
 
 #navbar-fixed {
