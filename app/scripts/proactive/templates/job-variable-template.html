@@ -1,3 +1,16 @@
+<center>
+
+<h4 class="modal-title"><%- jobName %> </h4>
+<small class="font-bold"><b>Description : </b><%- jobDescription %></small><br>
+<small class="font-bold"><b>Project name : </b><%- jobProjectName %></small><br>
+<small class="font-bold">Documentation : </b><a href="{{jobDocumentation}}" target="_blank"><%- jobDocumentation %></small></a><br>
+</center>
+
+    <% _.each(jobGenericInfos, function(gi) { %>
+    		<small class="font-bold"><b><%=gi["Property Name"]%> : </b><%=gi["Property Value"]%></small><br>
+    <% }) %>
+
+
 <ul>
     <% for (var key in jobVariables) {
          if (jobVariables.hasOwnProperty(key)) {
