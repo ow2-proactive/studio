@@ -255,6 +255,13 @@ define(
 
             save_workflow();
             closeCollapsedMenu();
+            
+            var jobName = studioApp.models.jobModel.get("Name");
+            var jobProjectName = studioApp.models.jobModel.get("Project");
+            var jobDescription = studioApp.models.jobModel.get("Description");
+            var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
+            var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
+
 
             var jobVariables = readOrStoreVariablesInModel();
             if (jobVariables == null || $.isEmptyObject(jobVariables)) {
@@ -262,7 +269,7 @@ define(
                 return;
             }
 
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
             $("#exec-plan-button").hide();
             $("#exec-button").show();
