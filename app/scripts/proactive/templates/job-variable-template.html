@@ -1,16 +1,29 @@
 <center>
+<% _.each(jobGenericInfos, function(gi) { 
+    		var label = gi["Property Name"];
+    		if (label == "pca.action.icon" )  %>
+    			<img src="<%=gi["Property Value"]%>" style="width:100px;height:100px;">
+<% }) %>
 
 <h4 class="modal-title"><%- jobName %> </h4>
 <small class="font-bold"><b>Description : </b><%- jobDescription %></small><br>
 <small class="font-bold"><b>Project name : </b><%- jobProjectName %></small><br>
-<small class="font-bold">Documentation : </b><a href="{{jobDocumentation}}" target="_blank"><%- jobDocumentation %></small></a><br>
+<% _.each(jobGenericInfos, function(gi) { 
+    var label = gi["Property Name"];
+    if (label == "bucketName" )  %>
+    	<small class="font-bold"><b>Bucket name : </b><%=gi["Property Value"] %></small><br>
+<% }) %>
+    
+<% _.each(jobGenericInfos, function(gi) { 
+	var label = gi["Property Name"];
+    if (label == "Documentation" )  %>
+		<small class="font-bold"><b> Documentation : </b><%=gi["Property Value"]%></small><br>
+<% }) %>
+   
 </center>
 
-    <% _.each(jobGenericInfos, function(gi) { %>
-    		<small class="font-bold"><b><%=gi["Property Name"]%> : </b><%=gi["Property Value"]%></small><br>
-    <% }) %>
 
-
+<br>
 <ul>
     <% for (var key in jobVariables) {
          if (jobVariables.hasOwnProperty(key)) {
