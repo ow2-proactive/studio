@@ -32,7 +32,7 @@
         <li class="formLayout">
             <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- key %></label>
             <% if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:list')!=-1) {  %>
-                <select name="<%- variable.Name %>" id="<%- key %>">
+                <select class="form-control" name="<%- variable.Name %>" id="<%- key %>">
                     <% var indexBegin = variable.Model.indexOf('(');
                         var indexEnd = variable.Model.lastIndexOf(')');
                         var options = variable.Model.substring(indexBegin +1 , indexEnd).split(',');
@@ -44,7 +44,7 @@
                     <% } %>
                 </select>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
-                <% if (variable.Value === 'true' || variable.Value === 1) %>
+                <% if (variable.Value === 'true' || variable.Value == 1) %>
                     <input type="checkbox" name="<%- variable.Name %>" id="<%- key %>" checked/>
                 <% else %>
                     <input type="checkbox" name="<%- variable.Name %>" id="<%- key %>"/>
