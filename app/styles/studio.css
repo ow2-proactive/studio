@@ -1123,9 +1123,11 @@ li.success {
 
 .formLayout label.Name {
     text-align: right;
-    padding-right: 5px;
+    vertical-align: middle;
     width: 30%;
-
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
 }
 
 .formLayout input {
