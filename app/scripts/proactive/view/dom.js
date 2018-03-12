@@ -276,7 +276,7 @@ define(
             $('#execute-workflow-modal').modal();
         });
 
-    $("#plan-button").click(function (event) {
+        $("#plan-button").click(function (event) {
             event.preventDefault();
         
             var studioApp = require('StudioApp');
@@ -288,22 +288,7 @@ define(
             save_workflow();
             closeCollapsedMenu();
 
-            var jobName = studioApp.models.jobModel.get("Name");
-            var jobProjectName = studioApp.models.jobModel.get("Project");
-            var jobDescription = studioApp.models.jobModel.get("Description");
-            var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
-            var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
-
-            var jobVariables = readOrStoreVariablesInModel();
-            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
-                executeIfConnected(function(){$("#plan-workflow-modal").modal();});
-                return;
-            }
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
-            $('#job-variables').html(template);
-            $("#exec-button").hide();
-            $("#exec-plan-button").show();
-            $('#execute-workflow-modal').modal();
+            $("#plan-workflow-modal").modal();
         });
 
         $("#exec-button").click(function (event) {
