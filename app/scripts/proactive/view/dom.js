@@ -318,9 +318,17 @@ define(
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
                 var inputReceived = $('#job-variables').find('input');
+                var selectInputs = $('#job-variables').find('select');
                 for (var i = 0; i < inputReceived.length; i++) {
                     var input = inputReceived[i];
-                    inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': input.placeholder}
+                    if (input.type==="checkbox")
+                        inputVariables[input.id] = {'Name': input.name, 'Value': input.checked, 'Model': $(input).data("variable-model")};
+                    else
+                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
+                }
+                for (var i = 0; i < selectInputs.length; i++) {
+                    var input = selectInputs[i];
+                    inputVariables[input.id] = {'Name': input.name, 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
                 }
                 readOrStoreVariablesInModel(inputVariables);
                 
