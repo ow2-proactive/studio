@@ -271,8 +271,6 @@ define(
 
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
-            $("#exec-plan-button").hide();
-            $("#exec-button").show();
             $('#execute-workflow-modal').modal();
         });
 
@@ -293,10 +291,6 @@ define(
 
         $("#exec-button").click(function (event) {
             executeOrCheck(event, false, false)
-        });
-        
-        $("#exec-plan-button").click(function (event) {
-            executeOrCheck(event, false, true)
         });
 
         $("#check-button").click(function (event) {
