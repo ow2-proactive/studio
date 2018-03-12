@@ -32,7 +32,7 @@
         <li class="formLayout">
             <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- key %></label>
             <% if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:list')!=-1) {  %>
-                <select class="form-control" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>">
+                <select class="form-control variableValue" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>">
                     <% var indexBegin = variable.Model.indexOf('(');
                         var indexEnd = variable.Model.lastIndexOf(')');
                         var options = variable.Model.substring(indexBegin +1 , indexEnd).split(',');
@@ -46,11 +46,11 @@
                 </select>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
                 <% if (variable.Value === 'true' || variable.Value == 1) %>
-                    <input type="checkbox" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>" checked/>
+                    <input class="variableValue" type="checkbox" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>" checked/>
                 <% else %>
-                    <input type="checkbox" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>"/>
+                    <input class="variableValue" type="checkbox" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>"/>
             <% } else {  %>
-                <input type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" />
+                <input class="variableValue" type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" />
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% }  %>
         </li>
