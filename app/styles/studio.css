@@ -1130,16 +1130,25 @@ li.success {
     overflow: hidden;
 }
 
-.formLayout input, .formLayout select {
+.formLayout input[type="radio"] {
+    margin-top : -5px;
+}
+
+.formLayout .radio-div {
+    height: 30px;
+    vertical-align: middle;
+}
+
+.formLayout .variableValue {
     width: 45%;
     display:inline-block;
     padding: 5px;
+    margin-left: 5px;
 }
 
 .formLayout label.Extra {
     text-align: left;
     width: 20%;
-
 }
 
 .formLayout {

@@ -308,10 +308,12 @@ define(
                     if ($(input).prop("tagName")==='SELECT')
                         inputVariables[input.id] = {'Name': input.name, 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
                     else if ($(input).prop("tagName")==='INPUT'){
-                        if (input.type==="checkbox")
-                            inputVariables[input.id] = {'Name': input.name, 'Value': input.checked, 'Model': $(input).data("variable-model")};
-                        else
-                            inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
+                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
+                    } else if ($(input).prop("tagName")==='DIV'){
+                        var checkedRadio = $(input).find("input[type='radio']:checked");
+                        var checkRadioValue = $(checkedRadio).val();
+                        var inputName = $(checkedRadio).attr('name');
+                        inputVariables[input.id] = {'Name': inputName, 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
                     }
                 }
                 readOrStoreVariablesInModel(inputVariables);
