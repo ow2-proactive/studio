@@ -45,10 +45,14 @@
                     <% } %>
                 </select>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
+                <div class="variableValue radio-div" id="<%- key %>" data-variable-model="<%- variable.Model %>">
                 <% if (variable.Value === 'true' || variable.Value == 1) %>
-                    <input class="variableValue" type="checkbox" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>" checked/>
+                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true" checked/>TRUE</label>
+                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false"/>FALSE</label>
                 <% else %>
-                    <input class="variableValue" type="checkbox" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>"/>
+                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true"/>TRUE</label>
+                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false" checked/>FALSE</label>
+                </div>
             <% } else {  %>
                 <input class="variableValue" type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" />
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
