@@ -271,12 +271,10 @@ define(
 
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
-            $("#exec-plan-button").hide();
-            $("#exec-button").show();
             $('#execute-workflow-modal').modal();
         });
 
-    $("#plan-button").click(function (event) {
+        $("#plan-button").click(function (event) {
             event.preventDefault();
         
             var studioApp = require('StudioApp');
@@ -288,24 +286,11 @@ define(
             save_workflow();
             closeCollapsedMenu();
 
-            var jobVariables = readOrStoreVariablesInModel();
-            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
-                executeIfConnected(function(){$("#plan-workflow-modal").modal();});
-                return;
-            }
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
-            $('#job-variables').html(template);
-            $("#exec-button").hide();
-            $("#exec-plan-button").show();
-            $('#execute-workflow-modal').modal();
+            $("#plan-workflow-modal").modal();
         });
 
         $("#exec-button").click(function (event) {
             executeOrCheck(event, false, false)
-        });
-        
-        $("#exec-plan-button").click(function (event) {
-            executeOrCheck(event, false, true)
         });
 
         $("#check-button").click(function (event) {
@@ -330,14 +315,19 @@ define(
                     }
                 }
                 readOrStoreVariablesInModel(inputVariables);
-                
+                var jobName = studioApp.models.jobModel.get("Name");
+                var jobProjectName = studioApp.models.jobModel.get("Project");
+                var jobDescription = studioApp.models.jobModel.get("Description");
+                var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
+                var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
+
                 var validationData = validate();
 
                 if (!validationData.valid) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
                     $('#job-variables').html(template);
                 } else if (check) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                     $('#job-variables').html(template);
                 } else {
                     $('#execute-workflow-modal').modal("hide");
