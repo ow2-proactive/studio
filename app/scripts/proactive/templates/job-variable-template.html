@@ -46,7 +46,7 @@
                 </select>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
                 <div class="variableValue radio-div" id="<%- key %>" data-variable-model="<%- variable.Model %>">
-                <% if (variable.Value === 'true' || variable.Value == 1) %>
+                <% if (variable.Value.toLowerCase() === 'true' || variable.Value == 1) %>
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true" checked/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false"/>FALSE</label>
                 <% else %>
