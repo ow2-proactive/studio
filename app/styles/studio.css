@@ -1123,20 +1123,32 @@ li.success {
 
 .formLayout label.Name {
     text-align: right;
-    padding-right: 5px;
+    vertical-align: middle;
     width: 30%;
-
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
 }
 
-.formLayout input {
-    width: 45%;
+.formLayout input[type="radio"] {
+    margin-top : -5px;
+}
 
+.formLayout .radio-div {
+    height: 30px;
+    vertical-align: middle;
+}
+
+.formLayout .variableValue {
+    width: 45%;
+    display:inline-block;
+    padding: 5px;
+    margin-left: 5px;
 }
 
 .formLayout label.Extra {
     text-align: left;
     width: 20%;
-
 }
 
 .formLayout {
