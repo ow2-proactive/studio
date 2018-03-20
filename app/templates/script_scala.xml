@@ -14,7 +14,7 @@
 			</description>
 			<scriptExecutable>
 				<script>
-					<code language="scala">
+					<code language="scalaw">
 						<![CDATA[
 val str = "Hello world!"
 println(str)
