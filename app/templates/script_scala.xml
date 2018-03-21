@@ -12,14 +12,9 @@
 			<description>
 				<![CDATA[ The simplest task, ran by a scala engine. ]]>
 			</description>
-			<forkEnvironment >
-				<jvmArgs>
-					<jvmArg value="-Dscala.usejavacp=true"/>
-				</jvmArgs>
-			</forkEnvironment>
 			<scriptExecutable>
 				<script>
-					<code language="scala">
+					<code language="scalaw">
 						<![CDATA[
 val str = "Hello world!"
 println(str)
