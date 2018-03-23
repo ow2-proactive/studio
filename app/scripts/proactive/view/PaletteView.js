@@ -166,7 +166,7 @@ define(
                     	var menuItem;
             			var objectKeyVal = template.get("object_key_values");
             			for (var i in objectKeyVal) {
-                            if (objectKeyVal[i]["key"] == 'pca.action.icon'){
+                            if (objectKeyVal[i]["key"] == 'workflow.icon'){
             					iconName = objectKeyVal[i]["value"];
             				}
             			}
@@ -239,7 +239,7 @@ define(
                     	var menuItem;
             			var objectKeyVal = template.get("object_key_values");
             			for (var i in objectKeyVal) {
-                            if (objectKeyVal[i]["key"] == 'pca.action.icon'){
+                            if (objectKeyVal[i]["key"] == 'workflow.icon'){
             					iconName = objectKeyVal[i]["value"];
             				}
             			}
