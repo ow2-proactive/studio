@@ -19,6 +19,7 @@ define(
                 'workflows/:id/templates/:bucketName' : 'openWorkflowWithTemplates',
                 'workflows/:id/templates/' : 'openWorkflow',
                 'workflows/templates/:bucketName' : 'listWorkflowsWithTemplates',
+                'workflowcatalog/:bucketName/workflow/:workflowName' : 'openCatalogWorkflow',
                 '*others' : 'gotoWorkflows'
             },
 
@@ -47,6 +48,11 @@ define(
             listWorkflowsWithTemplates: function(bucketName) {
                 this.app.views.propertiesView.listWorkflows();
                 this.app.views.palleteView.setTemplateMainBucket(bucketName);
+            },
+            openCatalogWorkflow : function(bucketName, workflowName) {
+                this.app.views.propertiesView.listWorkflows();
+                this.app.views.palleteView.setTemplateMainBucket();
+                this.app.openWorkflowFromCatalog(bucketName, workflowName);
             }
         });
     });

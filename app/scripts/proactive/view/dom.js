@@ -205,7 +205,7 @@ define(
                 type: 'GET',
                 headers: headers
             }).success(function (response) {
-                  successCallback(response);
+                successCallback(response);
             }).error(function (response) {
                 notify_message('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), false);
             });
@@ -844,7 +844,9 @@ define(
         setInterval(function(){validate_job(true);}, 30000);
 
        return {
-           saveWorkflow: save_workflow
+           saveWorkflow: save_workflow,
+           getWorkflowFromCatalog : getWorkflowFromCatalog,
+           add_workflow_to_current : add_workflow_to_current
        };
 
     });

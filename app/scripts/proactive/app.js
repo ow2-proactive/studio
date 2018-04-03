@@ -189,8 +189,15 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
-
             return this.views.xmlView != null;
+        },
+        openWorkflowFromCatalog : function(bucketName, workflowName) {
+            var studioApp = require('StudioApp');
+            var url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
+            dom.getWorkflowFromCatalog(url, function (response) {
+                studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
+                dom.add_workflow_to_current(true);
+            });
         }
     };
 });
