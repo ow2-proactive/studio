@@ -1,7 +1,5 @@
-html,
-body {
-    /*overflow-x: hidden; *//* Prevent scroll on narrow devices */
-    min-width: 1400px;
+html, body {
+    overflow-x: hidden; /* Prevent scroll on narrow devices */
     min-height: 100%;
     height: 100%;
 }
