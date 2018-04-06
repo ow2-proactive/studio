@@ -153,7 +153,7 @@ define(['jquery',
                 }
                 var app = this.options.app;
                 app.import(model);
-                app.router.navigate("workflows/" + model.get('id'), {trigger: true});
+                app.router.navigate("workflows/" + model.get('id'));
             },
             saveCurrentWorkflow: function (name, workflowXml, metadata) {
                 this._currentWorkflow().save(
