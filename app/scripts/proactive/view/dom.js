@@ -535,6 +535,22 @@ define(
             }
         }
 
+        function open_catalog_workflow() {
+            var studioApp = require('StudioApp');
+
+            // If a workflow is already opened, we don't import it (we would lose the current one)
+            if (studioApp.isWorkflowOpen()) {
+                var router = studioApp.router;
+                router.navigate("workflows/"+ studioApp.models.currentWorkflow.id, {trigger: true});
+            }
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+        }
+
         $("#confirm-publication-to-catalog").click(function () {
             var headers = { 'sessionID': localStorage['pa.session'] };
             var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
@@ -846,7 +862,7 @@ define(
        return {
            saveWorkflow: save_workflow,
            getWorkflowFromCatalog : getWorkflowFromCatalog,
-           add_workflow_to_current : add_workflow_to_current
+           open_catalog_workflow : open_catalog_workflow
        };
 
     });

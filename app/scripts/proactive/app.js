@@ -192,11 +192,11 @@ define(
             return this.views.xmlView != null;
         },
         openWorkflowFromCatalog : function(bucketName, workflowName) {
-            var studioApp = require('StudioApp');
+            var that = this;
             var url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
             dom.getWorkflowFromCatalog(url, function (response) {
-                studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
-                dom.add_workflow_to_current(true);
+                that.xmlToImport = new XMLSerializer().serializeToString(response);
+                dom.open_catalog_workflow();
             });
         }
     };
