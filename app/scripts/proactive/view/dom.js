@@ -542,7 +542,7 @@ define(
         function open_catalog_workflow() {
             var studioApp = require('StudioApp');
 
-            // If a worklfow is already opened, we don't import it (we would lose the current one)
+            // If a workflow is already opened, we don't import it (we would lose the current one)
             if (studioApp.isWorkflowOpen()) {
                 var router = studioApp.router;
                 router.navigate("workflows/"+ studioApp.models.currentWorkflow.id, {trigger: true});
