@@ -526,6 +526,26 @@ define(
                 studioApp.importFromCatalog();
                 console.log("A workflow was imported!");
                 $('#catalog-get-close-button').click();
+                if(redirectsWhenOpened) {
+                    var router = studioApp.router;
+                    router.navigate("workflows/"+ studioApp.models.currentWorkflow.id);
+                }
+            }
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+        }
+
+        function open_catalog_workflow() {
+            var studioApp = require('StudioApp');
+
+            // If a worklfow is already opened, we don't import it (we would lose the current one)
+            if (studioApp.isWorkflowOpen()) {
+                var router = studioApp.router;
+                router.navigate("workflows/"+ studioApp.models.currentWorkflow.id, {trigger: true});
             }
             else {
                 // create a new workflow, open it and import the xml into it
@@ -846,7 +866,7 @@ define(
        return {
            saveWorkflow: save_workflow,
            getWorkflowFromCatalog : getWorkflowFromCatalog,
-           add_workflow_to_current : add_workflow_to_current
+           open_catalog_workflow : open_catalog_workflow
        };
 
     });
