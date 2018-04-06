@@ -526,10 +526,6 @@ define(
                 studioApp.importFromCatalog();
                 console.log("A workflow was imported!");
                 $('#catalog-get-close-button').click();
-                if(redirectsWhenOpened) {
-                    var router = studioApp.router;
-                    router.navigate("workflows/"+ studioApp.models.currentWorkflow.id);
-                }
             }
             else {
                 // create a new workflow, open it and import the xml into it
