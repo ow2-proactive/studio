@@ -1,7 +1,5 @@
-html,
-body {
-    /*overflow-x: hidden; *//* Prevent scroll on narrow devices */
-    min-width: 1400px;
+html, body {
+    overflow-x: hidden; /* Prevent scroll on narrow devices */
     min-height: 100%;
     height: 100%;
 }
@@ -1010,6 +1008,13 @@ li.success {
     .navbar-collapse .nav > .divider-vertical {
         display: none;
     }
+
+    .navbar-collapse.in, .navbar-collapse.collapsing{
+        padding: 0px 20px;
+        margin-top : 4px;
+        float: right;
+        border-color: transparent;
+    }
 }
 
 #navbar-fixed {
@@ -1116,20 +1121,32 @@ li.success {
 
 .formLayout label.Name {
     text-align: right;
-    padding-right: 5px;
+    vertical-align: middle;
     width: 30%;
-
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
 }
 
-.formLayout input {
-    width: 45%;
+.formLayout input[type="radio"] {
+    margin-top : -5px;
+}
 
+.formLayout .radio-div {
+    height: 30px;
+    vertical-align: middle;
+}
+
+.formLayout .variableValue {
+    width: 45%;
+    display:inline-block;
+    padding: 5px;
+    margin-left: 5px;
 }
 
 .formLayout label.Extra {
     text-align: left;
     width: 20%;
-
 }
 
 .formLayout {

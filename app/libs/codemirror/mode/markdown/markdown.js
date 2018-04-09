@@ -11,7 +11,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
     java: "text/x-java",
     csharp: "text/x-csharp",
     "c#": "text/x-csharp",
-    scala: "text/x-scala"
+    scalaw: "text/x-scala"
   };
 
   var getMode = (function () {
