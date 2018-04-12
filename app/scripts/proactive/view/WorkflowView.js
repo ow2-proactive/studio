@@ -229,31 +229,13 @@ define(
             var jobNameInputField = $("input[id='" + this.model.cid + "_Name']");
             //$("#breadcrumb-project-name").text(this.model.get("Project Name"))
             // Prevent having empty Workflow names. Nameless workflows do not affect the scheduler but cannot be removed from studio unless they get a name.
-            if (!this.model.get("Name")) {
+            if (!this.model.get("Name") || this.model.get("Name").trim() === "") {
+                this.model.set("Name", "");
                 this.alert('Workflow name is empty','Workflow Name should not be empty','error');
                 jobNameInputField.css({ "border": "1px solid #D2322D"});
             }
             $("#breadcrumb-selected-job").text(this.model.get("Name"))
         },
-
-        alert: function(caption, message, type) {
-             var text_escape = message.indexOf("<html>") == -1 ? true : false;
-
-             PNotify.removeAll();
-
-             new PNotify({
-                 title: caption,
-                 text: message,
-                 type: type,
-                 text_escape: text_escape,
-                 buttons: {
-                     closer: true,
-                     sticker: false
-                     },
-                 addclass: 'translucent', // defined in studio.css
-                 width: '20%'
-             });
-         },
         clean: function () {
             this.workFlowDesigner.empty();
             jsPlumb.reset()
