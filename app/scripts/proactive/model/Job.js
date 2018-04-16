@@ -11,11 +11,14 @@ define(
     'proactive/model/utils',
     'proactive/view/utils/undo', // TODO remove
     'proactive/config',
-    'proactive/rest/studio-client'
+    'proactive/rest/studio-client',
+    'pnotify',
+    'pnotify.buttons'
+
   ],
 
   // TODO REMOVE undoManager dependency - comes from view
-  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient) {
+  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient, PNotify) {
 
     "use strict";
 
@@ -508,22 +511,55 @@ define(
           })
         }
 
+        var myStack = {"dir1": "up", "dir2": "left", "push": "bottom"};
+
+        var genericInformation = this.attributes["Generic Info"];
+        // Find duplicates in generic information
+        this.findDuplicates("Generic Information", genericInformation, "Property Name", "Property Value", myStack);
+        var workflowVariables = this.attributes["Variables"];
+        // Find duplicates in workflow variables
+        this.findDuplicates("Workflow Variables", workflowVariables, "Name", "Value", myStack);
         // Generate Urls for documentation
-        this.generateDocumentUrl();
+        this.generateDocumentUrl(genericInformation);
       },
       getBasicFields: function() {
         return ["Name", "Variables"]
       },
-      generateDocumentUrl: function() {
+
+      findDuplicates: function(type, inputArray, property, value, myStack){
+          console.log("Identification of duplicated " + type + "...");
+          var notDuplicatedElements = new Set();
+          var indexOfDuplicatedElements = new Set();
+          var  j = 0;
+          var list = inputArray.map(function(item){ return item[property] });
+          for (var i = 0; i < list.length; i++) {
+            notDuplicatedElements.add(list[i]);
+            if (! (notDuplicatedElements.size == i+1-j)){
+              indexOfDuplicatedElements.add(i)
+              j++;
+            }
+          };
+          var duplicatesArray = Array.from(indexOfDuplicatedElements).map(function(item){ return inputArray[item]});
+          if(indexOfDuplicatedElements.size>0){
+                this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(duplicatesArray, property, value),'error',myStack);
+          }
+      },
+      generateDocumentUrl: function(genericInformation) {
+
         console.log("Fetching documentation in GI...");
 
         // Get the job name and put it as name for the generated file
-        var genericInformation = this.attributes["Generic Info"];
+
         var fileContent = "";
         var linkName = "Undefined";
         var documentationValue = "Undefined";
 
+        console.log('genericInformation',genericInformation);
+
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
+
+
+
           for (var i in genericInformation) {
             if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
               fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
@@ -543,6 +579,29 @@ define(
         });
 
       },
+      formatObjectsList: function(inputArray, propertyName, propertyValue) {
+          var message = '<span><table cellpadding = "5">';
+          inputArray.forEach(function(item){ message = message + '<tr valign = "top"><td><b>'+item[propertyName]+'</b></td><td>'+item[propertyValue]+'</td></tr>';});
+          message = message + '</table></span><br><b><i>Please chose which one is appropriate and remove the other.</i></b>';
+          return message;
+      },
+      alertUI: function (caption, message, type, myStack) {
+            new PNotify({
+                title: caption,
+                text: message,
+                textTrusted: true,
+                type: type,
+                opacity: .8,
+                width: '30%',
+                stack: myStack,
+                addclass: "stack-custom",
+                buttons: {
+                    closer: true,
+                    sticker: false
+                }
+            });
+
+        },
       generateUrl: function(data) {
         var url;
 
