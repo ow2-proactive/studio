@@ -558,8 +558,20 @@ define(
 
       formatObjectsList: function(inputMap, propertyName, propertyValue) {
           var message = '<span><table cellpadding = "5">';
-          inputMap.forEach(function(value, key, map){ message = message + '<tr valign = "top"><td><b>'+key+'</b></td><td>'+value.map(function(v){return '<table><tr valign = "top"><td>&#8226;</td><td>'+v+'</td></tr></table>';}).join('')+'</td></tr>';});
-          message = message + '</table></span><br><b><i>Please chose which value is appropriate and remove the others.</i></b>';
+          var first = true;
+          inputMap.forEach(function(value, key, map){ message = message + '<tr valign = "top"><td><b>'+key+'</b></td><td>'+
+            value.map(function(v){
+              var str = "";
+              if (first){
+                   str = ("Initial Value present: ").bold() + v;
+                   first=false;
+              }
+              else{
+                  str = ("New Value imported: ").bold() + v;
+              }
+            return '<table><tr valign = "top"><td>&#8226;</td><td>'+str+'</td></tr></table>';}).join('')+'</td></tr>';}
+          );
+          message = message + '</table></span><br><b><i>Please chose which value is appropriate and remove the other(s).</i></b>';
           return message;
       },
 
@@ -570,7 +582,7 @@ define(
                 textTrusted: true,
                 type: type,
                 opacity: .8,
-                width: '35%',
+                width: '500px',
                 stack: myStack,
                 addclass: "myStack",
                 buttons: {
