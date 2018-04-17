@@ -24,6 +24,8 @@ define(
 
     var that = this;
 
+    var myStack = {"dir1": "up", "firstpos1": "25", "dir2": "left", "push": "bottom"};
+
     return SchemaModel.extend({
       schema: {
         "Name": {
@@ -511,39 +513,73 @@ define(
           })
         }
 
-        var myStack = {"dir1": "up", "dir2": "left", "push": "bottom"};
+
 
         var genericInformation = this.attributes["Generic Info"];
-        // Find duplicates in generic information
-        this.findDuplicates("Generic Information", genericInformation, "Property Name", "Property Value", myStack);
         var workflowVariables = this.attributes["Variables"];
+        // Find duplicates in generic information
+        this.findDuplicates("Generic Info", genericInformation, "Property Name", "Property Value");
         // Find duplicates in workflow variables
-        this.findDuplicates("Workflow Variables", workflowVariables, "Name", "Value", myStack);
+        this.findDuplicates("Variables", workflowVariables, "Name", "Value");
         // Generate Urls for documentation
         this.generateDocumentUrl(genericInformation);
       },
+
       getBasicFields: function() {
         return ["Name", "Variables"]
       },
 
-      findDuplicates: function(type, inputArray, property, value, myStack){
-          console.log("Identification of duplicated " + type + "...");
-          var notDuplicatedElements = new Set();
-          var indexOfDuplicatedElements = new Set();
-          var  j = 0;
-          var list = inputArray.map(function(item){ return item[property] });
-          for (var i = 0; i < list.length; i++) {
-            notDuplicatedElements.add(list[i]);
-            if (! (notDuplicatedElements.size == i+1-j)){
-              indexOfDuplicatedElements.add(i)
-              j++;
+      sortByKey: function(array, key) {
+          return array.sort((a, b) => a[key].localeCompare(b[key]));
+      },
+
+      filterByName: function(array, property, valeur){
+          var groupedByName = new Map();
+          array.forEach(function(gi) {
+          if (!groupedByName.has(gi[property].toLowerCase())) {
+                groupedByName.set(gi[property].toLowerCase(), new Array());
+          }
+          groupedByName.get(gi[property].toLowerCase()).push(gi[valeur]);
+          });
+          groupedByName.forEach(function(v, k, map){if(v.length<=1) {map.delete(k);}});
+          return groupedByName;
+      },
+
+      findDuplicates: function(type, inputArray, property, valeur){
+         if (inputArray != null) {
+            console.log("Identification of duplicated " + type + "...");
+            var myArray = this.sortByKey(inputArray, property);
+            var mapResult = this.filterByName(myArray, property, valeur);
+            if(mapResult.size>0){
+                  this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(mapResult, property, valeur),'error');
             }
-          };
-          var duplicatesArray = Array.from(indexOfDuplicatedElements).map(function(item){ return inputArray[item]});
-          if(indexOfDuplicatedElements.size>0){
-                this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(duplicatesArray, property, value),'error',myStack);
           }
       },
+
+      formatObjectsList: function(inputMap, propertyName, propertyValue) {
+          var message = '<span><table cellpadding = "5">';
+          inputMap.forEach(function(value, key, map){ message = message + '<tr valign = "top"><td><b>'+key+'</b></td><td>'+value.map(function(v){return '<table><tr valign = "top"><td>&#8226;</td><td>'+v+'</td></tr></table>';}).join('')+'</td></tr>';});
+          message = message + '</table></span><br><b><i>Please chose which value is appropriate and remove the others.</i></b>';
+          return message;
+      },
+
+      alertUI: function (caption, message, type) {
+            new PNotify({
+                title: caption,
+                text: message,
+                textTrusted: true,
+                type: type,
+                opacity: .8,
+                width: '35%',
+                stack: myStack,
+                addclass: "myStack",
+                buttons: {
+                    closer: true,
+                    sticker: false
+                }
+            });
+      },
+
       generateDocumentUrl: function(genericInformation) {
 
         console.log("Fetching documentation in GI...");
@@ -553,13 +589,7 @@ define(
         var fileContent = "";
         var linkName = "Undefined";
         var documentationValue = "Undefined";
-
-        console.log('genericInformation',genericInformation);
-
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
-
-
-
           for (var i in genericInformation) {
             if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
               fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
@@ -577,31 +607,8 @@ define(
         this.set({
           "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
         });
-
       },
-      formatObjectsList: function(inputArray, propertyName, propertyValue) {
-          var message = '<span><table cellpadding = "5">';
-          inputArray.forEach(function(item){ message = message + '<tr valign = "top"><td><b>'+item[propertyName]+'</b></td><td>'+item[propertyValue]+'</td></tr>';});
-          message = message + '</table></span><br><b><i>Please chose which one is appropriate and remove the other.</i></b>';
-          return message;
-      },
-      alertUI: function (caption, message, type, myStack) {
-            new PNotify({
-                title: caption,
-                text: message,
-                textTrusted: true,
-                type: type,
-                opacity: .8,
-                width: '30%',
-                stack: myStack,
-                addclass: "stack-custom",
-                buttons: {
-                    closer: true,
-                    sticker: false
-                }
-            });
 
-        },
       generateUrl: function(data) {
         var url;
 
