@@ -8,5 +8,6 @@ exports.command = function (xpathCheck) {
         .moveToElement('span.glyphicon.glyphicon-remove', 0, 0)
         .pause(this.globals.menuAnimationTime)
         .click('span.glyphicon.glyphicon-remove')
-        .waitForElementNotPresent('.ui-pnotify-title');
+        //TODO
+        //.waitForElementNotPresent('.ui-pnotify-title');
 };
