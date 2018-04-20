@@ -11,15 +11,20 @@ define(
     'proactive/model/utils',
     'proactive/view/utils/undo', // TODO remove
     'proactive/config',
-    'proactive/rest/studio-client'
+    'proactive/rest/studio-client',
+    'pnotify',
+    'pnotify.buttons'
+
   ],
 
   // TODO REMOVE undoManager dependency - comes from view
-  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient) {
+  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient, PNotify) {
 
     "use strict";
 
     var that = this;
+
+    var myStack = {"dir1": "up", "firstpos1": "25", "dir2": "left", "push": "bottom"};
 
     return SchemaModel.extend({
       schema: {
@@ -508,21 +513,94 @@ define(
           })
         }
 
+
+
+        var genericInformation = this.attributes["Generic Info"];
+        var workflowVariables = this.attributes["Variables"];
+        // Find duplicates in generic information
+        this.findDuplicates("Generic Info", genericInformation, "Property Name", "Property Value");
+        // Find duplicates in workflow variables
+        this.findDuplicates("Variables", workflowVariables, "Name", "Value");
         // Generate Urls for documentation
-        this.generateDocumentUrl();
+        this.generateDocumentUrl(genericInformation);
       },
+
       getBasicFields: function() {
         return ["Name", "Variables"]
       },
-      generateDocumentUrl: function() {
+
+      sortByKey: function(array, key) {
+          return array.sort((a, b) => a[key].localeCompare(b[key]));
+      },
+
+      filterByName: function(array, property, valeur){
+          var groupedByName = new Map();
+          array.forEach(function(gi) {
+          if (!groupedByName.has(gi[property].toLowerCase())) {
+                groupedByName.set(gi[property].toLowerCase(), new Array());
+          }
+          groupedByName.get(gi[property].toLowerCase()).push(gi[valeur]);
+          });
+          groupedByName.forEach(function(v, k, map){if(v.length<=1) {map.delete(k);}});
+          return groupedByName;
+      },
+
+      findDuplicates: function(type, inputArray, property, valeur){
+         if (inputArray != null) {
+            console.log("Identification of duplicated " + type + "...");
+            var myArray = this.sortByKey(inputArray, property);
+            var mapResult = this.filterByName(myArray, property, valeur);
+            if(mapResult.size>0){
+                  this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(mapResult, property, valeur),'error');
+            }
+          }
+      },
+
+      formatObjectsList: function(inputMap, propertyName, propertyValue) {
+          var message = '<span><table cellpadding = "5">';
+          var first = true;
+          inputMap.forEach(function(value, key, map){ first = true; message = message + '<tr valign = "top"><td><b>'+key+'</b></td><td>'+
+            value.map(function(v){
+              var str = "";
+              if (first){
+                   str = ("Initial Value present: ").bold() + v;
+                   first=false;
+              }
+              else{
+                  str = ("New Value imported: ").bold() + v;
+              }
+            return '<table style="width: 100%; max-width: 550px; table-layout: auto; word-break: break-word;"> <tr valign = "top"><td>&#8226;</td><td>'+str+'</td></tr></table>';}).join('')+'</td></tr>';}
+          );
+          message = message + '</table></span><br><b><i>Please chose which value is appropriate and remove the other(s).</i></b>';
+          return message;
+      },
+
+      alertUI: function (caption, message, type) {
+            new PNotify({
+                title: caption,
+                text: message,
+                textTrusted: true,
+                type: type,
+                opacity: .8,
+                width: '550px',
+                stack: myStack,
+                addclass: "myStack",
+                buttons: {
+                    closer: true,
+                    sticker: false
+                }
+            });
+      },
+
+      generateDocumentUrl: function(genericInformation) {
+
         console.log("Fetching documentation in GI...");
 
         // Get the job name and put it as name for the generated file
-        var genericInformation = this.attributes["Generic Info"];
+
         var fileContent = "";
         var linkName = "Undefined";
         var documentationValue = "Undefined";
-
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
           for (var i in genericInformation) {
             if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
@@ -541,8 +619,8 @@ define(
         this.set({
           "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
         });
-
       },
+
       generateUrl: function(data) {
         var url;
 
