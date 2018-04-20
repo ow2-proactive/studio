@@ -117,7 +117,7 @@ define(
 
                     }
                 }
-                reader.readAsBinaryString(file);
+                reader.readAsTextfile);
             }
         }
 
