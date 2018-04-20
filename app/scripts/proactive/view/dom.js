@@ -117,7 +117,7 @@ define(
 
                     }
                 }
-                reader.readAsTextfile);
+                reader.readAsText(file);
             }
         }
 
