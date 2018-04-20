@@ -8,6 +8,6 @@ exports.command = function (xpathCheck) {
         .moveToElement('span.glyphicon.glyphicon-remove', 0, 0)
         .pause(this.globals.menuAnimationTime)
         .click('span.glyphicon.glyphicon-remove')
-        //TODO
+        //TODO adapt this test's timeout constraint to manually closing popups
         //.waitForElementNotPresent('.ui-pnotify-title');
 };
