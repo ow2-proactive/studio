@@ -10,7 +10,7 @@ define(['proactive/view/xml/JobXmlView', 'proactive/model/Job', 'proactive/view/
                     type: "GET",
                     url: httpServer + fileName,
                     cache: false,
-                    async: false,
+                    async: false
                 }).responseText;
             };
 
