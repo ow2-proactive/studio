@@ -526,6 +526,7 @@ define(
         var genericInformation = this.attributes["Generic Info"];
         var workflowVariables = this.attributes["Variables"];
         // Find duplicates in generic information
+        PNotify.removeAll();
         this.findDuplicates("Generic Info", genericInformation, "Property Name", "Property Value");
         // Find duplicates in workflow variables
         this.findDuplicates("Variables", workflowVariables, "Name", "Value");
