@@ -396,7 +396,12 @@ define(
         const GIToRemove = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
         if (isTemplate) {
           if(obj["genericInformation"]){
-            obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !GIToRemove.includes(info["@attributes"]["name"].toLowerCase()));
+            if(obj["genericInformation"]["info"].isArray){
+              obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !GIToRemove.includes(info["@attributes"]["name"].toLowerCase()));
+            }
+            else{ // This is a workaround for "Controls tasks"
+              obj["genericInformation"]["info"] = []
+            }
           }
           this.populateTemplate(obj, merging);
         } else {
