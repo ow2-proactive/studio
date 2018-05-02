@@ -24,7 +24,7 @@ define(
 
     var that = this;
 
-    var myStack = {"dir1": "up", "firstpos1": "25", "dir2": "left", "push": "bottom"};
+    const myStack = {"dir1": "up", "firstpos1": "1", "dir2": "left", "push": "bottom"};
 
     return SchemaModel.extend({
       schema: {
@@ -392,7 +392,17 @@ define(
         });
       },
       populate: function(obj, merging, isTemplate) {
+        // remove the unnecessary GI in case of appending workflow to the current one.
+        const GIToRemove = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
         if (isTemplate) {
+          if(obj["genericInformation"]){
+            if(obj["genericInformation"]["info"].isArray){
+              obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !GIToRemove.includes(info["@attributes"]["name"].toLowerCase()));
+            }
+            else{ // This is a workaround for "Controls tasks"
+              obj["genericInformation"]["info"] = []
+            }
+          }
           this.populateTemplate(obj, merging);
         } else {
           this.populateSchema(obj, merging);
@@ -513,11 +523,10 @@ define(
           })
         }
 
-
-
         var genericInformation = this.attributes["Generic Info"];
         var workflowVariables = this.attributes["Variables"];
         // Find duplicates in generic information
+        PNotify.removeAll();
         this.findDuplicates("Generic Info", genericInformation, "Property Name", "Property Value");
         // Find duplicates in workflow variables
         this.findDuplicates("Variables", workflowVariables, "Name", "Value");
@@ -536,10 +545,12 @@ define(
       filterByName: function(array, property, valeur){
           var groupedByName = new Map();
           array.forEach(function(gi) {
-          if (!groupedByName.has(gi[property].toLowerCase())) {
+            if (gi[property]){
+              if (gi[property] && !groupedByName.has(gi[property].toLowerCase())) {
                 groupedByName.set(gi[property].toLowerCase(), new Array());
-          }
-          groupedByName.get(gi[property].toLowerCase()).push(gi[valeur]);
+              }
+              groupedByName.get(gi[property].toLowerCase()).push(gi[valeur]);
+            }
           });
           groupedByName.forEach(function(v, k, map){if(v.length<=1) {map.delete(k);}});
           return groupedByName;
@@ -551,7 +562,7 @@ define(
             var myArray = this.sortByKey(inputArray, property);
             var mapResult = this.filterByName(myArray, property, valeur);
             if(mapResult.size>0){
-                  this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(mapResult, property, valeur),'error');
+                  this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(mapResult, property, valeur),'notice');
             }
           }
       },
@@ -569,7 +580,7 @@ define(
               else{
                   str = ("New Value imported: ").bold() + v;
               }
-            return '<table style="width: 100%; max-width: 550px; table-layout: auto; word-break: break-word;"> <tr valign = "top"><td>&#8226;</td><td>'+str+'</td></tr></table>';}).join('')+'</td></tr>';}
+            return '<table style="width: 100%; max-width: 450px; table-layout: auto; word-break: break-word;"> <tr valign = "top"><td>&#8226;</td><td>'+str+'</td></tr></table>';}).join('')+'</td></tr>';}
           );
           message = message + '</table></span><br><b><i>Please chose which value is appropriate and remove the other(s).</i></b>';
           return message;
@@ -582,12 +593,12 @@ define(
                 textTrusted: true,
                 type: type,
                 opacity: .8,
-                width: '550px',
+                width: '450px',
                 stack: myStack,
                 addclass: "myStack",
+                hide: false,
                 buttons: {
-                    closer: true,
-                    sticker: false
+                   sticker: false
                 }
             });
       },

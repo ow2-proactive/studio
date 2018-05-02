@@ -82,6 +82,8 @@ define(
 
         $('#import-file').change(function (env) {
             import_file(env, true);
+            PNotify.removeAll();
+
         })
 
         $('#add-file').change(function (env) {
@@ -115,7 +117,7 @@ define(
 
                     }
                 }
-                reader.readAsBinaryString(file);
+                reader.readAsText(file);
             }
         }
 
