@@ -43,6 +43,16 @@ define(
                         "data-help": 'A small textual description of what task does.'
                     }
                 },
+                "Generic Info Documentation": {
+                  type: "Link",
+                  fieldAttrs: {
+                    "id": "gidoc",
+                    'placeholder': ['description->#cdata-section', 'description->#text'],
+                    "data-help": "Link to Task Documentation. Set value in Generic Information named \"DOCUMENTATION\""
+                  },
+                  title: 'Documentation'
+                },
+
                 "Variables": {
                     type: 'List',
                     itemType: 'Object',
@@ -348,7 +358,10 @@ define(
                 }
 
                 this.schema = $.extend(true, {}, this.schema);
-
+                // Generic Info
+                this.set({
+                  "Generic Info": new Array()
+                });
                 this.set({"Type": "ScriptExecutable"});
                 this.set({"Execute": new ScriptExecutable()});
                 this.set({"Fork Environment": new ForkEnvironment()});
@@ -360,6 +373,9 @@ define(
                 this.set({"If An Error Occurs Restart Task": "anywhere"});
                 this.set({"Store Task Logs in a File": false});
                 this.set({"Number of Nodes": 1});
+                this.set({
+                  "Generic Info Documentation": "{\"name\":\"Undefined\",\"url\":\"" + config.docUrl + "/user/ProActiveUserGuide.html#_generic_information\"}"
+                });
                 var that = this;
                 this.schema.Variables.subSchema.Model.validators = [
                     function checkVariableValue(value, formValues) {
@@ -381,11 +397,110 @@ define(
                 ]
 
                 this.controlFlow = {};
-                this.on("change", function (eventName, event) {
-                    undoManager.save()
+
+                // get the GI of the Task
+                var genericInformation = this.get["Generic Info"];
+
+                this.on("change", function(eventName, error) {
+                  if (eventName) {
+                    if (eventName._changing) {
+                      // Check if Generic Info doc has been changed and generate new link if needed
+                      if (eventName.changed.hasOwnProperty('Generic Info') && eventName.changed["Generic Info"]["Property Value"] != "") {
+
+                        var genericInformation = eventName.changed["Generic Info"];
+                        var hasDocumentation;
+
+                        // Regenerate new documentation url
+                        for (var i in genericInformation) {
+                          if (genericInformation[i]["Property Name"].toLowerCase() === 'task.documentation') {
+                            hasDocumentation = true;
+                            var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
+                            var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
+                            var linkName = genericInformation[i]["Property Value"];
+                            var documentationValue = genericInformation[i]["Property Value"];
+                            break;
+                          } else {
+                            hasDocumentation = false;
+                          }
+                        }
+
+                        if (hasDocumentation) {
+                          // Set New Value, needed for persistance
+                          this.set({
+                            "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + documentationValue + "\"}"
+                          });
+
+                          // Needed to update UI
+                          $('a[name="Generic Info Documentation"]').text(documentationValue);
+                          $('a[name="Generic Info Documentation"]').attr("href", documentationValue);
+                        } else {
+                          if ($('a[name="Generic Info Documentation"]')) {
+                            $('a[name="Generic Info Documentation"]').text("Undefined");
+                            $('a[name="Generic Info Documentation"]').attr("href", "#");
+                          }
+                        }
+
+                      } else if (eventName.changed.hasOwnProperty('Generic Info')) {
+                        var genericInformation = eventName.changed["Generic Info"];
+                        if (genericInformation.length == 0) {
+                          // Documentation has been deleted, make sure to update link
+                          this.set({
+                            "Generic Info Documentation": "{\"name\":\"Undefined\",\"url\":\"#\"}"
+                          });
+
+                          if ($('a[name="Generic Info Documentation"]')) {
+                            $('a[name="Generic Info Documentation"]').text("Undefined");
+                            $('a[name="Generic Info Documentation"]').attr("href", "#");
+                          }
+                        }
+                      }
+
+                    }
+                  } else {
+                    undoManager.save();
+                  }
                 });
             },
 
+
+            // documentation GI:  value will be displayed as link
+            generateDocumentUrl: function(genericInformation) {
+              var linkName = "Undefined";
+              var documentationValue = "Undefined";
+              if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
+                for (var i in genericInformation) {
+                  if (genericInformation[i]["Property Name"].toLowerCase() === 'task.documentation') {
+                    linkName = genericInformation[i]["Property Value"];
+                    documentationValue = genericInformation[i]["Property Value"];
+                  }
+                }
+              } else {
+                console.log("No generic information task.documentation defined for this job");
+              }
+
+              // Set Value
+              this.set({
+                "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
+              });
+            },
+
+            generateUrl: function(data) {
+              var url;
+
+              if (data) {
+                var file = new Blob([data], {
+                  type: String
+                });
+
+                if (data.toLowerCase() === 'undefined') {
+                  url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
+                } else {
+                  url = data;
+                }
+              }
+
+              return url;
+            },
             addDependency: function (task) {
                 if (!this.dependencies) this.dependencies = [];
 
@@ -517,7 +632,6 @@ define(
                         "Variables"]
             },
             addOrReplaceGenericInfo: function (key, value) {
-
                 var genericInfo = this.get("Generic Info");
                 if (!genericInfo) {
                     genericInfo = []
@@ -591,6 +705,7 @@ define(
             populateSimpleForm: function () {
                 // initializing filed for simple form from generic info
                 var genericInfo = this.get("Generic Info");
+
                 if (!genericInfo) {
                     genericInfo = []
                 }
@@ -598,6 +713,9 @@ define(
                 for (var i in genericInfo) {
                     var key = genericInfo[i]["Property Name"];
                     var value = genericInfo[i]["Property Value"];
+
+                    // this metgod generates the link from the task.documentation GI value
+                    this.generateDocumentUrl(genericInfo);
 
                     if (key == "Dedicated Host") {
                         value = (value === 'true')
