@@ -398,15 +398,12 @@ define(
 
                 this.controlFlow = {};
 
-                // get the GI of the Task
-                var genericInformation = this.get["Generic Info"];
-
                 this.on("change", function(eventName, error) {
                   if (eventName) {
                     if (eventName._changing) {
                       // Check if Generic Info doc has been changed and generate new link if needed
                       if (eventName.changed.hasOwnProperty('Generic Info') && eventName.changed["Generic Info"]["Property Value"] != "") {
-
+                        // retrieve GI from updated data
                         var genericInformation = eventName.changed["Generic Info"];
                         var hasDocumentation;
 
@@ -414,8 +411,6 @@ define(
                         for (var i in genericInformation) {
                           if (genericInformation[i]["Property Name"].toLowerCase() === 'task.documentation') {
                             hasDocumentation = true;
-                            var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                            var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                             var linkName = genericInformation[i]["Property Value"];
                             var documentationValue = genericInformation[i]["Property Value"];
                             break;
@@ -441,7 +436,7 @@ define(
                         }
 
                       } else if (eventName.changed.hasOwnProperty('Generic Info')) {
-                        var genericInformation = eventName.changed["Generic Info"];
+                           genericInformation = eventName.changed["Generic Info"];
                         if (genericInformation.length == 0) {
                           // Documentation has been deleted, make sure to update link
                           this.set({
@@ -488,10 +483,6 @@ define(
               var url;
 
               if (data) {
-                var file = new Blob([data], {
-                  type: String
-                });
-
                 if (data.toLowerCase() === 'undefined') {
                   url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
                 } else {

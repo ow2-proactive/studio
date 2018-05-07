@@ -275,8 +275,6 @@ define(
                 for (var i in genericInformation) {
                   if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
                     hasDocumentation = true;
-                    var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                    var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                     var linkName = genericInformation[i]["Property Value"];
                     var documentationValue = genericInformation[i]["Property Value"];
                     break;
@@ -607,18 +605,12 @@ define(
 
         console.log("Fetching documentation in GI...");
 
-        // Get the job name and put it as name for the generated file
-
-        var fileContent = "";
         var linkName = "Undefined";
         var documentationValue = "Undefined";
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
           for (var i in genericInformation) {
             if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
-              fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-              fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
               linkName = genericInformation[i]["Property Value"];
-
               documentationValue = genericInformation[i]["Property Value"];
             }
           }
@@ -636,10 +628,6 @@ define(
         var url;
 
         if (data) {
-          var file = new Blob([data], {
-            type: String
-          });
-
           if (data.toLowerCase() === 'undefined') {
             url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
           } else {
