@@ -184,7 +184,7 @@ define(
                                     console.log("Should no be here", prop, value);
                                 }
                             } else {
-                                if (merging && that.get(prop) && that.get(prop).includes('Untitled workflow')){
+                                if (merging && that.get(prop) && that.get(prop).includes('Untitled Workflow')){
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
