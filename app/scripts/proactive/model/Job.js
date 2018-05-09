@@ -602,9 +602,6 @@ define(
       },
 
       generateDocumentUrl: function(genericInformation) {
-
-        console.log("Fetching documentation in GI...");
-
         var linkName = "Undefined";
         var documentationValue = "Undefined";
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
