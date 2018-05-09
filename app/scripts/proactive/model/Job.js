@@ -390,18 +390,23 @@ define(
         });
       },
       populate: function(obj, merging, isTemplate) {
-        // remove the unnecessary GI in case of appending workflow to the current one.
-        const GIToRemove = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
-        if (isTemplate) {
-          if(obj["genericInformation"]){
-            if(obj["genericInformation"]["info"].isArray){
-              obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !GIToRemove.includes(info["@attributes"]["name"].toLowerCase()));
-            }
-            else{ // This is a workaround for "Controls tasks"
-              obj["genericInformation"]["info"] = []
-            }
-          }
-          this.populateTemplate(obj, merging);
+        var StudioApp = require('StudioApp');
+               // remove the unnecessary GI in case of appending workflow to the current one.
+               const COMMON_GI = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
+               if (isTemplate) {
+                   if(obj["genericInformation"]){
+                     var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
+                     var ExistingCommonGI = jobGenericInfos.filter(info => COMMON_GI.includes(info["Property Name"].toLowerCase())).map(a => a["Property Name"].toLowerCase());
+                     if(obj["genericInformation"]["info"] instanceof Array){
+                        obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !ExistingCommonGI.includes(info["@attributes"]["name"].toLowerCase()));
+                     }else{ // This is a workaround for "Controls tasks"
+                         var filtredGI = Object.keys(obj["genericInformation"]["info"]).map(name => obj["genericInformation"]["info"][name]).filter(info => !ExistingCommonGI.includes(info["name"].toLowerCase()));
+                         if(filtredGI.length == 0){
+                            obj["genericInformation"]["info"] = [];
+                         }
+                       }
+                   }
+                 this.populateTemplate(obj, merging);
         } else {
           this.populateSchema(obj, merging);
         }
