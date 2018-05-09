@@ -25,7 +25,9 @@ define(
     var that = this;
 
     const myStack = {"dir1": "up", "firstpos1": "1", "dir2": "left", "push": "bottom"};
-
+    const GENERIC_INFORMATION = "genericInformation";
+    const INFO = "info"
+    const NAME = "name"
     return SchemaModel.extend({
       schema: {
         "Name": {
@@ -391,24 +393,25 @@ define(
       },
       populate: function(obj, merging, isTemplate) {
         var StudioApp = require('StudioApp');
-               // remove the unnecessary GI in case of appending workflow to the current one.
-               const COMMON_GI = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
-               if (isTemplate) {
-                   if(obj["genericInformation"]){
-                     var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
-                     var ExistingCommonGI = jobGenericInfos.filter(info => COMMON_GI.includes(info["Property Name"].toLowerCase())).map(a => a["Property Name"].toLowerCase());
-                     if(obj["genericInformation"]["info"] instanceof Array){
-                        obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !ExistingCommonGI.includes(info["@attributes"]["name"].toLowerCase()));
-                     }else{ // This is a workaround for "Controls tasks"
-                         var filtredGI = Object.keys(obj["genericInformation"]["info"]).map(name => obj["genericInformation"]["info"][name]).filter(info => !ExistingCommonGI.includes(info["name"].toLowerCase()));
-                         if(filtredGI.length == 0){
-                            obj["genericInformation"]["info"] = [];
-                         }
-                       }
+        // remove the unnecessary GI in case of appending workflow to the current one.
+        const COMMON_GI = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
+        if (isTemplate) {
+            if(obj[GENERIC_INFORMATION]){
+                var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
+                if(jobGenericInfos !== 'null' && jobGenericInfos !== 'undefined'){
+                    var ExistingCommonGI = jobGenericInfos.filter(info => COMMON_GI.includes(info["Property Name"].toLowerCase())).map(a => a["Property Name"].toLowerCase());
+                }
+                if(obj[GENERIC_INFORMATION][INFO] instanceof Array){
+                   obj[GENERIC_INFORMATION][INFO] = obj[GENERIC_INFORMATION][INFO].filter(info => !ExistingCommonGI.includes(info["@attributes"][NAME].toLowerCase()));
+                }else{ // This is a workaround for "Controls tasks"
+                   if(Object.keys(obj[GENERIC_INFORMATION][INFO]).map(name => obj[GENERIC_INFORMATION][INFO][name]).filter(info => !ExistingCommonGI.includes(info[NAME].toLowerCase())).length == 0){
+                      obj[GENERIC_INFORMATION][INFO] = [];
                    }
-                 this.populateTemplate(obj, merging);
+                }
+            }
+            this.populateTemplate(obj, merging);
         } else {
-          this.populateSchema(obj, merging);
+        this.populateSchema(obj, merging);
         }
         this.convertCancelJobOnErrorToOnTaskError(obj);
 
