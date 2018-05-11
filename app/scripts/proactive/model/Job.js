@@ -394,7 +394,7 @@ define(
       populate: function(obj, merging, isTemplate) {
         var StudioApp = require('StudioApp');
         // remove the unnecessary GI in case of appending workflow to the current one.
-        const COMMON_GI = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
+        const COMMON_GI = ["bucketname","documentation", "group", "workflow.icon"];
         if (isTemplate) {
             if(obj[GENERIC_INFORMATION]){
                 var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
