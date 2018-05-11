@@ -4,7 +4,7 @@
 	name="SubmitJobNoWait" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
 	<genericInformation>
-		<info name="pca.action.icon"
+		<info name="workflow.icon"
 			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png" />
 	</genericInformation>
 	<taskFlow>

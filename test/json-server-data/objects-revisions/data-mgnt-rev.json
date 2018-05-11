@@ -24,7 +24,7 @@
           "label": "job_information"
         },
         {
-          "key": "pca.action.icon",
+          "key": "workflow.icon",
           "value": "/automation-dashboard/styles/patterns/img/wf-icons/data-management.png",
           "label": "generic_information"
         },

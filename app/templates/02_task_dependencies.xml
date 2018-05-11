@@ -9,7 +9,7 @@
 		available.
 	</description>
 	<genericInformation>
-		<info name="pca.action.icon"
+		<info name="workflow.icon"
 			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_task_dependencies.png" />
 	</genericInformation>
 	<taskFlow>

@@ -10,7 +10,7 @@
     <![CDATA[ Execute replicated processing tasks, and wait for one task to finish before continuing. The first terminated task kill the others using a kill script from the catalog. ]]>
 	</description>
 	<genericInformation>
-		<info name="pca.action.icon"
+		<info name="workflow.icon"
 			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any_replicate.png" />
 	</genericInformation>
 	<taskFlow>

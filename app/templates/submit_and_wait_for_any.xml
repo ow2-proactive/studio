@@ -13,7 +13,7 @@
     <![CDATA[ Submit a processing workflow, and wait for one task from the taskNames list to finish before continuing. ]]>
 	</description>
 	<genericInformation>
-		<info name="pca.action.icon"
+		<info name="workflow.icon"
 			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
 	</genericInformation>
 	<taskFlow>
