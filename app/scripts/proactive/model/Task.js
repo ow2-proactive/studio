@@ -47,8 +47,7 @@ define(
                   type: "Link",
                   fieldAttrs: {
                     "id": "gidoc",
-                    'placeholder': ['description->#cdata-section', 'description->#text'],
-                    "data-help": "Link to Task Documentation. Set value in Generic Information named \"DOCUMENTATION\""
+                    "data-help": "Link to Task Documentation. Set value in Generic Information named \"TASK.DOCUMENTATION\""
                   },
                   title: 'Documentation'
                 },
