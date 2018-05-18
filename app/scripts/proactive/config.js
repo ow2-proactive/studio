@@ -31,6 +31,7 @@ define(function () {
 	    	'PowerShell': 'templates/script_powershell.xml',
 	        'R': 'templates/script_r.xml',
 	        'Cron': 'templates/script_cron.xml',
+	        'Kubernetes': 'templates/script_kubernetes.xml',
             'LDAP Query': 'templates/script_ldap_query.xml'
         },
         manuals: {

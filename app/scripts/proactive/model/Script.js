@@ -26,7 +26,7 @@ define(
             },
             "Language": {
                 type: 'Select',
-                options: [" ", "bash", "cmd", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+                options: [" ", "bash", "cmd", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R", "kubernetes"],
                 fieldAttrs: {
                     'placeholder': 'code->@attributes->language',
                     "data-help":"The language of the code to execute."
