@@ -21,7 +21,7 @@ define(
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png",
             "bash": "images/LinuxBash.png", "scalaw": "images/Scalaw.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
                    "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png",
-                   "powershell": "images/PowerShell.png", "kubernetes": "images/kubernetes.png"},
+                   "powershell": "images/PowerShell.png", "kubernetes": "images/Kubernetes.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
         initialize: function () {
