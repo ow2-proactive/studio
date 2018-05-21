@@ -23,7 +23,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: pi
+  name: hello-world
 spec:
   template:
     spec:
