@@ -3,28 +3,24 @@ html, body {
     min-height: 100%;
 }
 
+#login-view {
+    display : inline-flex;
+}
+
 .login-container {
     text-align: center;
-    width: 370px;
-    height: 270px;
     padding: 10px;
+    margin: auto;
 
     border-color: rgb(204, 204, 204);
     border-style: solid;
     border-width: 1px;
     box-shadow: 5px 5px 5px #888888;
-
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    margin: auto;
 }
 
 .login-header-container {
     margin-top: 10px;
+    margin-bottom: 10px;
     background-color: rgb(240, 240, 240);
     border-color: rgb(204, 204, 204);
     border-style: solid;
@@ -51,7 +47,6 @@ html, body {
     padding-top: 10px;
     width: 100%;
     position: relative;
-    left: -85px;
 }
 
 .login-logo-image {

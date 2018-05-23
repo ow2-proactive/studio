@@ -10,7 +10,6 @@ define(
 
         return Backbone.Model.extend({
             defaults: {
-                id: "",
                 name: "",
                 owner: "",
                 created_at: "",

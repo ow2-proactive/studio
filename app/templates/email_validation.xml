@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="urn:proactive:jobdescriptor:3.9"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-        name="Email Validation" projectName="Notifications"
-        priority="normal"
-        onTaskError="continueJobExecution"
-        maxNumberOfExecution="2"
->
-  <description>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.10"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+	name="Email Validation" projectName="Notifications" priority="normal"
+	onTaskError="continueJobExecution" maxNumberOfExecution="2">
+	<description>
     <![CDATA[ Workflow to pause the job and send a validation email ]]>
-  </description>
-  <taskFlow>
-    <task name="EmailValidation"
-    
-    
-    onTaskError="pauseJob" >
-      <description>
+	</description>
+	<taskFlow>
+		<task name="EmailValidation" onTaskError="pauseJob">
+			<description>
         <![CDATA[ Task to pause the job and send a validation email ]]>
-      </description>
-      <variables>
-        <variable name="notification_message" value="Put your email validation message here" inherited="false" model=""/>
-        <variable name="email_to" value="user@domain.org" inherited="false" model=""/>
-        <variable name="user_to_login" value="user" inherited="false" model=""/>
-      </variables>
-      <scriptExecutable>
-        <script>
-          <code language="python">
+			</description>
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/email_validation_bis.png" />
+			</genericInformation>
+			<variables>
+				<variable name="notification_message" value="Put your email validation message here"
+					inherited="false" model="" />
+				<variable name="email_to" value="user@domain.org"
+					inherited="false" model="" />
+				<variable name="user_to_login" value="user" inherited="false"
+					model="" />
+			</variables>
+			<scriptExecutable>
+				<script>
+					<code language="python">
             <![CDATA[
 #Please setup the Task Variables!
 
@@ -53,9 +52,9 @@ notification_content = '{\"description\": \"'+variables.get("notification_messag
 Webhook.execute ( 'POST', url, headers, notification_content);
 print "Email Validation sent"
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-    </task>
-  </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

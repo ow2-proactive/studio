@@ -184,13 +184,14 @@ define(
                                     console.log("Should no be here", prop, value);
                                 }
                             } else {
+                                if (merging && that.get(prop) && that.get(prop).toLowerCase().includes('untitled workflow')){
+                                    value = value.trim()
+                                    that.set(prop, value)
+                                }
                                 if (merging && that.get(prop)) {
                                     // do not override existing value when merging
-                                }  else if(this.schema["Project"]){
-                                   // do not override project name even if it is empty
-                                } else if(this.schema["Description"] ){
-                                   // do not override project description even if it is empty
-                                } else {
+                                }
+                                else {
 //                                    console.log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
                                     that.set(prop, value)

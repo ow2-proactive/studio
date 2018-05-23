@@ -62,9 +62,9 @@ define(
                             var localStorageTemplates = JSON.parse(localStorage.getItem('secondaryBucketNames'));
                             templateModel = that.options.app.models.secondaryTemplates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
                         }
-                        var bucket_id = templateModel.attributes.bucket_id;
+                        var bucket_name = templateModel.attributes.bucket_name;
                         var workflow_name = templateModel.attributes.name;
-                        templateUrl = '/catalog/buckets/' + bucket_id + '/resources/'+workflow_name+'/raw';
+                        templateUrl = '/catalog/buckets/' + bucket_name + '/resources/'+workflow_name+'/raw';
                       }
                       $.ajax({
                           type: "GET",
@@ -235,7 +235,14 @@ define(
             return view;
         },
         updateJobName: function () {
-//	    	$("#breadcrumb-project-name").text(this.model.get("Project Name"))
+            var jobNameInputField = $("input[id='" + this.model.cid + "_Name']");
+            //$("#breadcrumb-project-name").text(this.model.get("Project Name"))
+            // Prevent having empty Workflow names. Nameless workflows do not affect the scheduler but cannot be removed from studio unless they get a name.
+            if (!this.model.get("Name") || this.model.get("Name").trim() === "") {
+                this.model.set("Name", "");
+                this.alert('Workflow name is empty','Workflow Name should not be empty','error');
+                jobNameInputField.css({ "border": "1px solid #D2322D"});
+            }
             $("#breadcrumb-selected-job").text(this.model.get("Name"))
         },
         clean: function () {

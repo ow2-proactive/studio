@@ -79,8 +79,6 @@ define(
                     'width': width, 'height': height, 'top': top, 'left': left
                 });
 
-            // replacing all images paths
-            html = html.replace(/img\//g, url + "/images/");
             return html;
         },
         render: function () {

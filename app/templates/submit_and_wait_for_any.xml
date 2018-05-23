@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="urn:proactive:jobdescriptor:3.9"
-        xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-        name="Submit and wait for any"
-        priority="normal"
-        onTaskError="continueJobExecution"
-        maxNumberOfExecution="2"
->
-  <variables>
-    <variable name="taskNames" value="Average1,Average2" model="String"/>
-    <variable name="workflowURL" value="https://try.activeeon.com/catalog/buckets/1000/resources/distributed_computing_PI/raw" model="String"/>
-  </variables>
-  <description>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.10"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+	name="Submit and wait for any" priority="normal" onTaskError="continueJobExecution"
+	maxNumberOfExecution="2">
+	<variables>
+		<variable name="taskNames" value="Average1,Average2" model="String" />
+		<variable name="workflowURL"
+			value="https://try.activeeon.com/catalog/buckets/1000/resources/distributed_computing_PI/raw"
+			model="String" />
+	</variables>
+	<description>
     <![CDATA[ Submit a processing workflow, and wait for one task from the taskNames list to finish before continuing. ]]>
-  </description>
-  <taskFlow>
-    <task name="Submit">
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+	</description>
+	<genericInformation>
+		<info name="workflow.icon"
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
+	</genericInformation>
+	<taskFlow>
+		<task name="Submit">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 println "Submitting a processing job ..."
 
@@ -39,17 +44,21 @@ jobid = schedulerapi.submit(workflow_file).value()
 
 variables.put("jobID", jobid)
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-    </task>
-    <task name="Wait_for_task">
-      <depends>
-        <task ref="Submit"/>
-      </depends>
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+		<task name="Wait_for_task">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
+			</genericInformation>
+			<depends>
+				<task ref="Submit" />
+			</depends>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 def tasks_names = variables["taskNames"]
 def job_id = variables["jobID"]
@@ -74,13 +83,13 @@ else // Wait one of the tasks_names end
 
 variables["isFinished"] = "yes"
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-      <controlFlow >
-        <loop target="Wait_for_task">
-          <script>
-            <code language="javascript">
+					</code>
+				</script>
+			</scriptExecutable>
+			<controlFlow>
+				<loop target="Wait_for_task">
+					<script>
+						<code language="javascript">
               <![CDATA[
 // You can use a Cron Expression here
               // examples http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
@@ -90,24 +99,28 @@ if(!variables.get("isFinished")){
 	loop = false;
 }
 ]]>
-            </code>
-          </script>
-        </loop>
-      </controlFlow>
-    </task>
-    <task name="Next_process">
-      <depends>
-        <task ref="Wait_for_task"/>
-      </depends>
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+						</code>
+					</script>
+				</loop>
+			</controlFlow>
+		</task>
+		<task name="Next_process">
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
+			</genericInformation>
+			<depends>
+				<task ref="Wait_for_task" />
+			</depends>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 println "... " + variables.get("PA_TASK_NAME")
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-    </task>
-  </taskFlow>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
 </job>

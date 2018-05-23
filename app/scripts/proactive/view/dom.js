@@ -82,6 +82,8 @@ define(
 
         $('#import-file').change(function (env) {
             import_file(env, true);
+            PNotify.removeAll();
+
         })
 
         $('#add-file').change(function (env) {
@@ -97,6 +99,7 @@ define(
             if (files.length > 0) {
                 var file = files[0];
                 if (!file.type.match('text/xml')) {
+                   StudioClient.alert("Job descriptor must be a valid XML. Content is not allowed in prolog", "", 'error');
                     return;
                 }
                 var reader = new FileReader();
@@ -104,12 +107,17 @@ define(
 
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
+                        StudioClient.resetLastValidationResult();
+                        if(!StudioClient.validateWithPopup(evt.target.result, json, false)){
+                           return;
+                        }
                         studioApp.merge(json, null);
                         studioApp.updateWorkflowName(json.job);
                         studioApp.views.workflowView.importNoReset();
+
                     }
                 }
-                reader.readAsBinaryString(file);
+                reader.readAsText(file);
             }
         }
 
@@ -199,7 +207,7 @@ define(
                 type: 'GET',
                 headers: headers
             }).success(function (response) {
-                  successCallback(response);
+                successCallback(response);
             }).error(function (response) {
                 notify_message('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), false);
             });
@@ -249,6 +257,13 @@ define(
 
             save_workflow();
             closeCollapsedMenu();
+            
+            var jobName = studioApp.models.jobModel.get("Name");
+            var jobProjectName = studioApp.models.jobModel.get("Project");
+            var jobDescription = studioApp.models.jobModel.get("Description");
+            var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
+            var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
+
 
             var jobVariables = readOrStoreVariablesInModel();
             if (jobVariables == null || $.isEmptyObject(jobVariables)) {
@@ -256,14 +271,12 @@ define(
                 return;
             }
 
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
+            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
-            $("#exec-plan-button").hide();
-            $("#exec-button").show();
             $('#execute-workflow-modal').modal();
         });
 
-    $("#plan-button").click(function (event) {
+        $("#plan-button").click(function (event) {
             event.preventDefault();
         
             var studioApp = require('StudioApp');
@@ -275,24 +288,11 @@ define(
             save_workflow();
             closeCollapsedMenu();
 
-            var jobVariables = readOrStoreVariablesInModel();
-            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
-                executeIfConnected(planned_submit);
-                return;
-            }
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'errorMessage':'', 'infoMessage' :''});
-            $('#job-variables').html(template);
-            $("#exec-button").hide();
-            $("#exec-plan-button").show();
-            $('#execute-workflow-modal').modal();
+            $("#plan-workflow-modal").modal();
         });
 
         $("#exec-button").click(function (event) {
             executeOrCheck(event, false, false)
-        });
-        
-        $("#exec-plan-button").click(function (event) {
-            executeOrCheck(event, false, true)
         });
 
         $("#check-button").click(function (event) {
@@ -304,27 +304,41 @@ define(
             executeIfConnected(function () {
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
-                var inputReceived = $('#job-variables').find('input');
+                var inputReceived = $('#job-variables .variableValue');
                 for (var i = 0; i < inputReceived.length; i++) {
                     var input = inputReceived[i];
-                    inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': input.placeholder}
+                    if ($(input).prop("tagName")==='SELECT')
+                        inputVariables[input.id] = {'Name': input.name, 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
+                    else if ($(input).prop("tagName")==='INPUT'){
+                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
+                    } else if ($(input).prop("tagName")==='DIV'){
+                        var checkedRadio = $(input).find("input[type='radio']:checked");
+                        var checkRadioValue = $(checkedRadio).val();
+                        var inputName = $(checkedRadio).attr('name');
+                        inputVariables[input.id] = {'Name': inputName, 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
+                    }
                 }
                 readOrStoreVariablesInModel(inputVariables);
-                
+                var jobName = studioApp.models.jobModel.get("Name");
+                var jobProjectName = studioApp.models.jobModel.get("Project");
+                var jobDescription = studioApp.models.jobModel.get("Description");
+                var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
+                var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
+
                 var validationData = validate();
 
                 if (!validationData.valid) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
                     $('#job-variables').html(template);
                 } else if (check) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
+                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                     $('#job-variables').html(template);
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
                         submit();   
                     }else{
-                        planned_submit();
+                        $("#plan-workflow-modal").modal();
                     }
                     
                 }
@@ -404,13 +418,6 @@ define(
             var xml = studioApp.views.xmlView.generateXml();
             var htmlVisualization = studioApp.views.xmlView.generateHtml();
             StudioClient.submit(xml, htmlVisualization);
-        }
-
-    function planned_submit() {
-            var studioApp = require('StudioApp');
-            var xml = studioApp.views.xmlView.generateXml();
-            var htmlVisualization = studioApp.views.xmlView.generateHtml();
-            StudioClient.planned_submit(xml, htmlVisualization);
         }
 
         function validate() {
@@ -530,9 +537,25 @@ define(
             }
         }
 
+        function open_catalog_workflow() {
+            var studioApp = require('StudioApp');
+
+            // If a workflow is already opened, we don't import it (we would lose the current one)
+            if (studioApp.isWorkflowOpen()) {
+                var router = studioApp.router;
+                router.navigate("workflows/"+ studioApp.models.currentWorkflow.id, {trigger: true});
+            }
+            else {
+                // create a new workflow, open it and import the xml into it
+                var clickAndOpenEvent = jQuery.Event( "click" );
+                clickAndOpenEvent.openWorkflow = true;
+                $('.create-workflow-button').trigger(clickAndOpenEvent);
+            }
+        }
+
         $("#confirm-publication-to-catalog").click(function () {
             var headers = { 'sessionID': localStorage['pa.session'] };
-            var bucketId = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketid");
+            var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
             
             var studioApp = require('StudioApp');
             var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
@@ -543,9 +566,9 @@ define(
             payload.append('kind', 'workflow');
             payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
-            payload.append('contentType', "application/xml");
+            payload.append('objectContentType', "application/xml");
             
-            var url = '/catalog/buckets/' + bucketId + '/resources';
+            var url = '/catalog/buckets/' + bucketName + '/resources';
             var isRevision = ($("#catalog-publish-description").data("first") != true)
            
             if (isRevision){
@@ -571,7 +594,7 @@ define(
             var promise = $.ajax(postData).success(function (response) {
                 notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
 
-                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketId + '/resources/' + workflowName + '/raw'
+                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketName + '/resources/' + workflowName + '/raw'
                 console.log('the url of published object to catalog:', urlOfRawObjectFromCatalog);
 
                 var studioApp = require('StudioApp');
@@ -600,11 +623,11 @@ define(
             var studioApp = require('StudioApp');
             // We manually add the newly published workflow into the right bucket
             // without relying on Backbone's persistence layer
-            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_id).get("workflows");
+            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_name).get("workflows");
             workflows[workflows.length] = {
                 id: newWorkflow.id,
                 name: newWorkflow.name,
-                bucket_id: newWorkflow.bucket_id
+                bucket_name: newWorkflow.bucket_name
             };
         }
 
@@ -839,7 +862,9 @@ define(
         setInterval(function(){validate_job(true);}, 30000);
 
        return {
-           saveWorkflow: save_workflow
+           saveWorkflow: save_workflow,
+           getWorkflowFromCatalog : getWorkflowFromCatalog,
+           open_catalog_workflow : open_catalog_workflow
        };
 
     });

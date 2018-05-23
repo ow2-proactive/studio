@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="urn:proactive:jobdescriptor:3.9"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.9 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.9/schedulerjob.xsd"
-    name="SubmitJobAndWait" 
-    priority="normal"
-    onTaskError="continueJobExecution"
-     maxNumberOfExecution="2"
->
-  <taskFlow>
-    <task name="SubmitJobAndWait">
-      <description>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.10"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+	name="SubmitJobAndWait" priority="normal" onTaskError="continueJobExecution"
+	maxNumberOfExecution="2">
+	<genericInformation>
+		<info name="workflow.icon"
+			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png" />
+	</genericInformation>
+	<taskFlow>
+		<task name="SubmitJobAndWait">
+			<description>
         <![CDATA[ The simplest task, ran by a groovy engine. ]]>
-      </description>
-      <variables>
-        <variable name="workflowURL" value="http://try.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml" inherited="false" model="String"/>
-      </variables>
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+			</description>
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png" />
+			</genericInformation>
+			<variables>
+				<variable name="workflowURL"
+					value="http://try.activeeon.com:8080/workflow-catalog/buckets/1/workflows/4?alt=xml"
+					inherited="false" model="String" />
+			</variables>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 //Please add the job URL that you want to execute in Task Variables under the key 'workflowURL'
 
@@ -39,20 +44,24 @@ jobid = schedulerapi.submit(jobURL, variables, requestHeader)
 
 variables.put("jobID", jobid)
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-    </task>
-    <task name="cron_task">
-      <description>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+		<task name="cron_task">
+			<description>
         <![CDATA[ Will run every minutes ]]>
-      </description>
-      <depends>
-        <task ref="SubmitJobAndWait"/>
-      </depends>
-      <scriptExecutable>
-        <script>
-          <code language="groovy">
+			</description>
+			<genericInformation>
+				<info name="TASK.ICON"
+					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png" />
+			</genericInformation>
+			<depends>
+				<task ref="SubmitJobAndWait" />
+			</depends>
+			<scriptExecutable>
+				<script>
+					<code language="groovy">
             <![CDATA[
 schedulerapi.connect()
 
@@ -60,13 +69,13 @@ isFinished = schedulerapi.isJobFinished(variables.get("jobID"))
 
 variables.put("isFinished", isFinished)
 ]]>
-          </code>
-        </script>
-      </scriptExecutable>
-      <controlFlow >
-        <loop target="cron_task">
-          <script>
-            <code language="javascript">
+					</code>
+				</script>
+			</scriptExecutable>
+			<controlFlow>
+				<loop target="cron_task">
+					<script>
+						<code language="javascript">
               <![CDATA[
 // You can use a Cron Expression here
               // examples http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
@@ -76,10 +85,10 @@ if(!variables.get("isFinished")){
 	loop = false;
 }
 ]]>
-            </code>
-          </script>
-        </loop>
-      </controlFlow>
-    </task>
-  </taskFlow>
+						</code>
+					</script>
+				</loop>
+			</controlFlow>
+		</task>
+	</taskFlow>
 </job>

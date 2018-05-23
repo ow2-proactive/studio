@@ -6,9 +6,10 @@ define(['jquery',
         'xml2json',
         'text!proactive/templates/workflow-list.html',
         'text!proactive/templates/workflow-list-category.html',
-        'text!proactive/templates/workflow-list-entry.html'
+        'text!proactive/templates/workflow-list-entry.html',
+        'pnotify'
     ],
-    function ($, Backbone, Job, WorkflowList, XmlView, xml2json, workflowListTemplate, workflowListCategory, workflowListEntryTemplate) {
+    function ($, Backbone, Job, WorkflowList, XmlView, xml2json, workflowListTemplate, workflowListCategory, workflowListEntryTemplate,  PNotify) {
 
         "use strict";
 
@@ -37,6 +38,7 @@ define(['jquery',
                 'click .btn-remove': 'destroy'
             },
             open: function() {
+                PNotify.removeAll();
                 var app = this.options.app;
                 app.import(this.model);
                 app.router.navigate("workflows/" + this.model.get('id'));
@@ -142,6 +144,7 @@ define(['jquery',
                 this.listenToCollection(function() { list.open(openAfterFetch) });
             },
             open: function (id) {
+                PNotify.removeAll();
                 if (!id) {return;}
 
                 var model = this.collection.findWhere({'id':parseInt(id)});
@@ -153,6 +156,7 @@ define(['jquery',
                 }
                 var app = this.options.app;
                 app.import(model);
+                app.router.navigate("workflows/" + model.get('id'));
             },
             saveCurrentWorkflow: function (name, workflowXml, metadata) {
                 this._currentWorkflow().save(
@@ -173,4 +177,3 @@ define(['jquery',
             }
         });
     });
-

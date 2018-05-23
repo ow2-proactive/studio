@@ -32,17 +32,17 @@ define(
             publishCurrentButton.prop('disabled', !currentBucketRow);
 
             if (currentBucketRow){
-	        	var currentBucketId= $(currentBucketRow).data("bucketid");
+	        	var currentBucketName= $(currentBucketRow).data("bucketname");
 	            var studioApp = require('StudioApp');
 	            this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
 
-                var currentBucket = this.buckets.get(currentBucketId);
+                var currentBucket = this.buckets.findWhere({name: currentBucketName});
                 var workflows = currentBucket.get("workflows");
                 var editedWorkflow = null;
                 var name = studioApp.models.currentWorkflow.attributes.name;
                 var workflowsModel = new CatalogWorkflowCollection(
                 {
-                    id: currentBucket.id,
+                    bucketname: currentBucketName,
                     callback: function (workflows) {
                         _.each(
                         workflows,
@@ -59,7 +59,7 @@ define(
                 if (editedWorkflow){
 		            var revisionsModel = new CatalogLastWorkflowRevisionDescription(
 		            	{
-		            		bucketid: currentBucketId,
+		            		bucketname: currentBucketName,
 		            		workflowname: editedWorkflow.name,
 			            	callback: function (revision) {
 	            				var WorkflowDescription = _.template(workflowDescription);
@@ -90,8 +90,8 @@ define(
             this.$el.html(this.template());
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
-                var id = bucket.get("id");
-                this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketid: id}));
+                var bucketName = bucket.get("name");
+                this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
             }, this);
             // to open the browser on the first bucket
             this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0]);

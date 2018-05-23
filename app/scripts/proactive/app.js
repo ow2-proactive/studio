@@ -189,8 +189,15 @@ define(
             this.importNoReset(json);
         },
         isWorkflowOpen: function() {
-
             return this.views.xmlView != null;
+        },
+        openWorkflowFromCatalog : function(bucketName, workflowName) {
+            var that = this;
+            var url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
+            dom.getWorkflowFromCatalog(url, function (response) {
+                that.xmlToImport = new XMLSerializer().serializeToString(response);
+                dom.open_catalog_workflow();
+            });
         }
     };
 });

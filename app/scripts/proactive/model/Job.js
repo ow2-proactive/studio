@@ -11,16 +11,23 @@ define(
     'proactive/model/utils',
     'proactive/view/utils/undo', // TODO remove
     'proactive/config',
-    'proactive/rest/studio-client'
+    'proactive/rest/studio-client',
+    'pnotify',
+    'pnotify.buttons'
+
   ],
 
   // TODO REMOVE undoManager dependency - comes from view
-  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient) {
+  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient, PNotify) {
 
     "use strict";
 
     var that = this;
 
+    const myStack = {"dir1": "up", "firstpos1": "1", "dir2": "left", "push": "bottom"};
+    const GENERIC_INFORMATION = "genericInformation";
+    const INFO = "info"
+    const NAME = "name"
     return SchemaModel.extend({
       schema: {
         "Name": {
@@ -270,8 +277,6 @@ define(
                 for (var i in genericInformation) {
                   if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
                     hasDocumentation = true;
-                    var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                    var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                     var linkName = genericInformation[i]["Property Value"];
                     var documentationValue = genericInformation[i]["Property Value"];
                     break;
@@ -387,10 +392,26 @@ define(
         });
       },
       populate: function(obj, merging, isTemplate) {
+        var StudioApp = require('StudioApp');
+        // remove the unnecessary GI in case of appending workflow to the current one.
+        const COMMON_GI = ["bucketname","documentation", "group", "workflow.icon"];
         if (isTemplate) {
-          this.populateTemplate(obj, merging);
+            if(obj[GENERIC_INFORMATION]){
+                var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
+                if(jobGenericInfos !== 'null' && jobGenericInfos !== 'undefined'){
+                    var ExistingCommonGI = jobGenericInfos.filter(info => COMMON_GI.includes(info["Property Name"].toLowerCase())).map(a => a["Property Name"].toLowerCase());
+                }
+                if(obj[GENERIC_INFORMATION][INFO] instanceof Array){
+                   obj[GENERIC_INFORMATION][INFO] = obj[GENERIC_INFORMATION][INFO].filter(info => !ExistingCommonGI.includes(info["@attributes"][NAME].toLowerCase()));
+                }else{ // This is a workaround for "Controls tasks"
+                   if(Object.keys(obj[GENERIC_INFORMATION][INFO]).map(name => obj[GENERIC_INFORMATION][INFO][name]).filter(info => !ExistingCommonGI.includes(info[NAME].toLowerCase())).length == 0){
+                      obj[GENERIC_INFORMATION][INFO] = [];
+                   }
+                }
+            }
+            this.populateTemplate(obj, merging);
         } else {
-          this.populateSchema(obj, merging);
+        this.populateSchema(obj, merging);
         }
         this.convertCancelJobOnErrorToOnTaskError(obj);
 
@@ -508,28 +529,93 @@ define(
           })
         }
 
+        var genericInformation = this.attributes["Generic Info"];
+        var workflowVariables = this.attributes["Variables"];
+        // Find duplicates in generic information
+        PNotify.removeAll();
+        this.findDuplicates("Generic Info", genericInformation, "Property Name", "Property Value");
+        // Find duplicates in workflow variables
+        this.findDuplicates("Variables", workflowVariables, "Name", "Value");
         // Generate Urls for documentation
-        this.generateDocumentUrl();
+        this.generateDocumentUrl(genericInformation);
       },
+
       getBasicFields: function() {
         return ["Name", "Variables"]
       },
-      generateDocumentUrl: function() {
-        console.log("Fetching documentation in GI...");
 
-        // Get the job name and put it as name for the generated file
-        var genericInformation = this.attributes["Generic Info"];
-        var fileContent = "";
+      sortByKey: function(array, key) {
+          return array.sort((a, b) => a[key].localeCompare(b[key]));
+      },
+
+      filterByName: function(array, property, valeur){
+          var groupedByName = new Map();
+          array.forEach(function(gi) {
+            if (gi[property]){
+              if (gi[property] && !groupedByName.has(gi[property].toLowerCase())) {
+                groupedByName.set(gi[property].toLowerCase(), new Array());
+              }
+              groupedByName.get(gi[property].toLowerCase()).push(gi[valeur]);
+            }
+          });
+          groupedByName.forEach(function(v, k, map){if(v.length<=1) {map.delete(k);}});
+          return groupedByName;
+      },
+
+      findDuplicates: function(type, inputArray, property, valeur){
+         if (inputArray != null) {
+            console.log("Identification of duplicated " + type + "...");
+            var myArray = this.sortByKey(inputArray, property);
+            var mapResult = this.filterByName(myArray, property, valeur);
+            if(mapResult.size>0){
+                  this.alertUI('Duplicated ' + type + ' are detected',this.formatObjectsList(mapResult, property, valeur),'notice');
+            }
+          }
+      },
+
+      formatObjectsList: function(inputMap, propertyName, propertyValue) {
+          var message = '<span><table cellpadding = "5">';
+          var first = true;
+          inputMap.forEach(function(value, key, map){ first = true; message = message + '<tr valign = "top"><td><b>'+key+'</b></td><td>'+
+            value.map(function(v){
+              var str = "";
+              if (first){
+                   str = ("Initial Value present: ").bold() + v;
+                   first=false;
+              }
+              else{
+                  str = ("New Value imported: ").bold() + v;
+              }
+            return '<table style="width: 100%; max-width: 450px; table-layout: auto; word-break: break-word;"> <tr valign = "top"><td>&#8226;</td><td>'+str+'</td></tr></table>';}).join('')+'</td></tr>';}
+          );
+          message = message + '</table></span><br><b><i>Please chose which value is appropriate and remove the other(s).</i></b>';
+          return message;
+      },
+
+      alertUI: function (caption, message, type) {
+            new PNotify({
+                title: caption,
+                text: message,
+                textTrusted: true,
+                type: type,
+                opacity: .8,
+                width: '450px',
+                stack: myStack,
+                addclass: "myStack",
+                hide: false,
+                buttons: {
+                   sticker: false
+                }
+            });
+      },
+
+      generateDocumentUrl: function(genericInformation) {
         var linkName = "Undefined";
         var documentationValue = "Undefined";
-
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
           for (var i in genericInformation) {
             if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
-              fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-              fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
               linkName = genericInformation[i]["Property Value"];
-
               documentationValue = genericInformation[i]["Property Value"];
             }
           }
@@ -541,16 +627,12 @@ define(
         this.set({
           "Generic Info Documentation": "{\"name\":\"" + linkName + "\",\"url\":\"" + this.generateUrl(documentationValue) + "\"}"
         });
-
       },
+
       generateUrl: function(data) {
         var url;
 
         if (data) {
-          var file = new Blob([data], {
-            type: String
-          });
-
           if (data.toLowerCase() === 'undefined') {
             url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
           } else {

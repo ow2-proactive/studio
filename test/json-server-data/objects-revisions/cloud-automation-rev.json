@@ -24,8 +24,8 @@
           "label": "job_information"
         },
         {
-          "key": "pca.action.icon",
-          "value": "/cloud-automation/styles/patterns/img/cloud-automation_try.png",
+          "key": "workflow.icon",
+          "value": "/automation-dashboard/styles/patterns/img/wf-icons/cloud-automation_try.png",
           "label": "generic_information"
         },
         {

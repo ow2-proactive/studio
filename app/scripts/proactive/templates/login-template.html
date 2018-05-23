@@ -1,15 +1,17 @@
+
 <div id="login-view">
-    <div class="login-container">
+    <div class="login-container" id="login-container">
         <img src="images/logo_350.png" class="login-logo-image"/>
 
         <div class="login-header-container">
             <div class="login-header">Studio <span class="login-font-normal">login</span></div>
             <div class="login-form-container">
-                <form class="form-horizontal" role="form" id="login-form">
+                <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
                     <div class="form-group">
                         <label class="control-label" for="user">User: </label>
                         <div class="controls">
-                            <input type="text" id="user" required autofocus>
+                            <input type="text" style="display:none;" value="">
+                            <input type="text" id="user" value="" required autofocus>
                         </div>
                     </div>
                     <div class="form-group">
@@ -20,7 +22,7 @@
                     </div>
                     <div class="form-group">
                         <div class="buttons-container">
-                            <button type="submit" class="btn btn-primary pull-right">Connect</button>
+                            <button type="submit" class="btn btn-primary">Connect</button>
                         </div>
                     </div>
                 </form>

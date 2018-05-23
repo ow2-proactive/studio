@@ -30,10 +30,8 @@ define(
             setTemplatesBucketButton.prop('disabled', !currentBucketRow);
 
             if (currentBucketRow){
-	        	var currentBucketId= $(currentBucketRow).data("bucketid");
+	        	var currentBucketName= $(currentBucketRow).data("bucketname");
 	            this.highlightSelectedRow('#catalog-set-templates-'+ this.order +'-bucket-table', currentBucketRow);
-
-                var currentBucket = this.buckets.get(currentBucketId);
             }
 
         },
@@ -53,8 +51,8 @@ define(
             this.$el.html(this.template());
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
-                var id = bucket.get("id");
-                this.$('#catalog-set-templates-'+ this.order +'-bucket-table').append(BucketList({bucket: bucket, bucketid: id}));
+                var bucketName = bucket.get("name");
+                this.$('#catalog-set-templates-'+ this.order +'-bucket-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
             }, this);
             // to open the browser on the first bucket
             this.internalSelectBucket(this.$('#catalog-set-templates-'+ this.order +'-bucket-table tr')[0]);
