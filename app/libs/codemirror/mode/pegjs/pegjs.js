@@ -1,3 +1,16 @@
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"), require("../javascript/javascript"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror", "../javascript/javascript"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
 CodeMirror.defineMode("pegjs", function (config) {
   var jsMode = CodeMirror.getMode(config, "javascript");
 
@@ -11,7 +24,7 @@ CodeMirror.defineMode("pegjs", function (config) {
         inString: false,
         stringType: null,
         inComment: false,
-        inChracterClass: false,
+        inCharacterClass: false,
         braced: 0,
         lhs: true,
         localState: null
@@ -53,26 +66,22 @@ CodeMirror.defineMode("pegjs", function (config) {
           }
         }
         return "comment";
-      } else if (state.inChracterClass) {
-        if (stream.match(/^[^\]\\]+/)) {
-          return;
-        } else if (stream.match(/^\\./)) {
-          return;
-        } else {
-          stream.next();
-          state.inChracterClass = false;
-          return 'bracket';
-        }
+      } else if (state.inCharacterClass) {
+          while (state.inCharacterClass && !stream.eol()) {
+            if (!(stream.match(/^[^\]\\]+/) || stream.match(/^\\./))) {
+              state.inCharacterClass = false;
+            }
+          }
       } else if (stream.peek() === '[') {
         stream.next();
-        state.inChracterClass = true;
+        state.inCharacterClass = true;
         return 'bracket';
       } else if (stream.match(/^\/\//)) {
         stream.skipToEnd();
         return "comment";
       } else if (state.braced || stream.peek() === '{') {
         if (state.localState === null) {
-          state.localState = jsMode.startState();
+          state.localState = CodeMirror.startState(jsMode);
         }
         var token = jsMode.token(stream, state.localState);
         var text = stream.current();
@@ -101,3 +110,5 @@ CodeMirror.defineMode("pegjs", function (config) {
     }
   };
 }, "javascript");
+
+});

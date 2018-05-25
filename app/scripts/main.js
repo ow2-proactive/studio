@@ -65,15 +65,13 @@ require.config({
             deps: [
                 'backbone-forms'
             ]
-        },
-        codemirror: {
-            exports: 'CodeMirror'
-        },
-        codemirrorJs: { deps: [ 'codemirror' ]},
-        codemirrorXml: { deps: [ 'codemirror' ]},
-        codemirrorComment: { deps: [ 'codemirror' ]},
-        codemirrorMB: { deps: [ 'codemirror' ]}
+        }
     },
+    packages: [{
+        name: "codemirror",
+        location: "../libs/codemirror",
+        main: "lib/codemirror"
+      }],
     paths: {
         jquery: '../libs/jquery/jquery',
         'jquery.ui.core': '../libs/jquery-ui/ui/jquery.ui.core',
@@ -94,11 +92,6 @@ require.config({
         'pnotify': '../libs/pnotify/dist/pnotify',
         'pnotify.buttons': '../libs/pnotify/dist/pnotify.buttons',
         fileSaver: '../libs/FileSaver/FileSaver',
-        codemirror: '../libs/codemirror/lib/codemirror',
-        codemirrorJs: '../libs/codemirror/mode/javascript/javascript',
-        codemirrorXml: '../libs/codemirror/mode/xml/xml',
-        codemirrorComment: '../libs/codemirror/addon/comment/comment',
-        codemirrorMB: '../libs/codemirror/addon/edit/matchbrackets',
         jsplumb: '../libs/jsplumb/dist/js/jquery.jsPlumb-1.7.2-min',
         filesaver: '../libs/FileSaver/FileSaver',
         xml2json: 'thirdparties/xml2json',
