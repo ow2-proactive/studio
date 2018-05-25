@@ -7,7 +7,7 @@ define(
         'text!proactive/templates/job-template.html',
         'text!proactive/templates/workflow-view-template.html',
         'codemirror',
-        'codemirrorXml',
+        'codemirror/mode/xml/xml',
         'proactive/view/utils/escapeHtml'
     ],
 

@@ -1208,3 +1208,17 @@ li.success {
 .ui-pnotify.translucent.ui-pnotify-fade-in {
     opacity: .8;
 }
+
+.CodeMirror-focused .cm-matchhighlight {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
+    background-position: bottom;
+    background-repeat: repeat-x;
+}
+
+.cm-matchhighlight {background-color: lightgreen}
+
+.CodeMirror-selection-highlight-scrollbar {background-color: green}
+
+.CodeMirror-hints, .CodeMirror-hint, .CodeMirror-hint-active {
+    z-index:2147483647;
+}
