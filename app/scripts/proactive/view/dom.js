@@ -872,7 +872,7 @@ define(
                 return false;
             })
             $('#full-edit-modal').on('shown.bs.modal', function () {
-                $('#variable_reference_link').attr("href", config.docUrl)
+                $('#variable_reference_link').attr("href", config.docUrl + "/user/ProActiveUserGuide.html#_variables_quick_reference")
                 $(".CodeMirror").height($(".code-editor-container").height())
                 $("#set-script-content").data("editor").refresh()
             })
