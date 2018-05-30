@@ -8,6 +8,19 @@
             <div class="login-form-container">
                 <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
                     <div class="form-group">
+                        <img id="login_option_plus" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgklEQVR42mNgGDRg6cbD/4nFOA24+vk/QUzQgO5pq4nGOA0gxiUEDXjzC4EZ3apQ+CBM0IB3vxEYZAC6GEEDPv5GYJgByGIEDQBpwoWJMuDbX0SAwVxAUiD+/IvAMAOQxbAaAMIwA4ABDccwA5DFMAyAAZgBf/6jYnQxvAaQlRLJBQBTOhTbk2BpDQAAAABJRU5ErkJggg==" style="vertical-align:middle" name="isc_Ficon" eventpart="icon" suppress="TRUE" draggable="true" height="16" border="0" align="absmiddle" width="16">
+                        <img id="login_option_minus" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVR42mNgGDRg6cbD/4nFOA24+vk/QUzQgO5pq4nGOA0gxiUEDXjzCz8maMC73/gxQQM+/saPCRrA6FaFExNlwLe/FAbiz7/4MVYDQBhmADCg8WIMA2AAZsCf//gxXgPISonkAgBSlSKYRZjLygAAAABJRU5ErkJggg==" style="vertical-align:middle" name="isc_Ficon" eventpart="icon" suppress="TRUE" draggable="true" height="16" border="0" align="absmiddle" width="16">
+                        <label class="control-label"><div id="login_option_label" style="color:#003168;font-size: 1.2em;cursor:pointer">more options</div></label>
+                    </div>
+                    <div id="login_option_mode" class="form-group">
+                        <label class="control-label">Mode: </label>
+                        <input type="text" id="theinput" name="theinput" />
+                        <select name="thelist" onChange="combo(this, 'theinput')" onMouseOut="comboInit(this, 'theinput')" >
+                            <option>Basic</option>
+                            <option>Credentials</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="user">User: </label>
                         <div class="controls">
                             <input type="text" style="display:none;" value="">
@@ -18,6 +31,15 @@
                         <label class="control-label" for="password">Password: </label>
                         <div class="controls">
                             <input type="password" id="password" required>
+                        </div>
+                    </div>
+                    <div id="login_option_ssh" class="form-group">
+                        <input id="login_option_ssh_checkbox" type="checkbox">
+                    </div>
+                    <div id="login_attach_file" class="form-group">
+                        <div class="buttons-container">
+                            <button type="submit" class="btn btn-primary">Browse</button>
+                            <label class="control-label">No file selected</label>
                         </div>
                     </div>
                     <div class="form-group">
