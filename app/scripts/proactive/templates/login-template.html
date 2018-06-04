@@ -10,11 +10,11 @@
                     </div>
                     <div style="cursor:pointer;float:right;width:50%;padding-right:15px;text-align:right">
                         <div id="login-option-plus">
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgklEQVR42mNgGDRg6cbD/4nFOA24+vk/QUzQgO5pq4nGOA0gxiUEDXjzC4EZ3apQ+CBM0IB3vxEYZAC6GEEDPv5GYJgByGIEDQBpwoWJMuDbX0SAwVxAUiD+/IvAMAOQxbAaAMIwA4ABDccwA5DFMAyAAZgBf/6jYnQxvAaQlRLJBQBTOhTbk2BpDQAAAABJRU5ErkJggg==" style="vertical-align:middle" name="isc_Ficon" eventpart="icon" suppress="TRUE" draggable="true" height="16" border="0" align="absmiddle" width="16">
+                            <img src="images/plus.png"  style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
                             <span style="cursor:pointer" class="login-font-normal">more options</span>
                         </div>
                         <div id="login-option-minus" style="display:none">
-                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAZ0lEQVR42mNgGDRg6cbD/4nFOA24+vk/QUzQgO5pq4nGOA0gxiUEDXjzCz8maMC73/gxQQM+/saPCRrA6FaFExNlwLe/FAbiz7/4MVYDQBhmADCg8WIMA2AAZsCf//gxXgPISonkAgBSlSKYRZjLygAAAABJRU5ErkJggg==" style="vertical-align:middle" name="isc_Ficon" eventpart="icon" suppress="TRUE" draggable="true" height="16" border="0" align="absmiddle" width="16">
+                            <img src="images/minus.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
                             <span class="login-font-normal">less options</span>
                         </div>
                     </div>
@@ -23,16 +23,16 @@
                 <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
                     <div id="login-options" class="form-group" style="display:none">
                         <label class="control-label">Mode: </label>
-                        <select id="login-mode" class="controls" name="login_mode_list">
-                            <option value="basic">Basic</option>
-                            <option value="credentials">Credentials</option>
+                        <select id="login-mode" class="controls" name="login_mode_list" style="font-size:11px">
+                            <option value="basic"  style="font-size:11px">Basic</option>
+                            <option value="credentials"  style="font-size:11px">Credentials</option>
                         </select>
                     </div>
                     <div id="login-basic">
                         <div class="form-group">
                             <label class="control-label" for="user">User: </label>
                             <div class="controls">
-                                <input type="text" style="display:none;" value="">
+                                <input type="text" style="display:none;"  class="login-form" value="">
                                 <input type="text" id="user" value="" required autofocus>
                             </div>
                         </div>
@@ -44,23 +44,26 @@
                         </div>
                         <div id="login-ssh" class="form-group" style="display:none">
                             <input id="login-ssh-checkbox" type="checkbox">
-                            <span class="login-font-normal">Use SSH private key</span>
-                            <div id="login-ssh-button" class="buttons-container" style="display:none">
-                                <button type="submit">Browse</button>
-                                <label class="control-label">No file selected</label>
+                            <span  id="login-ssh-label" class="login-form">Use SSH private key</span>
+                            <div align="center">
+                                <input id="login-sshkey-file" type="file" class="login-form" style="display:none">
                             </div>
                         </div>
                     </div>
                     <div id="login-credentials" class="form-group" style="display:none">
-                        <div class="buttons-container">
-                            <button type="submit">Browse</button>
-                            <button type="submit">Create credentials</button>
-                            <label class="control-label">No file selected</label>
+                        <span class="buttons-container">
+                            <div align="center">
+                              <input id="login-creds-file" type="file" class="login-form">
+                            </div>
+                            <div id="create-credentials" class="file-selector">
+                                <img src="images/key.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
+                                <span >Create Credentials</span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="buttons-container">
-                            <button type="submit" class="btn btn-primary">Connect</button>
+                            <button id="login-connect" type="submit">Connect</button>
                         </div>
                     </div>
                 </form>

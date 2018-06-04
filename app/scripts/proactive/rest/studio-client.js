@@ -35,9 +35,6 @@ define(
 
             login: function(creds, onSuccess) {
                 var that = this;
-
-                console.log("Authenticating", creds)
-
                 $.ajax({
                     type: "POST",
                     url: config.restApiUrl + "/login",

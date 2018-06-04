@@ -42,12 +42,6 @@ html, body {
     padding-bottom: 38px;
 }
 
-.buttons-container {
-    padding-top: 10px;
-    width: 100%;
-    position: relative;
-}
-
 .login-logo-image {
     width: 349px;
     height: 75px;
@@ -55,6 +49,25 @@ html, body {
 
 .login-font-normal {
     font-weight: normal;
+}
+
+.file-selector {
+    cursor : pointer;
+    font-size : 11px;
+    margin-top : 6px;
+    margin-bottom : 6px;
+}
+
+.login-form {
+    font-size : 11px !important;
+    background-color : #f0f0f0;
+    border: 0px #f0f0f0 !important;
+    box-shadow: inset 0 1px 1px rgba(198, 191, 189, 0);
+    align : center;
+}
+
+button {
+    font-size : 11px;
 }
 
 #login-view label {
