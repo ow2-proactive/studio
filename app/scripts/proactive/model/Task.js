@@ -474,10 +474,9 @@ define(
                   }
                 }
               } else{
-                console.log ("here");
                 hasDocumentation = false;
                 linkName = "Undefined";
-                documentationValue = null;
+                documentationValue = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
               }
 
               // Set Value
