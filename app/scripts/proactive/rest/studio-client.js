@@ -38,10 +38,8 @@ define(
                 $.ajax({
                     type: "POST",
                     url: config.restApiUrl + "/login",
-                    data: {
-                        username: creds['user'],
-                        password: creds['pass']
-                    },
+                    dataType: "json",
+                    data: creds,
                     success: function(data) {
                         // ProActive Studio login request return invalid json with status code 200
                         console.log("Should not be there", data)
@@ -52,7 +50,7 @@ define(
                             that.alert("Connected", "Successfully connected user", 'success');
                             console.log("Session ID is " + data.responseText)
                             localStorage['pa.session'] = data.responseText;
-                            localStorage['pa.login'] = creds['user'];
+                            localStorage['pa.login'] = creds['username'];
                             return onSuccess();
                         } else {
                             var reason = data.responseText.length > 0 ? data.responseText : "";
