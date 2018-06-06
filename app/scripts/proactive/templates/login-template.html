@@ -22,7 +22,7 @@
                 <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
                     <div id="login-options" class="form-group" style="display:none">
                         <label class="control-label">Mode: </label>
-                        <select id="login-mode" class="controls font-size-11" name="login_mode_list">
+                        <select id="login-mode" name="login-mode" class="controls font-size-11">
                             <option value="basic">Basic</option>
                             <option value="credentials">Credentials</option>
                         </select>
@@ -31,28 +31,27 @@
                         <div class="form-group">
                             <label class="control-label" for="username">User: </label>
                             <div class="controls">
-                                <input type="text" style="display:none;"  class="login-form" value="">
-                                <input type="text" id="username" value="" required autofocus>
+                                <input type="text" id="username" name="username" value="" required autofocus>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="password">Password: </label>
                             <div class="controls">
-                                <input type="password" id="password" required>
+                                <input type="password" id="password" name="password" required>
                             </div>
                         </div>
                         <div id="login-ssh" class="form-group" style="display:none">
                             <input id="login-ssh-checkbox" type="checkbox">
                             <span  id="login-ssh-label" class="login-form">Use SSH private key</span>
                             <div align="center">
-                                <input id="sshkey" type="file" accept="text/*" class="login-form" style="display:none">
+                                <input type="file" id="sshkey" name="sshkey" accept="text/*" class="login-form" style="display:none">
                             </div>
                         </div>
                     </div>
                     <div id="login-credentials" class="form-group" style="display:none">
                         <div class="buttons-container">
                             <div align="center">
-                              <input id="credential" type="file" class="login-form">
+                              <input name="credential" id="credential" type="file" class="login-form">
                             </div>
                             <div id="create-credentials" class="file-selector">
                                 <img src="images/key.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">

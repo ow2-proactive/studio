@@ -23,7 +23,7 @@ define(
             },
 
             events: {
-                "click #login-connect"     : "login"            ,
+                "submit form"              : "login"            ,
                 "click #create-credentials": "createCredentials",
                 "click #login-option-plus" : "showOptions"      ,
                 "click #login-option-minus": "hideOptions"      ,
@@ -38,20 +38,13 @@ define(
                 event.preventDefault();
                 var that = this;
                 var form = $(event.target);
-                var loginData = { };
-
+                var loginData = new FormData();//document.getElementById('login-form'));
                 if($('#login-mode').val() === "credentials"){
-                    var lData = {
-                        credential : credentialFile
-                    }
-                    loginData = lData;
-                }else {
-                    var lData = {
-                        username   : $("#username").val(),
-                        password   : $("#password").val(),
-                        sshkey     : sshKeyFile
-                    }
-                    loginData = lData;
+                    loginData.append("credential", credentialFile);
+                }else{
+                    loginData.append("sshkey", sshKeyFile);
+                    loginData.append("username", $('#username').val());
+                    loginData.append("password", $('#password').val());
                 }
 
                 StudioClient.login(loginData, function() {
@@ -143,7 +136,7 @@ define(
             fill: function() {
                 var username = this.getCookie('username');
                 if (username != "null") {
-                    $("#user").val(username);
+                    $("#username").val(username);
                 }
 
             },
