@@ -1222,3 +1222,27 @@ li.success {
 .CodeMirror-hints, .CodeMirror-hint, .CodeMirror-hint-active {
     z-index:2147483647;
 }
+
+.hover-editor-container {
+    position: relative;
+}
+
+.hover-editor-content {
+    display:none;
+    position:absolute;
+    top:1.5em;
+    left:5.5em;
+    padding: 0.2em 0.6em;
+    border:1px solid #996633;
+    background-color:#FFF;
+    color:#000;
+    z-index:13000;
+    width:220px;
+    text-align:left;
+    font-size:10px
+
+}
+
+.hover-editor-container:hover .hover-editor-content {
+    display: block;
+}

@@ -849,7 +849,8 @@ define(
                     "Shift-Cmd-F": "replace",
                     "Shift-Tab": "indentAuto",
                     "Ctrl-]":"indentMore", "Cmd-]":"indentMore",
-                    "Ctrl-[":"indentLess", "Cmd-]":"indentLess"
+                    "Ctrl-[":"indentLess", "Cmd-]":"indentLess",
+                    "Ctrl-K Ctrl-1":"foldAll","Cmd-K Cmd-1":"foldAll"
                     },
                     foldGutter: true,
                     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
