@@ -30,7 +30,7 @@ define(
                 "change #login-mode"       : "switchMode"       ,
                 "click #login-ssh-checkbox": "sshOption"        ,
                 "click #login-ssh-label"   : "sshOption"        ,
-                "change #credential"       : "addFile"          ,
+                "change #credential"       : function(){this.addFile("credential")} ,
                 "change #sshkey"           : function(){this.addFile("sshkey")}
             },
 
@@ -38,17 +38,27 @@ define(
                 event.preventDefault();
                 var that = this;
                 var form = $(event.target);
-                var loginData = {
-                    username   : $("#username").val(),
-                    password   : $("#password").val(),
-                    sshkey     : sshKeyFile
+                var loginData = { };
+
+                if($('#login-mode').val() === "credentials"){
+                    var lData = {
+                        credential : credentialFile
+                    }
+                    loginData = lData;
+                }else {
+                    var lData = {
+                        username   : $("#username").val(),
+                        password   : $("#password").val(),
+                        sshkey     : sshKeyFile
+                    }
+                    loginData = lData;
                 }
 
                 StudioClient.login(loginData, function() {
                     // on success
                     that.remove();
                     that.options.app.login();
-                })
+                });
             },
 
            createCredentials: function(event) {
@@ -106,9 +116,9 @@ define(
  * credentialFile variable. The object is then converted in a json when clicked on connect button.
  */
             addFile : function (fileId) {
-                var files = document.getElementById(fileId).files;
-                var file = {};
-                if (!(document.getElementById(fileId))) {
+                var input = document.getElementById(fileId);
+                var files = input.files;
+                if (!input) {
                     alert("Couldn't find the specified file");
                 }
                 else if (!files) {
@@ -120,20 +130,13 @@ define(
                 else {
                     var fr = new FileReader( );
                     fr.onload = function () {
-                        file["content"] = fr.result;
+                        if(fileId === "sshkey"){
+                            sshKeyFile = fr.result;
+                        }else {
+                            credentialFile = fr.result;
+                        }
                     };
-                    fr.readAsDataURL(files[0]);
-                    file = {
-                        lastModified     : files[0].lastModified,
-                        name             : files[0].name,
-                        size             : files[0].size,
-                        type             : files[0].type
-                    }
-                }
-                if(fileId === "sshkey"){
-                    sshKeyFile = file;
-                }else {
-                    credentialFile = file;
+                    fr.readAsText(files[0]);
                 }
             },
 
