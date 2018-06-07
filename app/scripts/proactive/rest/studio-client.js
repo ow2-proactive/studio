@@ -67,29 +67,11 @@ define(
  * -----------------------------106259393478037601194543269--
  * ```
  *
- * Third login using username and password.
- * ```
- * -----------------------------16464589509518589191002728396
- * Content-Disposition: form-data; name="username"
- *
- * admin
- * -----------------------------16464589509518589191002728396
- * Content-Disposition: form-data; name="password"
- *
- * asdfasdf
- * -----------------------------16464589509518589191002728396
- * Content-Disposition: form-data; name="sshkey"; filename=""
- * Content-Type: application/octet-stream
- *
- *
- * -----------------------------16464589509518589191002728396--
- * ```
 */
             login: function(creds, onSuccess) {
                 var that = this;
                 $.ajax({
                     url: config.restApiUrl + "/login",
-                    // /currentuser
                     data: creds,
                     cache: false,
                     contentType: false,
@@ -213,7 +195,7 @@ define(
 
                 $.ajax({
                     url: config.restApiUrl + '/classes',
-                    data: JSON.stringify(data),
+                    data: data,
                     cache: false,
                     contentType: false,
                     processData: false,
