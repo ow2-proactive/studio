@@ -106,32 +106,6 @@ define(
                             that.alert("Connected", "Successfully connected user", 'success');
                             console.log("Session ID is " + data.responseText)
                             localStorage['pa.session'] = data.responseText;
-                            localStorage['pa.login'] = creds.get('username');
-
-                            //retrieve username to customize studio logout button
-                            $.ajax({
-                                type: 'GET',
-                                url: config.restApiUrl + "/currentuser",
-                                beforeSend: function(xhr) {
-                                    xhr.setRequestHeader('sessionid', localStorage['pa.session']);
-                                },
-                                success: function(data) {
-                                    if (data !== "") {
-                                        console.log("Connected to the studio", data);
-                                        success();
-                                    } else {
-                                        console.log("Not connected to the studio PEDROOO", data);
-                                    }
-                                    // ProActive Studio login request return invalid json with status code 200
-                                    console.log("I am here!!!")
-                                    localStorage['pa.login'] = "Vote4Pedro";
-                                },
-                                error: function(data) {
-                                        console.log("Not connected to the studio", data);
-                                        localStorage.removeItem('pa.session');
-                                        fail()
-                                }
-                            });
                             return onSuccess();
                         } else {
                             var reason = data.responseText.length > 0 ? data.responseText : "";
@@ -209,6 +183,29 @@ define(
                 } else {
                     fail();
                 }
+            },
+
+            //customize client side, set localStorage['pa.login'] with server username for current session
+            setCurrentUser : function () {
+                var that = this;
+                $.ajax({
+                    type: 'GET',
+                    url: config.restApiUrl + "/currentuser",
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('sessionid', localStorage['pa.session']);
+                    },
+                    success: function(data) {
+                        // ProActive Studio login request return invalid json with status code 200
+                        console.log("Connected to the studio", data);
+                        // ProActive Studio login request return invalid json with status code 200
+                        console.log("Current username is " + data.responseText)
+                        localStorage['pa.login'] = data.responseText;
+                    },
+                    error: function(data) {
+                        var reason = data.responseText.length > 0 ? data.responseText : "";
+                        that.alert("Cannot retrieve username from searver", reason, 'error');
+                    }
+                });
             },
 
             uploadBinaryFile: function(data, success, error) {
