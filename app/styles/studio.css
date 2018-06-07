@@ -1246,3 +1246,7 @@ li.success {
 .hover-editor-container:hover .hover-editor-content {
     display: block;
 }
+
+.hover-editor-content-hovered {
+    display: block;
+}
