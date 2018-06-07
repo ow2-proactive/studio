@@ -10,9 +10,6 @@ define(
 
         "use strict";
 
-        var sshKeyFile = {};
-        var credentialFile = {};
-
         return Backbone.View.extend({
             template: _.template(loginTemplate),
 
@@ -29,9 +26,7 @@ define(
                 "click #login-option-minus": "hideOptions"      ,
                 "change #login-mode"       : "switchMode"       ,
                 "click #login-ssh-checkbox": "sshOption"        ,
-                "click #login-ssh-label"   : "sshOption"        ,
-                "change #credential"       : function(){this.addFile("credential")} ,
-                "change #sshkey"           : function(){this.addFile("sshkey")}
+                "click #login-ssh-label"   : "sshOption"
             },
 
             login: function(event) {
@@ -40,11 +35,11 @@ define(
                 var form = $(event.target);
                 var loginData = new FormData();//document.getElementById('login-form'));
                 if($('#login-mode').val() === "credentials"){
-                    loginData.append("credential", credentialFile);
+                    loginData.append("credential", $("#credential")[0].files[0]);
                 }else{
-                    loginData.append("sshkey", sshKeyFile);
                     loginData.append("username", $('#username').val());
                     loginData.append("password", $('#password').val());
+                    loginData.append("sshKey", $("#sshKey")[0].files[0]);
                 }
 
                 StudioClient.login(loginData, function() {
@@ -98,41 +93,11 @@ define(
 
             sshOption : function () {
                 if($('#login-ssh-checkbox').is(":checked")) {
-                    $('#sshkey').show();
+                    $('#sshKey').show();
                 }else{
-                    $('#sshkey').hide();
+                    $('#sshKey').hide();
                 }
                 $('#login-ssh-checkbox').blur();
-            },
-
-/**
- * Add files to the variables that store files, this will upload the content into a JavaScript object.
- * Accept either "sshkey" to add the ssh private key, or by default will store the file content on the
- * credentialFile variable. The object is then converted in a json when clicked on connect button.
- */
-            addFile : function (fileId) {
-                var input = document.getElementById(fileId);
-                var files = input.files;
-                if (!input) {
-                    alert("Couldn't find the specified file");
-                }
-                else if (!files) {
-                    alert("This browser doesn't seem to support files upload");
-                }
-                else if (!files[0]) {
-                    alert("Please select a valid file");
-                }
-                else {
-                    var fr = new FileReader( );
-                    fr.onload = function () {
-                        if(fileId === "sshkey"){
-                            sshKeyFile = fr.result;
-                        }else {
-                            credentialFile = fr.result;
-                        }
-                    };
-                    fr.readAsText(files[0]);
-                }
             },
 
             fill: function() {
