@@ -37,7 +37,7 @@ define(
                 if($('#login-mode').val() === "credentials"){
                     loginData.append("credential", $("#credential")[0].files[0]);
                 }else{
-                    loginData.append("username", $('#username').val());
+                    loginData.append("username", $('#user').val());
                     loginData.append("password", $('#password').val());
                     loginData.append("sshKey", $("#sshKey")[0].files[0]);
                 }
@@ -101,9 +101,9 @@ define(
             },
 
             fill: function() {
-                var username = this.getCookie('username');
-                if (username != "null") {
-                    $("#username").val(username);
+                var user = this.getCookie('user');
+                if (user!= "null") {
+                    $("#user").val(user);
                 }
 
             },
@@ -128,8 +128,8 @@ define(
                 var that = this;
                 that.$el = $(that.template());
 
-                // get the cookie variable "username"
-                var username = this.getCookie('username');
+                // get the cookie variable "user"
+                var user = this.getCookie('user');
 
                 $('body').append(that.$el).show();
 
@@ -144,7 +144,7 @@ define(
                     console.log("Login Required");
 
                     $('body').show();
-                    // Set username input field value to "username" cookie variable if defined
+                    // Set user input field value to "user" cookie variable if defined
                     // Otherwise, keep the usual browser's behavior (stored credentials, cached login name)
                     that.fill();
                 });
