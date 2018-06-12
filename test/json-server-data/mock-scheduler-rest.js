@@ -2,6 +2,8 @@
 var PORT = 9000;
 var jsonServer = require('json-server');
 var express = require('express');
+var parseFormdata = require('parse-formdata')
+
 var server = jsonServer.create();
 var bucket1000ResRouter = jsonServer.router('test/json-server-data/buckets-resources/bucket-id-1000-res.json');
 var bucket1001ResRouter = jsonServer.router('test/json-server-data/buckets-resources/bucket-id-1001-res.json');
@@ -21,31 +23,34 @@ server.use(middlewares);
 
 server.post('/rest/studio/login', function (req, res, next) {
     console.log('LOGIN');
-    var data = "";
-    req.on('data', function(chunk) {
-	console.log("Received body data:");
-	console.log(chunk.toString());
-	data += chunk.toString();
-    });
-    req.on('end', function() {
-	console.log('body:');
-	console.log(data);
-	
-	// We assume the request is well formed
-	var pairs = data.split('&');
-	var username = pairs[0].split('=')[1];
-	var password = pairs[1].split('=')[1];
+    parseFormdata(req, function (err, data) {
+        console.log("Received body data:");
+    	console.log('received:');
+    	console.log(JSON.stringify(data));
+        if (err) throw err
 
-	// check the user/pass
-	var statusCode = 404;
-	if (username == 'user' && password == 'pwd') {
-	    console.log('login successful');
-	    statusCode = 200;
-	}
-	res.status(statusCode);
-	res.setHeader('content-type', 'application/json');
-	res.write('MOCKED_SESSION_ID');
-	res.end();
+        if (err) throw err
+            console.log('fields:', data.fields)
+            data.parts.forEach(function (part) {
+                console.log('part:', part.fieldname)
+            })
+        // We assume the request is well formed
+        var username = data.fields.username;
+        var password = data.fields.password;
+
+        console.log("username : "+ username);
+        console.log("password : "+ password);
+
+        // check the user/pass
+        var statusCode = 404;
+        if (username === 'user' && password === 'pwd') {
+            console.log('login successful');
+            statusCode = 200;
+        }
+        res.status(statusCode);
+        res.setHeader('content-type', 'application/json');
+        res.write('MOCKED_SESSION_ID');
+        res.end();
     });
 });
 

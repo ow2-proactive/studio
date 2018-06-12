@@ -33,18 +33,51 @@ define(
                 });
             },
 
+/*
+ * Need to send a application/multipart-form, need to use the sshKey like this K must be a capital letter.
+ *
+ * examples from scheduler/portal/login:
+ *
+ * First login using simply the credentials:
+ * ```
+ * -----------------------------11455341699611662118707578
+ * Content-Disposition: form-data; name="credential"; filename="admin_cred.txt"
+ * Content-Type: text/plain
+ *
+ * UlNBCjEwMjQKUlNBL0VDQi9QS0NTMVBhZGRpbmcKRco6zdaD+Rw0Euo+unkCnCxsOymQhOARhcQ0vo0G/hVQpjn2cRFhSkhsX0jf3UY6r091A87gK+/zp66M2Dx2uop0q9248qtLMjONKVc/5mpQchU1K2fa6gcCeB5BRR95ZAaISTt9wuficndy1kqGC/RGYywugtvB+41mR3lSR/eMvnKoR8DFBFSWrJoNBqkm9TsbOuFWZSoTm1kEpg38MKGQUQHhf7jTUmfF4xtWorssm64bEODPFm4+OJWpLc0WIhz8BS5y7jbZGQhelgHb8pbP9k8IvvYuCVglEhl7s8r+mo2fhgzbh0HROzPIMG1UhkEIfJJJ2eLFQkjUvKoHH8xzzaZVLGkSP6aZ0M48xIxvbST7wFsMufBz3BX5Z7uC4Rtzx+Uo+sWkLlsdCCTnd9OqLusmdeEec/jcHaCfNG+NC9hB5Y1QJF9VUxuU4h0GnSajHM9HKOUheuRxc5DqxjQPDnhg9PjFurJfBb05WKlZR4VpipgH3Os50bxt6a3K4NDr5DBpSIUrv+Y4GX195i9TlJZ/QsqH1ac2C/D4lpvJNr/Yi3j9zdMIXAK8gtPTu+RRFgl/6j3DfkSSmPdVkZz3msDdl4wBZDEnzHz4BBSkdG+cuo7roGqCTATwKmJktQN6Foy9G1Ubcn1Fnn/uitnbB5N96wr2qUE53WB/Xvtxpk9utOIrdYtBqey6ZXbEbk/gnmnTCU+3SC8bSMmehnmtiUIvnHbIfq8S4tbAyZrL9gYT21pl4Nn1It4AxqSAWffYwTO9hz1kNBuBXG8QPEoAE3YHMGOW3+2A9tENlRngQ27/1X048iGhitimIjlpPzQ9k95mMnCQozJlLiBc6xdcjZMvYPaIeSAWCJBaZejVcQppsTwmLnY2mG3g2/dOzy2CKVBJVzt+b2IGjXaVEOd8482TP+NqY2p1pKi3COKZKW6iIQo4dr1eaIjYu/F80AxlTvedCtbl5uSC5Xf5ale9PbDHe3i73BysOFFK/4datIoEMq8ebe80EP9QfFqPW48BpPoUsmsg5yDc9GtTs4VCC5Bif5SrIbU6eQtbqgABwFUzwsW4inomYmik+zp+F5//5GXBbg30D+6jqvVIfTEzA7yFWBdVoOf57WkMM/JFMKlUGRwqSiP2rq3CXrqEZ+hiTNFra+GukJLWuOYnhokk0+xY3A2Jl9brgsJstvhfgHp1h6k1ubz4/JI6DbgfGYH9l/0MIbIVFcwDmA1JrBnS5uMR6fNEveKTDoEF1K5AWKqPBKGH+tPV4uwIQ7gnAHV42YSEXnGl+eu4tLxc5sEHPTwtGlvgT94//QTNoTn6YoPwwNIUAkWcbkKaruz0iidlIkPdp0pvcCrd1XwflQbwz7KlTGM5+nPtqEa56aMHg/5KWl/hNZlBZI13WdVowue+9+b/oEtEtFw98yv6RFrf40YLnOXg6Wv4KDigGtMrlPnHtjZSmAS3quUDuXQc1AgpgqM0G8vKLN3Na32o0QFUT+hQ6Ttl5umSBHhI5qxcfut0JfU5CAub0kK9l+7WQtJ2YwEMdis4XduNFZsbsdsU4O0Y0l0w4BD2CIgWFE4Wcc9Yglc1UyBb1s8o/1cEYUPFCLD+4XQQ8F/oT39g912r5SXQiOgFz5d1gAZJA/yiewhIuCdY4Ja77bvTNczxvcSDYB5BIlf9hnhgKLY2BV543YjITsN9pyTJpT7pOt3QyVnVLvjNd35CJI8CJjevhN+QeXfr/ThIpKyN3/2rBhFJhy3SQzE7GlpQ0h+JYbZkCaUpzAKsMJi0vdcyXJo2r6PZP3NUXtYxLwl/qi0oCp/OO+TipXMlW54po/vQyiGJ+Hq9eOIIRlDIDWjagRG4vwr1RtW1WxOZyxOR8OZf2sZk1LaZR9VyH69hdsOvpPbSUlo4x8rXYKQ1y/YhvUjDNnmjxRfJD4SK2ziJWI4BXNUFkF1eqxsVsJW1jWbQq6KzUfJ0v8PSTUnqX5jKqe2vMhC27Ey3CYJDZMKJjw1+ojuTFnx2eF+X4kfB2w6SQCuEAKFGCG3CYz92Z4qw/+jRzHh61vtnHfUmpuQs30GjgvRiT5enw2KGxRjay3Ir8FtX7qHSNrWCeGjNGiBE9fp2/eHUJCKbW2itJ/1klQwoKP2J3q99AcjtpfX01vSLYG9aPiC70jESEpC4qA5lkNBGYW5wmYYHNg1E5lkiqHnVUfUhhrlRHJImcFoJuflqCRw=
+ * -----------------------------11455341699611662118707578--
+ * ```
+ *
+ * Second login using username and password, without SSH key.
+ *
+ * ```
+ * -----------------------------106259393478037601194543269
+ * Content-Disposition: form-data; name="username"
+ *
+ * admin
+ * -----------------------------106259393478037601194543269
+ * Content-Disposition: form-data; name="password"
+ *
+ * asdfasdf
+ * -----------------------------106259393478037601194543269
+ * Content-Disposition: form-data; name="sshKey"; filename="admin_cred.txt"
+ * Content-Type: text/plain
+ *
+ * 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
+ * -----------------------------106259393478037601194543269--
+ * ```
+ *
+*/
             login: function(creds, onSuccess) {
                 var that = this;
-
-                console.log("Authenticating", creds)
-
                 $.ajax({
-                    type: "POST",
                     url: config.restApiUrl + "/login",
-                    data: {
-                        username: creds['user'],
-                        password: creds['pass']
-                    },
+                    data: creds,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST',
                     success: function(data) {
                         // ProActive Studio login request return invalid json with status code 200
                         console.log("Should not be there", data)
@@ -55,7 +88,6 @@ define(
                             that.alert("Connected", "Successfully connected user", 'success');
                             console.log("Session ID is " + data.responseText)
                             localStorage['pa.session'] = data.responseText;
-                            localStorage['pa.login'] = creds['user'];
                             return onSuccess();
                         } else {
                             var reason = data.responseText.length > 0 ? data.responseText : "";
@@ -133,6 +165,32 @@ define(
                 } else {
                     fail();
                 }
+            },
+
+            //customize client side, set localStorage['pa.login'] with server username for current session
+            setCurrentUser : function () {
+                var that = this;
+                $.ajax({
+                    type: 'GET',
+                    url: config.restApiUrl + "/currentuser",
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('sessionid', localStorage['pa.session']);
+                    },
+                    success: function(data) {
+                        //does not  return a json so even in case of success goes to error callback
+                        console.log("Should not be here")
+                    },
+                    error: function(data) {
+                        if (data.status == 200) {
+                            // ProActive Studio login request return invalid json with status code 200
+                            console.log("Current username is " + data.responseText)
+                            localStorage['pa.login'] = data.responseText;
+                        }else{
+                            console.log("Problems to retrieve current user " + data.responseText)
+                        }
+
+                    }
+                });
             },
 
             uploadBinaryFile: function(data, success, error) {

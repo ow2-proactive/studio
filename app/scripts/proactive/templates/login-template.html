@@ -1,28 +1,67 @@
-
 <div id="login-view">
     <div class="login-container" id="login-container">
         <img src="images/logo_350.png" class="login-logo-image"/>
 
         <div class="login-header-container">
-            <div class="login-header">Studio <span class="login-font-normal">login</span></div>
-            <div class="login-form-container">
-                <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
-                    <div class="form-group">
-                        <label class="control-label" for="user">User: </label>
-                        <div class="controls">
-                            <input type="text" style="display:none;" value="">
-                            <input type="text" id="user" value="" required autofocus>
+            <div class="login-header" align="left">
+                    <div style="float:left;width:50%">
+                        Studio <span class="login-font-normal">login</span>
+                    </div>
+                    <div style="cursor:pointer;float:right;width:50%;padding-right:15px;text-align:right">
+                        <div id="login-option-plus">
+                            <img src="images/plus.png"  style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
+                            <span style="cursor:pointer" class="login-font-normal">more options</span>
+                        </div>
+                        <div id="login-option-minus" style="display:none">
+                            <img src="images/minus.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
+                            <span class="login-font-normal">less options</span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="password">Password: </label>
-                        <div class="controls">
-                            <input type="password" id="password" required>
+            </div>
+            <div class="login-form-container">
+                <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
+                    <div id="login-options" class="form-group" style="display:none">
+                        <label class="control-label">Mode: </label>
+                        <select id="login-mode" name="login-mode" class="controls font-size-11">
+                            <option value="basic">Basic</option>
+                            <option value="credentials">Credentials</option>
+                        </select>
+                    </div>
+                    <div id="login-basic">
+                        <div class="form-group">
+                            <label class="control-label" for="user">User: </label>
+                            <div class="controls">
+                                <input type="text" id="user" name="user" autocomplete="on">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="password">Password: </label>
+                            <div class="controls">
+                                <input type="password" id="password" name="password" autocomplete="on">
+                            </div>
+                        </div>
+                        <div id="login-ssh" class="form-group" style="display:none">
+                            <input type="checkbox" id="login-ssh-checkbox">
+                            <span  id="login-ssh-label" class="login-form">Use SSH private key</span>
+                            <div align="center">
+                                <input type="file" id="sshKey" name="sshKey" accept="text/*" class="login-form" style="display:none">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="login-credentials" class="form-group" style="display:none">
+                        <div class="buttons-container">
+                            <div align="center">
+                              <input name="credential" id="credential" type="file" class="login-form">
+                            </div>
+                            <div id="create-credentials" class="file-selector" style="display:none">
+                                <img src="images/key.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
+                                <span >Create Credentials</span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="buttons-container">
-                            <button type="submit" class="btn btn-primary">Connect</button>
+                            <button id="login-connect" type="submit" class="btn btn-primary font-size-11">Connect</button>
                         </div>
                     </div>
                 </form>
