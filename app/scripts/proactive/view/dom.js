@@ -591,7 +591,7 @@ define(
 
             var payload = new FormData();
             payload.append('file', blob);
-            payload.append('kind', 'Workflow/standard');
+            payload.append('kind',  $("#catalog-publish-kind-select").val());
             payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('objectContentType', "application/xml");
