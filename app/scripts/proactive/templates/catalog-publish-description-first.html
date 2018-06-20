@@ -4,10 +4,21 @@
 			<td style="padding-bottom: 5em">You are about to publish a <b>new Workflow</b> named &quot;<%= name %>&quot; to this bucket.</td>
 		</tr>
 		<tr>
+			<td>Publish as kind:</td>
+		</tr>
+		<tr>
+			<td>
+				<select id="catalog-publish-kind-select">
+					<option value="Workflow/standard">Workflow/standard</option>
+					<option value="Workflow/pca">Workflow/pca</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td>Commit message:</td>
 		</tr>
 		<tr>
 			<td><input type="text" id="catalog-publish-commit-message" style="width: 100%"></input></td>
 		</tr>
-	</table>	
+	</table>
 </div>
