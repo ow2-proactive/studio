@@ -273,7 +273,7 @@ define(
             });
         },
         setSecondaryTemplatesBucket : function(bucketName, onPageLoad) {
-            if (!onPageLoad && localStorage['secondaryBucketNames'].indexOf(bucketName)>-1){
+            if (!onPageLoad && JSON.parse(localStorage.getItem('secondaryBucketNames')).indexOf(bucketName)>-1){
                 alert("The bucket "+ bucketName +" is already open.");
                 return;
             }
