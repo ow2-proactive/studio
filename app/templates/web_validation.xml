@@ -27,6 +27,7 @@ notification_message = 'Put your web validation message here'
 from org.ow2.proactive.addons.webhook import Webhook
 
 jobid = variables.get("PA_JOB_ID")
+userName = variables.get("PA_USER")
 schedulerURL =  variables.get("PA_SCHEDULER_REST_URL")
 
 print schedulerURL
@@ -41,7 +42,7 @@ schedulerapi.pauseJob(jobid)
 print "Sending web validation..."
 url = schedulerURL.replace("/rest", "") +'/notification-service/notifications'
 headers = '{\"Content-Type\" : \"application/json\" }'
-notification_content = '{\"description\": \"'+notification_message+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\"}'
+notification_content = '{\"description\": \"'+notification_message+'\", \"jobId\": \"'+jobid+'\" , \"validation\": \"true\", \"userName\":  \"'+userName+'\"}'
 Webhook.execute ( 'POST', url, headers, notification_content);
 print "Web Validation sent"
 

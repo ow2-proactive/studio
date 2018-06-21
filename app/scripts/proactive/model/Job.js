@@ -25,7 +25,9 @@ define(
     var that = this;
 
     const myStack = {"dir1": "up", "firstpos1": "1", "dir2": "left", "push": "bottom"};
-
+    const GENERIC_INFORMATION = "genericInformation";
+    const INFO = "info"
+    const NAME = "name"
     return SchemaModel.extend({
       schema: {
         "Name": {
@@ -275,8 +277,6 @@ define(
                 for (var i in genericInformation) {
                   if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
                     hasDocumentation = true;
-                    var fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-                    var fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
                     var linkName = genericInformation[i]["Property Value"];
                     var documentationValue = genericInformation[i]["Property Value"];
                     break;
@@ -392,20 +392,26 @@ define(
         });
       },
       populate: function(obj, merging, isTemplate) {
+        var StudioApp = require('StudioApp');
         // remove the unnecessary GI in case of appending workflow to the current one.
-        const GIToRemove = ["bucketname","documentation", "group", "pca.action.icon", "workflow.icon"];
+        const COMMON_GI = ["bucketname","documentation", "group", "workflow.icon"];
         if (isTemplate) {
-          if(obj["genericInformation"]){
-            if(obj["genericInformation"]["info"].isArray){
-              obj["genericInformation"]["info"] = obj["genericInformation"]["info"].filter(info => !GIToRemove.includes(info["@attributes"]["name"].toLowerCase()));
+            if(obj[GENERIC_INFORMATION]){
+                var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
+                if(jobGenericInfos !== 'null' && jobGenericInfos !== 'undefined'){
+                    var ExistingCommonGI = jobGenericInfos.filter(info => COMMON_GI.includes(info["Property Name"].toLowerCase())).map(a => a["Property Name"].toLowerCase());
+                }
+                if(obj[GENERIC_INFORMATION][INFO] instanceof Array){
+                   obj[GENERIC_INFORMATION][INFO] = obj[GENERIC_INFORMATION][INFO].filter(info => !ExistingCommonGI.includes(info["@attributes"][NAME].toLowerCase()));
+                }else{ // This is a workaround for "Controls tasks"
+                   if(Object.keys(obj[GENERIC_INFORMATION][INFO]).map(name => obj[GENERIC_INFORMATION][INFO][name]).filter(info => !ExistingCommonGI.includes(info[NAME].toLowerCase())).length == 0){
+                      obj[GENERIC_INFORMATION][INFO] = [];
+                   }
+                }
             }
-            else{ // This is a workaround for "Controls tasks"
-              obj["genericInformation"]["info"] = []
-            }
-          }
-          this.populateTemplate(obj, merging);
+            this.populateTemplate(obj, merging);
         } else {
-          this.populateSchema(obj, merging);
+        this.populateSchema(obj, merging);
         }
         this.convertCancelJobOnErrorToOnTaskError(obj);
 
@@ -604,21 +610,12 @@ define(
       },
 
       generateDocumentUrl: function(genericInformation) {
-
-        console.log("Fetching documentation in GI...");
-
-        // Get the job name and put it as name for the generated file
-
-        var fileContent = "";
         var linkName = "Undefined";
         var documentationValue = "Undefined";
         if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
           for (var i in genericInformation) {
             if (genericInformation[i]["Property Name"].toLowerCase() === 'documentation') {
-              fileContent = "Documentation for the Job \"" + this.get('Name') + "\" \n" + "\n" + "\n";
-              fileContent = fileContent + "Documentation value: " + genericInformation[i]["Property Value"] + "\n";
               linkName = genericInformation[i]["Property Value"];
-
               documentationValue = genericInformation[i]["Property Value"];
             }
           }
@@ -636,10 +633,6 @@ define(
         var url;
 
         if (data) {
-          var file = new Blob([data], {
-            type: String
-          });
-
           if (data.toLowerCase() === 'undefined') {
             url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
           } else {

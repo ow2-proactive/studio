@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns="urn:proactive:jobdescriptor:3.10"
+		xsi:schemaLocation="urn:proactive:jobdescriptor:3.10 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.10/schedulerjob.xsd"
+		name="script_kubernetes"
+		priority="normal"
+		onTaskError="continueJobExecution"
+		maxNumberOfExecution="2"
+>
+	<description>
+		<![CDATA[ A workflow that executes a Kubernetes (kubectl) task. ]]>
+	</description>
+	<taskFlow>
+		<task name="Kubernetes_Task">
+			<description>
+				<![CDATA[ Simple task running with Kubernetes. ]]>
+			</description>
+			<scriptExecutable>
+				<script>
+					<code language="kubernetes">
+						<![CDATA[
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello-world
+spec:
+  template:
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["echo",  "Hello World! - Kubernetes script engine for ProActive Scheduling suite."]
+      restartPolicy: Never
+]]>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
+</job>

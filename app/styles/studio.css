@@ -1208,3 +1208,45 @@ li.success {
 .ui-pnotify.translucent.ui-pnotify-fade-in {
     opacity: .8;
 }
+
+.CodeMirror-focused .cm-matchhighlight {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
+    background-position: bottom;
+    background-repeat: repeat-x;
+}
+
+.cm-matchhighlight {background-color: lightgreen}
+
+.CodeMirror-selection-highlight-scrollbar {background-color: green}
+
+.CodeMirror-hints, .CodeMirror-hint, .CodeMirror-hint-active {
+    z-index:2147483647;
+}
+
+.hover-editor-container {
+    position: relative;
+}
+
+.hover-editor-content {
+    display:none;
+    position:absolute;
+    top:1.5em;
+    left:5.5em;
+    padding: 0.2em 0.6em;
+    border:1px solid #996633;
+    background-color:#FFF;
+    color:#000;
+    z-index:13000;
+    width:220px;
+    text-align:left;
+    font-size:10px
+
+}
+
+.hover-editor-container:hover .hover-editor-content {
+    display: block;
+}
+
+.hover-editor-content-hovered {
+    display: block;
+}

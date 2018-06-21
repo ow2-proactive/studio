@@ -14,6 +14,11 @@
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="libs/codemirror/lib/codemirror.css" />
+        <link rel="stylesheet" href="libs/codemirror/addon/fold/foldgutter.css" />
+        <link rel="stylesheet" href="libs/codemirror/addon/scroll/simplescrollbars.css" />
+        <link rel="stylesheet" href="libs/codemirror/addon/hint/show-hint.css" />
+        <link rel="stylesheet" href="libs/codemirror/addon/dialog/dialog.css" />
+        <link rel="stylesheet" href="libs/codemirror/theme/eclipse.css" />
         <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css" />
         <!-- endbower -->
 
@@ -26,8 +31,8 @@
            
         
         <script src="studio-conf.js"></script>
-        <!-- endbuild -->
 
+        <!-- endbuild -->
     </head>
 <body data-library="jquery" style="zoom: 1;display:none">
         <!--[if lt IE 10]>
@@ -457,7 +462,11 @@
 					    </div>
 					    <div class="col-sm-9">
 					      <p>Version: <b id="version"></b></p>
-                        	<p>Copyright (C) 1997-<script>document.write(new Date().getFullYear())</script> INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                        	<p>Copyright (C) 1997-<div id="current-year"></div> INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                            <script>
+                              var date = document.getElementById("current-year");
+                              date.innerText = (new Date()).getFullYear();
+                            </script>
 	                        <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
 	                        <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
 	                        <p>REST server	<a target="_blank" href="" id="restServer"></a></p>
@@ -515,12 +524,97 @@
             <div class="modal-dialog" style="width:90%;height:90%">
                 <div class="modal-content" style="height: 100%;">
                     <table style="min-height:100%;width:100%">
-                        <tr><td style="height:80px">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                <h3>Script Editor</h3>
-                            </div>
-                        </td></tr>
+                        <tr>
+                            <td style="height:80px">
+                                <div class="modal-header">
+
+                                    <div class="row"
+                                         style="width:100%;margin-left: 0px;margin-right: 0px;display: flex;align-items: flex-end;">
+
+                                        <div class="col col-md-2 col-lg-2" style="text-align:left;font-size:18px;margin-bottom: -4px;">
+                                            Script Editor
+                                        </div>
+                                        <div class="col col-md-2 col-lg-2" style="text-align:center;font-size:14px;margin-bottom: -2px;">
+                                            <a id="variable_reference_link"
+                                               href="#"
+                                               target="_blank">Documentation</a></div>
+                                        <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
+                                            <b>Ctrl+Space:</b>
+                                            <i>Auto-Complete</i></div>
+                                        <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
+                                            <b>[Shift-]Ctrl+F:</b>
+                                            <i>Find[Replace]</i></div>
+                                        <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
+                                            <b>Shift-Tab:</b>
+                                            <i>Indent</i></div>
+                                        <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
+                                            <b>Ctrl-/:</b>
+                                            <i>Comment</i></div>
+                                        <div class="col col-md-1 col-lg-1"
+                                             style="text-align:right;font-size:10px;">
+                                            <div class="hover-editor-container">
+                                                <div class="hover-editor-content" onclick="$(this).toggleClass('hover-editor-content-hovered');">
+                                                    <b>Ctrl-[:</b> indentLess<br>
+                                                    <b>Ctrl-]:</b> indentMore<br>
+                                                    <b>Shift-Ctrl-K:</b> deleteLine<br>
+                                                    <b>Alt-Left:</b> goSubwordLeft<br>
+                                                    <b>Alt-Right:</b> goSubwordRight<br>
+                                                    <b>Ctrl-Up:</b> scrollLineUp<br>
+                                                    <b>Ctrl-Down:</b> scrollLineDown<br>
+                                                    <b>Ctrl-L:</b> selectLine<br>
+                                                    <b>Shift-Ctrl-L:</b> splitSelectionByLine<br>
+                                                    <b>Ctrl-Enter:</b> insertLineAfter<br>
+                                                    <b>Shift-Ctrl-Enter:</b> insertLineBefore<br>
+                                                    <b>Ctrl-D:</b> selectNextOccurrence<br>
+                                                    <b>Shift-Ctrl-Space:</b> selectScope<br>
+                                                    <b>Shift-Ctrl-M:</b> selectBetweenBrackets<br>
+                                                    <b>Ctrl-M:</b> goToBracket<br>
+                                                    <b>Shift-Ctrl-Up:</b> swapLineUp<br>
+                                                    <b>Shift-Ctrl-Down:</b> swapLineDown<br>
+                                                    <b>Ctrl-J:</b> joinLines<br>
+                                                    <b>Shift-Ctrl-D:</b> duplicateLine<br>
+                                                    <b>F9:</b> sortLines<br>
+                                                    <b>Ctrl-F9:</b> sortLinesInsensitive<br>
+                                                    <b>Shift-F2:</b> prevBookmark<br>
+                                                    <b>Ctrl-F2:</b> toggleBookmark<br>
+                                                    <b>Shift-Ctrl-F2:</b> clearBookmarks<br>
+                                                    <b>Alt-F2:</b> selectBookmarks<br>
+                                                    <b>Ctrl-K Ctrl-K:</b> delLineRight<br>
+                                                    <b>Ctrl-K Ctrl-U:</b> upcaseAtCursor<br>
+                                                    <b>Ctrl-K Ctrl-L:</b> downcaseAtCursor<br>
+                                                    <b>Ctrl-K Ctrl-Space:</b> setSublimeMark<br>
+                                                    <b>Ctrl-K Ctrl-A:</b> selectToSublimeMark<br>
+                                                    <b>Ctrl-K Ctrl-W:</b> deleteToSublimeMark<br>
+                                                    <b>Ctrl-K Ctrl-X:</b> swapWithSublimeMark<br>
+                                                    <b>Ctrl-K Ctrl-Y:</b> sublimeYank<br>
+                                                    <b>Ctrl-K Ctrl-C:</b> showInCenter<br>
+                                                    <b>Ctrl-K Ctrl-G:</b> clearBookmarks<br>
+                                                    <b>Ctrl-K Ctrl-Backspace:</b> delLineLeft<br>
+                                                    <b>Ctrl-K Ctrl-0:</b> unfoldAll<br>
+                                                    <b>Ctrl-K Ctrl-1:</b> foldAll<br>
+                                                    <b>Ctrl-Alt-Up:</b> addCursorToPrevLine<br>
+                                                    <b>Ctrl-Alt-Down:</b> addCursorToNextLine<br>
+                                                    <b>Ctrl-F3:</b> findUnder<br>
+                                                    <b>Shift-Ctrl-F3:</b> findUnderPrevious<br>
+                                                </div>
+                                                Other Keys
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col col-md-1 col-lg-1"
+                                             style="text-align:right;font-size: 18px;margin-bottom: -3px;">
+
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                ×
+                                            </button>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         <tr class="code-editor-container"><td style="height:99%;min-height:99%;vertical-align: top;">
                             <textarea id="full-edit-modal-script-content" class="form-control" style="width:100%;height:100%"></textarea>
                         </td></tr>

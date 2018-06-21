@@ -2,6 +2,7 @@ define(
     [
         'jquery',
         'backbone',
+        'proactive/config',
         'proactive/view/utils/undo',
         'proactive/rest/studio-client',
         'xml2json',
@@ -9,9 +10,36 @@ define(
         'text!proactive/templates/job-variable-template.html',
         'pnotify',
         'pnotify.buttons',
-        'codemirrorJs',
-        'codemirrorComment',
-        'codemirrorMB',
+        'codemirror/mode/shell/shell',
+        'codemirror/mode/clike/clike',
+        'codemirror/mode/javascript/javascript',
+        'codemirror/mode/groovy/groovy',
+        'codemirror/mode/ruby/ruby',
+        'codemirror/mode/python/python',
+        'codemirror/mode/perl/perl',
+        'codemirror/mode/powershell/powershell',
+        'codemirror/mode/r/r',
+        'codemirror/mode/yaml/yaml',
+        'codemirror/addon/comment/comment',
+        'codemirror/addon/edit/matchbrackets',
+        'codemirror/addon/edit/closebrackets',
+        'codemirror/addon/fold/foldcode',
+        'codemirror/addon/fold/foldgutter',
+        'codemirror/addon/fold/brace-fold',
+        'codemirror/addon/fold/indent-fold',
+        'codemirror/addon/fold/comment-fold',
+        'codemirror/addon/dialog/dialog',
+        'codemirror/addon/scroll/annotatescrollbar',
+        'codemirror/addon/scroll/simplescrollbars',
+        'codemirror/addon/search/searchcursor',
+        'codemirror/addon/search/matchesonscrollbar',
+        'codemirror/addon/search/search',
+        'codemirror/addon/search/jump-to-line',
+        'codemirror/addon/search/match-highlighter',
+        'codemirror/addon/hint/show-hint',
+        'codemirror/addon/hint/anyword-hint',
+        'codemirror/addon/selection/active-line',
+        'codemirror/keymap/sublime',
         'backbone-forms',
         'list',
         'backboneFormsAdapter',
@@ -20,7 +48,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, PNotify) {
+    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, PNotify) {
 
         "use strict";
 
@@ -745,15 +773,91 @@ define(
 
         (function scriptManagement() {
             $(document).on("click", '.edit-full-screen', function () {
+
                 $(".CodeMirror").remove();
                 var textarea = $(this).parents('form').find('textarea');
+                var select = $(this).parents('form').find('select');
+                var selectedLanguage = select.val()
+                var modes = config.modes
+                var language = 'text/plain'
+                for (var property in modes) {
+                     if (modes.hasOwnProperty(property) && selectedLanguage == property) {
+                        language = modes[property]
+                     }
+                }
+
+                var dictionary = config.dictionary.concat(config.keywords[selectedLanguage])
+
+                var WORD = /[\w]+$/, WORD2 = /[\w$]+/g, RANGE = 500;
+
+                CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
+                    var word = options && options.word || WORD;
+                    var word2 = options && options.word || WORD2;
+                    var range = options && options.range || RANGE;
+                    var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+                    var start = cur.ch, end = start;
+                    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;
+                    while (start && word.test(curLine.charAt(start - 1))) --start;
+                    var curWord = start != end && curLine.slice(start, end);
+
+                    var list = [], seen = {};
+                    for (var i=0; i < dictionary.length; i++) {
+                        var m = dictionary[i];
+                        if ((!curWord || m.indexOf(curWord) == 0) && !seen.hasOwnProperty(m)) {
+                            seen[m] = true;
+                            list.push(m);
+                        }
+                    }
+
+
+                    function scan(dir) {
+                      var line = cur.line, end = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
+                      for (; line != end; line += dir) {
+                        var text = editor.getLine(line), m;
+                        word2.lastIndex = 0;
+                        while (m = word2.exec(text)) {
+                          if ((!curWord || m[0].indexOf(curWord) == 0) && !seen.hasOwnProperty(m[0])) {
+                            seen[m[0]] = true;
+                            list.push(m[0]);
+                          }
+                        }
+                      }
+                    }
+                    scan(-1);
+                    scan(1);
+                    return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+                });
+
                 var content = textarea.val();
                 $("#set-script-content").data("area", textarea);
                 $("#full-edit-modal-script-content").val(content);
+                CodeMirror.commands.autocomplete = function(cm) {
+                    cm.showHint({hint: CodeMirror.hint.anyword});
+                }
                 var editor = CodeMirror.fromTextArea($("#full-edit-modal-script-content").get(0), {
                     lineNumbers: true,
-                    mode: "javascript"
-
+                    lineWrapping: true,
+                    mode: language,
+                    matchBrackets: true,
+                    autoCloseBrackets: true,
+                    styleActiveLine: true,
+                    indentUnit: 4,
+                    extraKeys: {
+                    "Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); },
+                    "Ctrl-Space": "autocomplete", "Cmd-Space": "autocomplete",
+                    "Shift-Ctrl-F": "replace",
+                    "Shift-Cmd-F": "replace",
+                    "Shift-Tab": "indentAuto",
+                    "Ctrl-]":"indentMore", "Cmd-]":"indentMore",
+                    "Ctrl-[":"indentLess", "Cmd-]":"indentLess",
+                    "Ctrl-K Ctrl-1":"foldAll","Cmd-K Cmd-1":"foldAll"
+                    },
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                    highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
+                    scrollbarStyle: "simple",
+                    keyMap: "sublime",
+                    theme: "eclipse"
                 });
                 $('#full-edit-modal').modal('show');
                 $("#set-script-content").data("editor", editor);
@@ -769,6 +873,7 @@ define(
                 return false;
             })
             $('#full-edit-modal').on('shown.bs.modal', function () {
+                $('#variable_reference_link').attr("href", config.docUrl + "/user/ProActiveUserGuide.html#_variables_quick_reference")
                 $(".CodeMirror").height($(".code-editor-container").height())
                 $("#set-script-content").data("editor").refresh()
             })

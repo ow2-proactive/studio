@@ -39,7 +39,7 @@
           "label": "generic_information"
         },
         {
-          "key": "pca.action.icon",
+          "key": "workflow.icon",
           "value": "../studio/images/about_115.png",
           "label": "generic_information"
         },

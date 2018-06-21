@@ -6,7 +6,7 @@
 		A sample workflow that solves a classic split/process/merge problem.
 	</description>
 	<genericInformation>
-		<info name="pca.action.icon"
+		<info name="workflow.icon"
 			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 	</genericInformation>
 	<taskFlow>
