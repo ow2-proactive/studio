@@ -31,8 +31,8 @@
            
         
         <script src="studio-conf.js"></script>
-        <!-- endbuild -->
 
+        <!-- endbuild -->
     </head>
 <body data-library="jquery" style="zoom: 1;display:none">
         <!--[if lt IE 10]>
@@ -462,7 +462,11 @@
 					    </div>
 					    <div class="col-sm-9">
 					      <p>Version: <b id="version"></b></p>
-                        	<p>Copyright (C) 1997-<script>document.write(new Date().getFullYear())</script> INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                        	<p>Copyright (C) 1997-<div id="current-year"></div> INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                            <script>
+                              var date = document.getElementById("current-year");
+                              date.innerText = (new Date()).getFullYear();
+                            </script>
 	                        <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
 	                        <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
 	                        <p>REST server	<a target="_blank" href="" id="restServer"></a></p>

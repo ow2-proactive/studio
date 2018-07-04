@@ -413,8 +413,6 @@ define(
                             var linkName = genericInformation[i]["Property Value"];
                             var documentationValue = genericInformation[i]["Property Value"];
                             break;
-                          } else {
-                            hasDocumentation = false;
                           }
                         }
 
@@ -428,10 +426,12 @@ define(
                           $('a[name="Generic Info Documentation"]').text(documentationValue);
                           $('a[name="Generic Info Documentation"]').attr("href", documentationValue);
                         } else {
-                          if ($('a[name="Generic Info Documentation"]')) {
                             $('a[name="Generic Info Documentation"]').text("Undefined");
-                            $('a[name="Generic Info Documentation"]').attr("href", "#");
-                          }
+                            $('a[name="Generic Info Documentation"]').attr("href", config.docUrl + "/user/ProActiveUserGuide.html#_generic_information\"");
+
+                            this.set({
+                              "Generic Info Documentation": "{\"name\":\"" + "Undefined" + "\",\"url\":\"" + config.docUrl + "/user/ProActiveUserGuide.html#_generic_information\"}"
+                            });
                         }
 
                       } else if (eventName.changed.hasOwnProperty('Generic Info')) {
@@ -444,11 +444,13 @@ define(
 
                           if ($('a[name="Generic Info Documentation"]')) {
                             $('a[name="Generic Info Documentation"]').text("Undefined");
-                            $('a[name="Generic Info Documentation"]').attr("href", "#");
+                            $('a[name="Generic Info Documentation"]').attr("href", config.docUrl + "/user/ProActiveUserGuide.html#_generic_information\"");
+                            undoManager.save();
                           }
+                        }else{
+                          console.log ("No task.documentation defined for this task");
                         }
                       }
-
                     }
                   } else {
                     undoManager.save();
@@ -459,17 +461,22 @@ define(
 
             // documentation GI:  value will be displayed as link
             generateDocumentUrl: function(genericInformation) {
+              var hasDocumentation;
               var linkName = "Undefined";
               var documentationValue = "Undefined";
+
               if (this.attributes.hasOwnProperty('Generic Info') && this.attributes["Generic Info"] != "") {
                 for (var i in genericInformation) {
                   if (genericInformation[i]["Property Name"].toLowerCase() === 'task.documentation') {
+                    hasDocumentation = true;
                     linkName = genericInformation[i]["Property Value"];
                     documentationValue = genericInformation[i]["Property Value"];
                   }
                 }
-              } else {
-                console.log("No generic information task.documentation defined for this job");
+              } else{
+                hasDocumentation = false;
+                linkName = "Undefined";
+                documentationValue = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
               }
 
               // Set Value
@@ -480,7 +487,6 @@ define(
 
             generateUrl: function(data) {
               var url;
-
               if (data) {
                 if (data.toLowerCase() === 'undefined') {
                   url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
@@ -708,8 +714,9 @@ define(
                     this.generateDocumentUrl(genericInfo);
 
                     if (key == "Dedicated Host") {
-                        value = (value === 'true')
+                        value = (value === 'true');
                     }
+
                     this.set(key, value)
                 }
             }

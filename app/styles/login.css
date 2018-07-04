@@ -37,16 +37,9 @@ html, body {
     font-family: Arial, Verdana, sans-serif;
     font-size: 13px;
     width: 100%;
-    text-align: left;
     padding-top: 10px;
     padding-left: 20px;
-    padding-bottom: 20px;
-}
-
-.buttons-container {
-    padding-top: 10px;
-    width: 100%;
-    position: relative;
+    padding-bottom: 38px;
 }
 
 .login-logo-image {
@@ -56,6 +49,25 @@ html, body {
 
 .login-font-normal {
     font-weight: normal;
+}
+
+.file-selector {
+    cursor : pointer;
+    font-size : 11px;
+    margin-top : 6px;
+    margin-bottom : 6px;
+}
+
+.login-form {
+    font-size : 11px !important;
+    background-color : #f0f0f0;
+    border: 0px #f0f0f0 !important;
+    box-shadow: inset 0 1px 1px rgba(198, 191, 189, 0);
+    align : center;
+}
+
+.font-size-11 {
+    font-size : 11px;
 }
 
 #login-view label {
