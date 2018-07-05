@@ -3,10 +3,11 @@ define(
         'backbone',
         'proactive/model/SchemaModel',
         'proactive/model/Script',
+        'proactive/model/ForkEnvironmentScript',
         'proactive/model/utils'
     ],
 
-    function (Backbone, SchemaModel, Script, Utils) {
+    function (Backbone, SchemaModel, Script, ForkEnvironmentScript, Utils) {
 
         "use strict";
 
@@ -61,7 +62,7 @@ define(
                 },
                 "Environment Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: ForkEnvironmentScript,
                     fieldAttrs: {
                         'placeholder': 'envScript->script',
                         "data-help": 'Environment script that is able to add/change each items of the fork environment programmatically.'

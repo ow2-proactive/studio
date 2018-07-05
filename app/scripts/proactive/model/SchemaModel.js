@@ -204,6 +204,25 @@ define(
         },
         _mergeListsRemovingDuplicates: function (a, b) {
             return _.uniq(a.concat(b), false, JSON.stringify);
+        },
+        mergeObjectsPreserveOrder: function (original, overriding) {
+            var answer = {};
+            for (var key in original) {
+               if (original.hasOwnProperty(key) && overriding.hasOwnProperty(key)) {
+                  answer[key] = overriding[key];
+               } else if (original.hasOwnProperty(key)) {
+                    answer[key] = original[key];
+               }
+            }
+            for (var key in overriding) {
+               if (overriding.hasOwnProperty(key) && original.hasOwnProperty(key)) {
+                  // was treated by previous loop
+               } else if (overriding.hasOwnProperty(key)) {
+                    // append new properties at the end
+                    answer[key] = overriding[key];
+               }
+            }
+            return answer;
         }
     });
     return SchemaModel;

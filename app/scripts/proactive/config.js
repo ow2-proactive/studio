@@ -53,6 +53,12 @@ define(function () {
             'powershell': 'powershell',
             'R': 'r'
         },
+        languages_available: {
+            'script' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
+            'flow' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
+            'forkenvironment' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"]
+        },
         keywords: {
             'bash': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],
             'cmd' : ['Append','Attrib','Backup','Break','Call','Cd','Chcp','Chdir','Choice','Cls','Command','Copy','Ctty','Date','Debug','Del','Deltree','Dir','Doskey','Echo','Erase','Exit','Expand','Fasthelp','Fastopen','Fc','Fdisk','Find','For','Format','Goto','Graphics','Help','If','Interlnk','Intersvr','Keyb','Label','Lh','Loadfix','Loadhigh','Md','Mem','Mkdir','Mode','More','Move','Nlsfunc','Path','Pause','Power','Print','Prompt','Rd','Rem','Ren','Rename','Replace','Restore','Rmdir','Scandisk','Set','Setver','Share','Shift','Smartdrv','Sort','Subst','Sys','Time','Tree','Type','Undelete','Unformat','Ver','Verify','Vol','Xcopy'],
