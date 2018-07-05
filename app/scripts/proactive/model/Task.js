@@ -8,6 +8,12 @@ define(
     'proactive/model/ForkEnvironment',
     'proactive/model/Script',
     'proactive/model/SelectionScript',
+    'proactive/model/ForkEnvironmentScript',
+    'proactive/model/PreScript',
+    'proactive/model/TaskScript',
+    'proactive/model/PostScript',
+    'proactive/model/FlowScript',
+    'proactive/model/CleanScript',
     'proactive/model/BranchWithScript',
     'proactive/view/utils/undo',
     'text!proactive/templates/selection-script-host-template.html',
@@ -19,8 +25,9 @@ define(
     ],
 
      // TODO REMOVE undoManager dependency - comes from view
-     function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript,
-             BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config, StudioClient) {
+     function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript, ForkEnvironmentScript,
+            PreScript, TaskScript, PostScript, FlowScript, CleanScript,
+            BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config, StudioClient) {
 
         "use strict";
 
@@ -236,7 +243,7 @@ define(
                 "Execute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
                 "Pre Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: PreScript,
                     fieldAttrs: {
                         "data-tab": "Pre/Post/Clean scripts",
                         'data-tab-help': 'Scripts executed before and after the task',
@@ -246,7 +253,7 @@ define(
                 },
                 "Post Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: PostScript,
                     fieldAttrs: {
                         'placeholder': 'post->script',
                         "data-help": 'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'
@@ -254,7 +261,7 @@ define(
                 },
                 "Clean Script": {
                     type: 'NestedModel',
-                    model: Script,
+                    model: CleanScript,
                     fieldAttrs: {
                         'placeholder': 'cleaning->script',
                         "data-help": 'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'

@@ -3,9 +3,10 @@ define(
         'backbone',
         'proactive/model/SchemaModel',
         'text!proactive/templates/script-form-template.html',
+        'proactive/config'
     ],
 
-    function (Backbone, SchemaModel, tpl) {
+    function (Backbone, SchemaModel, tpl, config) {
 
     "use strict";
 
@@ -26,11 +27,14 @@ define(
             },
             "Language": {
                 type: 'Select',
-                options: [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+                options: config.languages_available['script'],
                 fieldAttrs: {
                     'placeholder': 'code->@attributes->language',
                     "data-help":"The language of the code to execute."
                 }
+            },
+            "CatalogKind": {
+                type: "Hidden"
             },
             "Or Path": {
                 type: "Hidden",
