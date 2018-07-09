@@ -545,7 +545,7 @@ define(
       },
 
       sortByKey: function(array, key) {
-          return array.sort((a, b) => a[key].localeCompare(b[key]));
+          return array.slice(0).sort((a, b) => a[key].localeCompare(b[key]));
       },
 
       filterByName: function(array, property, valeur){
