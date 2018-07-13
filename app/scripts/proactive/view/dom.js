@@ -687,7 +687,6 @@ define(
                     studioApp.models.jobModel.get("Name"),
                     studioApp.views.xmlView.generateXml(),
                     {
-                        offsets: undoManager.getOffsetsFromDOM(),
                         project: studioApp.models.jobModel.get("Project"),
                         detailedView: studioApp.models.currentWorkflow.getMetadata()['detailedView']
                     }
