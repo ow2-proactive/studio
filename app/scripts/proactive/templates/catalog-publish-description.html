@@ -10,10 +10,17 @@
 			<td style="padding-bottom: 3em; width: 40%">Last commit message: </td><td style="padding-bottom: 3em"><%= revision.commit_message %></td>
 		</tr>
 		<tr>
-			<td>Commit message:</td>
+			<td>Kind:</td>
+			<td><input type="text" id="catalog-publish-kind" ></input></td>
 		</tr>
 		<tr>
+			<td>Content type:</td>
+			<td><input type="text" id="catalog-publish-content-type" value="application/xml" ></input></td>
+		</tr>
+		<tr>
+			<td>Commit message:</td>
 			<td colspan="2"><input type="text" id="catalog-publish-commit-message" style="width: 100%"></input></td>
 		</tr>
-	</table>	
+
+	</table>
 </div>

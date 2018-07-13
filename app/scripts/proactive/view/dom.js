@@ -95,7 +95,7 @@ define(
         $("#add-button").click(function (event) {
             add_or_import(event, '#add-file');
         })
-        
+
         function add_or_import(event, buttonSelector){
             event.preventDefault();
             var studioApp = require('StudioApp');
@@ -117,7 +117,7 @@ define(
         $('#add-file').change(function (env) {
             import_file(env, false);
         })
-        
+
         function import_file(env, clearFirst){
             var studioApp = require('StudioApp');
             if (clearFirst){
@@ -216,7 +216,7 @@ define(
         $("#catalog-get-append-button").click(function (event) {
             workflowImport(event, '#add-workflow-confirmation-modal');
         });
-        
+
         function workflowImport(e, modalSelector) {
             var studioApp = require('StudioApp');
             var url = $("#catalog-get-revision-description").data("selectedrawurl");
@@ -285,7 +285,7 @@ define(
 
             save_workflow();
             closeCollapsedMenu();
-            
+
             var jobName = studioApp.models.jobModel.get("Name");
             var jobProjectName = studioApp.models.jobModel.get("Project");
             var jobDescription = studioApp.models.jobModel.get("Description");
@@ -306,7 +306,7 @@ define(
 
         $("#plan-button").click(function (event) {
             event.preventDefault();
-        
+
             var studioApp = require('StudioApp');
             if (!studioApp.isWorkflowOpen()) {
                 $('#select-workflow-modal').modal();
@@ -364,16 +364,16 @@ define(
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
-                        submit();   
+                        submit();
                     }else{
                         $("#plan-workflow-modal").modal();
                     }
-                    
+
                 }
                 readOrStoreVariablesInModel(oldVariables);
             })
         }
-        
+
         function extractUpdatedVariables(inputVariables, validationData) {
             if (validationData.hasOwnProperty('updatedVariables')) {
                 var updatedVariables = validationData.updatedVariables;
@@ -385,7 +385,7 @@ define(
                         }
                     }
                 }
-            } 
+            }
             return inputVariables;
         }
 
@@ -470,7 +470,7 @@ define(
         });
 
         $("#save-button").click(function (event) {
-            
+
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -498,24 +498,24 @@ define(
 
             closeCollapsedMenu();
         });
-        
-        
+
+
         $("#about-button").click(function (event) {
-                    
+
             event.preventDefault();
-            
-            
+
+
             jQuery.get('file.txt', function(data) {
                    alert(data);
                    //process text file line by line
                    $('#div').html(data.replace('n',''));
             });
-            
-            
+
+
             var url = window.location.href;
             var arr = url.split("/");
             var result = arr[0] + "//" + arr[2] + "/rest";
-            
+
             $("#version").text( conf.studioVersion);
             $("#restServer").text( result );
             $("#restServer").attr("href", result);
@@ -523,7 +523,7 @@ define(
             $("#studioVersion").text( conf.studioVersion );
             $('#about-modal').modal('show');
             return;
-           
+
         });
 
         $("#download-xml-button").click(function (event) {
@@ -542,8 +542,8 @@ define(
 
         $("#confirm-add-from-catalog").click(function () {
             add_workflow_to_current(false);
-        });    
-        
+        });
+
         function add_workflow_to_current(clearCurrentFirst){
             var studioApp = require('StudioApp');
 
@@ -584,25 +584,27 @@ define(
         $("#confirm-publication-to-catalog").click(function () {
             var headers = { 'sessionID': localStorage['pa.session'] };
             var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
-            
+
             var studioApp = require('StudioApp');
             var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
             var workflowName = studioApp.models.currentWorkflow.attributes.name;
-            
+
             var payload = new FormData();
             payload.append('file', blob);
             payload.append('kind', 'workflow');
             payload.append('name', workflowName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
-            payload.append('objectContentType', "application/xml");
-            
+            payload.append('kind', $("#catalog-publish-kind").val());
+            payload.append('objectContentType', $("#catalog-publish-content-type").val());
+          //  payload.append('objectContentType', "application/xml");
+
             var url = '/catalog/buckets/' + bucketName + '/resources';
             var isRevision = ($("#catalog-publish-description").data("first") != true)
-           
+
             if (isRevision){
                 url += "/" + workflowName + "/revisions"
             }
-            
+
             var postData = {
                     url: url,
                     type: 'POST',
@@ -612,13 +614,13 @@ define(
                     cache: false,
                     data: payload
                 };
-            
-            var workflowId = $("#catalog-publish-description").data("workflowid");            
+
+            var workflowId = $("#catalog-publish-description").data("workflowid");
             if (workflowId){
                 postData.url = postData.url + "/" + workflowId + "/revisions";
                 payload.append('objectId', workflowId);
             }
-            
+
             var promise = $.ajax(postData).success(function (response) {
                 notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
 
@@ -638,7 +640,7 @@ define(
                 notify_message('Error', 'Error publishing the Workflow to the Catalog', false);
                 return response;
             });
-            
+
             if (!isRevision){
                 $.when(promise).then(function () {
                     var newWorkflow = promise.responseJSON;
@@ -750,7 +752,7 @@ define(
             undoManager._enable();
             undoManager.save();
         });
-        
+
         function notify_message(title, text, typeSuccess){
             PNotify.removeAll();
             var type = typeSuccess ? 'success' : 'error';
@@ -891,7 +893,7 @@ define(
         })();
 
         $(document).ready(function () {
-            
+
             var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
@@ -906,7 +908,7 @@ define(
                 $("#documentationLinkId").attr("href", result);
             });
 
-            
+
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
             var copied = false;
