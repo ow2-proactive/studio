@@ -388,23 +388,23 @@ define(
             jsPlumb.repaintEverything();
         },
         layoutNewElements: function (uiWithInitialOffset) {
-
             if (!uiWithInitialOffset) {
                 this.autoLayout()
                 return;
             }
 
             var app = this.options.app;
-            var workflow = app.models.currentWorkflow;
-            var offsets = workflow.getOffsets();
             var elemWithInitialOffset = $(uiWithInitialOffset.draggable);
 
             // finding task that are not layouted
             var nodes = [];
             $.each(this.model.tasks, function (i, task) {
                 var taskName = task.get("Task Name");
-                var offset = offsets[taskName];
-                if (!offset || (offset && offset.left==0 && offset.top==0)) {
+                var offset = {};
+                offset["top"] = task.get("PositionTop");
+                offset["left"] = task.get("PositionLeft");
+                if (!offset["left"] || !offset["top"] || offset["left"]===0 || offset["top"]===0) {
+                    console.log("in if");
                     nodes.push({id: taskName, task: task, width: 78, height: 28});
                 }
             })
@@ -442,14 +442,15 @@ define(
             var leftOffset = uiWithInitialOffset.offset.left-(elemWithInitialOffset.width()/2)+50;
             var topOffset = uiWithInitialOffset.offset.top-10;
 
-            var offsets = workflow.getOffsets();
+            var job = app.models.jobModel
             $.each(nodes, function (i, node) {
                 var pos = {};
                 if (node.dagre.x) pos.left = node.dagre.x + leftOffset;
                 if (node.dagre.x) pos.top = node.dagre.y + topOffset;
-                offsets[node.dagre.id] = pos;
+                var task = job.getTaskByName(node.dagre.id);
+                task.set('PositionTop', pos.top);
+                task.set('PositionLeft', pos.left);
             })
-            app.models.currentWorkflow.setOffsets(offsets);
             app.models.currentWorkflow.save({}, {wait: true});
         },
         restoreLayoutFromOffsets: function (offsets) {
@@ -480,14 +481,20 @@ define(
         },
         restoreLayout: function () {
             var app = this.options.app;
-            var workflow = app.models.currentWorkflow;
-            var offsets = workflow.getOffsets();
-
-            if (offsets) {
-                this.restoreLayoutFromOffsets(offsets);
-            } else {
-                this.autoLayout();
+            var job = app.models.jobModel;
+            var offsets = {};
+            for (var i = 0; i < job.tasks.length; i++) {
+                var name = job.tasks[i].get('Task Name');
+                var offset = {};
+                offset["top"] = job.tasks[i].get('PositionTop');
+                offset["left"] = job.tasks[i].get('PositionLeft');
+                if (!offset["top"] || !offset["left"] || offset["top"] === 0 || offset["left"] === 0) {
+                    this.autoLayout();
+                    return;
+                }
+                offsets[name] = offset;
             }
+            this.restoreLayoutFromOffsets(offsets);
         },
         zoom: 1,
         setZoom: function (zoom) {
