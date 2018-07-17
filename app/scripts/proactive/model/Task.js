@@ -359,13 +359,13 @@ define(
                 "PositionTop": {
                     type: "Hidden",
                     fieldAttrs: {
-                        "placeholder": "positionTop->#text"
+                        "placeholder": "metadata->positionTop->#text"
                     }
                 },
                  "PositionLeft": {
                      type: "Hidden",
                      fieldAttrs: {
-                         "placeholder": "positionLeft->#text"
+                         "placeholder": "metadata->positionLeft->#text"
                      }
                  }
             },

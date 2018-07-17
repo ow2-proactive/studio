@@ -118,15 +118,17 @@
     </outputFiles>
     <% } %>
 
-    <% if (task["PositionTop"]) { %>
-    <positionTop>
-        <%=task["PositionTop"]%>
-    </positionTop>
-    <% } %>
+    <metadata>
+        <% if (task["PositionTop"]) { %>
+        <positionTop>
+            <%=task["PositionTop"]%>
+        </positionTop>
+        <% } %>
 
-    <% if (task["PositionLeft"]) { %>
-    <positionLeft>
-        <%=task["PositionLeft"]%>
-    </positionLeft>
-    <% } %>
+        <% if (task["PositionLeft"]) { %>
+        <positionLeft>
+            <%=task["PositionLeft"]%>
+        </positionLeft>
+        <% } %>
+    </metadata>
 </task>
