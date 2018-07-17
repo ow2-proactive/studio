@@ -620,7 +620,7 @@ define(
                 payload.append('objectId', workflowId);
             }
 
-            var promise = $.ajax(postData).success(function (response) {
+            $.ajax(postData).success(function (response) {
                 notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
 
                 var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketName + '/resources/' + workflowName + '/raw'
@@ -639,26 +639,7 @@ define(
                 notify_message('Error', 'Error publishing the Workflow to the Catalog', false);
                 return response;
             });
-
-            if (!isRevision){
-                $.when(promise).then(function () {
-                    var newWorkflow = promise.responseJSON;
-                    add_workflow_to_catalog_collection(newWorkflow.object[0]);
-                });
-            }
         })
-
-        function add_workflow_to_catalog_collection (newWorkflow) {
-            var studioApp = require('StudioApp');
-            // We manually add the newly published workflow into the right bucket
-            // without relying on Backbone's persistence layer
-            var workflows = studioApp.models.catalogBuckets.get(newWorkflow.bucket_name).get("workflows");
-            workflows[workflows.length] = {
-                id: newWorkflow.id,
-                name: newWorkflow.name,
-                bucket_name: newWorkflow.bucket_name
-            };
-        }
 
         // removing a task by del
         $('body').keyup(function (e) {
