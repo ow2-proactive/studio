@@ -1,10 +1,9 @@
 define(
     [
-        'backbone',
-        'xml2json'
+        'backbone'
     ],
 
-    function (Backbone, xml2json) {
+    function (Backbone) {
 
         "use strict";
 

@@ -404,7 +404,6 @@ define(
                 offset["top"] = task.get("PositionTop");
                 offset["left"] = task.get("PositionLeft");
                 if (!offset["left"] || !offset["top"] || offset["left"]===0 || offset["top"]===0) {
-                    console.log("in if");
                     nodes.push({id: taskName, task: task, width: 78, height: 28});
                 }
             })
