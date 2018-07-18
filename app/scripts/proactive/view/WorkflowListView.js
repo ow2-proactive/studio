@@ -7,9 +7,10 @@ define(['jquery',
         'text!proactive/templates/workflow-list.html',
         'text!proactive/templates/workflow-list-category.html',
         'text!proactive/templates/workflow-list-entry.html',
+        'proactive/view/utils/undo',
         'pnotify'
     ],
-    function ($, Backbone, Job, WorkflowList, XmlView, xml2json, workflowListTemplate, workflowListCategory, workflowListEntryTemplate,  PNotify) {
+    function ($, Backbone, Job, WorkflowList, XmlView, xml2json, workflowListTemplate, workflowListCategory, workflowListEntryTemplate, undoManager, PNotify) {
 
         "use strict";
 
@@ -159,6 +160,7 @@ define(['jquery',
                 app.router.navigate("workflows/" + model.get('id'));
             },
             saveCurrentWorkflow: function (name, workflowXml, metadata) {
+                this.saveTasksPositions();
                 this._currentWorkflow().save(
                     {
                         name: name,
@@ -167,6 +169,17 @@ define(['jquery',
                     });
                 if (this.options.paletteView) {
                     //this.options.paletteView.render();
+                }
+            },
+            saveTasksPositions: function() {
+                var offsets = undoManager.getOffsetsFromDOM();
+                var app = this.options.app;
+                var job = app.models.jobModel;
+                for (var i = 0; i < job.tasks.length; i++) {
+                    var task = job.tasks[i];
+                    var name = task.get('Task Name');
+                    task.set('PositionTop', offsets[name].top);
+                    task.set('PositionLeft', offsets[name].left);
                 }
             },
             _currentWorkflow: function () {

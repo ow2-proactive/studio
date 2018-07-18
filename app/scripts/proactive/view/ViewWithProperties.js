@@ -82,7 +82,6 @@ define(
 									StudioApp.models.jobModel.get("Name"),
 									StudioApp.views.xmlView.generateXml(),
 									{
-										offsets: undoManager.getOffsetsFromDOM(),
 										project: StudioApp.models.jobModel.get("Project"),
 										detailedView: !detailedView
 									}
@@ -114,7 +113,6 @@ define(
 									StudioApp.models.jobModel.get("Name"),
 									StudioApp.views.xmlView.generateXml(),
 									{
-										offsets: undoManager.getOffsetsFromDOM(),
 										project: StudioApp.models.jobModel.get("Project"),
 										detailedView: detailedView
 									}
