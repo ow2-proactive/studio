@@ -355,7 +355,19 @@ define(
                         "placeholder": "controlFlow->@attributes->block",
                         "data-help": "Task blocks are defined by pairs of start and end tags.<br/>The role of task blocks is to restrain the expressiveness of the system so that a workflow can be statically checked and validated."
                     }
-                }
+                },
+                "PositionTop": {
+                    type: "Hidden",
+                    fieldAttrs: {
+                        "placeholder": "metadata->positionTop->#text"
+                    }
+                },
+                 "PositionLeft": {
+                     type: "Hidden",
+                     fieldAttrs: {
+                         "placeholder": "metadata->positionLeft->#text"
+                     }
+                 }
             },
 
             initialize: function () {
