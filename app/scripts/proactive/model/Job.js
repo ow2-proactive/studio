@@ -7,7 +7,7 @@ define(
     'proactive/model/ScriptExecutable',
     'proactive/model/NativeExecutable',
     'proactive/model/JavaExecutable',
-    'proactive/model/BranchWithScript',
+    'proactive/model/script/FlowScript',
     'proactive/model/utils',
     'proactive/view/utils/undo', // TODO remove
     'proactive/config',
@@ -18,7 +18,7 @@ define(
   ],
 
   // TODO REMOVE undoManager dependency - comes from view
-  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, BranchWithScript, Utils, undoManager, config, StudioClient, PNotify) {
+  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, FlowScript, Utils, undoManager, config, StudioClient, PNotify) {
 
     "use strict";
 
@@ -425,40 +425,7 @@ define(
           var name2Task = {};
           $.each(obj.taskFlow.task, function(i, task) {
             var taskModel = new Task();
-            if (task.javaExecutable) {
-              taskModel.schema['Execute']['model'] = JavaExecutable;
-              taskModel.schema['Execute']['fieldAttrs'] = {
-                placeholder: 'javaExecutable'
-              }
-              taskModel.set({
-                'Execute': new JavaExecutable()
-              });
-              taskModel.set({
-                Type: "JavaExecutable"
-              });
-            } else if (task.nativeExecutable) {
-              taskModel.schema['Execute']['model'] = NativeExecutable;
-              taskModel.schema['Execute']['fieldAttrs'] = {
-                placeholder: 'nativeExecutable'
-              }
-              taskModel.set({
-                'Execute': new NativeExecutable()
-              });
-              taskModel.set({
-                Type: "NativeExecutable"
-              });
-            } else if (task.scriptExecutable) {
-              taskModel.schema['Execute']['model'] = ScriptExecutable;
-              taskModel.schema['Execute']['fieldAttrs'] = {
-                placeholder: 'scriptExecutable'
-              }
-              taskModel.set({
-                'Execute': new ScriptExecutable()
-              });
-              taskModel.set({
-                Type: "ScriptExecutable"
-              });
-            }
+
             taskModel.convertCancelJobOnErrorToOnTaskError(task);
             taskModel.populateSchema(task);
             taskModel.populateSimpleForm();
@@ -511,7 +478,7 @@ define(
                 taskModel.controlFlow.replicate.model.populateSchema(taskJson.controlFlow.replicate);
               }
               if (taskJson.controlFlow.loop) {
-                var branch = new BranchWithScript();
+                var branch = new FlowScript();
                 branch.populateSchema(taskJson.controlFlow.loop);
                 var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
                 var targetTask = name2Task[loopTarget];

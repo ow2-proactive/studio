@@ -2,7 +2,11 @@ define(
     [
         'jquery',
         'backbone',
-        'text!proactive/templates/script-template.html'
+        'text!proactive/templates/script-template.html',
+        'text!proactive/templates/selection-script-template.html',
+        'text!proactive/templates/script-code-template.html',
+        'text!proactive/templates/script-file-template.html'
+
     ],
 
     function ($, Backbone) {

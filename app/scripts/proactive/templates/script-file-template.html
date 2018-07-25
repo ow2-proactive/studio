@@ -1,0 +1,21 @@
+<% if (model["Url"] && model["Url"].length > 0) { %>
+                <file url="<%=model["Url"]%>"<% if (model["Language"] && model["Language"].length > 0) { %> language="<%=model["Language"]%>"<% } %>>
+<%      if (model["Arguments"] && model["Arguments"].length>0) { %>
+                    <arguments>
+<%          _.each(model["Arguments"], function(arg) { %>
+                        <argument value="<%=arg%>"/>
+<%          }) %>
+                    </arguments>
+<%      }%>
+                </file>
+<% } else if (model["Path"] && model["Path"].length > 0) { %>
+                <file path="<%=model["Path"]%>">
+<%      if (model["Arguments"] && model["Arguments"].length>0) { %>
+                    <arguments>
+    <%          _.each(model["Arguments"], function(arg) { %>
+                        <argument value="<%=arg%>"/>
+    <%          }) %>
+                    </arguments>
+<%      }%>
+                </file>
+<% }%>

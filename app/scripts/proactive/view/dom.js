@@ -8,6 +8,7 @@ define(
         'xml2json',
         'codemirror',
         'text!proactive/templates/job-variable-template.html',
+        'proactive/view/BeautifiedModalAdapter',
         'pnotify',
         'pnotify.buttons',
         'codemirror/mode/shell/shell',
@@ -48,20 +49,27 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, PNotify) {
+    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
-        Backbone.Form.editors.List.Modal.ModalAdapter = Backbone.BootstrapModal;
+        Backbone.Form.editors.List.Modal.ModalAdapter = BeautifiedModalAdapter;
 
         Backbone.Form.editors.TaskTypeRadioEditor = Backbone.Form.editors.Radio.extend({
-            /** A simple override to add a class to the label */
+            /** An override which adds onclick handlers to display or hide nested forms, based on the current radio selection. It also adds a custom class to the label */
             _arrayToHtml: function (array) {
                 var html = [];
                 var self = this;
+                var thatArray = array;
 
                 _.each(array, function (option, index) {
-                    var itemHtml = '<li>';
+                    var itemHtml = '<li';
+                    if (_.isObject(option) && option.val) {
+                        itemHtml += ' onclick=\'';
+                        itemHtml += self._generateHandler.call(self, thatArray, option, index);
+                        itemHtml += '\'';
+                    }
+                    itemHtml += '>';
                     if (_.isObject(option)) {
                         var val = (option.val || option.val === 0) ? option.val : '';
                         itemHtml += ('<input type="radio" name="' + self.getName() + '" value="' + val + '" id="' + self.id + '-' + index + '" />');
@@ -76,8 +84,28 @@ define(
                 });
 
                 return html.join('');
+            },
+
+            _generateHandler(array, option, index) {
+                var handler = "";
+                var self = this;
+                _.each(array, function (other_option, other_index) {
+                    // find the backbone-forms generated id associated with this form
+                    var root_id = self.id.substring(0, self.id.lastIndexOf("_"));
+                    // find the sibling nested form which must have the same name as the option value, with a _Div suffix
+                    var associatedFormId = root_id + ( root_id.length > 0 ? '_' : '') + other_option.val + "_Div";
+                    if (other_index == index) {
+                       // set the corresponding nested form as visible
+                    handler += 'document.getElementById("' + associatedFormId + '").classList.add("displayed");document.getElementById("' + associatedFormId + '").classList.remove("hidden");';
+                    } else {
+                    // hide all other nested forms
+                    handler += 'document.getElementById("' + associatedFormId + '").classList.remove("displayed");document.getElementById("' + associatedFormId + '").classList.add("hidden");';
+                    }
+                });
+                return handler;
             }
         });
+
 
         Backbone.Form.editors.Text.prototype.setValue = function(value) {
             this.previousValue = value;

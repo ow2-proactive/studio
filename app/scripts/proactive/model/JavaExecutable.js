@@ -2,11 +2,10 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'proactive/model/Script',
         'proactive/model/utils'
     ],
 
-    function (Backbone, SchemaModel, Script, Utils) {
+    function (Backbone, SchemaModel, Utils) {
 
         "use strict";
 

@@ -4,20 +4,22 @@ define(
         'backbone',
         'pnotify',
         'proactive/model/Task',
-        'proactive/model/Script',
+        'proactive/model/script/Script',
+        'proactive/model/script/ScriptCode',
+        'proactive/model/script/ScriptFile',
         'proactive/view/ViewWithProperties',
         'proactive/model/NativeExecutable',
         'proactive/model/JavaExecutable',
         'proactive/model/ScriptExecutable'
     ],
 
-    function ($, Backbone, PNotify, Task, Script, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
+    function ($, Backbone, PNotify, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
 
     "use strict";
 
     return ViewWithProperties.extend({
 
-        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png"},
+        icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png", "ScriptCode": "images/script.png", "ScriptFile": "images/url.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png", "kubernetes": "images/Kubernetes.png",
             "bash": "images/LinuxBash.png", "scalaw": "images/Scalaw.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
                    "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png",
@@ -28,10 +30,8 @@ define(
             if (!this.model) {
                 // creating a default task model
                 this.model = new Task();
-                var script = new Script();
-                script.set("Script", "print(java.lang.System.getProperty('pas.task.name'))");
-                script.set("Language", "javascript");
-                this.model.get("Execute").set("Script", script);
+                this.model.set("Type", "ScriptExecutable");
+                this.model.set("ScriptExecutable", { "ScriptType": "ScriptCode", "ScriptCode": {"Code" : "println variables.get(\"PA_TASK_NAME\")", "Language" : "groovy" }});
             }
 
             var base_studio_url = window.location.origin + "/studio" ;
@@ -50,18 +50,30 @@ define(
             }
 
             if (!hasGenericInfoIcon){
-                try{
-                    iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").get("Script").get("Language")];
-                }catch(err){
-                     try{
-                        iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[this.model.get("Execute").Script.Language];
-                     }catch(err){}
+                if(this.model.get("Type") === "ScriptExecutable") {
+                    var language;
+                    if (this.model.get("ScriptExecutable").hasOwnProperty("ScriptType")) {
+                        if (this.model.get("ScriptExecutable").ScriptType === "ScriptCode" && this.model.get("ScriptExecutable").ScriptCode) {
+                            language = this.model.get("ScriptExecutable").ScriptCode.Language;
+                        } else if (this.model.get("ScriptExecutable").ScriptFile) {
+                            language = this.model.get("ScriptExecutable").ScriptFile.Language;
+                        }
+                    } else {
+                        if (this.model.get("ScriptExecutable").get("ScriptType") === "ScriptCode" && this.model.get("ScriptExecutable").get("ScriptCode")) {
+                            language = this.model.get("ScriptExecutable").get("ScriptCode").get("Language");
+                        } else if (this.model.get("ScriptExecutable").get("ScriptFile")) {
+                            language = this.model.get("ScriptExecutable").get("ScriptFile").get("Language");
+                        }
+                    }
+                    if (language && language.length > 0) {
+                        iconPath =  base_studio_url+ "/" + this.iconsPerLanguage[language];
+                    }
                 }
             }
             
-            this.model.on("change:Execute", this.updateIcon, this);
+            this.model.on("change:ScriptExecutable", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
-            this.model.on("change:Type", this.changeTaskType, this);
+            this.model.on("change:Type", this.updateIcon, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
             // Register a handler, listening for changes on Fork Execution Environment,
@@ -166,25 +178,31 @@ define(
                 // We did not find a way to render the model, so the last possibility was to
                 // just set it in the DOM.
                 $('[id*="_Fork Environment_Java Home"]').val(javaHome);
-                $('[id*="_Fork Environment_Environment Script_Language"]').val(prefixCommandLanguage);
-                $('[id*="_Fork Environment_Environment Script_Script"]').val( prefixDockerCommandString);
+                $('[id*="_Fork Environment_Environment Script_ScriptCode_Language"]').val(prefixCommandLanguage);
+                $('[id*="_Fork Environment_Environment Script_ScriptCode_Code"]').val( prefixDockerCommandString);
                 // Set the script and language in the model. This persists the changes but does not render
                 // them immediately.
                 this.model.get('Fork Environment')['Java Home'] = javaHome;
-                var replacedScript = new Script();
-                replacedScript.set({Script :prefixDockerCommandString, Language : prefixCommandLanguage });
-                this.model.get('Fork Environment')['Environment Script'] = replacedScript;
+                this.model.get('Fork Environment')['Environment Script'] = {ScriptType : "ScriptCode", ScriptCode: {Code : prefixDockerCommandString, Language : prefixCommandLanguage}};
             }
             // Function is done. If the Fork Execution Environment was set to something not handled above,
             // then the previous inputs will just be kept.
         },
+
         
         updateIcon: function (changed) {
             var executableTypeStr = this.model.get("Type");
             var iconPath = this.icons[executableTypeStr];
             if (executableTypeStr == "ScriptExecutable") {
-                var language = this.model.get("Execute").Script.Language;
-                iconPath = this.iconsPerLanguage[language];
+                var language;
+                if (this.model.get("ScriptExecutable").ScriptType === "ScriptCode" ) {
+                    language = this.model.get("ScriptExecutable").ScriptCode.Language;
+                } else if (this.model.get("ScriptExecutable").ScriptFile.Language) {
+                    language = this.model.get("ScriptExecutable").ScriptFile.Language;
+                }
+                if (language && language.length > 0) {
+                    iconPath = this.iconsPerLanguage[language];
+                }
             }
             var genericInformation = this.model.get("Generic Info");
             if (genericInformation){
@@ -199,32 +217,6 @@ define(
 
         setInvalid: function () {
             this.$el.addClass("invalid-task")
-        },
-
-        changeTaskType: function () {
-            var executableTypeStr = this.model.get("Type");
-            
-            if (this.modelType && this.modelType != executableTypeStr) {
-                var executableType = require('proactive/model/'+executableTypeStr);
-                var executable = new executableType();
-
-                this.model.schema = $.extend(true, {}, this.model.schema);
-                // TODO beautify
-                if (executableTypeStr == "JavaExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: JavaExecutable, title: ""};
-                } else if (executableTypeStr == "NativeExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: NativeExecutable, title: ""};
-                } else if (executableTypeStr == "UrlExecutable") {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: UrlExecutable, title: ""};
-                } else {
-                    this.model.schema['Execute'] = {type: 'NestedModel', model: ScriptExecutable, title: ""};
-                    executable["Script"] = {"Language": "bash"};
-                }
-                this.$el.find("img").attr('src', this.icons[executableTypeStr]);
-                this.model.set({"Execute": executable});
-                this.$el.click();
-            }
-            this.modelType = executableTypeStr;
         },
 
         controlFlowChanged: function (model, valu, handler) {
@@ -284,6 +276,8 @@ define(
             var model = this.model.controlFlow[modelType];
 
             if (!model) return;
+
+            model.model.parentModel = this.model;
 
             var modelView = new ViewWithProperties({el: labelElem, model: model.model})
             modelView.render();

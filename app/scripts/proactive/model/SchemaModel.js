@@ -47,7 +47,30 @@ define(
         },
         //This method is used for the imported job xml
         populateSchema: function (obj, merging) {
+            this.populateSchemaOrTemplate.call(this, obj, merging, false);
+        },
+
+        populateSchemaOrTemplate: function (obj, merging, isTemplate) {
             var that = this;
+            // change this to true to display in the console the model parsing
+            var logEnabled = false;
+
+            var log = function(...args) {
+                if (logEnabled) {
+                    console.log.apply(that, args)
+                }
+            }
+
+            var selectedNestedModel = null;
+            var radioButtonNestedModelOptions = [];
+
+            var isCurrentSelectedNestedModelIfRequired = function(selectedModel, modelOptions, currentProperty) {
+                // returns true if the current schema does not use a TaskTypeRadioEditor,
+                // if the current property/model is not part of the radio editor choice,
+                // or if the current property/model is the selected choice.
+                return (selectedModel == null || modelOptions == null || modelOptions.indexOf(currentProperty) < 0 || currentProperty === selectedModel)
+            }
+
 
             for (var prop in this.schema) {
                 if (this.schema[prop] && this.schema[prop].fieldAttrs && this.schema[prop].fieldAttrs.placeholder) {
@@ -62,14 +85,31 @@ define(
                             if (!Array.isArray(value)) {
                                 value = [value];
                             }
-                            $.each(value, function (i, v) {
+                            $.each(value, function(i, v) {
                                 var listElemValue = that.getListElementValue(that.schema[prop], v)
                                 if (listElemValue) {
                                     newElements.push(listElemValue)
-//                                    console.log("Adding to list", prop, listElemValue)
+                                    log("Adding to list", prop, listElemValue)
                                 }
                             })
                             this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
+                        }
+                    } else if (this.schema[prop].type && this.schema[prop].type == 'TaskTypeRadioEditor') {
+                        // the radio editor model specifies a ordered choice placeholder separated by |
+                        // each choice corresponds to one NestedModel named after the radio button values
+                        // for example, if placeholder is "code|file" and radio values are ScriptCode, ScriptFile
+                        // it means that when the "code" tag is present, the ScriptCode nested model will be populated
+                        var choicePlaceholders = placeholder.split("|");
+                        for (var i in choicePlaceholders) {
+                            var choicePh = choicePlaceholders[i];
+                            var value = this.getValue(choicePh, obj);
+                            if (value) {
+                                log("Setting", prop, "to", this.schema[prop].options[i].val)
+                                this.set(prop, this.schema[prop].options[i].val);
+                                // in the current schema, only the following NestedModel will be populated.
+                                selectedNestedModel = this.schema[prop].options[i].val;
+                                radioButtonNestedModelOptions = this.schema[prop].options.map( elem => elem.val);
+                            }
                         }
                     } else {
                         var value = null;
@@ -86,121 +126,58 @@ define(
                         if (value) {
                             if (typeof value === 'object') {
                                 if (this.schema[prop].type == "Select") {
-                                    // looking for a filed in the value matching select options
+                                    // looking for a field in the value matching select options
                                     if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy == 'checkpresence') {
                                         if (value) {
-//                                            console.log("Setting", prop, "from", placeholder, "to", "true")
+                                            log("Setting", prop, "from", placeholder, "to", "true")
                                             that.set(prop, "true")
                                         }
                                     } else {
-                                        $.each(this.schema[prop].options, function (i, option) {
+                                        $.each(this.schema[prop].options, function(i, option) {
                                             if (value[option] || value[option.val]) {
-//                                                console.log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
+                                                log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
                                                 that.set(prop, option.val ? option.val : option)
                                                 return false;
                                             }
                                         });
                                     }
-                                } else if (this.schema[prop].type == "NestedModel") {
+                                } else if (this.schema[prop].type == "NestedModel" &&
+                                    isCurrentSelectedNestedModelIfRequired(selectedNestedModel, radioButtonNestedModelOptions, prop)) {
                                     var model = new this.schema[prop].model();
                                     model.populateSchema(value)
-//                                    console.log("Setting", prop, "from", placeholder, "to", model)
+                                    log("Setting", prop, "from", placeholder, "to", model)
                                     that.set(prop, model)
+                                } else if (this.schema[prop].type == "NestedModel") {
+                                    log("Skipping", prop, "from", placeholder, "as it was not selected")
                                 } else {
-                                    console.log("Should no be here", prop, value);
+                                    log("Should not be here", prop, value);
                                 }
                             } else {
-//                                  console.log("Setting", prop, "from", placeholder, "to", value)
+                                if (isTemplate && merging && that.get(prop) && typeof that.get(prop) == 'string' && that.get(prop).toLowerCase().includes('untitled workflow')){
                                     value = value.trim()
                                     that.set(prop, value)
+                                }
+                                if (isTemplate && merging && that.get(prop)) {
+                                    // do not override existing value when merging
+                                }
+                                else {
+                                    log("Setting", prop, "from", placeholder, "to", value)
+                                    value = value.trim()
+                                    that.set(prop, value)
+                                }
+                                log("Setting", prop, "from", placeholder, "to", value)
+                                value = value.trim()
+                                that.set(prop, value)
                             }
                         }
                     }
                 }
             }
         },
+
         //This method is used for the templates
         populateTemplate: function (obj, merging) {
-            var that = this;
-
-            for (var prop in this.schema) {
-                if (this.schema[prop] && this.schema[prop].fieldAttrs && this.schema[prop].fieldAttrs.placeholder) {
-
-                    var placeholder = this.schema[prop].fieldAttrs.placeholder;
-
-                    if (this.schema[prop].type && this.schema[prop].type == 'List') {
-                        var currentElements = this.get(prop) || [];
-                        var newElements = [];
-                        var value = this.getValue(placeholder, obj);
-                        if (value) {
-                            if (!Array.isArray(value)) {
-                                value = [value];
-                            }
-                            $.each(value, function (i, v) {
-                                var listElemValue = that.getListElementValue(that.schema[prop], v)
-                                if (listElemValue) {
-                                    newElements.push(listElemValue)
-//                                    console.log("Adding to list", prop, listElemValue)
-                                }
-                            })
-                            this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
-                        }
-                    } else {
-                        var value = null;
-                        if (!value && placeholder instanceof Array) {
-                            for (var ph in placeholder) {
-                                value = this.getValue(placeholder[ph], obj)
-                                if (value) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            var value = this.getValue(placeholder, obj);
-                        }
-                        if (value) {
-                            if (typeof value === 'object') {
-                                if (this.schema[prop].type == "Select") {
-                                    // looking for a filed in the value matching select options
-                                    if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy == 'checkpresence') {
-                                        if (value) {
-//                                            console.log("Setting", prop, "from", placeholder, "to", "true")
-                                            that.set(prop, "true")
-                                        }
-                                    } else {
-                                        $.each(this.schema[prop].options, function (i, option) {
-                                            if (value[option] || value[option.val]) {
-//                                                console.log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
-                                                that.set(prop, option.val ? option.val : option)
-                                                return false;
-                                            }
-                                        });
-                                    }
-                                } else if (this.schema[prop].type == "NestedModel") {
-                                    var model = new this.schema[prop].model();
-                                    model.populateSchema(value)
-//                                    console.log("Setting", prop, "from", placeholder, "to", model)
-                                    that.set(prop, model)
-                                } else {
-                                    console.log("Should no be here", prop, value);
-                                }
-                            } else {
-                                if (merging && that.get(prop) && typeof that.get(prop) == 'string' && that.get(prop).toLowerCase().includes('untitled workflow')){
-                                    value = value.trim()
-                                    that.set(prop, value)
-                                }
-                                if (merging && that.get(prop)) {
-                                    // do not override existing value when merging
-                                }
-                                else {
-//                                    console.log("Setting", prop, "from", placeholder, "to", value)
-                                    value = value.trim()
-                                    that.set(prop, value)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            this.populateSchemaOrTemplate.call(this, obj, merging, true);
         },
         _mergeListsRemovingDuplicates: function (a, b) {
             return _.uniq(a.concat(b), false, JSON.stringify);

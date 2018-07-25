@@ -123,7 +123,7 @@ var Form = Backbone.View.extend({
     } else if (this.data) {
       options.value = this.data[key];
     } else {
-      options.value = null;
+      options.value = undefined;
     }
 
     var field = new this.Field(options);
@@ -825,7 +825,8 @@ Form.Field = Backbone.View.extend({
       fieldAttrs: schema.fieldAttrs,
       editorAttrs: schema.editorAttrs,
       key: this.key,
-      editorId: this.editor.id
+      editorId: this.editor.id,
+      self: this
     };
   },
 

@@ -1,0 +1,14 @@
+<% if (model["Code"] && model["Code"].length>0 || model["Language"]) { %>
+                <code language="<%=model["Language"]%>">
+<![CDATA[
+<%= model["Code"] %>
+]]>
+                </code>
+<% }
+if (model["Arguments"] && model["Arguments"].length>0) { %>
+                <arguments>
+    <% _.each(model["Arguments"], function(arg) { %>
+                    <argument value="<%=arg%>"/>
+    <% }) %>
+                </arguments>
+<% }%>
