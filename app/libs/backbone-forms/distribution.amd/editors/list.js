@@ -549,7 +549,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     onModalSubmitted: function() {
       var modal = this.modal,
           form = this.modalForm,
-          isNew = !this.value || (this.defaultValue && JSON.stringify(this.defaultValue) === JSON.stringify(this.value));
+          isNewOrDefault = !this.value || (this.defaultValue && JSON.stringify(this.defaultValue) === JSON.stringify(this.value));
 
       //Stop if there are validation errors
       var error = form.validate();
@@ -561,7 +561,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       //Render item
       this.renderSummary();
 
-      if (isNew) this.trigger('readyToAdd');
+      if (isNewOrDefault) this.trigger('readyToAdd');
       
       this.trigger('change', this);
 

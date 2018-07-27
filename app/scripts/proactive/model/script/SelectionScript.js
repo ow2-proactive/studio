@@ -18,11 +18,11 @@ define(
     var scriptCodeTemplate = _.template(tpl);
 
     // class for most fields in the modal form
-    var width100Class = 'width100p';
+    var fullWidthClass = 'full-width';
     // class for arguments
-    var width490pxClass = 'width490px';
+    var argumentsModalClass = 'arguments-modal';
 
-    var originalModel = Script("Script/selection", null, null, dataHelp, scriptCodeTemplate, width100Class, width100Class, width490pxClass);
+    var originalModel = Script("Script/selection", null, null, dataHelp, scriptCodeTemplate, fullWidthClass, fullWidthClass, argumentsModalClass);
 
     return originalModel.extend({
         schema: SchemaModel.prototype.mergeObjectsPreserveOrder(

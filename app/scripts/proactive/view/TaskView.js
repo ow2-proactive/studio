@@ -219,7 +219,7 @@ define(
             this.$el.addClass("invalid-task")
         },
 
-        controlFlowChanged: function (model, valu, handler) {
+        controlFlowChanged: function (changed, valu, handler) {
             var fromFormChange = handler.error; // its defined when form was
                                                 // changed
             var control = this.model.get("Control Flow");
@@ -273,13 +273,14 @@ define(
 
             var labelElem = $(label.canvas);
             var modelType = labelElem.text();
-            var model = this.model.controlFlow[modelType];
+            var controlFlow = this.model.controlFlow[modelType];
 
-            if (!model) return;
+            if (!controlFlow) return;
 
-            model.model.parentModel = this.model;
+            // add a reference to the parent task model in the control flow model
+            controlFlow.model.parentModel = this.model;
 
-            var modelView = new ViewWithProperties({el: labelElem, model: model.model})
+            var modelView = new ViewWithProperties({el: labelElem, model: controlFlow.model})
             modelView.render();
             modelView.$el.click();
         },

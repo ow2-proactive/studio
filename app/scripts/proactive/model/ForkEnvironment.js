@@ -64,7 +64,7 @@ define(
                     model: ForkEnvironmentScript,
                     fieldAttrs: {
                         'placeholder': 'envScript',
-                        "data-help": 'A script which can be used to configure programmatically the Java Virtual Machine forked from the computing node to execute a task. The environment script is run before any other task script (pre, task, etc).'
+                        "data-help": 'A script which can be used to configure programmatically the task&#39;s forked JVM process. The environment script is run before any other task script (pre, task, etc).'
                     }
                 }
             },

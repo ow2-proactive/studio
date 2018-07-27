@@ -706,12 +706,12 @@ div[name="Arguments"] button {
   font-size: 12px;
 }
 
-.width100p {
+.full-width {
     width: 100% !important;
     max-width: 100% !important;
 }
 
-.width490px {
+.arguments-modal {
     width: 490px !important;
 }
 
