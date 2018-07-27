@@ -8,7 +8,9 @@ if (model["ScriptType"] && model["ScriptType"] == "ScriptCode") {
 }
 if (subTemplate && subTemplate.length > 0) {
 %>
-            <script>
+            <script<%=(model["Type"] && model["Type"].length > 0) ? ' type="' + model["Type"] + '"':''%>>
 <%=subTemplate%>
             </script>
-<%}%>
+<%
+}
+%>

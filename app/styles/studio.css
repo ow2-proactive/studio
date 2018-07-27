@@ -663,6 +663,7 @@ input[name="Type"] {
 
 input[name="Arguments"] {
     float: left;
+    width: 300px;
 }
 
 input[type="number"] {
@@ -679,6 +680,42 @@ input[type="number"] {
 input[type="checkbox"] {
     width: 13px !important;
     height: 13px !important;
+}
+
+label[for$="Pre Script"] {
+    font-weight: bold !important;
+}
+
+label[for$="Post Script"] {
+    margin-top: 18px;
+    font-weight: bold !important;
+}
+
+label[for$="Clean Script"] {
+    margin-top: 18px;
+    font-weight: bold !important;
+}
+
+label[for$="Environment Script"] {
+    margin-top: 18px;
+    font-weight: bold !important;
+}
+
+/* buttons for arguments in selection script modal */
+div[name="Arguments"] button {
+  font-size: 12px;
+}
+
+.full-width {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.arguments-modal {
+    width: 490px !important;
+}
+
+.blank {
 }
 
 .task-type input {
@@ -718,6 +755,14 @@ input[type="checkbox"] {
 
 .ScriptExecutable {
     background-image: url("../images/script.png");
+}
+
+.ScriptCode {
+    background-image: url("../images/code.png");
+}
+
+.ScriptFile {
+    background-image: url("../images/url.png");
 }
 
 .dragActive {
@@ -1249,4 +1294,12 @@ li.success {
 
 .hover-editor-content-hovered {
     display: block;
+}
+
+.displayed {
+    display: inherit;
+}
+
+.hidden {
+    display: none;
 }

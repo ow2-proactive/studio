@@ -54,10 +54,13 @@ define(function () {
             'R': 'r'
         },
         languages_available: {
-            'script' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
-            'flow' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
-            'forkenvironment' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"]
+            'Script/selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
+            'Script/environment' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"],
+            'Script/pre' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/task' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/post' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/flow' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
+            'Script/clean' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
         },
         keywords: {
             'bash': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],

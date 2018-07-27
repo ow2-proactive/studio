@@ -1,21 +1,21 @@
 define(
     [
     'backbone',
+    'underscore',
     'proactive/model/SchemaModel',
     'proactive/model/ScriptExecutable',
     'proactive/model/NativeExecutable',
     'proactive/model/JavaExecutable',
     'proactive/model/ForkEnvironment',
-    'proactive/model/Script',
-    'proactive/model/SelectionScript',
-    'proactive/model/ForkEnvironmentScript',
-    'proactive/model/PreScript',
-    'proactive/model/TaskScript',
-    'proactive/model/PostScript',
-    'proactive/model/FlowScript',
-    'proactive/model/CleanScript',
-    'proactive/model/BranchWithScript',
+    'proactive/model/script/Script',
+    'proactive/model/script/SelectionScript',
+    'proactive/model/script/ForkEnvironmentScript',
+    'proactive/model/script/PreScript',
+    'proactive/model/script/PostScript',
+    'proactive/model/script/FlowScript',
+    'proactive/model/script/CleanScript',
     'proactive/view/utils/undo',
+    'text!proactive/templates/submodel-radio-form-template.html',
     'text!proactive/templates/selection-script-host-template.html',
     'text!proactive/templates/selection-script-os-template.html',
     'text!proactive/templates/selection-script-totalmem-template.html',
@@ -25,9 +25,9 @@ define(
     ],
 
      // TODO REMOVE undoManager dependency - comes from view
-     function (Backbone, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript, ForkEnvironmentScript,
-            PreScript, TaskScript, PostScript, FlowScript, CleanScript,
-            BranchWithScript, undoManager, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config, StudioClient) {
+     function (Backbone, _, SchemaModel, ScriptExecutable, NativeExecutable, JavaExecutable, ForkEnvironment, Script, SelectionScript, ForkEnvironmentScript,
+            PreScript, PostScript, FlowScript, CleanScript,
+            undoManager, radioFormTemplate, ssHostTemplate, ssOSTemplate, ssTotalMemTemplate, Utils, config, StudioClient) {
 
         "use strict";
 
@@ -226,45 +226,75 @@ define(
                     },
                     options: ["anywhere", "elsewhere"]
                 },
+                // Type is a radio button which can select an active NestedModel
+                // The options values match each one nested model defined in this schema
+                // the placeholder defines which xml structure triggers one nested model or the other
                 "Type": {
                     type: 'TaskTypeRadioEditor',
                     fieldAttrs: {
                         "data-help": '<b>Script Task</b>, a script written in Groovy, Ruby, Python and other languages supported by the JSR-223.<br/><b>Native Task</b>, an executable with eventual parameters to be executed.<br/><b>Java Task</b>, a task written in Java extending the Scheduler API.',
                         "data-tab": "Task Implementation",
-                        'data-tab-help': 'Implementation of the task (script, executable or java class extending the Scheduler API)'
+                        'data-tab-help': 'Implementation of the task (script, executable or java class extending the Scheduler API)',
+                        'placeholder': 'scriptExecutable|nativeExecutable|javaExecutable'
                     },
                     fieldClass: 'task-type',
                     options: [
-                              {val: "ScriptExecutable", label: "Code"},
+                              {val: "ScriptExecutable", label: "Script"},
                               {val: "NativeExecutable", label: "Native"},
                               {val: "JavaExecutable", label: "Java"}
                               ]
                 },
-                "Execute": {type: 'NestedModel', model: ScriptExecutable, title: ""},
+                "ScriptExecutable": {
+                    type: 'NestedModel',
+                    model: ScriptExecutable,
+                    template: _.template("<% var selectedRadioType = 'Type'; %>" + radioFormTemplate),
+                    fieldAttrs: {
+                        'placeholder': 'scriptExecutable'
+                    },
+                    title: ""
+                },
+                "NativeExecutable": {
+                    type: 'NestedModel',
+                    model: NativeExecutable,
+                    template: _.template("<% var selectedRadioType = 'Type'; %>" + radioFormTemplate),
+                    fieldAttrs: {
+                        'placeholder': 'nativeExecutable'
+                    },
+                    title: ""
+                },
+                "JavaExecutable": {
+                    type: 'NestedModel',
+                    model: JavaExecutable,
+                    template: _.template("<% var selectedRadioType = 'Type'; %>" + radioFormTemplate),
+                    fieldAttrs: {
+                        'placeholder': 'javaExecutable'
+                    },
+                    title: ""
+                },
                 "Pre Script": {
                     type: 'NestedModel',
                     model: PreScript,
                     fieldAttrs: {
                         "data-tab": "Pre/Post/Clean scripts",
                         'data-tab-help': 'Scripts executed before and after the task',
-                        'placeholder': 'pre->script',
-                        "data-help": 'A script that is executed on computing node before executing the task. A script can be saved into a library when you are logged in.'
+                        'placeholder': 'pre',
+                        "data-help": 'A script that is executed on the computing node before executing the task.'
                     }
                 },
                 "Post Script": {
                     type: 'NestedModel',
                     model: PostScript,
                     fieldAttrs: {
-                        'placeholder': 'post->script',
-                        "data-help": 'A script that is executed on computing node after the task execution (if task is finished correctly). A script can be saved into a library when you are logged in.'
+                        'placeholder': 'post',
+                        "data-help": 'A script that is executed on the computing node after the task execution (if the task is finished correctly).'
                     }
                 },
                 "Clean Script": {
                     type: 'NestedModel',
                     model: CleanScript,
                     fieldAttrs: {
-                        'placeholder': 'cleaning->script',
-                        "data-help": 'A script that is executed on computing node after the task execution even if task failed. A script can be saved into a library when you are logged in.'
+                        'placeholder': 'cleaning',
+                        "data-help": 'A script that is executed on the computing node after the task execution even if the task failed.'
                     }
                 },
                 "Number of Nodes": {
@@ -309,7 +339,7 @@ define(
                     itemTemplate: Utils.bigCrossTemplate,
                     fieldAttrs: {
                         "data-tab": "Node Selection",
-                        'placeholder': 'selection->script',
+                        'placeholder': 'selection',
                         "data-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
                     },
                     confirmDelete: 'You are about to remove a Selection script.'
@@ -381,7 +411,7 @@ define(
                   "Generic Info": new Array()
                 });
                 this.set({"Type": "ScriptExecutable"});
-                this.set({"Execute": new ScriptExecutable()});
+                this.set({"ScriptExecutable": new ScriptExecutable()});
                 this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Task Name": "Task" + (++Task.counter)});
                 this.set({"Maximum Number of Execution Attempts": ""});
@@ -412,7 +442,8 @@ define(
                             }
                         }
                     }
-                ]
+                ];
+
 
                 this.controlFlow = {};
 
@@ -581,7 +612,7 @@ define(
                 }
 
                 this.controlFlow['if'].task = task;
-                this.controlFlow['if'].model = new BranchWithScript();
+                this.controlFlow['if'].model = new FlowScript();
                 console.log('Adding if branch', this.controlFlow['if'], 'to', this)
             },
             setelse: function (task) {
@@ -616,7 +647,7 @@ define(
             setloop: function (task) {
                 console.log('Adding loop')
                 this.set({'Control Flow': 'loop'});
-                this.controlFlow = {'loop': {task: task, model: new BranchWithScript()}}
+                this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
             },
             removeloop: function (controlFlow, task) {
                 console.log('Removing loop')
@@ -627,7 +658,7 @@ define(
                 console.log('Adding replicate')
                 if (!this.controlFlow['replicate']) { // keep existing script if it is already defined
                     this.set({'Control Flow': 'replicate'});
-                    this.controlFlow = {'replicate': {model: new BranchWithScript()}}
+                    this.controlFlow = {'replicate': {model: new FlowScript()}}
                 }
             },
             removereplicate: function (controlFlow, task) {
@@ -639,7 +670,7 @@ define(
             getBasicFields: function () {
                 return [
                         "Task Name",
-                        "Execute",
+                        "Type",
                         "Host Name",
                         "Operating System",
                         "Required amount of memory (in mb)",

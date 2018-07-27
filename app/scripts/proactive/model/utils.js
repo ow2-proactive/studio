@@ -1,9 +1,10 @@
 define(
     [
-        'backbone'
+        'backbone',
+        'underscore'
     ],
 
-    function (Backbone) {
+    function (Backbone, _) {
 	
         return {
             inlineName: function(prop) {
@@ -33,6 +34,13 @@ define(
                 "\"><input class='input-property-field' type=\"text\"  value=\""+ value +
                 "\"><input class='input-property-field' type=\"checkbox\"" + checked + " onclick=\"return false;\">";
             },
-            bigCrossTemplate: _.template('<div><span data-editor></span><button type="button" class="btn btn-danger" data-action="remove">x</button></div>')
+            bigCrossTemplate: _.template('<div><span data-editor></span><button type="button" class="btn btn-danger" data-action="remove">x</button></div>'),
+
+            isUrl: function(url) {
+                var urlMatcher = /^([a-z]+\:\/+)([^\/\s]*)([a-z0-9\-@\^=%&;\/~\+]*)[\?]?([^ \#]*)#?([^ \#]*)/ig;
+
+                return (! _.isEmpty(url) && url.match(urlMatcher));
+
+            }
         }
 })
