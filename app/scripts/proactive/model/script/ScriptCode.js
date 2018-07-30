@@ -53,7 +53,7 @@ define(
                         itemType: 'Text',
                         editorClass: scriptArgumentsClass,
                         fieldAttrs: {
-                            'placeholder': 'code->arguments->argument',
+                            'placeholder': 'arguments->argument',
                             'itemplaceholder': '@attributes->value',
                             'data-help' : 'Arguments given to the script, which can be accessed inside the script through the binding <u>args</u>.'
                             },
