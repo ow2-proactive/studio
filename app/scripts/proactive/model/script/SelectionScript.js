@@ -32,7 +32,10 @@ define(
                     type: 'Select',
                     options: ["dynamic", "static"],
                     validators: ['required'],
-                    fieldAttrs: {'placeholder': 'script->@attributes->type'}
+                    fieldAttrs: {
+                        'placeholder': 'script->@attributes->type',
+                        'data-help' : 'Based on the selection script code definition (md5), a <i>static</i> script is run only once on a given node. A <i>dynamic</i> script will be re-run.'
+                    }
                 }
             }),
         defaults : {
