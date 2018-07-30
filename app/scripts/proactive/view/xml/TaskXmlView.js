@@ -19,7 +19,7 @@ define(
         render: function () {
             var executableType = this.model.get("Type");
             var executableViewType = require('proactive/view/xml/' + executableType + "XmlView");
-            var executableView = new executableViewType({model: this.model.get("Execute")});
+            var executableView = new executableViewType({model: this.model.get(executableType)});
             var executable = executableView.render().$el.text();
 
             var forkEnvironmentViewType = require('proactive/view/xml/ForkEnvironmentXmlView');
@@ -29,7 +29,7 @@ define(
             var selectionScripts = [];
             if (this.model.get("Node Selection")) {
                 $.each(this.model.get("Node Selection"), function (i, script) {
-                    var view = new TemplateView({model: script, template: "script-template"}).render();
+                    var view = new TemplateView({model: script, template: "selection-script-template"}).render();
                     selectionScripts.push(view.$el.text());
                 })
             }
@@ -44,9 +44,9 @@ define(
                 $.each(['if', 'loop', 'replicate'], function (i, control) {
                     if (that.model.controlFlow[control]) {
                         var controlModel = that.model.controlFlow[control].model;
-                        if (controlModel && controlModel.get('Script')) {
+                        if (controlModel) {
                             that.model.controlFlow[control].script =
-                                new TemplateView({model: controlModel.get('Script'), template: "script-template"}).render().$el.text();
+                                new TemplateView({model: controlModel, template: "script-template"}).render().$el.text();
                             return false;
                         }
                     }

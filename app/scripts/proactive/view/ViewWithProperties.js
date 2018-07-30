@@ -48,13 +48,19 @@ define(
 					breadcrumb.append(workflows)
 
 					var jobBreadcrumb
-					if (this.model.get("Task Name")) {
+					var modelInUse = this.model;
+					if (this.model.parentModel) {
+					    // when the current model is a flow script, the parent model field contains the task model, which will be used for the breadcrumb
+					    modelInUse = this.model.parentModel;
+					}
+					if (modelInUse.get("Task Name")) {
 						jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Name") + '</a></span></li>');
 						breadcrumb.append(jobBreadcrumb)
 
-						breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + this.model.get("Task Name") + '</span></li>')
+						breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + modelInUse.get("Task Name") + '</span></li>')
+
 					} else {
-						jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + this.model.get("Name") + '</span></li>');
+						jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + modelInUse.get("Name") + '</span></li>');
 						breadcrumb.append(jobBreadcrumb)
 
 						// selected-task class is used for copy/paste, delete operations, group task moving etc
@@ -82,7 +88,6 @@ define(
 									StudioApp.models.jobModel.get("Name"),
 									StudioApp.views.xmlView.generateXml(),
 									{
-										offsets: undoManager.getOffsetsFromDOM(),
 										project: StudioApp.models.jobModel.get("Project"),
 										detailedView: !detailedView
 									}
@@ -114,7 +119,6 @@ define(
 									StudioApp.models.jobModel.get("Name"),
 									StudioApp.views.xmlView.generateXml(),
 									{
-										offsets: undoManager.getOffsetsFromDOM(),
 										project: StudioApp.models.jobModel.get("Project"),
 										detailedView: detailedView
 									}

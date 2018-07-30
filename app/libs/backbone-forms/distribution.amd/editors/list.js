@@ -16,7 +16,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     events: {
       'click [data-action="add"]': function(event) {
         event.preventDefault();
-        this.addItem(null, true);
+        this.addItem(undefined, true);
       }
     },
 
@@ -415,6 +415,14 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
      */
     initialize: function(options) {
       options = options || {};
+
+      if (_.isEmpty(options.value) && options.schema.model) {
+
+          // if the value is empty and there is a model defined, create a new model object and use default attributes
+          this.defaultModel = new options.schema.model();
+          options.value = this.defaultModel.attributes;
+          this.defaultValue = options.value;
+      }
       
       Form.editors.Base.prototype.initialize.call(this, options);
       
@@ -435,7 +443,9 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       var self = this;
 
       //New items in the list are only rendered when the editor has been OK'd
-      if (_.isEmpty(this.value)) {
+      if (_.isEmpty(this.value) || (this.defaultValue && JSON.stringify(this.defaultValue) === JSON.stringify(this.value))) {
+        // open the editor if the value is empty or not the default value provided by the model
+
         this.openEditor();
       }
 
@@ -539,7 +549,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     onModalSubmitted: function() {
       var modal = this.modal,
           form = this.modalForm,
-          isNew = !this.value;
+          isNewOrDefault = !this.value || (this.defaultValue && JSON.stringify(this.defaultValue) === JSON.stringify(this.value));
 
       //Stop if there are validation errors
       var error = form.validate();
@@ -551,7 +561,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
       //Render item
       this.renderSummary();
 
-      if (isNew) this.trigger('readyToAdd');
+      if (isNewOrDefault) this.trigger('readyToAdd');
       
       this.trigger('change', this);
 

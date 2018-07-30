@@ -1,6 +1,6 @@
 define(
     [
-        'backbone',
+        'backbone'
     ],
 
     function (Backbone) {
@@ -29,27 +29,11 @@ define(
                     return {};
                 }
             },
-            getOffsets: function () {
-                try {
-                    var offsets = this.getMetadata().offsets;
-                    if (!offsets) {
-                        offsets = {};
-                    }
-                    return offsets;
-                } catch (e) {
-                    return {};
-                }
-            },
             getProject: function () {
                 return this.getMetadata().project;
             },
             setMetadata: function (metadata) {
                 this.set('metadata', JSON.stringify(metadata));
-            },
-            setOffsets: function (offsets) {
-                var metadata = this.getMetadata();
-                metadata.offsets = offsets;
-                this.setMetadata(metadata);
             },
             setProject: function (project) {
                 var metadata = this.getMetadata();

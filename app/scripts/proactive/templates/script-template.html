@@ -1,35 +1,14 @@
-<% if (model["Library Path"] && model["Library Path"].length>0 || model["Script"] && model["Script"].length>0 || model["Language"] || model["Or Url"]) { %>
-    <% print("<sc"+"ript") %>
-        <% if (model["Type"]) { %> type="<%=model["Type"]%>" <% }%>>
-            <% if (model["Script"] && model["Script"].length>0 && !model["Library Path"] || model["Or Url"] && model["Or Url"].length>0 || model["Language"]) {%>
-                <% if (!(model["Or Url"] && model["Or Url"].length>0)) { %>
-                <code language="<%=model["Language"]%>">
-<![CDATA[
-<%= model["Script"] %>
-]]>
-                </code>
-                <% } else { %>
-                <file url="<%=model["Or Url"]%>"<% if (model["Language"] && model["Language"].length > 0) { %> language="<%=model["Language"]%>"<% } %>>
-                </file>
-                <% }%>
-
-            <% } else { %>
-
-                <% if (model["Library Path"] && model["Library Path"].length>0) { %>
-                    <file path="<%=model["Library Path"]%>">
-                <% }%>
-
-                <% if (model["Arguments"] && model["Arguments"].length>0) { %>
-                    <arguments>
-                        <% _.each(model["Arguments"], function(arg) { %>
-                    <argument value="<%=arg%>"/>
-                        <% }) %>
-                    </arguments>
-                <% }%>
-
-                <% if (model["Library Path"] && model["Library Path"].length>0) { %>
-                    </file>
-                <% }%>
-            <% } %>
-    <% print("</sc"+"ript>") %>
-<% }%>
+<%
+var subTemplate = null;
+var templateViewType = require('proactive/view/TemplateView');
+if (model["ScriptType"] && model["ScriptType"] == "ScriptCode") {
+    subTemplate = new templateViewType({model: model["ScriptCode"], template: "script-code-template"}).render().$el.text();
+} else if (model["ScriptType"] && model["ScriptType"] == "ScriptFile") {
+    subTemplate = new templateViewType({model: model["ScriptFile"], template: "script-file-template"}).render().$el.text();
+}
+if (subTemplate && subTemplate.length > 0) {
+%>
+            <script>
+<%=subTemplate%>
+            </script>
+<%}%>

@@ -1,0 +1,16 @@
+<%
+var subTemplate = null;
+var templateViewType = require('proactive/view/TemplateView');
+if (model["ScriptType"] && model["ScriptType"] == "ScriptCode") {
+    subTemplate = new templateViewType({model: model["ScriptCode"], template: "script-code-template"}).render().$el.text();
+} else if (model["ScriptType"] && model["ScriptType"] == "ScriptFile") {
+    subTemplate = new templateViewType({model: model["ScriptFile"], template: "script-file-template"}).render().$el.text();
+}
+if (subTemplate && subTemplate.length > 0) {
+%>
+            <script<%=(model["Type"] && model["Type"].length > 0) ? ' type="' + model["Type"] + '"':''%>>
+<%=subTemplate%>
+            </script>
+<%
+}
+%>

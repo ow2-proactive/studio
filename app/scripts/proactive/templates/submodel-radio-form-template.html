@@ -1,0 +1,21 @@
+<div id="<%= editorId + '_Div' %>" <%
+var selectedRadio = null;
+if (self.form.data) {
+    // this applies when editing a previously defined selection script
+    selectedRadio = self.form.data[selectedRadioType];
+} else if (self.hasOwnProperty('model')) {
+    // this applies in the normal case
+    selectedRadio = self.model.get(selectedRadioType);
+}
+if (editorId.endsWith(selectedRadio)) {
+%> class='displayed'<%
+} else {
+%> class='hidden'<%
+} %> >
+    <label for="<%= editorId %>"><%= title %></label>
+    <div>
+        <span data-editor></span>
+        <div data-error></div>
+        <div><%= help %></div>
+    </div>
+</div>

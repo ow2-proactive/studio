@@ -2,16 +2,12 @@ define(
     [
         'backbone',
         'proactive/model/SchemaModel',
-        'proactive/model/Script'
+        'proactive/model/script/Script'
     ],
 
     function (Backbone, SchemaModel, Script) {
 
-        "use strict";
+    "use strict";
 
-        return SchemaModel.extend({
-        schema: {
-            "Script": {type: 'NestedModel', model: Script, fieldAttrs: {'placeholder': 'script', "data-help":"A script written in Groovy, Ruby, Python and other languages supported by the JSR-223."}}
-        }
-    })
+    return Script("Script/task", null, null, "A task script written in Groovy, Ruby, Python and other languages supported by the JSR-223. Define the binding <u>result</u> to return an object accessible from dependent tasks.");
 })
