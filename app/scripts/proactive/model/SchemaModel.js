@@ -154,20 +154,19 @@ define(
                                 }
                             } else {
                                 if (isTemplate && merging && that.get(prop) && typeof that.get(prop) == 'string' && that.get(prop).toLowerCase().includes('untitled workflow')){
+                                    log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
-                                if (isTemplate && merging && that.get(prop)) {
+                                else if (isTemplate && merging && that.get(prop)) {
                                     // do not override existing value when merging
+                                    log("Skipping ", prop, "from", placeholder)
                                 }
                                 else {
                                     log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
-                                log("Setting", prop, "from", placeholder, "to", value)
-                                value = value.trim()
-                                that.set(prop, value)
                             }
                         }
                     }
