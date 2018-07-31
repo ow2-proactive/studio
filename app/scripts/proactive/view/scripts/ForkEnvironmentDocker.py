@@ -6,7 +6,7 @@ dockerRunCommand =  'docker run '
 dockerParameters = '--rm '
 # Prepare ProActive home volume
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
-paHomeContainer = variables.get("PA_SCHEDULER_HOME") 
+paHomeContainer = variables.get("PA_SCHEDULER_HOME")
 proActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' '
 # Prepare working directory (For Dataspaces and serialized task file)
 workspaceHost = localspace
