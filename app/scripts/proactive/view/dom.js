@@ -861,9 +861,7 @@ define(
 
             $(document).on("click", '.publish-script-to-catalog', function (event) {
                 var relatedTextAreaId = $(this).attr('data-related-textArea');
-                console.log('----->'+relatedTextAreaId);
                 var textAreaValue = $('#'+relatedTextAreaId).val();
-                console.log('----->'+textAreaValue);
                 event.preventDefault();
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");

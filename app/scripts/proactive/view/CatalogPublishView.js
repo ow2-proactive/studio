@@ -28,7 +28,25 @@ define(
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
             this.kindLabel = newKindLabel;
-            console.log('setting kind: '+newKind);
+        },
+        getCatalogObjectRevision : function(name, bucketName) {
+            var revision;
+            var catalogObjectsModel = new CatalogObjectCollection(
+            {
+                bucketname: bucketName,
+                kind: this.kind,
+                callback: function (catalogObjects) {
+                    _.each(
+                    catalogObjects,
+                    function (catalogObject) {
+                        if (catalogObject.name == name){
+                            revision = catalogObject;
+                        }
+                    });
+                }
+            });
+            catalogObjectsModel.fetch({async:false});
+            return revision;
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-description-container').empty();
@@ -38,42 +56,32 @@ define(
             publishCurrentButton.prop('disabled', !currentBucketRow);
 
             if (currentBucketRow){
-	        	var currentBucketName= $(currentBucketRow).data("bucketname");
-	            this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
+                var currentBucketName= $(currentBucketRow).data("bucketname");
+                this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
+                if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                    var name = studioApp.models.currentWorkflow.attributes.name;
+                    var editedCatalogObject = this.getCatalogObjectRevision(name, currentBucketName);
 
-                var editedCatalogObject = null;
-                var name = studioApp.models.currentWorkflow.attributes.name;
-                var catalogObjectsModel = new CatalogObjectCollection(
-                {
-                    bucketname: currentBucketName,
-                    kind: this.kind,
-                    callback: function (catalogObjects) {
-                        _.each(
-                        catalogObjects,
-                        function (catalogObject) {
-                            if (catalogObject.name == name){
-                                editedCatalogObject = catalogObject;
-                            }
-                        });
+                    var that = this;
+                    if (editedCatalogObject){
+                        var revisionsModel = new CatalogObjectLastRevisionDescription(
+                            {
+                                bucketname: currentBucketName,
+                                name: editedCatalogObject.name,
+                                callback: function (revision) {
+                                    var objectDescription = _.template(publishDescription);
+                                    $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: name, kind: that.kind, kindLabel: that.kindLabel}));
+                                }
+                            });
+                        revisionsModel.fetch();
+                    }else{
+                      var objectDescription = _.template(publishDescriptionFirst);
+                      this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
-                });
-                catalogObjectsModel.fetch({async:false});
-
-                var that = this;
-                if (editedCatalogObject){
-		            var revisionsModel = new CatalogObjectLastRevisionDescription(
-		            	{
-		            		bucketname: currentBucketName,
-		            		name: editedCatalogObject.name,
-			            	callback: function (revision) {
-	            				var objectDescription = _.template(publishDescription);
-	            				$('#catalog-publish-description-container').append(objectDescription({revision: revision, name: name, kind: that.kind, kindLabel: that.kindLabel}));
-			            	}
-		            	});
-		            revisionsModel.fetch();
-                }else{
-                  var objectDescription = _.template(publishDescriptionFirst);
-                  this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
+                } else {
+                    console.log("not catalog");
+                    var objectDescription = _.template(publishDescriptionFirst);
+                    this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
             }
 
@@ -118,21 +126,29 @@ define(
 
             var studioApp = require('StudioApp');
             var blob = new Blob([this.contentToPublish], { type: this.contentTypeToPublish });
-            var objectName = studioApp.models.currentWorkflow.attributes.name; //TODO : add input that take workflow value if it is a workflow
+            var objectName;
+            if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                objectName = studioApp.models.currentWorkflow.attributes.name;
+            } else {
+                objectName = $("#catalog-publish-name").val();
+            }
 
             var payload = new FormData();
             payload.append('file', blob);
             payload.append('name', objectName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('kind', $("#catalog-publish-kind").val());
-            payload.append('objectContentType', this.contentTypeToPublish );
+            payload.append('objectContentType', this.contentTypeToPublish );//TODO : content type may be improved depending on the kind of script
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
-            var isRevision = ($("#catalog-publish-description").data("first") != true)
-
+            var isWorkflowRevision = ($("#catalog-publish-description").data("first") != true)
+            var isRevision = isWorkflowRevision;
+            if (!isWorkflowRevision){
+                var revision = this.getCatalogObjectRevision(objectName, bucketName);
+                isRevision = (revision != null);
+            }
             if (isRevision){
-                console.log('is revision true');
-                url += "/" + objectName + "/revisions"
+                url += "/" + objectName + "/revisions" //TODO : we should warn user that we are publishing a new revision
             }
 
             var postData = {
@@ -148,24 +164,7 @@ define(
             var that = this;
             $.ajax(postData).success(function (response) {
                 that.displayMessage('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
-
-                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/raw'
-                console.log('the url of published object to catalog:', urlOfRawObjectFromCatalog);
-
-                if (that.kind.toLowerCase().indexOf('workflow') > -1) {
-                    var studioApp = require('StudioApp');
-                    $.ajax({
-                        url: urlOfRawObjectFromCatalog,
-                        type: 'GET',
-                        headers: headers
-                    }).success(function (response) {
-                        studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
-                        add_workflow_to_current(true);
-                        $('#catalog-publish-close-button').click();
-                    }).error(function (response) {
-                        console.error('Error importing selected Workflow: ' + JSON.stringify(response));
-                    });
-                }
+                $('#catalog-publish-close-button').click();
             }).error(function (response) {
                 that.displayMessage('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });
