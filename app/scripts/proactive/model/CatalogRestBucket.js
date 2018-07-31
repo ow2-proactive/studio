@@ -13,7 +13,7 @@ define(
                 name: "",
                 owner: "",
                 created_at: "",
-                workflows: ""
+                catalogObjects: ""
             }
         });
     })

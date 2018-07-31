@@ -77,7 +77,7 @@ define(
         login: function() {
 
             this.models.workflows = new WorkflowCollection();
-            this.models.catalogBuckets = new CatalogBucketCollection();
+            this.models.catalogBuckets = new CatalogBucketCollection({kind:'workflow'});
 
             this.models.catalogBuckets.fetch();
             this.modelsToRemove = [];

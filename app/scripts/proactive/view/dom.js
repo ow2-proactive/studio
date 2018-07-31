@@ -194,6 +194,7 @@ define(
         $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.setKind("workflow");
             studioApp.models.catalogBuckets.fetch({reset: true, async: false});
             studioApp.modelsToRemove = [];
             studioApp.views.catalogGetView.render();
@@ -204,8 +205,11 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
+                studioApp.models.catalogBuckets.setKind("workflow");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
+                studioApp.views.catalogPublishView.setKind("workflow/standard", "workflow");
+                studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml(), 'text/xml');
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             }else{
@@ -216,6 +220,7 @@ define(
         function openSetTemplatesMenuModal(order){
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
+                studioApp.models.catalogBuckets.setKind("workflow");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 if (order=='main')
@@ -610,63 +615,8 @@ define(
         }
 
         $("#confirm-publication-to-catalog").click(function () {
-            var headers = { 'sessionID': localStorage['pa.session'] };
-            var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
-
             var studioApp = require('StudioApp');
-            var blob = new Blob([studioApp.views.xmlView.generateXml()], { type: "text/xml" });
-            var workflowName = studioApp.models.currentWorkflow.attributes.name;
-
-            var payload = new FormData();
-            payload.append('file', blob);
-            payload.append('kind', 'workflow');
-            payload.append('name', workflowName);
-            payload.append('commitMessage', $("#catalog-publish-commit-message").val());
-            payload.append('kind', $("#catalog-publish-kind").val());
-            payload.append('objectContentType', "application/xml");
-
-            var url = '/catalog/buckets/' + bucketName + '/resources';
-            var isRevision = ($("#catalog-publish-description").data("first") != true)
-
-            if (isRevision){
-                url += "/" + workflowName + "/revisions"
-            }
-
-            var postData = {
-                    url: url,
-                    type: 'POST',
-                    headers: headers,
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    data: payload
-                };
-
-            var workflowId = $("#catalog-publish-description").data("workflowid");
-            if (workflowId){
-                postData.url = postData.url + "/" + workflowId + "/revisions";
-                payload.append('objectId', workflowId);
-            }
-
-            $.ajax(postData).success(function (response) {
-                notify_message('Publish successful', 'The Workflow has been successfully published to the Catalog', true);
-
-                var urlOfRawObjectFromCatalog = '/catalog/buckets/' + bucketName + '/resources/' + workflowName + '/raw'
-                console.log('the url of published object to catalog:', urlOfRawObjectFromCatalog);
-
-                var studioApp = require('StudioApp');
-
-                getWorkflowFromCatalog(urlOfRawObjectFromCatalog, function (response) {
-                    studioApp.xmlToImport = new XMLSerializer().serializeToString(response);
-                    add_workflow_to_current(true);
-                    $('#catalog-publish-close-button').click();
-                });
-
-                return response;
-            }).error(function (response) {
-                notify_message('Error', 'Error publishing the Workflow to the Catalog', false);
-                return response;
-            });
+            studioApp.views.catalogPublishView.publishToCatalog()
         })
 
         // removing a task by del
@@ -881,6 +831,7 @@ define(
 
                 return false;
             })
+
             $('#full-edit-modal').on('shown.bs.modal', function () {
                 $('#variable_reference_link').attr("href", config.docUrl + "/user/ProActiveUserGuide.html#_variables_quick_reference")
                 $(".CodeMirror").height($(".code-editor-container").height())
@@ -897,6 +848,33 @@ define(
                 var form = studioApp.views.propertiesView.$el.data('form')
                 form.commit();
             })
+
+            $(document).on("click", '.get-script-from-catalog', function (event) {
+                event.preventDefault();
+                var studioApp = require('StudioApp');
+                studioApp.models.catalogBuckets.setKind("script");
+                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
+                studioApp.modelsToRemove = [];
+                studioApp.views.catalogGetView.render();
+                $('#catalog-get-modal').modal();
+            })
+
+            $(document).on("click", '.publish-script-to-catalog', function (event) {
+                var relatedTextAreaId = $(this).attr('data-related-textArea');
+                console.log('----->'+relatedTextAreaId);
+                var textAreaValue = $('#'+relatedTextAreaId).val();
+                console.log('----->'+textAreaValue);
+                event.preventDefault();
+                var studioApp = require('StudioApp');
+                studioApp.models.catalogBuckets.setKind("script");
+                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
+                studioApp.modelsToRemove = [];
+                studioApp.views.catalogPublishView.setKind("script", "script");
+                studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
+                studioApp.views.catalogPublishView.render();
+                $('#catalog-publish-modal').modal();
+            })
+
         })();
 
         $(document).ready(function () {
