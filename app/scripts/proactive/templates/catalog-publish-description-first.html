@@ -2,11 +2,11 @@
 	<table>
 		<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
 		<tr>
-			<td colspan="2" style="padding-bottom: 5em">You are about to publish a <b>new  <%= kindLabel %></b> named &quot;<%= name %>&quot; to this bucket.</td>
+			<td colspan="2" style="padding-bottom: 5em">You are about to publish a <b>new <%= kindLabel %></b> named &quot;<%= name %>&quot; to this bucket.</td>
 		</tr>
 		<% } else { %>
 		<tr>
-			<td colspan="2" style="padding-bottom: 5em">You are about to publish a the <%= kindLabel %> to this bucket. If it already exists, a new revision will be created.</td>
+			<td colspan="2" style="padding-bottom: 5em">You are about to publish the <%= kindLabel %> to this bucket. If it already exists, a new revision will be created.</td>
 		</tr>
 		<tr>
 			<td>Name:</td>

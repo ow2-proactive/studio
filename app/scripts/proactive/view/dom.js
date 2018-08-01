@@ -197,6 +197,7 @@ define(
             studioApp.models.catalogBuckets.setKind("workflow");
             studioApp.models.catalogBuckets.fetch({reset: true, async: false});
             studioApp.modelsToRemove = [];
+            studioApp.views.catalogGetView.setKind("workflow/standard", "Workflow");
             studioApp.views.catalogGetView.render();
             $('#catalog-get-modal').modal();
         });
@@ -208,7 +209,7 @@ define(
                 studioApp.models.catalogBuckets.setKind("workflow");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogPublishView.setKind("workflow/standard", "workflow");
+                studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
                 studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml(), 'text/xml');
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
@@ -248,6 +249,10 @@ define(
 
         $("#catalog-get-append-button").click(function (event) {
             workflowImport(event, '#add-workflow-confirmation-modal');
+        });
+
+        $("#catalog-get-import-button").click(function (event) {
+            $('#import-catalog-object-confirmation-modal').modal();
         });
 
         function workflowImport(e, modalSelector) {
@@ -577,6 +582,11 @@ define(
             add_workflow_to_current(false);
         });
 
+        $("#confirm-import-catalog-object-from-catalog").click(function () {
+            var studioApp = require('StudioApp');
+            studioApp.views.catalogGetView.importCatalogObject();
+        });
+
         function add_workflow_to_current(clearCurrentFirst){
             var studioApp = require('StudioApp');
 
@@ -616,7 +626,7 @@ define(
 
         $("#confirm-publication-to-catalog").click(function () {
             var studioApp = require('StudioApp');
-            studioApp.views.catalogPublishView.publishToCatalog()
+            studioApp.views.catalogPublishView.publishToCatalog();
         })
 
         // removing a task by del
@@ -850,11 +860,14 @@ define(
             })
 
             $(document).on("click", '.get-script-from-catalog', function (event) {
+                var relatedTextAreaId = $(this).attr('data-related-textArea');
                 event.preventDefault();
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
+                studioApp.views.catalogGetView.setKind("script", "Script");
+                studioApp.views.catalogGetView.setTextAreaToImport(relatedTextAreaId);
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
             })
@@ -867,7 +880,7 @@ define(
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogPublishView.setKind("script", "script");
+                studioApp.views.catalogPublishView.setKind("script", "Script");
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();

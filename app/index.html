@@ -260,7 +260,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Get a Workflow from the Catalog</h3>
+                        <h3>Get from the Catalog</h3>
                     </div>
                     <div id="catalog-get-body" class="modal-body" style="height:100%">
                     	<div id="catalog-get-container"></div>
@@ -271,6 +271,9 @@
                         </button>
                     	<button id="catalog-get-append-button" class="btn btn-primary" aria-hidden="true">
                             Append to current<br>Workflow
+                        </button>
+                        <button id="catalog-get-import-button" class="btn btn-primary" aria-hidden="true">
+                            Import
                         </button>
                         <button id="catalog-get-close-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
                             Close
@@ -442,6 +445,24 @@
                     </div>
                     <div class="modal-footer">
                         <button id="confirm-add-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="import-catalog-object-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Import from Catalog</h3>
+                    </div>
+                    <div class="modal-body" style="height:100%">
+                        You are about to import an object from the Catalog. If you continue it will replace and remove its current value in the text area.
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-import-catalog-object-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
                         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
                     </div>
                 </div>

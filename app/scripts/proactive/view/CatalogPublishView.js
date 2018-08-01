@@ -2,7 +2,6 @@ define(
     [
         'jquery',
         'backbone',
-        'pnotify',
         'text!proactive/templates/catalog-publish.html',
         'text!proactive/templates/catalog-bucket.html',
         'text!proactive/templates/catalog-publish-description.html',
@@ -11,7 +10,7 @@ define(
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, PNotify, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
+    function ($, Backbone, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
 
     "use strict";
 
@@ -79,7 +78,6 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    console.log("not catalog");
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
@@ -97,24 +95,6 @@ define(
         selectBucket: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
-        },
-        displayMessage: function (caption, message, type) {
-            var text_escape = message.indexOf("<html>") == -1 ? true : false;
-
-            PNotify.removeAll();
-
-            new PNotify({
-                title: caption,
-                text: message,
-                type: type,
-                text_escape: text_escape,
-                opacity: .8,
-                width: '20%',
-                buttons: {
-                    closer: true,
-                    sticker: false
-                }
-            });
         },
         setContentToPublish: function(content, contentType){
             this.contentToPublish = content;
@@ -163,10 +143,10 @@ define(
 
             var that = this;
             $.ajax(postData).success(function (response) {
-                that.displayMessage('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
+                studioApp.displayMessage('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
             }).error(function (response) {
-                that.displayMessage('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
+                studioApp.displayMessage('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });
         },
         render: function () {

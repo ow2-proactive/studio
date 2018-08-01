@@ -4,6 +4,7 @@ define(
     [
         'jquery',
         'jsplumb',
+        'pnotify',
         'jquery.ui.droppable',
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
@@ -28,7 +29,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, PNotify, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -197,6 +198,24 @@ define(
             dom.getWorkflowFromCatalog(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
                 dom.open_catalog_workflow();
+            });
+        },
+        displayMessage: function (caption, message, type) {
+            var text_escape = message.indexOf("<html>") == -1 ? true : false;
+
+            PNotify.removeAll();
+
+            new PNotify({
+                title: caption,
+                text: message,
+                type: type,
+                text_escape: text_escape,
+                opacity: .8,
+                width: '20%',
+                buttons: {
+                    closer: true,
+                    sticker: false
+                }
             });
         }
     };
