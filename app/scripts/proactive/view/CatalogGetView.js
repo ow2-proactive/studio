@@ -162,7 +162,6 @@ define(
             this.internalSelectRevision(row);
         },
         setTextAreaToImport: function(textAreaToImport) {
-            console.log("---setting text area "+textAreaToImport)
             //setting the text area where we will import the object
             this.textAreaToImport = textAreaToImport;
         },
@@ -175,7 +174,7 @@ define(
                 type: 'GET',
                 headers: headers
             }).success(function (response) {
-                $('#'+that.textAreaToImport).val(response);
+                document.getElementById(that.textAreaToImport).value = response;
                 $('#catalog-get-close-button').click();
                 studioApp.displayMessage('Publish successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
             }).error(function (response) {
