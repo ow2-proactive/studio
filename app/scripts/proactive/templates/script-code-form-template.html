@@ -1,8 +1,8 @@
 <div class="control-group field-<%= key %>">
     <div style="width:90%">
         <label class="control-label" for="<%= editorId %>"><%= title %></label>
-        <a href="#" class="get-script-from-catalog glyphicon glyphicon-download pull-right" title="import a script from the catalog" data-related-textArea="<%= editorId %>"></a>
-        <a href="#" class="publish-script-to-catalog glyphicon glyphicon-upload pull-right" title="export this script to the catalog" style="margin-right: 5px;" data-related-textArea="<%= editorId %>"></a>
+        <a href="#" class="get-script-from-catalog glyphicon glyphicon-download pull-right" title="import a script from the catalog" data-related-textArea="<%= editorId %>" data-catalog-kind="<%= catalogKind %>"></a>
+        <a href="#" class="publish-script-to-catalog glyphicon glyphicon-upload pull-right" title="export this script to the catalog" style="margin-right: 5px;" data-related-textArea="<%= editorId %>" data-catalog-kind="<%= catalogKind %>"></a>
     </div>
     <div class="controls">
         <span data-editor></span>

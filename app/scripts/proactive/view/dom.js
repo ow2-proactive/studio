@@ -866,7 +866,7 @@ define(
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogGetView.setKind("script", "Script");
+                studioApp.views.catalogGetView.setKind('script', "Script");
                 studioApp.views.catalogGetView.setTextAreaToImport(relatedTextAreaId);
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
@@ -875,12 +875,13 @@ define(
             $(document).on("click", '.publish-script-to-catalog', function (event) {
                 var relatedTextAreaId = $(this).attr('data-related-textArea');
                 var textAreaValue = document.getElementById(relatedTextAreaId).value;
+                var catalogKind = $(this).attr('data-catalog-kind');
                 event.preventDefault();
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogPublishView.setKind("script", "Script");
+                studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
