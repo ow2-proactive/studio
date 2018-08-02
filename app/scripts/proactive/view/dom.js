@@ -90,6 +90,7 @@ define(
                 var handler = "";
                 var self = this;
                 _.each(array, function (other_option, other_index) {
+                    //TODO: something like that
                     // find the backbone-forms generated id associated with this form
                     var root_id = self.id.substring(0, self.id.lastIndexOf("_"));
                     // find the sibling nested form which must have the same name as the option value, with a _Div suffix
@@ -860,8 +861,8 @@ define(
             })
 
             $(document).on("click", '.get-script-from-catalog', function (event) {
-                var relatedTextAreaId = $(this).attr('data-related-textArea');
                 event.preventDefault();
+                var relatedTextAreaId = $(this).attr('data-related-textArea');
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
@@ -873,15 +874,16 @@ define(
             })
 
             $(document).on("click", '.publish-script-to-catalog', function (event) {
+                event.preventDefault();
                 var relatedTextAreaId = $(this).attr('data-related-textArea');
                 var textAreaValue = document.getElementById(relatedTextAreaId).value;
                 var catalogKind = $(this).attr('data-catalog-kind');
-                event.preventDefault();
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
+                studioApp.views.catalogPublishView.setRelatedTextArea(relatedTextAreaId);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();

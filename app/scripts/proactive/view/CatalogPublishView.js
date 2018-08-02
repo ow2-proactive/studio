@@ -2,6 +2,7 @@ define(
     [
         'jquery',
         'backbone',
+        'proactive/config',
         'text!proactive/templates/catalog-publish.html',
         'text!proactive/templates/catalog-bucket.html',
         'text!proactive/templates/catalog-publish-description.html',
@@ -10,7 +11,7 @@ define(
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
+    function ($, Backbone, config, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
 
     "use strict";
 
@@ -78,6 +79,10 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
+                    var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
+                    var language = languageElement.options[languageElement.selectedIndex].value;
+                    var extension = config.languages_to_extensions[language];
+                    var name = 'Untitled'+ this.kindLabel+'.'+extension;
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
@@ -99,6 +104,9 @@ define(
         setContentToPublish: function(content, contentType){
             this.contentToPublish = content;
             this.contentTypeToPublish = contentType;
+        },
+        setRelatedTextArea: function(relatedTextArea){
+            this.relatedTextArea = relatedTextArea;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
