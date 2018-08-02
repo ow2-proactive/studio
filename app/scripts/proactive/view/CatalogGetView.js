@@ -2,6 +2,7 @@ define(
     [
         'jquery',
         'backbone',
+        'proactive/config',
         'text!proactive/templates/catalog-get.html',
         'text!proactive/templates/catalog-bucket.html',
         'text!proactive/templates/catalog-get-object.html',
@@ -11,7 +12,7 @@ define(
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
+    function ($, Backbone, config, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
 
     "use strict";
 
@@ -169,14 +170,27 @@ define(
             var headers = { 'sessionID': localStorage['pa.session'] };
             var that = this;
             var studioApp = require('StudioApp');
-            $.ajax({
+            var request = $.ajax({
                 url: $("#catalog-get-revision-description").data("selectedrawurl"),
                 type: 'GET',
                 headers: headers
             }).success(function (response) {
                 document.getElementById(that.textAreaToImport).value = response;
                 $('#catalog-get-close-button').click();
-                studioApp.displayMessage('Publish successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
+                studioApp.displayMessage('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
+                //it it's a script, we set the language depending on the file extension
+                if (that.kind.toLowerCase().indexOf('script') > -1) {
+                    try {
+                        var contentDispositionHeader = request.getResponseHeader('content-disposition');
+                        var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
+                        var extension = fileName.split('.').pop();
+                        var language = config.extensions_to_languages[extension.toLowerCase()];
+                        var languageElement = document.getElementById(that.textAreaToImport.replace('_Code', '_Language'));
+                        languageElement.value = language;
+                    } catch (e) {
+                        console.error('Error while setting language of the imported script: '+e);
+                    }
+                }
             }).error(function (response) {
                 studioApp.displayMessage('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
             });

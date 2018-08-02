@@ -863,11 +863,12 @@ define(
             $(document).on("click", '.get-script-from-catalog', function (event) {
                 event.preventDefault();
                 var relatedTextAreaId = $(this).attr('data-related-textArea');
+                var catalogKind = $(this).attr('data-catalog-kind');
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
-                studioApp.views.catalogGetView.setKind('script', "Script");
+                studioApp.views.catalogGetView.setKind(catalogKind, "Script");
                 studioApp.views.catalogGetView.setTextAreaToImport(relatedTextAreaId);
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();

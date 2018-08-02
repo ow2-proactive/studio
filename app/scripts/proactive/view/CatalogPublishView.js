@@ -79,10 +79,15 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
-                    var language = languageElement.options[languageElement.selectedIndex].value;
-                    var extension = config.languages_to_extensions[language];
-                    var name = 'Untitled'+ this.kindLabel+'.'+extension;
+                    var name = 'Untitled'+ this.kindLabel;
+                    try {
+                        var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
+                        var language = languageElement.options[languageElement.selectedIndex].value;
+                        var extension = config.languages_to_extensions[language.toLowerCase()];
+                        name+= '.'+extension;
+                    }catch(e){
+                        console.error("Error while getting the language of the selected element. "+ e);
+                    }
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
