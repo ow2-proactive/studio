@@ -829,6 +829,11 @@ define(
                     keyMap: "sublime",
                     theme: "eclipse"
                 });
+                if ($(this).attr('data-catalog-kind') === 'Script/selection') {
+                    //Fixing modals overlay bug
+                    var zIndexModal = parseInt($(".selection-script-code-form").parents().find(".modal").css("z-index"));
+                    $("#full-edit-modal").css("z-index", (zIndexModal+1).toString());
+                }
                 $('#full-edit-modal').modal('show');
                 $("#set-script-content").data("editor", editor);
 
@@ -864,6 +869,12 @@ define(
                 event.preventDefault();
                 var relatedTextAreaId = $(this).attr('data-related-textArea');
                 var catalogKind = $(this).attr('data-catalog-kind');
+                if (catalogKind === 'Script/selection') {
+                    //Fixing modals overlay bug
+                    var zIndexModal = parseInt($(".selection-script-code-form").parents().find(".modal").css("z-index"));
+                    $("#catalog-get-modal").css("z-index", (zIndexModal+1).toString());
+                    $("#import-catalog-object-confirmation-modal").css("z-index", (zIndexModal+2).toString());
+                }
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
@@ -879,6 +890,12 @@ define(
                 var relatedTextAreaId = $(this).attr('data-related-textArea');
                 var textAreaValue = document.getElementById(relatedTextAreaId).value;
                 var catalogKind = $(this).attr('data-catalog-kind');
+                if (catalogKind === 'Script/selection') {
+                    //Fixing modals overlay bug
+                    var zIndexModal = parseInt($(".selection-script-code-form").parents().find(".modal").css("z-index"));
+                    $("#catalog-publish-modal").css("z-index", (zIndexModal+1).toString());
+                    $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+2).toString());
+                }
                 var studioApp = require('StudioApp');
                 studioApp.models.catalogBuckets.setKind("script");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
