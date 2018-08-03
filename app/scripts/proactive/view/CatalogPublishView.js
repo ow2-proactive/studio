@@ -84,7 +84,8 @@ define(
                         var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
                         var language = languageElement.options[languageElement.selectedIndex].value;
                         var extension = config.languages_to_extensions[language.toLowerCase()];
-                        name+= '.'+extension;
+                        if (extension)
+                            name+= '.'+extension;
                     }catch(e){
                         console.error("Error while getting the language of the selected element. "+ e);
                     }
