@@ -80,15 +80,6 @@ define(
                     }
                 } else {
                     var name = 'Untitled'+ this.kindLabel;
-                    try {
-                        var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
-                        var language = languageElement.options[languageElement.selectedIndex].value;
-                        var extension = config.languages_to_extensions[language.toLowerCase()];
-                        if (extension)
-                            name+= '.'+extension;
-                    }catch(e){
-                        console.error("Error while getting the language of the selected element. "+ e);
-                    }
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
@@ -126,13 +117,23 @@ define(
             } else {
                 objectName = $("#catalog-publish-name").val();
             }
+            var fileName = objectName;
+            try {
+                var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
+                var language = languageElement.options[languageElement.selectedIndex].value;
+                var extension = config.languages_to_extensions[language.toLowerCase()];
+                if (extension)
+                    fileName = objectName+'.'+extension;
+            }catch(e){
+                console.error("Error while getting the language of the selected element. "+ e);
+            }
 
             var payload = new FormData();
-            payload.append('file', blob);
+            payload.append('file', blob, fileName);
             payload.append('name', objectName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('kind', $("#catalog-publish-kind").val());
-            payload.append('objectContentType', this.contentTypeToPublish );//TODO : content type may be improved depending on the kind of script
+            payload.append('objectContentType', this.contentTypeToPublish );
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
             var isWorkflowRevision = ($("#catalog-publish-description").data("first") != true)
@@ -142,7 +143,7 @@ define(
                 isRevision = (revision != null);
             }
             if (isRevision){
-                url += "/" + objectName + "/revisions" //TODO : we should warn user that we are publishing a new revision
+                url += "/" + objectName + "/revisions";
             }
 
             var postData = {
