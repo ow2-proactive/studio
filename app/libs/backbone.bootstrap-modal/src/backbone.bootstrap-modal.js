@@ -223,6 +223,20 @@
         self.close();
       });
 
+     this.$el.on('hidden.bs.modal', function(e) {
+        // Ignore events propagated from interior objects, like bootstrap tooltips
+        if(e.target !== e.currentTarget){
+          return $el.one('hidden', onHidden);
+        }
+        self.remove();
+
+        if (self.options.content && self.options.content.trigger) {
+          self.options.content.trigger('hidden', self);
+        }
+
+        self.trigger('hidden');
+     });
+
       Modal.count++;
 
       //Run callback on OK if provided
