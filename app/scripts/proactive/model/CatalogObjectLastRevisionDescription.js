@@ -1,22 +1,22 @@
 define(
     [
         'backbone',
-        'proactive/model/CatalogRestWorkflow'
+        'proactive/model/CatalogRestObject'
     ],
 
-    function (Backbone, RestWorkflow) {
+    function (Backbone, RestObject) {
 
         "use strict";
 
         return Backbone.Collection.extend({
-            model: RestWorkflow,
+            model: RestObject,
             initialize: function(options) {
                 this.bucketname = options.bucketname;
-                this.workflowname = options.workflowname;
+                this.name = options.name;
                 this.callback = options.callback;
             },
             url: function() {
-                return '/catalog/buckets/' + this.bucketname + '/resources/' + this.workflowname + '/';
+                return '/catalog/buckets/' + this.bucketname + '/resources/' + this.name + '/';
             },
             parse: function(data) {
             	this.callback(data);

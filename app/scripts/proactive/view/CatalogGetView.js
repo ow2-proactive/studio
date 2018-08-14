@@ -2,16 +2,17 @@ define(
     [
         'jquery',
         'backbone',
+        'proactive/config',
         'text!proactive/templates/catalog-get.html',
         'text!proactive/templates/catalog-bucket.html',
-        'text!proactive/templates/catalog-get-workflow.html',
+        'text!proactive/templates/catalog-get-object.html',
         'text!proactive/templates/catalog-get-revision.html',
         'text!proactive/templates/catalog-get-revision-description.html',
-        'proactive/model/CatalogWorkflowRevisionCollection',
-        'proactive/model/CatalogWorkflowCollection'
+        'proactive/model/CatalogObjectRevisionCollection',
+        'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList, catalogWorkflow, catalogRevision, catalogRevisionDescription, CatalogWorkflowRevisionCollection, CatalogWorkflowCollection) {
+    function ($, Backbone, config, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
 
     "use strict";
 
@@ -24,14 +25,26 @@ define(
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
-            'click #catalog-get-workflows-table tr': 'selectWorkflow',
+            'click #catalog-get-objects-table tr': 'selectWorkflow',
             'click #catalog-get-revisions-table tr': 'selectRevision'
         },
+        setKind : function(newKind, newKindLabel) {
+            this.kind = newKind;
+            this.kindLabel = newKindLabel;
+            //if it's not a workflow, we hide workflow import buttons and display generic import
+            if (this.kind.toLowerCase().indexOf('workflow') < 0) {
+                $("#catalog-get-as-new-button").hide();
+                $("#catalog-get-append-button").hide();
+                $("#catalog-get-import-button").show();
+            } else {
+                $("#catalog-get-as-new-button").show();
+                $("#catalog-get-append-button").show();
+                $("#catalog-get-import-button").hide();
+            }
+        },
         internalSelectBucket: function (currentBucketRow) {
-            this.$('#catalog-get-workflows-table').empty();
+            this.$('#catalog-get-objects-table').empty();
             this.$('#catalog-get-description-container').empty();
-            var studioApp = require('StudioApp');
-            
             this.disableActionButtons(true, true);
             
             if (currentBucketRow){
@@ -39,21 +52,22 @@ define(
 
 	            var that = this;
                 var bucketName = that.getSelectedBucketName();
-                var workflowsModel = new CatalogWorkflowCollection(
+                var objectsModel = new CatalogObjectCollection(
                 {
                     bucketname: bucketName,
-                    callback: function (workflows) {
+                    kind: this.kind,
+                    callback: function (catalogObjects) {
                         _.each(
-                        workflows,
-                        function (workflow) {
-                            var WorkflowList = _.template(catalogWorkflow);
-                            that.$('#catalog-get-workflows-table').append(WorkflowList({workflow: workflow}));
+                        catalogObjects,
+                        function (obj) {
+                            var ObjectList = _.template(catalogObject);
+                            that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
                         });
                     }
                 });
-                workflowsModel.fetch({async:false});
+                objectsModel.fetch({async:false});
             }
-            this.internalSelectWorkflow(this.$('#catalog-get-workflows-table tr')[0]);
+            this.internalSelectWorkflow(this.$('#catalog-get-objects-table tr')[0]);
             
         },
         disableActionButtons: function (enableGetAsNew, enableAppend){
@@ -62,18 +76,17 @@ define(
         },
         internalSelectWorkflow: function (currentWorkflowRow) {
             this.$('#catalog-get-revisions-table').empty();
-            var studioApp = require('StudioApp');
             
             if (currentWorkflowRow){
-                var currentWorkflowName = $(currentWorkflowRow).data("workflowname");
-	            this.highlightSelectedRow('#catalog-get-workflows-table', currentWorkflowRow);
+                var currentWorkflowName = $(currentWorkflowRow).data("objectname");
+	            this.highlightSelectedRow('#catalog-get-objects-table', currentWorkflowRow);
 	            var that = this;
 
 	            var bucketName = that.getSelectedBucketName();
-	            var revisionsModel = new CatalogWorkflowRevisionCollection(
+	            var revisionsModel = new CatalogObjectRevisionCollection(
 	            	{
 	            		bucketname: bucketName,
-	            		workflowname: currentWorkflowName,
+	            		name: currentWorkflowName,
 		            	callback: function (revisions) {
 		            		_.each(
 		            			revisions, 
@@ -113,7 +126,8 @@ define(
 					rawurl: rawurl, 
 					name: name,
 					commitmessage: commitmessage,
-					projectname: projectName
+					projectname: projectName,
+					kindLabel: this.kindLabel
 					}));
 
 	            this.disableActionButtons(false, !studioApp.isWorkflowOpen());
@@ -131,7 +145,7 @@ define(
         	return this.getSelectedRowId("#catalog-get-buckets-table .catalog-selected-row", "bucketname");
         },
         getSelectedWorkflowName: function(){
-        	return this.getSelectedRowId("#catalog-get-workflows-table .catalog-selected-row", "workflowname");
+        	return this.getSelectedRowId("#catalog-get-objects-table .catalog-selected-row", "objectname");
         },
         getSelectedRowId: function(tableSelector, dataName){
         	return ($(($(tableSelector))[0])).data(dataName);
@@ -148,6 +162,40 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectRevision(row);
         },
+        setTextAreaToImport: function(textAreaToImport) {
+            //setting the text area where we will import the object
+            this.textAreaToImport = textAreaToImport;
+        },
+        importCatalogObject: function(){
+            var headers = { 'sessionID': localStorage['pa.session'] };
+            var that = this;
+            var studioApp = require('StudioApp');
+            var request = $.ajax({
+                url: $("#catalog-get-revision-description").data("selectedrawurl"),
+                type: 'GET',
+                headers: headers
+            }).success(function (response) {
+                document.getElementById(that.textAreaToImport).value = response;
+                $('#catalog-get-close-button').click();
+                studioApp.displayMessage('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
+                //it it's a script, we set the language depending on the file extension
+                if (that.kind.toLowerCase().indexOf('script') > -1) {
+                    try {
+                        var contentDispositionHeader = request.getResponseHeader('content-disposition');
+                        var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
+                        var extension = fileName.split('.').pop();
+                        var language = config.extensions_to_languages[extension.toLowerCase()];
+                        var languageElement = document.getElementById(that.textAreaToImport.replace('_Code', '_Language'));
+                        languageElement.value = language;
+                    } catch (e) {
+                        console.error('Error while setting language of the imported script: '+e);
+                    }
+                }
+            }).error(function (response) {
+                studioApp.displayMessage('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
+                console.error('Error importing the '+ that.kindLabel +' from the Catalog : '+JSON.stringify(response));
+            });
+        },
         render: function () {
             this.$el.html(this.template());
             var BucketList = _.template(catalogList);
@@ -157,6 +205,9 @@ define(
             }, this);
             // to open the browser on the first bucket
             this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+            //setting kind in catalogBrowser (catalog-get.html) because it can't be
+            //passed as parameter (on page load, we don't know the kind yet)
+            this.$('#catalog-objects-legend').text(this.kindLabel+'s');
             return this;
         },
     })

@@ -1,7 +1,7 @@
 <div id="catalog-publish-description">
 	<table>
 		<tr>
-			<td colspan="2" style="padding-bottom: 3em">You are about to add a <b>new Version</b> of the existing &quot;<%= name %>&quot; Workflow to this bucket.</td>
+			<td colspan="2" style="padding-bottom: 3em">You are about to add a <b>new Version</b> of the existing &quot;<%= name %>&quot; <%= kindLabel %> to this bucket.</td>
 		</tr>
 		<tr>
 			<td>Last update: </td><td><%= revision.commit_time %></td>
@@ -11,11 +11,11 @@
 		</tr>
 		<tr>
 			<td>Kind:</td>
-			<td><input type="text" id="catalog-publish-kind" value="workflow/standard" ></input></td>
+			<td><input type="text" id="catalog-publish-kind" value="<%= kind %>" ></td>
 		</tr>
 		<tr>
 			<td>Commit message:</td>
-			<td colspan="2"><input type="text" id="catalog-publish-commit-message"></input></td>
+			<td colspan="2"><input type="text" id="catalog-publish-commit-message"></td>
 		</tr>
 
 	</table>

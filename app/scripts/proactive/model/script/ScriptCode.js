@@ -13,7 +13,7 @@ define(
 
         return function(catalogKind, codeDataHelp, scriptCodeTemplate, scriptCodeClass, scriptArgumentsClass) {
             if (!scriptCodeTemplate) {
-                var scriptCodeTemplate = _.template(tpl);
+                var scriptCodeTemplate = _.template("<% var catalogKind = '"+catalogKind+"'; %>" +tpl);
             }
 
             if (!codeDataHelp) {
