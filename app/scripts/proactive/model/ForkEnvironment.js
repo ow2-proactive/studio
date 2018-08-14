@@ -67,9 +67,6 @@ define(
                         "data-help": 'A script which can be used to configure programmatically the task&#39;s forked JVM process. The environment script is run before any other task script (pre, task, etc).'
                     }
                 }
-            },
-            initialize: function() {
-                this.set({"Environment Script": new ForkEnvironmentScript()});
             }
         })
     })
