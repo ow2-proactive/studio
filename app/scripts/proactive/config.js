@@ -106,7 +106,7 @@ define(function () {
             "kubernetes" : "text/yaml",
             "docker-compose" : "text/yaml",
             "perl" : "application/x-perl",
-            "powershell" : ""
+            "powershell" : "application/x-powershell"
         },
         keywords: {
             'bash': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],
