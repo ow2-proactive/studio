@@ -67,8 +67,8 @@ define(function () {
             "scala": "scalaw",
             "groovy": "groovy",
             "js": "javascript",
-            "cpy" : "python",
-            "py" : "jython",
+            "cpy" : "cpython",
+            "py" : "python",
             "rb": "ruby",
             "ps": "powershell",
             "r": "R",
@@ -83,7 +83,7 @@ define(function () {
             "groovy" : "groovy",
             "javascript" : "js",
             "python" : "py",
-            "cpython" : "py",
+            "cpython" : "cpy",
             "ruby" : "rb",
             "r" : "r",
             "bash" : "sh",
@@ -94,7 +94,7 @@ define(function () {
             "powershell" : "ps"
         },
         languages_content_type: {
-            "scalaw" : "",
+            "scalaw" : "text/x-scala",
             "groovy" : "application/x-groovy",
             "javascript" : "application/javascript",
             "python" : "application/x-python",

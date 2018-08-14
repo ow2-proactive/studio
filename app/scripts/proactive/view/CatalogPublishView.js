@@ -98,9 +98,8 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
         },
-        setContentToPublish: function(content, contentType){
+        setContentToPublish: function(content){
             this.contentToPublish = content;
-            this.contentTypeToPublish = contentType;
         },
         setRelatedTextArea: function(relatedTextArea){
             this.relatedTextArea = relatedTextArea;
@@ -110,7 +109,6 @@ define(
             var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
 
             var studioApp = require('StudioApp');
-            var blob = new Blob([this.contentToPublish], { type: this.contentTypeToPublish });
             var objectName;
             if (this.kind.toLowerCase().indexOf('workflow') > -1) {
                 objectName = studioApp.models.currentWorkflow.attributes.name;
@@ -118,22 +116,27 @@ define(
                 objectName = $("#catalog-publish-name").val();
             }
             var fileName = objectName;
-            try {
-                var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
-                var language = languageElement.options[languageElement.selectedIndex].value;
-                var extension = config.languages_to_extensions[language.toLowerCase()];
-                if (extension)
-                    fileName = objectName+'.'+extension;
-            }catch(e){
-                console.error("Error while getting the language of the selected element. "+ e);
+            var contentTypeToPublish = 'text/xml';
+            if (this.kind.toLowerCase().indexOf('script') > -1) {
+                try {
+                    var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
+                    var language = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
+                    var extension = config.languages_to_extensions[language];
+                    if (extension)
+                        fileName = objectName+'.'+extension;
+                    contentTypeToPublish = config.languages_content_type[language];
+                }catch(e){
+                    console.error("Error while getting the language of the selected element. "+ e);
+                }
             }
 
+            var blob = new Blob([this.contentToPublish], { type: contentTypeToPublish });
             var payload = new FormData();
             payload.append('file', blob, fileName);
             payload.append('name', objectName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('kind', $("#catalog-publish-kind").val());
-            payload.append('objectContentType', this.contentTypeToPublish );
+            payload.append('objectContentType', contentTypeToPublish );
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
             var isWorkflowRevision = ($("#catalog-publish-description").data("first") != true)

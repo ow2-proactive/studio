@@ -211,7 +211,7 @@ define(
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
-                studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml(), 'text/xml');
+                studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml());
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             }else{

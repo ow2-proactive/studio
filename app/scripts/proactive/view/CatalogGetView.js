@@ -193,6 +193,7 @@ define(
                 }
             }).error(function (response) {
                 studioApp.displayMessage('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
+                console.error('Error importing the '+ that.kindLabel +' from the Catalog : '+JSON.stringify(response));
             });
         },
         render: function () {
