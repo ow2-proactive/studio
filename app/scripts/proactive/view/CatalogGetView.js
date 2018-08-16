@@ -57,29 +57,34 @@ define(
                     bucketname: bucketName,
                     kind: this.kind,
                     callback: function (catalogObjects) {
-                        _.each(
-                        catalogObjects,
-                        function (obj) {
-                            var ObjectList = _.template(catalogObject);
-                            that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
-                        });
+                        if (catalogObjects.length === 0)
+                            $('#catalog-get-import-button').prop('disabled', true);
+                        else {
+                            $('#catalog-get-import-button').prop('disabled', false);
+                            _.each(
+                            catalogObjects,
+                            function (obj) {
+                                var ObjectList = _.template(catalogObject);
+                                that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
+                            });
+                        }
                     }
                 });
                 objectsModel.fetch({async:false});
             }
-            this.internalSelectWorkflow(this.$('#catalog-get-objects-table tr')[0]);
+            this.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
             
         },
         disableActionButtons: function (enableGetAsNew, enableAppend){
         	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
         	 $('#catalog-get-append-button').prop('disabled', enableAppend);       
         },
-        internalSelectWorkflow: function (currentWorkflowRow) {
+        internalSelectObject: function (currentObjectRow) {
             this.$('#catalog-get-revisions-table').empty();
             
-            if (currentWorkflowRow){
-                var currentWorkflowName = $(currentWorkflowRow).data("objectname");
-	            this.highlightSelectedRow('#catalog-get-objects-table', currentWorkflowRow);
+            if (currentObjectRow){
+                var currentWorkflowName = $(currentObjectRow).data("objectname");
+	            this.highlightSelectedRow('#catalog-get-objects-table', currentObjectRow);
 	            var that = this;
 
 	            var bucketName = that.getSelectedBucketName();
@@ -156,7 +161,7 @@ define(
         },
         selectWorkflow: function(e){
         	var row = $(e.currentTarget);
-            this.internalSelectWorkflow(row);
+            this.internalSelectObject(row);
         },
         selectRevision: function(e){
         	var row = $(e.currentTarget);
