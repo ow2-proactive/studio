@@ -57,29 +57,34 @@ define(
                     bucketname: bucketName,
                     kind: this.kind,
                     callback: function (catalogObjects) {
-                        _.each(
-                        catalogObjects,
-                        function (obj) {
-                            var ObjectList = _.template(catalogObject);
-                            that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
-                        });
+                        if (catalogObjects.length === 0)
+                            $('#catalog-get-import-button').prop('disabled', true);
+                        else {
+                            $('#catalog-get-import-button').prop('disabled', false);
+                            _.each(
+                            catalogObjects,
+                            function (obj) {
+                                var ObjectList = _.template(catalogObject);
+                                that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
+                            });
+                        }
                     }
                 });
                 objectsModel.fetch({async:false});
             }
-            this.internalSelectWorkflow(this.$('#catalog-get-objects-table tr')[0]);
+            this.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
             
         },
         disableActionButtons: function (enableGetAsNew, enableAppend){
         	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
         	 $('#catalog-get-append-button').prop('disabled', enableAppend);       
         },
-        internalSelectWorkflow: function (currentWorkflowRow) {
+        internalSelectObject: function (currentObjectRow) {
             this.$('#catalog-get-revisions-table').empty();
             
-            if (currentWorkflowRow){
-                var currentWorkflowName = $(currentWorkflowRow).data("objectname");
-	            this.highlightSelectedRow('#catalog-get-objects-table', currentWorkflowRow);
+            if (currentObjectRow){
+                var currentWorkflowName = $(currentObjectRow).data("objectname");
+	            this.highlightSelectedRow('#catalog-get-objects-table', currentObjectRow);
 	            var that = this;
 
 	            var bucketName = that.getSelectedBucketName();
@@ -156,7 +161,7 @@ define(
         },
         selectWorkflow: function(e){
         	var row = $(e.currentTarget);
-            this.internalSelectWorkflow(row);
+            this.internalSelectObject(row);
         },
         selectRevision: function(e){
         	var row = $(e.currentTarget);
@@ -178,13 +183,17 @@ define(
                 document.getElementById(that.textAreaToImport).value = response;
                 $('#catalog-get-close-button').click();
                 studioApp.displayMessage('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
-                //it it's a script, we set the language depending on the file extension
+                //if it's a script, we set the language depending on the file extension
                 if (that.kind.toLowerCase().indexOf('script') > -1) {
                     try {
                         var contentDispositionHeader = request.getResponseHeader('content-disposition');
                         var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
-                        var extension = fileName.split('.').pop();
-                        var language = config.extensions_to_languages[extension.toLowerCase()];
+                        var indexExt = fileName.lastIndexOf('.');
+                        var language  = '';
+                        if (indexExt > -1) {
+                            var extension = fileName.substring(indexExt+1, fileName.length);
+                            language = config.extensions_to_languages[extension.toLowerCase()];
+                        }
                         var languageElement = document.getElementById(that.textAreaToImport.replace('_Code', '_Language'));
                         languageElement.value = language;
                     } catch (e) {
