@@ -118,14 +118,17 @@ define(
             var fileName = objectName;
             var contentTypeToPublish = 'text/xml';
             if (this.kind.toLowerCase().indexOf('script') > -1) {
+                contentTypeToPublish = 'text/plain';
                 try {
                     var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
                     var language = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
                     var extension = config.languages_to_extensions[language];
                     if (extension)
                         fileName = objectName+'.'+extension;
-                    contentTypeToPublish = config.languages_content_type[language];
-                }catch(e){
+                    var contentType = config.languages_content_type[language];
+                    if (contentType)
+                        contentTypeToPublish = contentType;
+                } catch(e) {
                     console.error("Error while getting the language of the selected element. "+ e);
                 }
             }

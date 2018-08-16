@@ -178,13 +178,17 @@ define(
                 document.getElementById(that.textAreaToImport).value = response;
                 $('#catalog-get-close-button').click();
                 studioApp.displayMessage('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
-                //it it's a script, we set the language depending on the file extension
+                //if it's a script, we set the language depending on the file extension
                 if (that.kind.toLowerCase().indexOf('script') > -1) {
                     try {
                         var contentDispositionHeader = request.getResponseHeader('content-disposition');
                         var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
-                        var extension = fileName.split('.').pop();
-                        var language = config.extensions_to_languages[extension.toLowerCase()];
+                        var indexExt = fileName.lastIndexOf('.');
+                        var language  = '';
+                        if (indexExt > -1) {
+                            var extension = fileName.substring(indexExt+1, fileName.length);
+                            language = config.extensions_to_languages[extension.toLowerCase()];
+                        }
                         var languageElement = document.getElementById(that.textAreaToImport.replace('_Code', '_Language'));
                         languageElement.value = language;
                     } catch (e) {
