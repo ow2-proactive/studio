@@ -178,7 +178,8 @@ define(
             var request = $.ajax({
                 url: $("#catalog-get-revision-description").data("selectedrawurl"),
                 type: 'GET',
-                headers: headers
+                headers: headers,
+                dataType: 'text' //without this option, it will execute the response if it's JS code
             }).success(function (response) {
                 document.getElementById(that.textAreaToImport).value = response;
                 $('#catalog-get-close-button').click();
