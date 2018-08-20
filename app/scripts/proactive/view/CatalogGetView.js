@@ -52,10 +52,14 @@ define(
 
 	            var that = this;
                 var bucketName = that.getSelectedBucketName();
+                var filterKind = this.kind;
+                //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
+                if (this.kind.toLowerCase().indexOf('workflow') > -1)
+                    filterKind = "workflow"
                 var objectsModel = new CatalogObjectCollection(
                 {
                     bucketname: bucketName,
-                    kind: this.kind,
+                    kind: filterKind,
                     callback: function (catalogObjects) {
                         if (catalogObjects.length === 0)
                             $('#catalog-get-import-button').prop('disabled', true);
