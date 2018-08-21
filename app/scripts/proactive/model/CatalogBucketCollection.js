@@ -16,7 +16,12 @@ define(
             setKind: function(newKind) {
                 this.kind= newKind;
             },
-            url: function() { return '/catalog/buckets/?kind='+this.kind; },
+            url: function() {
+                if (this.kind && this.kind != null)
+                    return '/catalog/buckets/?kind='+this.kind;
+                else
+                    return '/catalog/buckets/';
+            },
             parse: function(data) {
                 return data;
             }

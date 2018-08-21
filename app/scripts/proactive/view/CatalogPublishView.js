@@ -23,7 +23,8 @@ define(
             this.buckets = options.buckets;
         },
         events: {
-            'click #catalog-publish-buckets-table tr': 'selectBucket'
+            'click #catalog-publish-buckets-table tr': 'selectBucket',
+            'change #show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
@@ -172,8 +173,20 @@ define(
                 studioApp.displayMessage('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });
         },
-        render: function () {
-            this.$el.html(this.template());
+        showAllChanged : function(kind) {
+            var filterKind = undefined;
+            if (!$('#show-all-checkbox input:checkbox').is(':checked')) {
+                filterKind = kind;
+                //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
+                if (kind.toLowerCase().indexOf('workflow') > -1)
+                    filterKind = "workflow"
+            }
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.setKind(filterKind);
+            studioApp.models.catalogBuckets.fetch({reset: true});
+        },
+        updateBuckets : function() {
+            this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
                 var bucketName = bucket.get("name");
@@ -181,6 +194,11 @@ define(
             }, this);
             // to open the browser on the first bucket
             this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0]);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            this.updateBuckets();
+            this.buckets.on('sync', this.updateBuckets, this);
             return this;
         },
     })
