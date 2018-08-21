@@ -110,13 +110,15 @@ define(
 
             var studioApp = require('StudioApp');
             var objectName;
+            var fileName;
             if (this.kind.toLowerCase().indexOf('workflow') > -1) {
                 objectName = studioApp.models.currentWorkflow.attributes.name;
+                fileName = objectName + ".xml";
             } else {
                 objectName = $("#catalog-publish-name").val();
+                fileName = objectName+ ".txt";
             }
-            var fileName = objectName;
-            var contentTypeToPublish = 'text/xml';
+            var contentTypeToPublish = 'application/xml';
             if (this.kind.toLowerCase().indexOf('script') > -1) {
                 contentTypeToPublish = 'text/plain';
                 try {
