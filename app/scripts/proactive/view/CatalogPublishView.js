@@ -24,7 +24,7 @@ define(
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
-            'change #show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
+            'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
@@ -175,7 +175,7 @@ define(
         },
         showAllChanged : function(kind) {
             var filterKind = undefined;
-            if (!$('#show-all-checkbox input:checkbox').is(':checked')) {
+            if (!$('#publish-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
                 if (kind.toLowerCase().indexOf('workflow') > -1)
