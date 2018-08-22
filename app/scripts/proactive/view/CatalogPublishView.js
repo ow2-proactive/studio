@@ -31,10 +31,14 @@ define(
         },
         getCatalogObjectRevision : function(name, bucketName) {
             var revision;
+            var filterKind = this.kind;
+            //for workflows, we don't want subkind filters (ie we want to check if there is a revision, no matter which subkind)
+            if (this.kind.toLowerCase().indexOf('workflow') > -1)
+                filterKind = "workflow"
             var catalogObjectsModel = new CatalogObjectCollection(
             {
                 bucketname: bucketName,
-                kind: this.kind,
+                kind: filterKind,
                 callback: function (catalogObjects) {
                     _.each(
                     catalogObjects,
