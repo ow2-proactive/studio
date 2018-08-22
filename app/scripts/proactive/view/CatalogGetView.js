@@ -206,6 +206,8 @@ define(
                         console.error('Error while setting language of the imported script: '+e);
                     }
                 }
+                //trigger textarea keyup event for model update
+                document.getElementById(that.textAreaToImport).dispatchEvent(new Event('keyup'));
             }).error(function (response) {
                 studioApp.displayMessage('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
                 console.error('Error importing the '+ that.kindLabel +' from the Catalog : '+JSON.stringify(response));
