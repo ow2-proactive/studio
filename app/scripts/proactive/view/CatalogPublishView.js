@@ -3,6 +3,7 @@ define(
         'jquery',
         'backbone',
         'proactive/config',
+        'proactive/rest/studio-client',
         'text!proactive/templates/catalog-publish.html',
         'text!proactive/templates/catalog-bucket.html',
         'text!proactive/templates/catalog-publish-description.html',
@@ -11,7 +12,7 @@ define(
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, config, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
+    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
 
     "use strict";
 
@@ -171,10 +172,10 @@ define(
 
             var that = this;
             $.ajax(postData).success(function (response) {
-                studioApp.displayMessage('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
+                StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
             }).error(function (response) {
-                studioApp.displayMessage('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
+                StudioClient.alert('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });
         },
         showAllChanged : function(kind) {

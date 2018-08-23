@@ -3,6 +3,7 @@ define(
         'jquery',
         'backbone',
         'proactive/config',
+        'proactive/rest/studio-client',
         'text!proactive/templates/catalog-get.html',
         'text!proactive/templates/catalog-bucket.html',
         'text!proactive/templates/catalog-get-object.html',
@@ -12,7 +13,7 @@ define(
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, config, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
+    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
 
     "use strict";
 
@@ -188,7 +189,7 @@ define(
             }).success(function (response) {
                 document.getElementById(that.textAreaToImport).value = response;
                 $('#catalog-get-close-button').click();
-                studioApp.displayMessage('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
+                StudioClient.alert('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
                 //if it's a script, we set the language depending on the file extension
                 if (that.kind.toLowerCase().indexOf('script') > -1) {
                     try {
@@ -209,7 +210,7 @@ define(
                 //trigger textarea keyup event for model update
                 document.getElementById(that.textAreaToImport).dispatchEvent(new Event('keyup'));
             }).error(function (response) {
-                studioApp.displayMessage('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
+                StudioClient.alert('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
                 console.error('Error importing the '+ that.kindLabel +' from the Catalog : '+JSON.stringify(response));
             });
         },

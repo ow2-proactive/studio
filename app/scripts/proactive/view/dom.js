@@ -276,8 +276,7 @@ define(
             }).success(function (response) {
                 successCallback(response);
             }).error(function (response) {
-                var studioApp = require('StudioApp');
-                studioApp.displayMessage('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), 'error');
+                StudioClient.alert('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), 'error');
             });
         }
 
@@ -522,7 +521,7 @@ define(
             closeCollapsedMenu();
             save_workflow();
 
-            studioApp.displayMessage('Saved', 'Workflow has been saved',  'success');
+            StudioClient.alert('Saved', 'Workflow has been saved',  'success');
         });
 
         $("#close-button").click(function (event) {

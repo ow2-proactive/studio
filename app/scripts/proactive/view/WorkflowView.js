@@ -1,13 +1,14 @@
 define(
     [
         'dagre',
+        'proactive/rest/studio-client',
         'proactive/model/Job',
         'proactive/view/ViewWithProperties',
         'proactive/view/TaskView',
         'proactive/view/utils/undo'
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager) {
+    function (d, StudioClient, Job, ViewWithProperties, TaskView, undoManager) {
 
     "use strict";
 
@@ -75,8 +76,7 @@ define(
                           },
                           error: function (data) {
                               console.log("Cannot retrieve the template", data)
-                              var studioApp = require('StudioApp');
-                              studioApp.displayMessage("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
+                              StudioClient.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
                           }
                       });
                 }
@@ -221,8 +221,7 @@ define(
             // Prevent having empty Workflow names. Nameless workflows do not affect the scheduler but cannot be removed from studio unless they get a name.
             if (!this.model.get("Name") || this.model.get("Name").trim() === "") {
                 this.model.set("Name", "");
-                var studioApp = require('StudioApp');
-                studioApp.displayMessage('Workflow name is empty','Workflow Name should not be empty','error');
+                StudioClient.alert('Workflow name is empty','Workflow Name should not be empty','error');
                 jobNameInputField.css({ "border": "1px solid #D2322D"});
             }
             $("#breadcrumb-selected-job").text(this.model.get("Name"))
