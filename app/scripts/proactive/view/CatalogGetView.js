@@ -26,7 +26,8 @@ define(
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-objects-table tr': 'selectWorkflow',
-            'click #catalog-get-revisions-table tr': 'selectRevision'
+            'click #catalog-get-revisions-table tr': 'selectRevision',
+            'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
@@ -212,8 +213,20 @@ define(
                 console.error('Error importing the '+ that.kindLabel +' from the Catalog : '+JSON.stringify(response));
             });
         },
-        render: function () {
-            this.$el.html(this.template());
+        showAllChanged : function(kind) {
+            var filterKind = undefined;
+            if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
+                filterKind = kind;
+                //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
+                if (kind.toLowerCase().indexOf('workflow') > -1)
+                    filterKind = "workflow"
+            }
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.setKind(filterKind);
+            studioApp.models.catalogBuckets.fetch({reset: true});
+        },
+        updateBuckets : function() {
+            this.$('#catalog-get-buckets-table').empty();
             var BucketList = _.template(catalogList);
             _(this.buckets.models).each(function(bucket) {
                 var bucketName = bucket.get("name");
@@ -221,6 +234,11 @@ define(
             }, this);
             // to open the browser on the first bucket
             this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            this.updateBuckets();
+            this.buckets.on('sync', this.updateBuckets, this);
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)
             this.$('#catalog-objects-legend').text(this.kindLabel+'s');
