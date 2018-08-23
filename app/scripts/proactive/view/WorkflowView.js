@@ -4,12 +4,10 @@ define(
         'proactive/model/Job',
         'proactive/view/ViewWithProperties',
         'proactive/view/TaskView',
-        'proactive/view/utils/undo',
-        'pnotify',
-        'pnotify.buttons'
+        'proactive/view/utils/undo'
     ],
 
-    function (d, Job, ViewWithProperties, TaskView, undoManager, PNotify) {
+    function (d, Job, ViewWithProperties, TaskView, undoManager) {
 
     "use strict";
 
@@ -77,7 +75,8 @@ define(
                           },
                           error: function (data) {
                               console.log("Cannot retrieve the template", data)
-                              that.alert("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
+                              var studioApp = require('StudioApp');
+                              studioApp.displayMessage("Cannot retrieve the template", "Name: " + elem.data("templateName") + ", url: " + elem.data("templateUrl"), 'error');
                           }
                       });
                 }
@@ -204,24 +203,6 @@ define(
             });
 
         },
-        alert: function (caption, message, type) {
-            var text_escape = message.indexOf("<html>") == -1 ? true : false;
-
-            PNotify.removeAll();
-
-            new PNotify({
-                title: caption,
-                text: message,
-                type: type,
-                text_escape: text_escape,
-                opacity: .8,
-                width: '20%',
-                buttons: {
-                    closer: true,
-                    sticker: false
-                }
-            });
-        },
         createTask: function (ui) {
             console.log("Initializing TaskView")
             var view = new TaskView();
@@ -240,7 +221,8 @@ define(
             // Prevent having empty Workflow names. Nameless workflows do not affect the scheduler but cannot be removed from studio unless they get a name.
             if (!this.model.get("Name") || this.model.get("Name").trim() === "") {
                 this.model.set("Name", "");
-                this.alert('Workflow name is empty','Workflow Name should not be empty','error');
+                var studioApp = require('StudioApp');
+                studioApp.displayMessage('Workflow name is empty','Workflow Name should not be empty','error');
                 jobNameInputField.css({ "border": "1px solid #D2322D"});
             }
             $("#breadcrumb-selected-job").text(this.model.get("Name"))

@@ -91,25 +91,6 @@ define(
             this.showBlockInTask();
         },
 
-        alert: function(caption, message, type) {
-                var text_escape = message.indexOf("<html>") == -1 ? true : false;
-
-                PNotify.removeAll();
-
-                new PNotify({
-                    title: caption,
-                    text: message,
-                    type: type,
-                    text_escape: text_escape,
-                    buttons: {
-                        closer: true,
-                        sticker: false
-                    },
-                    addclass: 'translucent', // defined in studio.css
-                    width: '20%'
-                });
-            },
-
         updateTaskName: function () {
             var newTaskName = this.model.get("Task Name");
             var existingTasks = $('.task-name .name');
@@ -123,7 +104,8 @@ define(
 
             // Prevent having empty task names. Nameless tasks do not affect the scheduler but cannot be removed from studio unless they get a name.
             if (!newTaskName) {
-                that.alert('Task name is empty','Task Name should not be empty','error');
+                var studioApp = require('StudioApp');
+                studioApp.displayMessage('Task name is empty','Task Name should not be empty','error');
                 taskNameInputField.css({ "border": "1px solid #D2322D"});
             }
 
@@ -134,8 +116,8 @@ define(
             existingTasks.each(function (index) {
                 if ($(this).text() == newTaskName && $(this).text()) {
                     if (duplicated) {
-                        PNotify.removeAll();
-                        that.alert('Duplicated task name detected','Task name must be unique per workflow.\nPlease fix the issue before submitting.','error');
+                        var studioApp = require('StudioApp');
+                        studioApp.displayMessage('Duplicated task name detected','Task name must be unique per workflow.\nPlease fix the issue before submitting.','error');
 
                         // TODO: improve by retrieving input text using Backbonejs methods
                         // and style using existing Bootstrap styles

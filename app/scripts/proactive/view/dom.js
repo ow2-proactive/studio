@@ -276,7 +276,8 @@ define(
             }).success(function (response) {
                 successCallback(response);
             }).error(function (response) {
-                notify_message('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), false);
+                var studioApp = require('StudioApp');
+                studioApp.displayMessage('Error', 'Error importing selected Workflow: ' + JSON.stringify(response), 'error');
             });
         }
 
@@ -521,7 +522,7 @@ define(
             closeCollapsedMenu();
             save_workflow();
 
-            notify_message('Saved', 'Workflow has been saved', true);
+            studioApp.displayMessage('Saved', 'Workflow has been saved',  'success');
         });
 
         $("#close-button").click(function (event) {
@@ -720,26 +721,6 @@ define(
             undoManager._enable();
             undoManager.save();
         });
-
-        function notify_message(title, text, typeSuccess){
-            PNotify.removeAll();
-            var type = typeSuccess ? 'success' : 'error';
-            new PNotify({
-                title: title,
-                text: text,
-                type: type,
-                text_escape: true,
-                buttons: {
-                    closer: true,
-                    sticker: false
-                },
-                addclass: 'translucent', // is defined in studio.css
-                width: '20%',
-                history: {
-                    history: false
-                }
-            });
-        }
 
         (function scriptManagement() {
             $(document).on("click", '.edit-full-screen', function () {
