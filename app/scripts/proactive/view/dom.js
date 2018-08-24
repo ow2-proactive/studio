@@ -856,7 +856,7 @@ define(
                     $("#import-catalog-object-confirmation-modal").css("z-index", (zIndexModal+2).toString());
                 }
                 var studioApp = require('StudioApp');
-                studioApp.models.catalogBuckets.setKind("script");
+                studioApp.models.catalogBuckets.setKind(catalogKind);
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogGetView.setKind(catalogKind, "Script");
@@ -877,7 +877,7 @@ define(
                     $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+2).toString());
                 }
                 var studioApp = require('StudioApp');
-                studioApp.models.catalogBuckets.setKind("script");
+                studioApp.models.catalogBuckets.setKind(catalogKind);
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
