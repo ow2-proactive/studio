@@ -1,5 +1,5 @@
 <div class="control-group field-<%= key %>">
-    <div style="width:90%">
+    <div <%if(catalogKind != 'Script/selection') {%> style="width:90%" <% } %>>
         <label class="control-label" for="<%= editorId %>"><%= title %></label>
         <a href="#" class="get-script-from-catalog glyphicon glyphicon-download pull-right" title="Set url to a catalog script" data-related-input="<%= editorId %>" data-catalog-kind="<%= catalogKind %>"></a>
     </div>
