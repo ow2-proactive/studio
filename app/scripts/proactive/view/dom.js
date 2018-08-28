@@ -847,7 +847,7 @@ define(
 
             $(document).on("click", '.get-script-from-catalog', function (event) {
                 event.preventDefault();
-                var relatedTextAreaId = $(this).attr('data-related-textArea');
+                var relatedInputId = $(this).attr('data-related-input');
                 var catalogKind = $(this).attr('data-catalog-kind');
                 if (catalogKind === 'Script/selection') {
                     //Fixing modals overlay bug
@@ -860,15 +860,15 @@ define(
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogGetView.setKind(catalogKind, "Script");
-                studioApp.views.catalogGetView.setTextAreaToImport(relatedTextAreaId);
+                studioApp.views.catalogGetView.setInputToImportId(relatedInputId);
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
             })
 
             $(document).on("click", '.publish-script-to-catalog', function (event) {
                 event.preventDefault();
-                var relatedTextAreaId = $(this).attr('data-related-textArea');
-                var textAreaValue = document.getElementById(relatedTextAreaId).value;
+                var relatedInputId = $(this).attr('data-related-input');
+                var textAreaValue = document.getElementById(relatedInputId).value;
                 var catalogKind = $(this).attr('data-catalog-kind');
                 if (catalogKind === 'Script/selection') {
                     //Fixing modals overlay bug
@@ -881,7 +881,7 @@ define(
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
                 studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
-                studioApp.views.catalogPublishView.setRelatedTextArea(relatedTextAreaId);
+                studioApp.views.catalogPublishView.setRelatedTextArea(relatedInputId);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
