@@ -173,24 +173,41 @@
       var self = this,
           $el = this.$el;
 
+      //Focus OK button
+        $el.one('shown.bs.modal', function() {
+          if (self.options.focusOk) {
+            $el.find('.btn.ok').focus();
+          }
+
+          if (self.options.content && self.options.content.trigger) {
+            self.options.content.trigger('shown', self);
+          }
+
+          self.trigger('shown');
+        });
+
+       // listener for hidden
+       this.$el.on('hidden.bs.modal', function(e) {
+          // Ignore events propagated from interior objects, like bootstrap tooltips
+          if(e.target !== e.currentTarget){
+            return $el.one('hidden', onHidden);
+          }
+          self.remove();
+
+          if (self.options.content && self.options.content.trigger) {
+            self.options.content.trigger('hidden', self);
+          }
+
+          self.trigger('hidden');
+       });
+
       //Create it
       $el.modal(_.extend({
         keyboard: this.options.allowCancel,
         backdrop: this.options.allowCancel ? true : 'static'
       }, this.options.modalOptions));
 
-      //Focus OK button
-      $el.one('shown.bs.modal', function() {
-        if (self.options.focusOk) {
-          $el.find('.btn.ok').focus();
-        }
 
-        if (self.options.content && self.options.content.trigger) {
-          self.options.content.trigger('shown', self);
-        }
-
-        self.trigger('shown');
-      });
 
       //Adjust the modal and backdrop z-index; for dealing with multiple modals
       var numModals = Modal.count,
@@ -222,7 +239,6 @@
       this.on('cancel', function() {
         self.close();
       });
-
       Modal.count++;
 
       //Run callback on OK if provided
@@ -245,20 +261,6 @@
         this._preventClose = false;
         return;
       }
-
-      $el.one('hidden.bs.modal', function onHidden(e) {
-        // Ignore events propagated from interior objects, like bootstrap tooltips
-        if(e.target !== e.currentTarget){
-          return $el.one('hidden', onHidden);
-        }
-        self.remove();
-
-        if (self.options.content && self.options.content.trigger) {
-          self.options.content.trigger('hidden', self);
-        }
-
-        self.trigger('hidden');
-      });
 
       $el.modal('hide');
 

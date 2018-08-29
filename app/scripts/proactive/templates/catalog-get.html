@@ -3,7 +3,12 @@
 		<tr>
 			<td style="width: 200px;">
 				<fieldset>
-					<legend style="font-weight: bold;">Buckets</legend>
+					<legend class="row">
+						<div class="pull-left" style="font-weight: bold;padding-left: 15px;">Buckets</div>
+						<div class="pull-right" id="get-show-all-checkbox">
+							<label class="checkbox-inline"><input type="checkbox">Show all</label>
+						</div>
+					</legend>
 					<div style="height: 270px; overflow: auto;">
 						<table id="catalog-get-buckets-table" style="width: 100%;"></table>
 					</div>
@@ -12,9 +17,9 @@
 			<td style="width: 5px;"></td>
 			<td style="width: 200px;">
 				<fieldset>
-					<legend style="font-weight: bold;">Workflows</legend>
+					<legend style="font-weight: bold;" id="catalog-objects-legend">Catalog Objects</legend>
 					<div style="height: 270px; overflow: auto;">
-						<table id="catalog-get-workflows-table" style="width: 100%;"></table>
+						<table id="catalog-get-objects-table" style="width: 100%;"></table>
 					</div>
 				</fieldset>
 			</td>

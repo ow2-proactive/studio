@@ -4,6 +4,7 @@ define(
     [
         'jquery',
         'jsplumb',
+        'pnotify',
         'jquery.ui.droppable',
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
@@ -28,7 +29,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, PNotify, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -77,7 +78,7 @@ define(
         login: function() {
 
             this.models.workflows = new WorkflowCollection();
-            this.models.catalogBuckets = new CatalogBucketCollection();
+            this.models.catalogBuckets = new CatalogBucketCollection({kind:'workflow'});
 
             this.models.catalogBuckets.fetch();
             this.modelsToRemove = [];

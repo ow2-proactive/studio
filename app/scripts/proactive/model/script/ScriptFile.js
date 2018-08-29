@@ -13,7 +13,7 @@ define(
 
         return function(catalogKind, scriptUrlClass, scriptArgumentsClass) {
 
-            var scriptFileTemplate = _.template(tpl);
+            var scriptFileTemplate = _.template("<% var catalogKind = '"+catalogKind+"'; %>" +tpl);
 
             if (!scriptUrlClass) {
                 var scriptUrlClass = 'blank';
@@ -28,7 +28,8 @@ define(
                         type: "Text",
                         editorClass: scriptUrlClass,
                         fieldAttrs: {'placeholder': 'file->@attributes->url',
-                                     "data-help":"The url which contains the script to be executed."}
+                                     "data-help":"The url which contains the script to be executed."},
+                        template: scriptFileTemplate
                     },
                     "Language": {
                         type: 'Select',
