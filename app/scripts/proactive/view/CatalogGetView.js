@@ -57,8 +57,9 @@ define(
                 var bucketName = that.getSelectedBucketName();
                 var filterKind = this.kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (this.kind.toLowerCase().indexOf('workflow') > -1)
-                    filterKind = "workflow"
+                if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                    filterKind = "workflow";
+                }
                 var objectsModel = new CatalogObjectCollection(
                 {
                     bucketname: bucketName,
@@ -236,8 +237,9 @@ define(
             if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (kind.toLowerCase().indexOf('workflow') > -1)
-                    filterKind = "workflow"
+                if (kind.toLowerCase().indexOf('workflow') > -1) {
+                    filterKind = "workflow";
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
@@ -257,8 +259,9 @@ define(
             this.$el.html(this.template());
             var bucketKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-            if (this.kind.toLowerCase().indexOf('workflow') > -1)
-                bucketKind = "workflow"
+            if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                bucketKind = "workflow";
+            }
             this.buckets.setKind(bucketKind);
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
