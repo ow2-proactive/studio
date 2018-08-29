@@ -35,7 +35,7 @@ define(
             this.kind = newKind;
             this.kindLabel = newKindLabel;
             //if it's not a workflow, we hide workflow import buttons and display generic import
-            if (this.kind.toLowerCase().indexOf('workflow') < 0) {
+            if (this.kind.toLowerCase().indexOf('workflow') != 0) {
                 $("#catalog-get-as-new-button").hide();
                 $("#catalog-get-append-button").hide();
                 $("#catalog-get-import-button").show();
@@ -57,7 +57,7 @@ define(
                 var bucketName = that.getSelectedBucketName();
                 var filterKind = this.kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     filterKind = "workflow";
                 }
                 var objectsModel = new CatalogObjectCollection(
@@ -204,7 +204,7 @@ define(
                 $('#catalog-get-close-button').click();
                 StudioClient.alert('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
                 //if it's a script, we set the language depending on the file extension
-                if (that.kind.toLowerCase().indexOf('script') > -1) {
+                if (that.kind.toLowerCase().indexOf('script') == 0) {
                     try {
                         var contentDispositionHeader = request.getResponseHeader('content-disposition');
                         var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
@@ -237,7 +237,7 @@ define(
             if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (kind.toLowerCase().indexOf('workflow') > -1) {
+                if (kind.toLowerCase().indexOf('workflow') == 0) {
                     filterKind = "workflow";
                 }
             }
@@ -259,7 +259,7 @@ define(
             this.$el.html(this.template());
             var bucketKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-            if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+            if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 bucketKind = "workflow";
             }
             this.buckets.setKind(bucketKind);

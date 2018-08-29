@@ -36,7 +36,7 @@ define(
             var revision;
             var filterKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to check if there is a revision, no matter which subkind)
-            if (this.kind.toLowerCase().indexOf('workflow') > -1){
+            if (this.kind.toLowerCase().indexOf('workflow') == 0){
                 filterKind = "workflow";
             }
             var catalogObjectsModel = new CatalogObjectCollection(
@@ -66,7 +66,7 @@ define(
             if (currentBucketRow){
                 var currentBucketName= $(currentBucketRow).data("bucketname");
                 this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
-                if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     var name = studioApp.models.currentWorkflow.attributes.name;
                     var editedCatalogObject = this.getCatalogObjectRevision(name, currentBucketName);
 
@@ -119,7 +119,7 @@ define(
             var studioApp = require('StudioApp');
             var objectName;
             var fileName;
-            if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+            if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 objectName = studioApp.models.currentWorkflow.attributes.name;
                 fileName = objectName + ".xml";
             } else {
@@ -127,7 +127,7 @@ define(
                 fileName = objectName+ ".txt";
             }
             var contentTypeToPublish = 'application/xml';
-            if (this.kind.toLowerCase().indexOf('script') > -1) {
+            if (this.kind.toLowerCase().indexOf('script') == 0) {
                 contentTypeToPublish = 'text/plain';
                 try {
                     var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
@@ -185,7 +185,7 @@ define(
             if (!$('#publish-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (kind.toLowerCase().indexOf('workflow') > -1) {
+                if (kind.toLowerCase().indexOf('workflow') == 0) {
                     filterKind = "workflow";
                 }
             }
@@ -207,7 +207,7 @@ define(
             this.$el.html(this.template());
             var bucketKind = this.kind;
             //for workflows, we don't want subkind filters
-            if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+            if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 bucketKind = "workflow";
             }
             this.buckets.setKind(bucketKind);
