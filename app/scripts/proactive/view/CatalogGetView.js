@@ -85,6 +85,15 @@ define(
         	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
         	 $('#catalog-get-append-button').prop('disabled', enableAppend);       
         },
+        getRevisionProjectName: function(revision){
+            for (var i = 0 ; i < revision.object_key_values.length ; i++){
+                var keyValue = revision.object_key_values[i];
+                if (keyValue.key == "project_name" && keyValue.label == "job_information"){
+                    return keyValue.value;
+                }
+            }
+            return "";
+        },
         internalSelectObject: function (currentObjectRow) {
             this.$('#catalog-get-revisions-table').empty();
             
@@ -99,22 +108,20 @@ define(
 	            		bucketname: bucketName,
 	            		name: currentWorkflowName,
 		            	callback: function (revisions) {
+                            var latestRevision = JSON.parse(JSON.stringify(revisions[0]));//Copy of the fist revision: the latest one
+                            latestRevision.links[1].href = 'buckets/'+latestRevision.bucket_name+'/resources/'+latestRevision.name;
+                            var latestRevisionProjectName = that.getRevisionProjectName(latestRevision);
+                            var RevisionList = _.template(catalogRevision);
+                            $('#catalog-get-revisions-table').append(RevisionList({revision: latestRevision, projectname: latestRevisionProjectName, isLatest : true}));
 		            		_.each(
 		            			revisions, 
 		            			function (revision) {
-		            				var projectName = "";
-		                    		//Go through all metadata to find project name
-		                    		_.each(revision.object_key_values, function(keyValue){
-		                    			if (keyValue.key == "project_name" && keyValue.label == "job_information"){
-		                    				projectName = keyValue.value;
-		                    			}
-		                    		});
-		                    		
+		            				var projectName = that.getRevisionProjectName(revision);
 		            				var RevisionList = _.template(catalogRevision);
-		            				$('#catalog-get-revisions-table').append(RevisionList({revision: revision, projectname: projectName}));
+		            				$('#catalog-get-revisions-table').append(RevisionList({revision: revision, projectname: projectName, isLatest : false}));
 		            			}
 	            			);
-            				that.internalSelectRevision(that.$('#catalog-get-revisions-table tr')[0])
+	            			that.internalSelectRevision(that.$('#catalog-get-revisions-table tr')[0])
 		            	}
 	            	});
 	            revisionsModel.fetch();
@@ -173,21 +180,25 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectRevision(row);
         },
-        setTextAreaToImport: function(textAreaToImport) {
+        setInputToImportId: function(inputToImportId) {
             //setting the text area where we will import the object
-            this.textAreaToImport = textAreaToImport;
+            this.inputToImportId = inputToImportId;
         },
         importCatalogObject: function(){
             var headers = { 'sessionID': localStorage['pa.session'] };
             var that = this;
-            var studioApp = require('StudioApp');
             var request = $.ajax({
                 url: $("#catalog-get-revision-description").data("selectedrawurl"),
                 type: 'GET',
                 headers: headers,
                 dataType: 'text' //without this option, it will execute the response if it's JS code
             }).success(function (response) {
-                document.getElementById(that.textAreaToImport).value = response;
+                var inputToImport = document.getElementById(that.inputToImportId);
+                var isUrlImport = that.inputToImportId.indexOf('Url') > -1;
+                if (isUrlImport) //if input id contains 'Url', we only import the URL of the selected catalog object
+                    inputToImport.value = $("#catalog-get-revision-description").data("selectedrawurl");
+                else //Otherwise, we import the content of the catalog object
+                    inputToImport.value = response;
                 $('#catalog-get-close-button').click();
                 StudioClient.alert('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
                 //if it's a script, we set the language depending on the file extension
@@ -201,14 +212,19 @@ define(
                             var extension = fileName.substring(indexExt+1, fileName.length);
                             language = config.extensions_to_languages[extension.toLowerCase()];
                         }
-                        var languageElement = document.getElementById(that.textAreaToImport.replace('_Code', '_Language'));
+                        var languageElementId;
+                        if (isUrlImport)
+                            languageElementId = that.inputToImportId.replace('_Url', '_Language');
+                        else
+                            languageElementId = that.inputToImportId.replace('_Code', '_Language');
+                        var languageElement = document.getElementById(languageElementId);
                         languageElement.value = language;
                     } catch (e) {
                         console.error('Error while setting language of the imported script: '+e);
                     }
                 }
-                //trigger textarea keyup event for model update
-                document.getElementById(that.textAreaToImport).dispatchEvent(new Event('keyup'));
+                //trigger input keyup event for model update
+                inputToImport.dispatchEvent(new Event('keyup'));
             }).error(function (response) {
                 StudioClient.alert('Error', 'Error importing the '+ that.kindLabel +' from the Catalog', 'error');
                 console.error('Error importing the '+ that.kindLabel +' from the Catalog : '+JSON.stringify(response));
