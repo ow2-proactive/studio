@@ -22,6 +22,7 @@ define(
             this.$el = $("<div id='catalog-publish-container'></div>");
             $("#catalog-publish-body").append(this.$el);
             this.buckets = options.buckets;
+            this.buckets.on('reset', this.updateBuckets, this);
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
@@ -202,8 +203,12 @@ define(
         },
         render: function () {
             this.$el.html(this.template());
-            this.updateBuckets();
-            this.buckets.on('sync', this.updateBuckets, this);
+            var bucketKind = this.kind;
+            //for workflows, we don't want subkind filters
+            if (this.kind.toLowerCase().indexOf('workflow') > -1)
+                bucketKind = "workflow"
+            this.buckets.setKind(bucketKind);
+            this.buckets.fetch({reset: true, async: false});
             return this;
         },
     })

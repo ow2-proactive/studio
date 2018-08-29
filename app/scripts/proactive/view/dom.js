@@ -195,9 +195,6 @@ define(
         $("#get-from-catalog-button").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
-            studioApp.models.catalogBuckets.setKind("workflow");
-            studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-            studioApp.modelsToRemove = [];
             studioApp.views.catalogGetView.setKind("workflow/standard", "Workflow");
             studioApp.views.catalogGetView.render();
             $('#catalog-get-modal').modal();
@@ -207,9 +204,6 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
-                studioApp.models.catalogBuckets.setKind("workflow");
-                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
                 studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml());
                 studioApp.views.catalogPublishView.render();
@@ -856,9 +850,6 @@ define(
                     $("#import-catalog-object-confirmation-modal").css("z-index", (zIndexModal+2).toString());
                 }
                 var studioApp = require('StudioApp');
-                studioApp.models.catalogBuckets.setKind(catalogKind);
-                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                studioApp.modelsToRemove = [];
                 studioApp.views.catalogGetView.setKind(catalogKind, "Script");
                 studioApp.views.catalogGetView.setInputToImportId(relatedInputId);
                 studioApp.views.catalogGetView.render();
@@ -877,9 +868,6 @@ define(
                     $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+2).toString());
                 }
                 var studioApp = require('StudioApp');
-                studioApp.models.catalogBuckets.setKind(catalogKind);
-                studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                studioApp.modelsToRemove = [];
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setRelatedTextArea(relatedInputId);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");

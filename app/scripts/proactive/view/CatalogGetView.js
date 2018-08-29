@@ -23,6 +23,7 @@ define(
             this.$el = $("<div id='catalog-get-container'></div>");
             $("#catalog-get-body").append(this.$el);
             this.buckets = options.buckets;
+            this.buckets.on('reset', this.updateBuckets, this);
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
@@ -254,8 +255,12 @@ define(
         },
         render: function () {
             this.$el.html(this.template());
-            this.updateBuckets();
-            this.buckets.on('sync', this.updateBuckets, this);
+            var bucketKind = this.kind;
+            //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
+            if (this.kind.toLowerCase().indexOf('workflow') > -1)
+                bucketKind = "workflow"
+            this.buckets.setKind(bucketKind);
+            this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)
             this.$('#catalog-objects-legend').text(this.kindLabel+'s');
