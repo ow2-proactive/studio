@@ -1,1 +1,7 @@
-<tr data-rawurl="<%= revision.links[1].href %>" data-projectname="<%= projectname %>" data-name="<%= revision.name %>" data-commitmessage="<%= revision.commit_message %>"><td><%= revision.commit_time %></td></tr>
+<tr data-rawurl="<%= revision.links[1].href %>" data-test="<%= isLatest %>" data-projectname="<%= projectname %>" data-name="<%= revision.name %>" data-commitmessage="<%= revision.commit_message %>">
+    <%if(isLatest) {%>
+        <td>Latest</td>
+    <% } else { %>
+        <td><%= revision.commit_time %></td>
+    <% } %>
+</tr>
