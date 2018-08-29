@@ -23,6 +23,7 @@ define(
             this.$el = $("<div id='catalog-get-container'></div>");
             $("#catalog-get-body").append(this.$el);
             this.buckets = options.buckets;
+            this.buckets.on('reset', this.updateBuckets, this);
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
@@ -34,7 +35,7 @@ define(
             this.kind = newKind;
             this.kindLabel = newKindLabel;
             //if it's not a workflow, we hide workflow import buttons and display generic import
-            if (this.kind.toLowerCase().indexOf('workflow') < 0) {
+            if (this.kind.toLowerCase().indexOf('workflow') != 0) {
                 $("#catalog-get-as-new-button").hide();
                 $("#catalog-get-append-button").hide();
                 $("#catalog-get-import-button").show();
@@ -56,8 +57,9 @@ define(
                 var bucketName = that.getSelectedBucketName();
                 var filterKind = this.kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (this.kind.toLowerCase().indexOf('workflow') > -1)
-                    filterKind = "workflow"
+                if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                    filterKind = "workflow";
+                }
                 var objectsModel = new CatalogObjectCollection(
                 {
                     bucketname: bucketName,
@@ -202,7 +204,7 @@ define(
                 $('#catalog-get-close-button').click();
                 StudioClient.alert('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
                 //if it's a script, we set the language depending on the file extension
-                if (that.kind.toLowerCase().indexOf('script') > -1) {
+                if (that.kind.toLowerCase().indexOf('script') == 0) {
                     try {
                         var contentDispositionHeader = request.getResponseHeader('content-disposition');
                         var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
@@ -235,8 +237,9 @@ define(
             if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (kind.toLowerCase().indexOf('workflow') > -1)
-                    filterKind = "workflow"
+                if (kind.toLowerCase().indexOf('workflow') == 0) {
+                    filterKind = "workflow";
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
@@ -254,8 +257,13 @@ define(
         },
         render: function () {
             this.$el.html(this.template());
-            this.updateBuckets();
-            this.buckets.on('sync', this.updateBuckets, this);
+            var bucketKind = this.kind;
+            //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
+            if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                bucketKind = "workflow";
+            }
+            this.buckets.setKind(bucketKind);
+            this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)
             this.$('#catalog-objects-legend').text(this.kindLabel+'s');
