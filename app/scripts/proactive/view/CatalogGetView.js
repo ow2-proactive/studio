@@ -52,7 +52,7 @@ define(
                 $("#catalog-get-as-new-button").show();
                 $("#catalog-get-append-button").show();
                 $("#catalog-get-import-button").hide();
-                $("#get-modal-title").text("Import a Workflow by copy from the Catalog");
+                $("#get-modal-title").text("Import a Workflow from the Catalog");
             }
         },
         internalSelectBucket: function (currentBucketRow) {
