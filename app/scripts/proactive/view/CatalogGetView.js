@@ -39,10 +39,20 @@ define(
                 $("#catalog-get-as-new-button").hide();
                 $("#catalog-get-append-button").hide();
                 $("#catalog-get-import-button").show();
+                if (this.kind.toLowerCase().indexOf('script') == 0) {
+                    if (this.inputToImportId.indexOf('_Code') > -1) {
+                        $("#get-modal-title").text("Import a Script by copy from the Catalog");
+                    } else if (this.inputToImportId.indexOf('_Url') > -1) {
+                        $("#get-modal-title").text("Import a Script by reference from the Catalog");
+                    }
+                } else {
+                    $("#get-modal-title").text("Import from the Catalog");
+                }
             } else {
                 $("#catalog-get-as-new-button").show();
                 $("#catalog-get-append-button").show();
                 $("#catalog-get-import-button").hide();
+                $("#get-modal-title").text("Import a Workflow from the Catalog");
             }
         },
         internalSelectBucket: function (currentBucketRow) {
@@ -196,7 +206,7 @@ define(
                 dataType: 'text' //without this option, it will execute the response if it's JS code
             }).success(function (response) {
                 var inputToImport = document.getElementById(that.inputToImportId);
-                var isUrlImport = that.inputToImportId.indexOf('Url') > -1;
+                var isUrlImport = that.inputToImportId.indexOf('_Url') > -1;
                 if (isUrlImport) //if input id contains 'Url', we only import the URL of the selected catalog object
                     inputToImport.value = $("#catalog-get-revision-description").data("selectedrawurl");
                 else //Otherwise, we import the content of the catalog object
