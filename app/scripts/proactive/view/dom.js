@@ -850,8 +850,8 @@ define(
                     $("#import-catalog-object-confirmation-modal").css("z-index", (zIndexModal+2).toString());
                 }
                 var studioApp = require('StudioApp');
-                studioApp.views.catalogGetView.setKind(catalogKind, "Script");
                 studioApp.views.catalogGetView.setInputToImportId(relatedInputId);
+                studioApp.views.catalogGetView.setKind(catalogKind, "Script");
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
             })
