@@ -87,7 +87,7 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    var name = document.getElementById(this.relatedTextArea).dataset.scriptName || 'Untitled'+ this.kindLabel;
+                    var name = document.getElementById(this.relatedTextArea).dataset.scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
@@ -202,9 +202,11 @@ define(
             var BucketList = _.template(catalogList);
             var i = 0;
             var selectIndex = 0;
-            var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
-            if (!isWorkflow) {
-                var alreadyPublishedBucketName = document.getElementById(this.relatedTextArea).dataset.bucketName;
+            if (this.kind) {
+                var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
+                if (!isWorkflow) {
+                    var alreadyPublishedBucketName = document.getElementById(this.relatedTextArea).dataset.bucketName;
+                }
             }
             _(this.buckets.models).each(function(bucket) {
                 var bucketName = bucket.get("name");

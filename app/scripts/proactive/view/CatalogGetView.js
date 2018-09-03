@@ -27,7 +27,7 @@ define(
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
-            'click #catalog-get-objects-table tr': 'selectWorkflow',
+            'click #catalog-get-objects-table tr': 'selectObject',
             'click #catalog-get-revisions-table tr': 'selectRevision',
             'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
@@ -174,7 +174,7 @@ define(
         getSelectedBucketName: function(){
         	return this.getSelectedRowId("#catalog-get-buckets-table .catalog-selected-row", "bucketname");
         },
-        getSelectedWorkflowName: function(){
+        getSelectedObjectName: function(){
         	return this.getSelectedRowId("#catalog-get-objects-table .catalog-selected-row", "objectname");
         },
         getSelectedRowId: function(tableSelector, dataName){
@@ -184,7 +184,7 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
         },
-        selectWorkflow: function(e){
+        selectObject: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectObject(row);
         },
@@ -213,9 +213,12 @@ define(
                     inputToImport.value = response;
                 $('#catalog-get-close-button').click();
                 StudioClient.alert('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
-                //if it's a script, we set the language depending on the file extension
                 if (that.kind.toLowerCase().indexOf('script') == 0) {
+                    //saving script name and bucket for next commits
+                    inputToImport.dataset.scriptName = that.getSelectedObjectName();
+                    inputToImport.dataset.bucketName = that.getSelectedBucketName();
                     try {
+                        //if it's a script, we set the language depending on the file extension
                         var contentDispositionHeader = request.getResponseHeader('content-disposition');
                         var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
                         var indexExt = fileName.lastIndexOf('.');
