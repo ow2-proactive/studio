@@ -87,7 +87,7 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    var name = 'Untitled'+ this.kindLabel;
+                    var name = document.getElementById(this.relatedTextArea).dataset.scriptName || 'Untitled'+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
@@ -128,6 +128,9 @@ define(
             }
             var contentTypeToPublish = 'application/xml';
             if (this.kind.toLowerCase().indexOf('script') == 0) {
+                //saving script name for next commits
+                document.getElementById(this.relatedTextArea).dataset.scriptName = objectName;
+
                 contentTypeToPublish = 'text/plain';
                 try {
                     var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
