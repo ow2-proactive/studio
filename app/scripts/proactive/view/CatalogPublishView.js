@@ -128,8 +128,9 @@ define(
             }
             var contentTypeToPublish = 'application/xml';
             if (this.kind.toLowerCase().indexOf('script') == 0) {
-                //saving script name for next commits
+                //saving script name and bucket for next commits
                 document.getElementById(this.relatedTextArea).dataset.scriptName = objectName;
+                document.getElementById(this.relatedTextArea).dataset.bucketName = bucketName;
 
                 contentTypeToPublish = 'text/plain';
                 try {
@@ -199,12 +200,21 @@ define(
         updateBuckets : function() {
             this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
+            var i = 0;
+            var selectIndex = 0;
+            var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
+            if (!isWorkflow) {
+                var alreadyPublishedBucketName = document.getElementById(this.relatedTextArea).dataset.bucketName;
+            }
             _(this.buckets.models).each(function(bucket) {
                 var bucketName = bucket.get("name");
                 this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                if (!isWorkflow && bucketName == alreadyPublishedBucketName)
+                    selectIndex = i;
+                i++;
             }, this);
-            // to open the browser on the first bucket
-            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0]);
+            // to open the browser on the right bucket (1st one if the object has never been commit)
+            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
         },
         render: function () {
             this.$el.html(this.template());
