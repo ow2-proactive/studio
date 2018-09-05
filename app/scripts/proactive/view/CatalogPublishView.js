@@ -109,8 +109,8 @@ define(
         setContentToPublish: function(content){
             this.contentToPublish = content;
         },
-        setRelatedTextArea: function(relatedTextArea){
-            this.relatedTextArea = relatedTextArea;
+        setScriptLanguage: function(language){
+            this.scriptLanguage = language;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
@@ -130,12 +130,10 @@ define(
             if (this.kind.toLowerCase().indexOf('script') == 0) {
                 contentTypeToPublish = 'text/plain';
                 try {
-                    var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
-                    var language = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
-                    var extension = config.languages_to_extensions[language];
+                    var extension = config.languages_to_extensions[this.scriptLanguage];
                     if (extension)
                         fileName = objectName+'.'+extension;
-                    var contentType = config.languages_content_type[language];
+                    var contentType = config.languages_content_type[this.scriptLanguage];
                     if (contentType)
                         contentTypeToPublish = contentType;
                 } catch(e) {

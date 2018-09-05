@@ -90,7 +90,6 @@ define(
                 var handler = "";
                 var self = this;
                 _.each(array, function (other_option, other_index) {
-                    //TODO: something like that
                     // find the backbone-forms generated id associated with this form
                     var root_id = self.id.substring(0, self.id.lastIndexOf("_"));
                     // find the sibling nested form which must have the same name as the option value, with a _Div suffix
@@ -719,9 +718,16 @@ define(
             $(document).on("click", '.edit-full-screen', function () {
 
                 $(".CodeMirror").remove();
-                var textarea = $(this).parents('form').find('textarea');
-                var select = $(this).parents('form').find('select');
-                var selectedLanguage = select.val()
+                var relatedInputId = $(this).data('related-input');
+                var isUrl = $(this).data('is-url');
+                var catalogKind = $(this).data('catalog-kind');
+                var inputValue = document.getElementById(relatedInputId).value;
+                var languageElementId;
+                if (isUrl)
+                    languageElementId = relatedInputId.replace('_Url', '_Language');
+                else
+                    languageElementId = relatedInputId.replace('_Code', '_Language');
+                var selectedLanguage = $('#'+languageElementId).val();
                 var modes = config.modes
                 var language = 'text/plain'
                 for (var property in modes) {
@@ -771,9 +777,38 @@ define(
                     scan(1);
                     return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
                 });
-
-                var content = textarea.val();
-                $("#set-script-content").data("area", textarea);
+                var content = '';
+                var setScriptContentButton = $("#set-script-content");
+                var commitScriptChangesButton = $("#commit-script-changes");
+                if (isUrl) {
+                    if (inputValue.trim()!='') {
+                        var headers = { 'sessionID': localStorage['pa.session'] };
+                        $.ajax({
+                            url: inputValue,
+                            type: 'GET',
+                            headers: headers,
+                            async: false,
+                            dataType: 'text' //without this option, it will execute the response if it's JS code
+                        }).success(function (response) {
+                            content = response;
+                            setScriptContentButton.hide();
+                            commitScriptChangesButton.show();
+                        }).error(function (response) {
+                            StudioClient.alert('Error', 'The code could not be opened. Please check that you entered a correct URL.', 'error');
+                            console.error('Error importing the script from the Catalog : '+JSON.stringify(response));
+                        });
+                    } else {
+                        StudioClient.alert('No script to display.', 'There is no URL value. Please enter a URL in the input field.', 'error');
+                        return false;
+                    }
+                } else {
+                    content = inputValue;
+                    commitScriptChangesButton.hide();
+                    setScriptContentButton.show();
+                    $("#set-script-content").data("area", $('#'+relatedInputId));
+                }
+                $("#full-edit-modal-script-content").data('language', selectedLanguage);
+                $("#full-edit-modal-script-content").data('catalog-kind', catalogKind);
                 $("#full-edit-modal-script-content").val(content);
                 CodeMirror.commands.autocomplete = function(cm) {
                     cm.showHint({hint: CodeMirror.hint.anyword});
@@ -809,7 +844,7 @@ define(
                     $("#full-edit-modal").css("z-index", (zIndexModal+1).toString());
                 }
                 $('#full-edit-modal').modal('show');
-                $("#set-script-content").data("editor", editor);
+                $('#full-edit-modal').data("editor", editor);
 
                 var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
                 if (is_firefox) {
@@ -825,11 +860,11 @@ define(
             $('#full-edit-modal').on('shown.bs.modal', function () {
                 $('#variable_reference_link').attr("href", config.docUrl + "/user/ProActiveUserGuide.html#_variables_quick_reference")
                 $(".CodeMirror").height($(".code-editor-container").height())
-                $("#set-script-content").data("editor").refresh()
+                $('#full-edit-modal').data("editor").refresh()
             })
 
             $("#set-script-content").click(function () {
-                var editor = $("#set-script-content").data("editor");
+                var editor = $('#full-edit-modal').data("editor");
                 editor.save()
                 $(this).data("area").val($("#full-edit-modal-script-content").val());
 
@@ -837,6 +872,25 @@ define(
                 // propagating changes to the model
                 var form = studioApp.views.propertiesView.$el.data('form')
                 form.commit();
+            })
+
+            $('#commit-script-changes').click(function () {
+                var textAreaEditor = $("#full-edit-modal-script-content");
+                var editorValue = $('#full-edit-modal').data("editor").getValue();
+                var language = textAreaEditor.data('language');
+                var catalogKind = textAreaEditor.data('catalog-kind');
+
+                //Fixing modals overlay bug
+                var zIndexModal = parseInt($("#full-edit-modal-script-content").parents().find(".modal").css("z-index"));
+                $("#catalog-publish-modal").css("z-index", (zIndexModal+1).toString());
+                $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+2).toString());
+
+                var studioApp = require('StudioApp');
+                studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
+                studioApp.views.catalogPublishView.setScriptLanguage(language);
+                studioApp.views.catalogPublishView.setContentToPublish(editorValue, "text/plain");
+                studioApp.views.catalogPublishView.render();
+                $('#catalog-publish-modal').modal();
             })
 
             $(document).on("click", '.get-script-from-catalog', function (event) {
@@ -860,6 +914,8 @@ define(
                 event.preventDefault();
                 var relatedInputId = $(this).attr('data-related-input');
                 var textAreaValue = document.getElementById(relatedInputId).value;
+                var languageElement = document.getElementById(relatedInputId.replace('_Code', '_Language'));
+                var language = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
                 var catalogKind = $(this).attr('data-catalog-kind');
                 if (catalogKind === 'Script/selection') {
                     //Fixing modals overlay bug
@@ -869,7 +925,7 @@ define(
                 }
                 var studioApp = require('StudioApp');
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
-                studioApp.views.catalogPublishView.setRelatedTextArea(relatedInputId);
+                studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
