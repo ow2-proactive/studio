@@ -210,6 +210,11 @@ define(
             }
             this.buckets.setKind(bucketKind);
             this.buckets.fetch({reset: true, async: false});
+            if (this.kind.toLowerCase().indexOf('script') == 0) {
+                $('#publish-current-confirmation-modal .modal-body').html("Publishing this script will impact all workflows using it. Do you confirm publication?");
+            } else {
+                $('#publish-current-confirmation-modal .modal-body').html("Do you want to publish your object in the Catalog?");
+            }
             return this;
         },
     })
