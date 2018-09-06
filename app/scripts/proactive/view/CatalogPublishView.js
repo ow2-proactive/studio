@@ -31,6 +31,7 @@ define(
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
             this.kindLabel = newKindLabel;
+            $("#catalog-publish-modal-title").text("Publish the "+ newKindLabel +" to the Catalog");
         },
         getCatalogObjectRevision : function(name, bucketName) {
             var revision;
