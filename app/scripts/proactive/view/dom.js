@@ -723,11 +723,22 @@ define(
                 var catalogKind = $(this).data('catalog-kind');
                 var inputValue = document.getElementById(relatedInputId).value;
                 var languageElementId;
-                if (isUrl)
+                if (isUrl) {
                     languageElementId = relatedInputId.replace('_Url', '_Language');
-                else
+                }
+                else {
                     languageElementId = relatedInputId.replace('_Code', '_Language');
-                var selectedLanguage = $('#'+languageElementId).val();
+                }
+                var languageElement = document.getElementById(languageElementId);
+                var selectedLanguage = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
+                if (isUrl && (!selectedLanguage || selectedLanguage === '')) {
+                    var indexExt = inputValue.lastIndexOf('.');
+                    var language  = '';
+                    if (indexExt > -1) {
+                        var extension = inputValue.substring(indexExt+1, inputValue.length);
+                        selectedLanguage = config.extensions_to_languages[extension.toLowerCase()] || '';
+                    }
+                }
                 var modes = config.modes
                 var language = 'text/plain'
                 for (var property in modes) {
