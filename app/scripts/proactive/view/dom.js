@@ -782,7 +782,11 @@ define(
                 var commitScriptChangesButton = $("#commit-script-changes");
                 if (isUrl) {
                     if (inputValue.trim()!='') {
-                        var headers = { 'sessionID': localStorage['pa.session'] };
+                        var isCatalogScript = inputValue.startsWith(window.location.origin + '/catalog/');
+                        var headers = {};
+                        if (isCatalogScript) {
+                            headers = { 'sessionID': localStorage['pa.session'] };
+                        }
                         $.ajax({
                             url: inputValue,
                             type: 'GET',
@@ -793,9 +797,15 @@ define(
                             content = response;
                             setScriptContentButton.hide();
                             commitScriptChangesButton.show();
+                            if (isCatalogScript)
+                                commitScriptChangesButton.prop('disabled', false);
+                            else
+                                commitScriptChangesButton.prop('disabled', true);
                         }).error(function (response) {
                             StudioClient.alert('Error', 'The code could not be opened. Please check that you entered a correct URL.', 'error');
                             console.error('Error importing the script from the Catalog : '+JSON.stringify(response));
+                            commitScriptChangesButton.hide();
+                            setScriptContentButton.hide();
                         });
                     } else {
                         StudioClient.alert('No script to display.', 'There is no URL value. Please enter a URL in the input field.', 'error');
