@@ -808,10 +808,6 @@ define(
                             content = response;
                             setScriptContentButton.hide();
                             commitScriptChangesButton.show();
-                            if (isCatalogScript)
-                                commitScriptChangesButton.prop('disabled', false);
-                            else
-                                commitScriptChangesButton.prop('disabled', true);
                         }).error(function (response) {
                             StudioClient.alert('Error', 'The code could not be opened. Please check that you entered a correct URL.', 'error');
                             console.error('Error importing the script from the Catalog : '+JSON.stringify(response));
