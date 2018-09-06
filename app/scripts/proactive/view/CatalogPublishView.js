@@ -112,6 +112,9 @@ define(
         setScriptLanguage: function(language){
             this.scriptLanguage = language;
         },
+        setUrlInputId: function(inputId) {
+            this.urlInputId = inputId;
+        },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
             var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
@@ -168,12 +171,19 @@ define(
                     contentType: false,
                     cache: false,
                     data: payload
-                };
+            };
 
             var that = this;
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
+                if (that.urlInputId) {
+                    //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
+                    var oldUrlValue = document.getElementById(that.urlInputId).value;
+                    if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
+                        document.getElementById(that.urlInputId).value = response._links.content.href;
+                    }
+                }
             }).error(function (response) {
                 StudioClient.alert('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });

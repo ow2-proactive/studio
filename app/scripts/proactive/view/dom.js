@@ -819,6 +819,7 @@ define(
                 }
                 $("#full-edit-modal-script-content").data('language', selectedLanguage);
                 $("#full-edit-modal-script-content").data('catalog-kind', catalogKind);
+                $('#full-edit-modal-script-content').data("related-url-input", relatedInputId);
                 $("#full-edit-modal-script-content").val(content);
                 CodeMirror.commands.autocomplete = function(cm) {
                     cm.showHint({hint: CodeMirror.hint.anyword});
@@ -889,6 +890,7 @@ define(
                 var editorValue = $('#full-edit-modal').data("editor").getValue();
                 var language = textAreaEditor.data('language');
                 var catalogKind = textAreaEditor.data('catalog-kind');
+                var urlInputId = textAreaEditor.data('related-url-input');
 
                 //Fixing modals overlay bug
                 var zIndexModal = parseInt($("#full-edit-modal-script-content").parents().find(".modal").css("z-index"));
@@ -899,6 +901,7 @@ define(
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(editorValue, "text/plain");
+                studioApp.views.catalogPublishView.setUrlInputId(urlInputId);
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             })
@@ -937,6 +940,7 @@ define(
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
+                studioApp.views.catalogPublishView.setUrlInputId(null);
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             })
