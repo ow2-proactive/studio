@@ -31,6 +31,7 @@ define(
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
             this.kindLabel = newKindLabel;
+            $("#catalog-publish-modal-title").text("Publish the "+ newKindLabel +" to the Catalog");
         },
         getCatalogObjectRevision : function(name, bucketName) {
             var revision;
@@ -109,8 +110,11 @@ define(
         setContentToPublish: function(content){
             this.contentToPublish = content;
         },
-        setRelatedTextArea: function(relatedTextArea){
-            this.relatedTextArea = relatedTextArea;
+        setScriptLanguage: function(language){
+            this.scriptLanguage = language;
+        },
+        setUrlInputId: function(inputId) {
+            this.urlInputId = inputId;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
@@ -130,12 +134,10 @@ define(
             if (this.kind.toLowerCase().indexOf('script') == 0) {
                 contentTypeToPublish = 'text/plain';
                 try {
-                    var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
-                    var language = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
-                    var extension = config.languages_to_extensions[language];
+                    var extension = config.languages_to_extensions[this.scriptLanguage];
                     if (extension)
                         fileName = objectName+'.'+extension;
-                    var contentType = config.languages_content_type[language];
+                    var contentType = config.languages_content_type[this.scriptLanguage];
                     if (contentType)
                         contentTypeToPublish = contentType;
                 } catch(e) {
@@ -170,12 +172,19 @@ define(
                     contentType: false,
                     cache: false,
                     data: payload
-                };
+            };
 
             var that = this;
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
+                if (that.urlInputId) {
+                    //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
+                    var oldUrlValue = document.getElementById(that.urlInputId).value;
+                    if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
+                        document.getElementById(that.urlInputId).value = response._links.content.href;
+                    }
+                }
             }).error(function (response) {
                 StudioClient.alert('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });
@@ -212,6 +221,11 @@ define(
             }
             this.buckets.setKind(bucketKind);
             this.buckets.fetch({reset: true, async: false});
+            if (this.kind.toLowerCase().indexOf('script') == 0) {
+                $('#publish-current-confirmation-modal .modal-body').html("Publishing this script will impact all workflows using it. Do you confirm publication?");
+            } else {
+                $('#publish-current-confirmation-modal .modal-body').html("Do you want to publish your object in the Catalog?");
+            }
             return this;
         },
     })
