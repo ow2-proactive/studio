@@ -39,8 +39,8 @@ define(
                         },
                         fieldClass: 'task-type',
                         options: [
-                            {val: "ScriptCode", label: "Code"},
-                            {val: "ScriptFile", label: "File"}
+                            {val: "ScriptCode", label: "Inline Code"},
+                            {val: "ScriptFile", label: "Reference"}
                         ],
                         title: ""
                     },

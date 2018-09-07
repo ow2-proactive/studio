@@ -22,6 +22,7 @@ define(
             this.$el = $("<div id='catalog-publish-container'></div>");
             $("#catalog-publish-body").append(this.$el);
             this.buckets = options.buckets;
+            this.buckets.on('reset', this.updateBuckets, this);
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
@@ -30,13 +31,15 @@ define(
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
             this.kindLabel = newKindLabel;
+            $("#catalog-publish-modal-title").text("Publish the "+ newKindLabel +" to the Catalog");
         },
         getCatalogObjectRevision : function(name, bucketName) {
             var revision;
             var filterKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to check if there is a revision, no matter which subkind)
-            if (this.kind.toLowerCase().indexOf('workflow') > -1)
-                filterKind = "workflow"
+            if (this.kind.toLowerCase().indexOf('workflow') == 0){
+                filterKind = "workflow";
+            }
             var catalogObjectsModel = new CatalogObjectCollection(
             {
                 bucketname: bucketName,
@@ -64,7 +67,7 @@ define(
             if (currentBucketRow){
                 var currentBucketName= $(currentBucketRow).data("bucketname");
                 this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
-                if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+                if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     var name = studioApp.models.currentWorkflow.attributes.name;
                     var editedCatalogObject = this.getCatalogObjectRevision(name, currentBucketName);
 
@@ -107,8 +110,11 @@ define(
         setContentToPublish: function(content){
             this.contentToPublish = content;
         },
-        setRelatedTextArea: function(relatedTextArea){
-            this.relatedTextArea = relatedTextArea;
+        setScriptLanguage: function(language){
+            this.scriptLanguage = language;
+        },
+        setUrlInputId: function(inputId) {
+            this.urlInputId = inputId;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
@@ -117,7 +123,7 @@ define(
             var studioApp = require('StudioApp');
             var objectName;
             var fileName;
-            if (this.kind.toLowerCase().indexOf('workflow') > -1) {
+            if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 objectName = studioApp.models.currentWorkflow.attributes.name;
                 fileName = objectName + ".xml";
             } else {
@@ -125,15 +131,13 @@ define(
                 fileName = objectName+ ".txt";
             }
             var contentTypeToPublish = 'application/xml';
-            if (this.kind.toLowerCase().indexOf('script') > -1) {
+            if (this.kind.toLowerCase().indexOf('script') == 0) {
                 contentTypeToPublish = 'text/plain';
                 try {
-                    var languageElement = document.getElementById(this.relatedTextArea.replace('_Code', '_Language'));
-                    var language = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
-                    var extension = config.languages_to_extensions[language];
+                    var extension = config.languages_to_extensions[this.scriptLanguage];
                     if (extension)
                         fileName = objectName+'.'+extension;
-                    var contentType = config.languages_content_type[language];
+                    var contentType = config.languages_content_type[this.scriptLanguage];
                     if (contentType)
                         contentTypeToPublish = contentType;
                 } catch(e) {
@@ -168,12 +172,19 @@ define(
                     contentType: false,
                     cache: false,
                     data: payload
-                };
+            };
 
             var that = this;
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
+                if (that.urlInputId) {
+                    //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
+                    var oldUrlValue = document.getElementById(that.urlInputId).value;
+                    if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
+                        document.getElementById(that.urlInputId).value = response._links.content.href;
+                    }
+                }
             }).error(function (response) {
                 StudioClient.alert('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
             });
@@ -183,8 +194,9 @@ define(
             if (!$('#publish-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
-                if (kind.toLowerCase().indexOf('workflow') > -1)
-                    filterKind = "workflow"
+                if (kind.toLowerCase().indexOf('workflow') == 0) {
+                    filterKind = "workflow";
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
@@ -202,8 +214,18 @@ define(
         },
         render: function () {
             this.$el.html(this.template());
-            this.updateBuckets();
-            this.buckets.on('sync', this.updateBuckets, this);
+            var bucketKind = this.kind;
+            //for workflows, we don't want subkind filters
+            if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                bucketKind = "workflow";
+            }
+            this.buckets.setKind(bucketKind);
+            this.buckets.fetch({reset: true, async: false});
+            if (this.kind.toLowerCase().indexOf('script') == 0) {
+                $('#publish-current-confirmation-modal .modal-body').html("Publishing this script will impact all workflows using it. Do you confirm publication?");
+            } else {
+                $('#publish-current-confirmation-modal .modal-body').html("Do you want to publish your object in the Catalog?");
+            }
             return this;
         },
     })
