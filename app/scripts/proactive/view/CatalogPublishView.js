@@ -6,13 +6,14 @@ define(
         'proactive/rest/studio-client',
         'text!proactive/templates/catalog-publish.html',
         'text!proactive/templates/catalog-bucket.html',
+        'text!proactive/templates/catalog-publish-object.html',
         'text!proactive/templates/catalog-publish-description.html',
         'text!proactive/templates/catalog-publish-description-first.html',
         'proactive/model/CatalogObjectLastRevisionDescription',
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
+    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, catalogObject, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
 
     "use strict";
 
@@ -33,8 +34,7 @@ define(
             this.kindLabel = newKindLabel;
             $("#catalog-publish-modal-title").text("Publish the "+ newKindLabel +" to the Catalog");
         },
-        getCatalogObjectRevision : function(name, bucketName) {
-            var revision;
+        getBucketCatalogObjects : function(bucketName, callbackFunction) {
             var filterKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to check if there is a revision, no matter which subkind)
             if (this.kind.toLowerCase().indexOf('workflow') == 0){
@@ -44,21 +44,13 @@ define(
             {
                 bucketname: bucketName,
                 kind: filterKind,
-                callback: function (catalogObjects) {
-                    _.each(
-                    catalogObjects,
-                    function (catalogObject) {
-                        if (catalogObject.name == name){
-                            revision = catalogObject;
-                        }
-                    });
-                }
+                callback: callbackFunction
             });
             catalogObjectsModel.fetch({async:false});
-            return revision;
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-description-container').empty();
+            this.$('#catalog-publish-objects-table').empty();
             var studioApp = require('StudioApp');
 
             var publishCurrentButton = $('#catalog-publish-current');
@@ -67,25 +59,35 @@ define(
             if (currentBucketRow){
                 var currentBucketName= $(currentBucketRow).data("bucketname");
                 this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
+                var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
+                var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
+                var that = this;
+                //adding objects table and checking if current workflow is inside
+                this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                    _.each(
+                    catalogObjects,
+                    function (obj) {
+                        var ObjectList = _.template(catalogObject);
+                        that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
+                        if (obj.name == currentWorkflowName)
+                            currentWorkflowExists = true;
+                    });
+                })
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
-                    var name = studioApp.models.currentWorkflow.attributes.name;
-                    var editedCatalogObject = this.getCatalogObjectRevision(name, currentBucketName);
-
-                    var that = this;
-                    if (editedCatalogObject){
+                    if (currentWorkflowExists){
                         var revisionsModel = new CatalogObjectLastRevisionDescription(
                             {
                                 bucketname: currentBucketName,
-                                name: editedCatalogObject.name,
+                                name: currentWorkflowName,
                                 callback: function (revision) {
                                     var objectDescription = _.template(publishDescription);
-                                    $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: name, kind: that.kind, kindLabel: that.kindLabel}));
+                                    $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
                                 }
                             });
                         revisionsModel.fetch();
                     }else{
                       var objectDescription = _.template(publishDescriptionFirst);
-                      this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
+                      this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
                     var name = document.getElementById(this.relatedInputId).dataset.scriptName || 'Untitled '+ this.kindLabel;
@@ -161,9 +163,16 @@ define(
             var url = '/catalog/buckets/' + bucketName + '/resources';
             var isWorkflowRevision = ($("#catalog-publish-description").data("first") != true)
             var isRevision = isWorkflowRevision;
-            if (!isWorkflowRevision){
-                var revision = this.getCatalogObjectRevision(objectName, bucketName);
-                isRevision = (revision != null);
+            if (!isWorkflowRevision) {
+                this.getBucketCatalogObjects(bucketName, function(catalogObjects){
+                    _.each(
+                    catalogObjects,
+                    function (catalogObject) {
+                        if (catalogObject.name == objectName){
+                            isRevision = true;
+                        }
+                    });
+                });
             }
             if (isRevision){
                 url += "/" + objectName + "/revisions";
