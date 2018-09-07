@@ -125,9 +125,10 @@ define(function () {
         },
         dictionary: ['variables', 'nodesurl', 'genericInformation', 'localspace', 'cachespace', 'inputspace', 'outputspace',
         'globalspace', 'userspace', 'globalspaceapi', 'userspaceapi', 'forkEnvironment', 'schedulerapi', 'synchronizationapi',
-        'result', 'results', 'resultMetadata', 'credentials', 'branch', 'runs', 'loop', 'selected',
+        'result', 'results', 'resultMetadata', 'credentials', 'branch', 'runs', 'loop', 'selected', 'nodeurl', 'nodename', 'nodehost',
         'PA_JOB_ID', 'PA_JOB_NAME', 'PA_TASK_ID', 'PA_TASK_NAME', 'PA_TASK_ITERATION', 'PA_TASK_REPLICATION',
-        'PA_TASK_SUCCESS', 'PA_SCHEDULER_HOME', 'PA_SCHEDULER_REST_URL', 'PA_TASK_PROGRESS_FILE', 'PA_NODESFILE', 'PA_NODESNUMBER', 'PA_CATALOG_REST_URL', 'PA_USER'
+        'PA_TASK_SUCCESS', 'PA_SCHEDULER_HOME', 'PA_SCHEDULER_REST_URL', 'PA_TASK_PROGRESS_FILE', 'PA_NODESFILE', 'PA_NODESNUMBER', 'PA_CATALOG_REST_URL', 'PA_USER',
+        'PA_NODE_URL', 'PA_NODE_NAME', 'PA_NODE_HOST'
         ],
         manuals: {
             'Email Notification' : 'templates/email.xml',
