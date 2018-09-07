@@ -908,7 +908,7 @@ define(
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(editorValue, "text/plain");
-                studioApp.views.catalogPublishView.setUrlInputId(urlInputId);
+                studioApp.views.catalogPublishView.setRelatedInputId(urlInputId, true);
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             })
@@ -947,7 +947,7 @@ define(
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
-                studioApp.views.catalogPublishView.setUrlInputId(null);
+                studioApp.views.catalogPublishView.setRelatedInputId(relatedInputId, false);
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             })

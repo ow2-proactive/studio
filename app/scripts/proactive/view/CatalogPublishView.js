@@ -88,7 +88,7 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    var name = document.getElementById(this.relatedTextArea).dataset.scriptName || 'Untitled '+ this.kindLabel;
+                    var name = document.getElementById(this.relatedInputId).dataset.scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
                 }
@@ -113,8 +113,9 @@ define(
         setScriptLanguage: function(language){
             this.scriptLanguage = language;
         },
-        setUrlInputId: function(inputId) {
-            this.urlInputId = inputId;
+        setRelatedInputId: function(inputId, isUrl){
+            this.relatedInputId = inputId;
+            this.isRelatedInputUrl = isUrl;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
@@ -133,8 +134,8 @@ define(
             var contentTypeToPublish = 'application/xml';
             if (this.kind.toLowerCase().indexOf('script') == 0) {
                 //saving script name and bucket for next commits
-                document.getElementById(this.relatedTextArea).dataset.scriptName = objectName;
-                document.getElementById(this.relatedTextArea).dataset.bucketName = bucketName;
+                document.getElementById(this.relatedInputId).dataset.scriptName = objectName;
+                document.getElementById(this.relatedInputId).dataset.bucketName = bucketName;
 
                 contentTypeToPublish = 'text/plain';
                 try {
@@ -182,11 +183,11 @@ define(
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
-                if (that.urlInputId) {
+                if (that.isRelatedInputUrl) {
                     //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
-                    var oldUrlValue = document.getElementById(that.urlInputId).value;
+                    var oldUrlValue = document.getElementById(that.relatedInputId).value;
                     if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
-                        document.getElementById(that.urlInputId).value = response._links.content.href;
+                        document.getElementById(that.relatedInputId).value = response._links.content.href;
                     }
                 }
             }).error(function (response) {
@@ -214,7 +215,7 @@ define(
             if (this.kind) {
                 var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
                 if (!isWorkflow) {
-                    var alreadyPublishedBucketName = document.getElementById(this.relatedTextArea).dataset.bucketName;
+                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
                 }
             }
             _(this.buckets.models).each(function(bucket) {
