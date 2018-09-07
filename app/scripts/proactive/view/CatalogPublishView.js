@@ -27,6 +27,7 @@ define(
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
+            'click #catalog-publish-objects-table tr': 'selectObject',
             'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
         setKind : function(newKind, newKindLabel) {
@@ -48,7 +49,7 @@ define(
             });
             catalogObjectsModel.fetch({async:false});
         },
-        internalSelectBucket: function (currentBucketRow) {
+        internalSelectBucket: function (currentBucketRow) { //TODO: split this functioninto several ones
             this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
             var studioApp = require('StudioApp');
@@ -59,21 +60,21 @@ define(
             if (currentBucketRow){
                 var currentBucketName= $(currentBucketRow).data("bucketname");
                 this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
-                var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
-                var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
                 var that = this;
-                //adding objects table and checking if current workflow is inside
-                this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
-                    _.each(
-                    catalogObjects,
-                    function (obj) {
-                        var ObjectList = _.template(catalogObject);
-                        that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
-                        if (obj.name == currentWorkflowName)
-                            currentWorkflowExists = true;
-                    });
-                })
+
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                    var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
+                    var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
+                    this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                        _.each(
+                        catalogObjects,
+                        function (obj) {
+                            var ObjectList = _.template(catalogObject);
+                            that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
+                            if (obj.name == currentWorkflowName)
+                                currentWorkflowExists = true;
+                        });
+                    })
                     if (currentWorkflowExists){
                         var revisionsModel = new CatalogObjectLastRevisionDescription(
                             {
@@ -90,12 +91,37 @@ define(
                       this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    var name = document.getElementById(this.relatedInputId).dataset.scriptName || 'Untitled '+ this.kindLabel;
+                    //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
+                    var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
+                    var selectedIndex = 0;
+                    var index = 0;
+                    this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                        _.each(
+                        catalogObjects,
+                        function (obj) {
+                            var ObjectList = _.template(catalogObject);
+                            that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
+                            if (obj.name == scriptName)
+                                selectedIndex = index;
+                            index++;
+                        });
+                    })
+                    var name = scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
+                    this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
             }
 
+        },
+        internalSelectObject: function (currentObjectRow) {
+            this.$('#catalog-get-revisions-table').empty();
+
+            if (currentObjectRow){
+                var selectedObjectName = $(currentObjectRow).data("objectname");
+                $("#catalog-publish-name").val(selectedObjectName);//copy object name in name input field
+                this.highlightSelectedRow('#catalog-publish-objects-table', currentObjectRow);
+            }
         },
         highlightSelectedRow: function(tableId, row){
         	var selectedClassName = 'catalog-selected-row';
@@ -108,6 +134,12 @@ define(
         selectBucket: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
+        },
+        selectObject: function(e){
+            if (this.kind.toLowerCase().indexOf('workflow') != 0) {
+                var row = $(e.currentTarget);
+                this.internalSelectObject(row);
+            }
         },
         setContentToPublish: function(content){
             this.contentToPublish = content;
@@ -224,7 +256,7 @@ define(
             if (this.kind) {
                 var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
                 if (!isWorkflow) {
-                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
+                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;//TODO : remove this
                 }
             }
             _(this.buckets.models).each(function(bucket) {
