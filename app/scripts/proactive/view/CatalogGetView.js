@@ -225,7 +225,7 @@ define(
                         var language  = '';
                         if (indexExt > -1) {
                             var extension = fileName.substring(indexExt+1, fileName.length);
-                            language = config.extensions_to_languages[extension.toLowerCase()];
+                            language = config.extensions_to_languages[extension.toLowerCase()] || '';
                         }
                         var languageElementId;
                         if (isUrlImport)
