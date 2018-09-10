@@ -49,7 +49,7 @@ define(
             });
             catalogObjectsModel.fetch({async:false});
         },
-        internalSelectBucket: function (currentBucketRow) { //TODO: split this functioninto several ones
+        internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
 
