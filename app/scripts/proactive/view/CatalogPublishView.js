@@ -6,13 +6,14 @@ define(
         'proactive/rest/studio-client',
         'text!proactive/templates/catalog-publish.html',
         'text!proactive/templates/catalog-bucket.html',
+        'text!proactive/templates/catalog-publish-object.html',
         'text!proactive/templates/catalog-publish-description.html',
         'text!proactive/templates/catalog-publish-description-first.html',
         'proactive/model/CatalogObjectLastRevisionDescription',
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
+    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, catalogObject, publishDescription, publishDescriptionFirst, CatalogObjectLastRevisionDescription, CatalogObjectCollection) {
 
     "use strict";
 
@@ -26,6 +27,7 @@ define(
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
+            'click #catalog-publish-objects-table tr': 'selectObject',
             'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
         setKind : function(newKind, newKindLabel) {
@@ -33,8 +35,7 @@ define(
             this.kindLabel = newKindLabel;
             $("#catalog-publish-modal-title").text("Publish the "+ newKindLabel +" to the Catalog");
         },
-        getCatalogObjectRevision : function(name, bucketName) {
-            var revision;
+        getBucketCatalogObjects : function(bucketName, callbackFunction) {
             var filterKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to check if there is a revision, no matter which subkind)
             if (this.kind.toLowerCase().indexOf('workflow') == 0){
@@ -44,22 +45,13 @@ define(
             {
                 bucketname: bucketName,
                 kind: filterKind,
-                callback: function (catalogObjects) {
-                    _.each(
-                    catalogObjects,
-                    function (catalogObject) {
-                        if (catalogObject.name == name){
-                            revision = catalogObject;
-                        }
-                    });
-                }
+                callback: callbackFunction
             });
             catalogObjectsModel.fetch({async:false});
-            return revision;
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-description-container').empty();
-            var studioApp = require('StudioApp');
+            this.$('#catalog-publish-objects-table').empty();
 
             var publishCurrentButton = $('#catalog-publish-current');
             publishCurrentButton.prop('disabled', !currentBucketRow);
@@ -67,33 +59,73 @@ define(
             if (currentBucketRow){
                 var currentBucketName= $(currentBucketRow).data("bucketname");
                 this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
-                if (this.kind.toLowerCase().indexOf('workflow') == 0) {
-                    var name = studioApp.models.currentWorkflow.attributes.name;
-                    var editedCatalogObject = this.getCatalogObjectRevision(name, currentBucketName);
+                var that = this;
 
-                    var that = this;
-                    if (editedCatalogObject){
-                        var revisionsModel = new CatalogObjectLastRevisionDescription(
-                            {
-                                bucketname: currentBucketName,
-                                name: editedCatalogObject.name,
-                                callback: function (revision) {
-                                    var objectDescription = _.template(publishDescription);
-                                    $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: name, kind: that.kind, kindLabel: that.kindLabel}));
-                                }
-                            });
-                        revisionsModel.fetch();
+                if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                    var studioApp = require('StudioApp');
+                    var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
+                    var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
+                    this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                        _.each(
+                        catalogObjects,
+                        function (obj) {
+                            var ObjectList = _.template(catalogObject);
+                            that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
+                            if (obj.name == currentWorkflowName)
+                                currentWorkflowExists = true;
+                        });
+                    })
+                    if (currentWorkflowExists){
+                        this.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName);
                     }else{
                       var objectDescription = _.template(publishDescriptionFirst);
-                      this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: that.kind, kindLabel: that.kindLabel}));
+                      this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
                     }
                 } else {
-                    var name = 'Untitled'+ this.kindLabel;
+                    //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
+                    var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
+                    var selectedIndex = 0;
+                    var index = 0;
+                    this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                        _.each(
+                        catalogObjects,
+                        function (obj) {
+                            var ObjectList = _.template(catalogObject);
+                            that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
+                            if (obj.name == scriptName)
+                                selectedIndex = index;
+                            index++;
+                        });
+                    })
+                    var name = scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
+                    this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
             }
 
+        },
+        addWorkflowRevisionDescription: function(bucketName, workflowName) {
+            var that = this;
+            var revisionsModel = new CatalogObjectLastRevisionDescription(
+                {
+                    bucketname: bucketName,
+                    name: workflowName,
+                    callback: function (revision) {
+                        var objectDescription = _.template(publishDescription);
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel}));
+                    }
+                });
+            revisionsModel.fetch();
+        },
+        internalSelectObject: function (currentObjectRow) {
+            this.$('#catalog-get-revisions-table').empty();
+
+            if (currentObjectRow){
+                var selectedObjectName = $(currentObjectRow).data("objectname");
+                $("#catalog-publish-name").val(selectedObjectName);//copy object name in name input field
+                this.highlightSelectedRow('#catalog-publish-objects-table', currentObjectRow);
+            }
         },
         highlightSelectedRow: function(tableId, row){
         	var selectedClassName = 'catalog-selected-row';
@@ -107,14 +139,21 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
         },
+        selectObject: function(e){
+            if (this.kind.toLowerCase().indexOf('workflow') != 0) {
+                var row = $(e.currentTarget);
+                this.internalSelectObject(row);
+            }
+        },
         setContentToPublish: function(content){
             this.contentToPublish = content;
         },
         setScriptLanguage: function(language){
             this.scriptLanguage = language;
         },
-        setUrlInputId: function(inputId) {
-            this.urlInputId = inputId;
+        setRelatedInputId: function(inputId, isUrl){
+            this.relatedInputId = inputId;
+            this.isRelatedInputUrl = isUrl;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
@@ -132,6 +171,10 @@ define(
             }
             var contentTypeToPublish = 'application/xml';
             if (this.kind.toLowerCase().indexOf('script') == 0) {
+                //saving script name and bucket for next commits
+                document.getElementById(this.relatedInputId).dataset.scriptName = objectName;
+                document.getElementById(this.relatedInputId).dataset.bucketName = bucketName;
+
                 contentTypeToPublish = 'text/plain';
                 try {
                     var extension = config.languages_to_extensions[this.scriptLanguage];
@@ -156,9 +199,16 @@ define(
             var url = '/catalog/buckets/' + bucketName + '/resources';
             var isWorkflowRevision = ($("#catalog-publish-description").data("first") != true)
             var isRevision = isWorkflowRevision;
-            if (!isWorkflowRevision){
-                var revision = this.getCatalogObjectRevision(objectName, bucketName);
-                isRevision = (revision != null);
+            if (!isWorkflowRevision) {
+                this.getBucketCatalogObjects(bucketName, function(catalogObjects){
+                    _.each(
+                    catalogObjects,
+                    function (catalogObject) {
+                        if (catalogObject.name == objectName){
+                            isRevision = true;
+                        }
+                    });
+                });
             }
             if (isRevision){
                 url += "/" + objectName + "/revisions";
@@ -178,12 +228,12 @@ define(
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
                 $('#catalog-publish-close-button').click();
-                if (that.urlInputId) {
+                if (that.isRelatedInputUrl) {
                     //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
-                    var oldUrlValue = document.getElementById(that.urlInputId).value;
+                    var oldUrlValue = document.getElementById(that.relatedInputId).value;
                     if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
                         var newUrlValue = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/'+ response.commit_time_raw +'/raw';
-                        document.getElementById(that.urlInputId).value = newUrlValue;
+                        document.getElementById(that.relatedInputId).value = newUrlValue;
                     }
                 }
             }).error(function (response) {
@@ -206,12 +256,23 @@ define(
         updateBuckets : function() {
             this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
+            var i = 0;
+            var selectIndex = 0;
+            if (this.kind) {
+                var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
+                if (!isWorkflow) {
+                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
+                }
+            }
             _(this.buckets.models).each(function(bucket) {
                 var bucketName = bucket.get("name");
                 this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                if (!isWorkflow && bucketName == alreadyPublishedBucketName)
+                    selectIndex = i;
+                i++;
             }, this);
-            // to open the browser on the first bucket
-            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0]);
+            // to open the browser on the right bucket (1st one if the object has never been commit)
+            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
         },
         render: function () {
             this.$el.html(this.template());
@@ -227,6 +288,8 @@ define(
             } else {
                 $('#publish-current-confirmation-modal .modal-body').html("Do you want to publish your object in the Catalog?");
             }
+            $("#catalog-publish-objects-title").text(this.kindLabel +"s");
+            console.log($("#catalog-publish-objects-title").length);
             return this;
         },
     })
