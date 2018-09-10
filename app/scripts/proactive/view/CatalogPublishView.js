@@ -182,7 +182,8 @@ define(
                     //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
                     var oldUrlValue = document.getElementById(that.urlInputId).value;
                     if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
-                        document.getElementById(that.urlInputId).value = response._links.content.href;
+                        var newUrlValue = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/'+ response.commit_time_raw +'/raw';
+                        document.getElementById(that.urlInputId).value = newUrlValue;
                     }
                 }
             }).error(function (response) {
