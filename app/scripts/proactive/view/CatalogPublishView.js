@@ -52,7 +52,6 @@ define(
         internalSelectBucket: function (currentBucketRow) { //TODO: split this functioninto several ones
             this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
-            var studioApp = require('StudioApp');
 
             var publishCurrentButton = $('#catalog-publish-current');
             publishCurrentButton.prop('disabled', !currentBucketRow);
@@ -63,6 +62,7 @@ define(
                 var that = this;
 
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                    var studioApp = require('StudioApp');
                     var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
                     var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
@@ -76,16 +76,7 @@ define(
                         });
                     })
                     if (currentWorkflowExists){
-                        var revisionsModel = new CatalogObjectLastRevisionDescription(
-                            {
-                                bucketname: currentBucketName,
-                                name: currentWorkflowName,
-                                callback: function (revision) {
-                                    var objectDescription = _.template(publishDescription);
-                                    $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
-                                }
-                            });
-                        revisionsModel.fetch();
+                        this.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName);
                     }else{
                       var objectDescription = _.template(publishDescriptionFirst);
                       this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
@@ -113,6 +104,19 @@ define(
                 }
             }
 
+        },
+        addWorkflowRevisionDescription: function(bucketName, workflowName) {
+            var that = this;
+            var revisionsModel = new CatalogObjectLastRevisionDescription(
+                {
+                    bucketname: bucketName,
+                    name: workflowName,
+                    callback: function (revision) {
+                        var objectDescription = _.template(publishDescription);
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel}));
+                    }
+                });
+            revisionsModel.fetch();
         },
         internalSelectObject: function (currentObjectRow) {
             this.$('#catalog-get-revisions-table').empty();
@@ -256,7 +260,7 @@ define(
             if (this.kind) {
                 var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
                 if (!isWorkflow) {
-                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;//TODO : remove this
+                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
                 }
             }
             _(this.buckets.models).each(function(bucket) {
