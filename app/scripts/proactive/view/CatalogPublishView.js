@@ -233,7 +233,10 @@ define(
                     var oldUrlValue = document.getElementById(that.relatedInputId).value;
                     if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
                         var newUrlValue = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/'+ response.commit_time_raw +'/raw';
-                        document.getElementById(that.relatedInputId).value = newUrlValue;
+                        var urlInput = document.getElementById(that.relatedInputId);
+                        urlInput.value = newUrlValue;
+                        //trigger input keyup event for model update
+                        urlInput.dispatchEvent(new Event('keyup'));
                     }
                 }
             }).error(function (response) {
