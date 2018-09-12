@@ -38,13 +38,13 @@ schedulerapi.connect()
 bucketName = variables.get("bucket_name")
 workflowName = variables.get("workflow_name")
 
-// parameters submitted to the workflow: Empty in the example, modify this map to give parameters to the submitted workflow
-parameters = Collections.EMPTY_MAP
+// variables submitted to the workflow: Empty in the example, modify this map to give parameters to the submitted workflow
+workflow_variables = Collections.EMPTY_MAP
 
 println "Submitting workflow " + workflowName + " from bucket " + bucketName
 
 // submitting the job
-jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, parameters)
+jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, workflow_variables)
 
 // alternatively you can submit a workflow from a direct url
 
