@@ -37,7 +37,7 @@ define(
                 });
             }
 
-            var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks});
+            var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks, 'visualization': this.generateHtml()});
 
             // removing multiple \n before closing xml element tag
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
