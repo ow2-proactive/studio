@@ -476,8 +476,7 @@ define(
         function submit() {
             var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
-            var htmlVisualization = studioApp.views.xmlView.generateHtml();//TODO : remove this
-            StudioClient.submit(xml, htmlVisualization);
+            StudioClient.submit(xml);
         }
 
         function validate() {
