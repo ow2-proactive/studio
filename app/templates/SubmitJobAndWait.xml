@@ -92,6 +92,8 @@ schedulerapi.connect()
 isFinished = schedulerapi.isJobFinished(results[0].value())
 
 variables.put("isFinished", isFinished)
+
+result = results[0].value()
 ]]>
           </code>
         </script>
