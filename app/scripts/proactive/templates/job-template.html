@@ -47,7 +47,10 @@
 
     <metadata>
         <visualization>
-            <![CDATA[ <%=visualization%> ]]>
+            <% if (visualization) { %>
+                <![CDATA[ <%=visualization%> ]]>
+            <% } %>
         </visualization>
     </metadata>
+
 </job>
