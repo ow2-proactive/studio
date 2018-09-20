@@ -186,14 +186,14 @@ define(
                             workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
                         })
                     }
-                    
-                    
+
+
                 })
             }, this);
             this.$el.append(templateWidget);
         },
         setTemplateMainBucket: function(bucketName){
-              var defaultBucketName = "basic-examples";
+              var defaultBucketName = config.examples_bucket;
                 if (!bucketName)
             bucketName = defaultBucketName;
             var that = this;
