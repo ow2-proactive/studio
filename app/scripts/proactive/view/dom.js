@@ -821,7 +821,7 @@ define(
                     content = inputValue;
                     commitScriptChangesButton.hide();
                     setScriptContentButton.show();
-                    $("#set-script-content").data("area", $('#'+relatedInputId));
+                    $("#set-script-content").data("area", relatedInputId);
                 }
                 $("#full-edit-modal-script-content").data('language', selectedLanguage);
                 $("#full-edit-modal-script-content").data('catalog-kind', catalogKind);
@@ -882,8 +882,8 @@ define(
 
             $("#set-script-content").click(function () {
                 var editor = $('#full-edit-modal').data("editor");
-                editor.save()
-                $(this).data("area").val($("#full-edit-modal-script-content").val());
+                editor.save();
+                document.getElementById($(this).data("area")).value = $("#full-edit-modal-script-content").val();
 
                 var studioApp = require('StudioApp');
                 // propagating changes to the model
