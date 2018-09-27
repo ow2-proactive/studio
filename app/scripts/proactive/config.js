@@ -146,6 +146,7 @@ define(function () {
             'Wait for Any': 'templates/wait_for_any.xml',
             'Wait for Any Replicate': 'templates/wait_for_any_replicate.xml',
             'Submit and Wait for Any': 'templates/submit_and_wait_for_any.xml'
-        }
+        },
+         examples_bucket: "basic-examples"
     };
 });
