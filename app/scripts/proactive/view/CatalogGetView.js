@@ -42,11 +42,14 @@ define(
                 if (this.kind.toLowerCase().indexOf('script') == 0) {
                     if (this.inputToImportId.indexOf('_Code') > -1) {
                         $("#get-modal-title").text("Import a Script by copy from the Catalog");
+                        $("#confirm-import-object-message").text("You are about to import a script (inline) from the Catalog. If you continue it will replace and remove the current inline code.");
                     } else if (this.inputToImportId.indexOf('_Url') > -1) {
                         $("#get-modal-title").text("Import a Script by reference from the Catalog");
+                        $("#confirm-import-object-message").text("You are about to import a script (reference) from the Catalog. If you continue it will replace and remove the current reference.");
                     }
                 } else {
                     $("#get-modal-title").text("Import from the Catalog");
+                    $("#confirm-import-object-message").text("You are about to import an object from the Catalog. If you continue it will replace and remove its current value.");
                 }
             } else {
                 $("#catalog-get-as-new-button").show();
