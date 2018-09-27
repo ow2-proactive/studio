@@ -429,7 +429,7 @@ define(
 
                 for (var i = 0; i < variables.length; i++) {
                     var variable = variables[i];
-                    if (!(!updatedVariables || updatedVariables === null)) {
+                    if (!(!updatedVariables || updatedVariables == null)) {
                         variables[i] = updatedVariables[variable.Name];
                     }
                     jobVariables[variable.Name] = variable;
@@ -455,7 +455,7 @@ define(
                             isInherited = variable.Inherited;
                         }
                         if (!isInherited) {
-                            if (!(!updatedVariables || updatedVariables === null)) {
+                            if (!(!updatedVariables || updatedVariables == null)) {
                                 variables[j] = updatedVariables[task.get('Task Name') + ":" + variable.Name];
                             }
                             jobVariables[task.get('Task Name') + ":" + variable.Name] = variable;
@@ -537,7 +537,6 @@ define(
 
 
             jQuery.get('file.txt', function(data) {
-                   alert(data);
                    //process text file line by line
                    $('#div').html(data.replace('n',''));
             });
@@ -732,9 +731,8 @@ define(
                 }
                 var languageElement = document.getElementById(languageElementId);
                 var selectedLanguage = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
-                if (isUrl && (!selectedLanguage || selectedLanguage === '')) {
+                if (isUrl && (!selectedLanguage || selectedLanguage == '')) {
                     var indexExt = inputValue.lastIndexOf('.');
-                    var language  = '';
                     if (indexExt > -1) {
                         var extension = inputValue.substring(indexExt+1, inputValue.length);
                         selectedLanguage = config.extensions_to_languages[extension.toLowerCase()] || '';
