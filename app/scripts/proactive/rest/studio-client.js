@@ -169,13 +169,13 @@ define(
 
             //customize client side, set localStorage['pa.login'] with server username for current session
             setCurrentUser : function () {
-                var that = this;
                 $.ajax({
                     type: 'GET',
                     url: config.restApiUrl + "/currentuser",
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('sessionid', localStorage['pa.session']);
                     },
+                    async: false,
                     success: function(data) {
                         //does not  return a json so even in case of success goes to error callback
                         console.log("Should not be here")
