@@ -725,9 +725,11 @@ define(
                 var languageElementId;
                 if (isUrl) {
                     languageElementId = relatedInputId.replace('_Url', '_Language');
+                    $("#cancel-script-changes").text("Close");
                 }
                 else {
                     languageElementId = relatedInputId.replace('_Code', '_Language');
+                    $("#cancel-script-changes").text("Cancel");
                 }
                 var languageElement = document.getElementById(languageElementId);
                 var selectedLanguage = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
