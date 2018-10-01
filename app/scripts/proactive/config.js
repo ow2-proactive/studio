@@ -21,6 +21,7 @@ define(function () {
         })(),
         tasks: {
             'Linux Bash': 'templates/script_bash.xml',
+            'Shell': 'templates/script_shell.xml',
             'Windows Cmd': 'templates/script_cmd.xml',
             'Docker': 'templates/script_docker_compose.xml',
             'Kubernetes': 'templates/script_kubernetes.xml',
@@ -40,6 +41,7 @@ define(function () {
         },
         modes: {
             'bash': 'shell',
+            'shell': 'shell',
             'cmd': 'text/plain',
             'kubernetes': 'yaml',
             'docker-compose': 'yaml',
@@ -56,11 +58,11 @@ define(function () {
         languages_available: {
             'Script/selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
             'Script/environment' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"],
-            'Script/pre' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/task' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/post' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/pre' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/task' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/post' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
             'Script/flow' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
-            'Script/clean' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
+            'Script/clean' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
         },
         extensions_to_languages: {
             "sc": "scalaw",
@@ -110,6 +112,7 @@ define(function () {
         },
         keywords: {
             'bash': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],
+            'shell': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],
             'cmd' : ['Append','Attrib','Backup','Break','Call','Cd','Chcp','Chdir','Choice','Cls','Command','Copy','Ctty','Date','Debug','Del','Deltree','Dir','Doskey','Echo','Erase','Exit','Expand','Fasthelp','Fastopen','Fc','Fdisk','Find','For','Format','Goto','Graphics','Help','If','Interlnk','Intersvr','Keyb','Label','Lh','Loadfix','Loadhigh','Md','Mem','Mkdir','Mode','More','Move','Nlsfunc','Path','Pause','Power','Print','Prompt','Rd','Rem','Ren','Rename','Replace','Restore','Rmdir','Scandisk','Set','Setver','Share','Shift','Smartdrv','Sort','Subst','Sys','Time','Tree','Type','Undelete','Unformat','Ver','Verify','Vol','Xcopy'],
             'kubernetes' : ['apiVersion', 'kind', 'metadata', 'name', 'namespace', 'labels', 'data', 'spec', 'ports', 'port', 'targetPort', 'protocol', 'selector', 'type', 'externalIPs', 'replicas', 'template', 'containers', 'image', 'resources', 'limits', 'requests', 'cpu', 'memory', 'env', 'value', 'volumeMounts', 'mountPath', 'subPath', 'containerPort', 'readinessProbe', 'httpGet', 'path', 'initialDelaysSeconds', 'periodSeconds', 'timeoutSeconds', 'livenessProbe', 'exec', 'command', 'failureThreshold', 'lifecycle', 'postStart', 'preStop', 'args', 'volumes', 'azureFile', 'awsElasticBlockStore', 'azureDisk', 'gcePersistentDisk', 'gitRepo', 'emptyDir', 'persistentVolumeClaim', 'hostPath', 'secret', 'secretName', 'shareName', 'configMap', 'Deployment', 'Service', 'ConfigMap', 'Job', 'Ingress', 'CronJob', 'Pod', 'schedule', 'DaemonSet', 'annotations', 'labels', 'valueFrom', 'fieldRef', 'fieldPath', 'tls', 'backend'],
             'docker-compose': ['version','services','build','context','dockerfile','args','cache_from','labels','shm_size','target','cap_add','cap_drop','command','configs','source','uid','gid','mode','cgroup_parent','container_name','credential_spec','deploy','endpoint_mode','labels','placement','constraints','preferences','replicas','resources','restart_policy','condition','delay','max_attempts','window','update_config','devices','depends_on','dns','dns_search','tmpfs','entrypoint','env_file','environment','expose','external_links','extra_hosts','healthcheck','image','links','logging','network_mode','networks','aliases','ipv4_address','ipv6_address','pid','ports','secrets','security_opt','stop_grace_period','stop_signal','sysctls','ulimits','userns_mode','volumes','restart','driver','driver_opts','external','name'],
