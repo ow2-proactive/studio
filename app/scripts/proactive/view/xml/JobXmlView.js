@@ -51,6 +51,7 @@ define(
         generateHtml: function () {
             var workflowDesigner = $("#workflow-designer").html();
 
+            //There is no HTML to generate if no workflow is open
             if (workflowDesigner) {
                 var url = document.URL;
                 var hashPos = url.indexOf("#");
