@@ -35,7 +35,7 @@ define(
                 this.model.set("ScriptExecutable", { "ScriptType": "ScriptCode", "ScriptCode": {"Code" : "println variables.get(\"PA_TASK_NAME\")", "Language" : "groovy" }});
             }
 
-            var base_studio_url = window.location.origin + "/studio" ;
+            var base_studio_url = "/studio" ;
             this.modelType = this.model.get("Type");
             var iconPath = base_studio_url+ "/" +this.icons[this.modelType];
             var hasGenericInfoIcon = false;

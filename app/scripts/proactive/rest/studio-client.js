@@ -256,7 +256,7 @@ define(
                 return classes;
             },
 
-            submit: function(jobXml, visualization) {
+            submit: function(jobXml) {
                 if (!localStorage['pa.session']) return;
 
                 var that = this;
@@ -269,7 +269,6 @@ define(
                         that.alert("Cannot submit the job", result.errorMessage, 'error');
                     } else if (result.id) {
                         that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id + ")</a></html>", 'success');
-                        that.setVisualization(result.id, visualization);
                     } else {
                         that.alert("Job submission", request.responseText, 'error');
                     }
@@ -379,27 +378,6 @@ define(
                         return;
                     }
                 }
-            },
-
-            setVisualization: function(jobId, visualization) {
-                var that = this;
-
-                $.ajax({
-                    url: config.restApiUrl + '/visualizations/' + jobId,
-                    data: {
-                        visualization: visualization
-                    },
-                    type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('sessionid', localStorage['pa.session'])
-                    },
-                    success: function(data) {
-                        console.log("Success", data)
-                    },
-                    error: function(data) {
-                        console.log("Error", data);
-                    }
-                });
             },
 
             pausecomp: function(millis) {
