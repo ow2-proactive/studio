@@ -53,12 +53,6 @@ define(
 
             //There is no HTML to generate if no workflow is open
             if (workflowDesigner) {
-                var url = document.URL;
-                var hashPos = url.indexOf("#");
-                if (hashPos != -1) url = url.substr(0, hashPos);
-                if (url.indexOf('?') != -1) url = url.substr(0, url.indexOf('?'));
-                if (url.charAt(url.length - 1) == '/') url = url.substr(0, url.length - 1);
-
                 var width = $("#workflow-designer").get(0).scrollWidth;
                 var height = $("#workflow-designer").get(0).scrollHeight;
 
@@ -77,7 +71,7 @@ define(
                 var left = (-1 * (minLeft - 100)) + "px";
                 var html = _.template(WorkflowTemplate,
                     {
-                        'url': url, 'content': workflowDesigner,
+                        'content': workflowDesigner,
                         'width': width, 'height': height, 'top': top, 'left': left
                     });
 
