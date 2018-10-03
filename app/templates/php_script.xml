@@ -44,6 +44,15 @@ try {
 					</code>
 				</script>
 			</selection>
+			<pre>
+				<script>
+					<code language="bash">
+						<![CDATA[
+echo '<?php echo "Hello World" ?>' > script.php
+]]>
+					</code>
+				</script>
+			</pre>
 			<scriptExecutable>
 				<script>
 					<code language="groovy">
