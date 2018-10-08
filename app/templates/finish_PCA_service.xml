@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.11"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
+    name="Finish_PCA_Service" 
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2">
+  <genericInformation>
+    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Finish_PCA_Service.png"/>
+  </genericInformation>
+  <taskFlow>
+    <task name="Finish_PCA_Service" 
+    
+    onTaskError="cancelJob" >
+      <description>
+        <![CDATA[ This task allows to finish a PCA service from the client side. It requires the INSTANCED_ID of the running service (to be retrieved from the Activated Service list in the cloud-automation section) and the name of the finishing action to be applied. ]]>
+      </description>
+      <variables>
+        <variable name="INSTANCE_ID" value="" inherited="true" />
+        <variable name="ACTION" value="" inherited="true" />
+      </variables>
+      <genericInformation>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Finish_PCA_Service.png"/>
+        <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
+      </genericInformation>
+      <inputFiles>
+        <files  includes="cloud-automation-service-client-8.2.0-SNAPSHOT.jar" accessMode="transferFromGlobalSpace"/>
+      </inputFiles>
+      <forkEnvironment >
+        <additionalClasspath>
+          <pathElement path="cloud-automation-service-client-8.2.0-SNAPSHOT.jar"/>
+        </additionalClasspath>
+      </forkEnvironment>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+println("--- BEGIN " + variables.get("PA_TASK_NAME") + " ---")
+
+import org.ow2.proactive.pca.service.client.ApiClient
+import org.ow2.proactive.pca.service.client.api.ServiceInstanceRestApi
+import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
+import org.ow2.proactive.pca.service.client.model.ServiceDescription
+
+// Get schedulerapi access
+schedulerapi.connect()
+
+// Acquire session id
+def sessionId = schedulerapi.getSession()
+
+// Define PCA URL
+def schedulerRestUrl = variables.get("PA_SCHEDULER_REST_URL")
+def pcaUrl = schedulerRestUrl.replaceAll("/rest\\z", "/cloud-automation-service")
+
+// Connect to APIs
+def apiClient = new ApiClient()
+apiClient.setBasePath(pcaUrl)
+//apiClient.setDebugging(true)
+def serviceInstanceRestApi = new ServiceInstanceRestApi(apiClient)
+
+def instanceId
+try{
+   instanceId = variables.get("INSTANCE_ID") as int
+} catch(Exception e){
+    throw new IllegalArgumentException("You have to specify a valid INSTANCE_ID value.");
+}
+println("INSTANCE_ID: " + instanceId)
+
+def action = variables.get("ACTION")
+if (action.isEmpty()) {
+    throw new IllegalArgumentException("You have to specify the ACTION value. Empty value is not allowed.");
+}
+
+// Execute action on service
+ServiceDescription service = new ServiceDescription()
+service.setBucketName("cloud-automation")
+service.setWorkflowName(action)
+serviceInstanceRestApi.launchServiceInstanceActionUsingPUT(sessionId, instanceId, service)
+
+println("--- END " + variables.get("PA_TASK_NAME") + " ---")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+      <controlFlow block="none"></controlFlow>
+      <metadata>
+        <positionTop>
+            381
+        </positionTop>
+        <positionLeft>
+            1673
+        </positionLeft>
+      </metadata>
+    </task>
+  </taskFlow>
+</job>

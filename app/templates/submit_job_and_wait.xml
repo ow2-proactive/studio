@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.11"
      xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="Submit_Job_and_Wait" projectName="3. Synchronization Examples"
+    name="Submit_Job_and_Wait"
     priority="normal"
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2">
