@@ -7,9 +7,6 @@
     priority="normal"
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2">
-  <description>
-    <![CDATA[ In this example usage of the Synchronization API, two sibling tasks wait for each other. Synchronization is made with an explicit wait call. ]]>
-  </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png"/>
   </genericInformation>

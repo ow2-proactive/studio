@@ -6,7 +6,7 @@
     name="Execute_Action_PCA_Service" 
     priority="normal"
     onTaskError="continueJobExecution"
-     maxNumberOfExecution="2">
+     maxNumberOfExecution="2">
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Execute_Action_PCA_Service.png"/>
   </genericInformation>
