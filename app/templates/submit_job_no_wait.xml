@@ -3,11 +3,10 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.11"
      xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="SubmitJobNoWait" 
+    name="Submit_Job_no_Wait"
     priority="normal"
     onTaskError="continueJobExecution"
-     maxNumberOfExecution="2"
->
+     maxNumberOfExecution="2">
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png"/>
   </genericInformation>
