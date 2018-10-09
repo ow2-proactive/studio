@@ -8,9 +8,9 @@
 	<taskFlow>
 		<task name="Shell_Task">
 			<description>
-                The simplest shell task.
-                Current one ran by a Korn Shell engine.
-                But you can use whatever installed interpreter by using shebang notation.
+The simplest shell task.
+Current one ran by a Korn Shell engine.
+But you can use whatever installed interpreter by using shebang notation.
 			</description>
 			<scriptExecutable>
 				<script>
