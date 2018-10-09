@@ -8,7 +8,7 @@
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2">
   <genericInformation>
-    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Execute_Action_PCA_Service.png"/>
+    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
   </genericInformation>
   <taskFlow>
     <task name="Execute_Action_PCA_Service" 
@@ -22,7 +22,7 @@
         <variable name="ACTION" value="" inherited="true" />
       </variables>
       <genericInformation>
-        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Execute_Action_PCA_Service.png"/>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
         <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
       </genericInformation>
       <inputFiles>

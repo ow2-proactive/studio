@@ -8,7 +8,7 @@
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2">
   <genericInformation>
-    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Start_PCA_Service.png"/>
+    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
   </genericInformation>
   <taskFlow>
     <task name="Start_PCA_Service" 
@@ -22,7 +22,7 @@
         <variable name="INSTANCE_NAME" value="" inherited="true" />
       </variables>
       <genericInformation>
-        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/Start_PCA_Service.png"/>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
         <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
       </genericInformation>
       <inputFiles>
@@ -48,7 +48,7 @@ println("BEGIN " + variables.get("PA_TASK_NAME"))
 * THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
 /********************************************************************************/
 
-// It is possible to start a PCA service using some variables. In that case, we retreive their values in this part.
+// It is possible to start a PCA service using some variables. In that case, we retrieve their values in this part.
 //e.g. def MY_Service_VAR_1 = $variables_WORKFLOW_VAR_1
 
 /********************************************************************************/
