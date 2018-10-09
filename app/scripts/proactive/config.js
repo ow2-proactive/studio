@@ -137,21 +137,24 @@ define(function () {
         'PA_NODE_URL', 'PA_NODE_NAME', 'PA_NODE_HOST'
         ],
         manuals: {
-            'Email Notification' : 'templates/email.xml',
-            'Web Notification' : 'templates/webnotification.xml',
-            'Email Validation' : 'templates/email_validation.xml',
-            'Web Validation' : 'templates/web_validation.xml'
+            'Email_Notification' : 'templates/email.xml',
+            'Web_Notification' : 'templates/web_notification.xml',
+            'Email_Validation' : 'templates/email_validation.xml',
+            'Web_Validation' : 'templates/web_validation.xml'
         },
         controls: {
-            'If': 'templates/07_workflow_branch.xml',
-            'Loop': 'templates/06_workflow_loop.xml',
-            'Replicate': 'templates/05_workflow_replication.xml',
-            'Task Dependencies': 'templates/02_task_dependencies.xml',
-            'Submit Job No Wait': 'templates/SubmitJobNoWait.xml',
-            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml',
-            'Wait for Any': 'templates/wait_for_any.xml',
-            'Wait for Any Replicate': 'templates/wait_for_any_replicate.xml',
-            'Submit and Wait for Any': 'templates/submit_and_wait_for_any.xml'
+            'If': 'templates/branch.xml',
+            'Loop': 'templates/loop.xml',
+            'Replicate': 'templates/replicate.xml',
+            'Task_Dependencies': 'templates/task_dependencies.xml',
+            'Submit_Job_no_Wait': 'templates/submit_job_no_wait.xml',
+            'Submit_Job_and_Wait': 'templates/submit_job_and_wait.xml',
+            'Wait_for_any': 'templates/wait_for_any.xml',
+            'Wait_for_any_Replicate': 'templates/wait_for_any_replicate.xml',
+            'Submit_and_Wait_for_any': 'templates/submit_and_wait_for_any.xml',
+            'Start_PCA_Service': 'templates/start_PCA_service.xml',
+            'Finish_PCA_Service': 'templates/finish_PCA_service.xml',
+            'Execute_Action_PCA_Service': 'templates/execute_action_PCA_service.xml'
         },
          examples_bucket: "basic-examples"
     };

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="Wait for any" priority="normal" onTaskError="continueJobExecution"
+	name="Wait_for_any" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
 	<description>
     <![CDATA[ Execute processing tasks, and wait for one task from the taskNames list to finish before continuing. ]]>

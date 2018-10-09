@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.11"
+     xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
+    name="Start_PCA_Service" 
+    priority="normal"
+    onTaskError="continueJobExecution"
+     maxNumberOfExecution="2">
+  <genericInformation>
+    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
+  </genericInformation>
+  <taskFlow>
+    <task name="Start_PCA_Service" 
+    
+    onTaskError="cancelJob" >
+      <description>
+        <![CDATA[ This task allows to start a PCA service from the client side. It requires an existing SERVICE_ID. Otherwise an exception is raised. ]]>
+      </description>
+      <variables>
+        <variable name="SERVICE_ID" value="" inherited="true" />
+        <variable name="INSTANCE_NAME" value="" inherited="true" />
+      </variables>
+      <genericInformation>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
+        <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
+      </genericInformation>
+      <inputFiles>
+        <files  includes="cloud-automation-service-client-8.2.0-SNAPSHOT.jar" accessMode="transferFromGlobalSpace"/>
+      </inputFiles>
+      <forkEnvironment >
+        <additionalClasspath>
+          <pathElement path="cloud-automation-service-client-8.2.0-SNAPSHOT.jar"/>
+        </additionalClasspath>
+      </forkEnvironment>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+import org.ow2.proactive.pca.service.client.ApiClient
+import org.ow2.proactive.pca.service.client.api.ServiceInstanceRestApi
+import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
+import org.ow2.proactive.pca.service.client.model.ServiceDescription
+
+println("BEGIN " + variables.get("PA_TASK_NAME"))
+
+/*********************************************************************************
+* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
+/********************************************************************************/
+
+// It is possible to start a PCA service using some variables. In that case, we retrieve their values in this part.
+//e.g. def MY_Service_VAR_1 = $variables_WORKFLOW_VAR_1
+
+/********************************************************************************/
+
+// Get schedulerapi access
+schedulerapi.connect()
+
+// Acquire session id
+def sessionId = schedulerapi.getSession()
+
+// Define PCA URL
+def scheduler_rest_url = variables.get("PA_SCHEDULER_REST_URL")
+def pcaUrl = scheduler_rest_url.replaceAll("/rest\\z", "/cloud-automation-service")
+
+// Connect to APIs
+def apiClient = new ApiClient()
+apiClient.setBasePath(pcaUrl)
+//apiClient.setDebugging(true)
+def serviceInstanceRestApi = new ServiceInstanceRestApi(apiClient)
+
+def instanceName = variables.get("INSTANCE_NAME")
+if (instanceName.isEmpty()) {
+    throw new IllegalArgumentException("You have to specify the INSTANCE_NAME value. Empty value is not allowed.");
+}
+def serviceId = variables.get("SERVICE_ID")
+if (serviceId.isEmpty()) {
+    throw new IllegalArgumentException("You have to specify a SERVICE_ID value. Empty value is not allowed.");
+}
+println("SERVICE_ID:    " + serviceId)
+println("INSTANCE_NAME: " + instanceName)
+println()
+// Check existing service instances
+boolean instance_exists = false
+List<ServiceInstanceData> service_instances = serviceInstanceRestApi.getServiceInstancesUsingGET()
+
+def isServiceExists = false
+for (ServiceInstanceData serviceInstanceData : service_instances) {
+    if (serviceInstanceData.getServiceId() == serviceId){
+        isServiceExists = true
+        break
+    }
+}
+
+if(!isServiceExists){
+	 throw new IllegalArgumentException(serviceId + "does not belong to the list of available PCA services. You have to specify an existing SERVICE_ID value.");  
+}
+
+for (ServiceInstanceData serviceInstanceData : service_instances) {
+    if ( (serviceInstanceData.getServiceId() == serviceId) && (serviceInstanceData.getInstanceStatus()  == "RUNNING")){
+        if (serviceInstanceData.getVariables().get("INSTANCE_NAME") == instanceName) {
+            instance_exists = true
+            def instanceId = serviceInstanceData.getInstanceId()
+            endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
+            println("INSTANCE_ID: " + instanceId)
+            println("ENDPOINT:    " + endpoint)
+            variables.put("INSTANCE_ID", instanceId)
+            variables.put("ENDPOINT", endpoint)
+            break
+        }
+  	}
+}
+
+println("INSTANCE_EXISTS ? " + instance_exists)
+
+if (!instance_exists){
+    // Prepare service description
+    ServiceDescription serviceDescription = new ServiceDescription()
+    serviceDescription.setBucketName("cloud-automation")
+    serviceDescription.setWorkflowName(serviceId)
+    serviceDescription.putVariablesItem("INSTANCE_NAME", instanceName)
+
+/*********************************************************************************
+* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
+/********************************************************************************/
+
+//In this part, we add the PCA service variables defined above to the service description before submission.
+//e.g. serviceDescription.putVariablesItem("MY_Service_VAR_1", MY_Service_VAR_1)
+
+/********************************************************************************/
+    // Run service
+    def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
+
+    // Acquire service Instance ID
+    def serviceInstanceId = serviceInstanceData.getInstanceId()
+
+    // Create synchro channel
+    def channel = "Service_Instance_" + serviceInstanceId
+    println("CHANNEL: " + channel)
+    synchronizationapi.createChannelIfAbsent(channel, false)
+    synchronizationapi.waitUntil(channel, "RUNNING", "{k,x -> x == true}")
+
+    // Acquire service endpoint
+    serviceInstanceData = serviceInstanceRestApi.getServiceInstanceUsingGET(serviceInstanceId)
+    def instanceId = serviceInstanceData.getInstanceId()
+    endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
+
+    println("INSTANCE_ID: " + instanceId)
+    println("ENDPOINT: " + endpoint)
+
+    variables.put("INSTANCE_ID", instanceId)
+    variables.put("ENDPOINT", endpoint)
+}
+
+println("END " + variables.get("PA_TASK_NAME"))
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+      <controlFlow block="none"></controlFlow>
+      <metadata>
+        <positionTop>
+            416
+        </positionTop>
+        <positionLeft>
+            1237
+        </positionLeft>
+      </metadata>
+    </task>
+  </taskFlow>
+</job>
