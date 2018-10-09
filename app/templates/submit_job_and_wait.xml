@@ -33,32 +33,32 @@
 // connect to the scheduler
 schedulerapi.connect()
 def jobid
-if(!variables.get("jobSubmitted")){
+if( !variables.get("jobSubmitted") ){
     // get the workflow information from Task Variables
-	def bucketName = variables.get("bucket_name")
-	def workflowName = variables.get("workflow_name")
+    def bucketName = variables.get("bucket_name")
+    def workflowName = variables.get("workflow_name")
 
-	// variables submitted to the workflow: Empty in the example, modify this map to give parameters to the submitted workflow
-	workflow_variables = Collections.EMPTY_MAP
+    // variables submitted to the workflow: Empty in the example, modify this map to give parameters to the submitted workflow
+    workflow_variables = Collections.EMPTY_MAP
 
-	println "Submitting workflow " + workflowName + " from bucket " + bucketName
+    println "Submitting workflow " + workflowName + " from bucket " + bucketName
 
     // submitting the job
-	jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, workflow_variables)
+    jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, workflow_variables)
     variables.put("jobSubmitted", true)
 
-	// alternatively you can submit a workflow from a direct url
-	
-	// // add sessionId to request header map
-	// requestHeader = Collections.singletonMap("sessionId", schedulerapi.getSession())
-	// jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_PI/raw"
-	// jobid = schedulerapi.submit(jobURL, variables, requestHeader)
+    // alternatively you can submit a workflow from a direct url
 
-	println "Job submitted with job id " + jobid
+    // // add sessionId to request header map
+    // requestHeader = Collections.singletonMap("sessionId", schedulerapi.getSession()
+    // jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_PI/raw"
+    // jobid = schedulerapi.submit(jobURL, variables, requestHeader)
+
+    println "Job submitted with job id " + jobid
     variables.put("jobID", jobid)
 }
 
-if(jobid == null){
+if( jobid == null ){
     jobid = variables.get("jobID")
 }
 isFinished = schedulerapi.isJobFinished(jobid)

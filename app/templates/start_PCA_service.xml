@@ -45,10 +45,12 @@ import org.ow2.proactive.pca.service.client.model.ServiceDescription
 println("BEGIN " + variables.get("PA_TASK_NAME"))
 
 /*********************************************************************************
-* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE       *
+* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
 /********************************************************************************/
-// It is possible to start a PCA service using some variables. In that case, we retreive their values in this part.  
+
+// It is possible to start a PCA service using some variables. In that case, we retreive their values in this part.
 //e.g. def MY_Service_VAR_1 = $variables_WORKFLOW_VAR_1
+
 /********************************************************************************/
 
 // Get schedulerapi access
@@ -119,10 +121,12 @@ if (!instance_exists){
     serviceDescription.putVariablesItem("INSTANCE_NAME", instanceName)
 
 /*********************************************************************************
-* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE       *
+* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
 /********************************************************************************/
+
 //In this part, we add the PCA service variables defined above to the service description before submission.
 //e.g. serviceDescription.putVariablesItem("MY_Service_VAR_1", MY_Service_VAR_1)
+
 /********************************************************************************/
     // Run service
     def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
