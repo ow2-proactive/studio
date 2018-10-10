@@ -15,7 +15,9 @@
     
     onTaskError="cancelJob" >
       <description>
-        <![CDATA[ This task allows to start a PCA service from the client side. It requires an existing SERVICE_ID. Otherwise an exception is raised. ]]>
+        <![CDATA[ This task allows to start a PCA service from the client side. It requires the following variables:
+$INSTANCE_NAME=some-instance-name
+$SERVICE_ID= some-service-id (you have to enter an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... ).  ]]>
       </description>
       <variables>
         <variable name="SERVICE_ID" value="" inherited="true" />
