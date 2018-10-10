@@ -15,7 +15,9 @@
     
     onTaskError="cancelJob" >
       <description>
-        <![CDATA[ This task allows to finish a PCA service from the client side. It requires the INSTANCED_ID of the running service (to be retrieved from the Activated Service list in the cloud-automation section) and the Action name to be executed. ]]>
+        <![CDATA[ This task allows to finish a PCA service from the client side. It requires the following variables:
+$INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
+$ACTION is the name of the action to be executed (to be retrieved from the Full Services View in the cloud-automation portal) . ]]>
       </description>
       <variables>
         <variable name="INSTANCE_ID" value="" inherited="true" />
