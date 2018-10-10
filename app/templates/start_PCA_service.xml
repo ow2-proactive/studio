@@ -43,6 +43,8 @@ import org.ow2.proactive.pca.service.client.ApiClient
 import org.ow2.proactive.pca.service.client.api.ServiceInstanceRestApi
 import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
 import org.ow2.proactive.pca.service.client.model.ServiceDescription
+import org.ow2.proactive.pca.service.client.model.CloudAutomationWorkflow
+import org.ow2.proactive.pca.service.client.api.CatalogRestApi
 
 println("BEGIN " + variables.get("PA_TASK_NAME"))
 
@@ -81,22 +83,25 @@ if (serviceId.isEmpty()) {
 }
 println("SERVICE_ID:    " + serviceId)
 println("INSTANCE_NAME: " + instanceName)
-println()
+
+//Check that the provided service id belongs to the existing Service Activation list
+def catalogRestApi = new CatalogRestApi(apiClient)
+def isServiceIdExists = false
+Map<String, List<CloudAutomationWorkflow>> listAllWorkflowsByServiceId = catalogRestApi.listAllWorkflowsByServiceIdUsingGET(sessionId)
+
+for(String pcaServiceId : listAllWorkflowsByServiceId.keySet()){
+     if (pcaServiceId.equals(serviceId)){
+         isServiceIdExists = true
+         break
+     }
+}
+if(!isServiceIdExists){
+	 throw new IllegalArgumentException("The provided SERVICE_ID: " + serviceId + " does not belong to the existing Service Activation list. You have to specify an existing service id.")
+}
+        
 // Check existing service instances
 boolean instance_exists = false
 List<ServiceInstanceData> service_instances = serviceInstanceRestApi.getServiceInstancesUsingGET()
-
-def isServiceExists = false
-for (ServiceInstanceData serviceInstanceData : service_instances) {
-    if (serviceInstanceData.getServiceId() == serviceId){
-        isServiceExists = true
-        break
-    }
-}
-
-if(!isServiceExists){
-	 throw new IllegalArgumentException(serviceId + "does not belong to the list of available PCA services. You have to specify an existing SERVICE_ID value.");  
-}
 
 for (ServiceInstanceData serviceInstanceData : service_instances) {
     if ( (serviceInstanceData.getServiceId() == serviceId) && (serviceInstanceData.getInstanceStatus()  == "RUNNING")){
@@ -162,12 +167,27 @@ println("END " + variables.get("PA_TASK_NAME"))
       <controlFlow block="none"></controlFlow>
       <metadata>
         <positionTop>
-            416
+            348
         </positionTop>
         <positionLeft>
-            1237
+            782
         </positionLeft>
       </metadata>
     </task>
   </taskFlow>
+  <metadata>
+    <visualization>
+      <![CDATA[ <html><head><link rel="stylesheet" href="/studio/styles/studio-standalone.css"><style>
+        #workflow-designer {
+            left:0 !important;
+            top:0 !important;
+            width:1025px;
+            height:632px;
+            }
+        </style></head><body><div style="position:relative;top:-196px;left:-278px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_55" style="top: 246px; left: 378px; z-index: 24;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Start_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 428.5px; top: 276px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></body></html>
+ ]]>
+    </visualization>
+  </metadata>
 </job>
