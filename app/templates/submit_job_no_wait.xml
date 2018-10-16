@@ -43,14 +43,15 @@ workflow_variables = Collections.EMPTY_MAP
 println "Submitting workflow " + workflowName + " from bucket " + bucketName
 
 // submitting the job
-jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, workflow_variables)
+def generic_infos_map = ["PARENT_JOB_ID" : variables.get("PA_JOB_ID")]
+jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, workflow_variables, generic_infos_map)
 
 // alternatively you can submit a workflow from a direct url
 
 // // add sessionId to request header map
 // requestHeader = Collections.singletonMap("sessionId", schedulerapi.getSession())
 // jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_PI/raw"
-// jobid = schedulerapi.submit(jobURL, variables, requestHeader)
+// jobid = schedulerapi.submit(jobURL, variables, generic_infos_map, requestHeader)
 
 println "Job submitted with job id " + jobid
 
