@@ -458,7 +458,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3>Import from Catalog</h3>
                     </div>
-                    <div class="modal-body" style="height:100%">
+                    <div class="modal-body" id="confirm-import-object-message" style="height:100%">
                         You are about to import an object from the Catalog. If you continue it will replace and remove its current value.
                     </div>
                     <div class="modal-footer">
@@ -541,7 +541,7 @@
             </div>
         </div>
 
-        <div id="full-edit-modal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="full-edit-modal" class="modal fade" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" style="width:90%;height:90%">
                 <div class="modal-content" style="height: 100%;">
                     <table style="min-height:100%;width:100%">
@@ -641,7 +641,7 @@
                         </td></tr>
                         <tr><td style="height:80px">
                             <div class="modal-footer">
-                                <button class="btn btn-white pull-right" data-dismiss="modal" aria-hidden="true" style="margin-left: 5px;">Cancel</button>
+                                <button class="btn btn-white pull-right" id="cancel-script-changes" data-dismiss="modal" aria-hidden="true" style="margin-left: 5px;">Cancel</button>
                                 <button id="set-script-content" class="btn btn-primary pull-right" data-dismiss="modal" aria-hidden="true">Save & Close</button>
                                 <button id="commit-script-changes" class="btn btn-primary pull-right" aria-hidden="true">Publish to the catalog</button>
                             </div>

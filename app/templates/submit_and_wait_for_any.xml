@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="Submit and wait for any" priority="normal" onTaskError="continueJobExecution"
+	name="Submit_and_Wait_for_any" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
 	<variables>
-		<variable name="taskNames" value="Average1,Average2" model="String" />
-		<variable name="workflowURL"
-			value="https://try.activeeon.com/catalog/buckets/1000/resources/distributed_computing_PI/raw"
-			model="String" />
+		<variable name="taskNames" value="Average1,Average2"/>
+		<variable name="bucket_name" value="basic-examples"/>
+		<variable name="workflow_name" value="distributed_computing_PI"/>
+		<variable name="workflow_variables_json" value="{}"/>
 	</variables>
 	<description>
     <![CDATA[ Submit a processing workflow, and wait for one task from the taskNames list to finish before continuing. ]]>
@@ -28,21 +28,22 @@
             <![CDATA[
 println "Submitting a processing job ..."
 
-// Retrieve the running catalog url
-schedulerapi.connect()
-def sessionId = schedulerapi.getSession()
-def scheduler_rest_url = variables.get("PA_SCHEDULER_REST_URL")
-def catalog_url = scheduler_rest_url.substring(0, scheduler_rest_url.length() - 4) + "catalog"
+// Retrieve some variables
+def PA_CATALOG_REST_URL = variables.get("PA_CATALOG_REST_URL")
+def bucket_name = variables.get("bucket_name")
+def workflow_name = variables.get("workflow_name")
+def workflow_variables_json = variables.get("workflow_variables_json")
 
-// Retrieve the workflow from the catalog
-def workflow_file = new File(localspace, "workflow.xml")
-def workflow_url = variables.get("workflowURL")
-workflow_file.text = new URL(workflow_url).getText(requestProperties: [sessionId: sessionId])
+// From variables json to map
+def slurper = new groovy.json.JsonSlurper()
+def variables_map = (Map) slurper.parseText(workflow_variables_json)
 
 // submitting the job
-jobid = schedulerapi.submit(workflow_file).value()
+schedulerapi.connect()
+def generic_infos_map = ["PARENT_JOB_ID" : variables.get("PA_JOB_ID")]
+def job_id = schedulerapi.submitFromCatalog(PA_CATALOG_REST_URL, bucket_name, workflow_name, variables_map, generic_infos_map)
 
-variables.put("jobID", jobid)
+variables.put("jobID", job_id)
 ]]>
 					</code>
 				</script>
@@ -77,7 +78,7 @@ else // Wait one of the tasks_names end
   def tasks_names_list = variables["taskNames"].split(",") as List
   def time_out_in_sec = 30
   println "(waiting for a task in " + tasks_names_list + " to finish)"
-  schedulerapi.waitForAnyTask(job_id, tasks_names_list, time_out_in_sec * 1000)
+  schedulerapi.waitForAnyTask(job_id.value(), tasks_names_list, time_out_in_sec * 1000)
 }
 
 

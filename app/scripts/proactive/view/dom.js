@@ -429,7 +429,7 @@ define(
 
                 for (var i = 0; i < variables.length; i++) {
                     var variable = variables[i];
-                    if (!(!updatedVariables || updatedVariables === null)) {
+                    if (!(!updatedVariables || updatedVariables == null)) {
                         variables[i] = updatedVariables[variable.Name];
                     }
                     jobVariables[variable.Name] = variable;
@@ -455,7 +455,7 @@ define(
                             isInherited = variable.Inherited;
                         }
                         if (!isInherited) {
-                            if (!(!updatedVariables || updatedVariables === null)) {
+                            if (!(!updatedVariables || updatedVariables == null)) {
                                 variables[j] = updatedVariables[task.get('Task Name') + ":" + variable.Name];
                             }
                             jobVariables[task.get('Task Name') + ":" + variable.Name] = variable;
@@ -476,8 +476,7 @@ define(
         function submit() {
             var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
-            var htmlVisualization = studioApp.views.xmlView.generateHtml();
-            StudioClient.submit(xml, htmlVisualization);
+            StudioClient.submit(xml);
         }
 
         function validate() {
@@ -538,7 +537,6 @@ define(
 
 
             jQuery.get('file.txt', function(data) {
-                   alert(data);
                    //process text file line by line
                    $('#div').html(data.replace('n',''));
             });
@@ -725,15 +723,16 @@ define(
                 var languageElementId;
                 if (isUrl) {
                     languageElementId = relatedInputId.replace('_Url', '_Language');
+                    $("#cancel-script-changes").text("Close");
                 }
                 else {
                     languageElementId = relatedInputId.replace('_Code', '_Language');
+                    $("#cancel-script-changes").text("Cancel");
                 }
                 var languageElement = document.getElementById(languageElementId);
                 var selectedLanguage = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
-                if (isUrl && (!selectedLanguage || selectedLanguage === '')) {
+                if (isUrl && (!selectedLanguage || selectedLanguage == '')) {
                     var indexExt = inputValue.lastIndexOf('.');
-                    var language  = '';
                     if (indexExt > -1) {
                         var extension = inputValue.substring(indexExt+1, inputValue.length);
                         selectedLanguage = config.extensions_to_languages[extension.toLowerCase()] || '';
@@ -822,7 +821,7 @@ define(
                     content = inputValue;
                     commitScriptChangesButton.hide();
                     setScriptContentButton.show();
-                    $("#set-script-content").data("area", $('#'+relatedInputId));
+                    $("#set-script-content").data("area", relatedInputId);
                 }
                 $("#full-edit-modal-script-content").data('language', selectedLanguage);
                 $("#full-edit-modal-script-content").data('catalog-kind', catalogKind);
@@ -883,8 +882,8 @@ define(
 
             $("#set-script-content").click(function () {
                 var editor = $('#full-edit-modal').data("editor");
-                editor.save()
-                $(this).data("area").val($("#full-edit-modal-script-content").val());
+                editor.save();
+                document.getElementById($(this).data("area")).value = $("#full-edit-modal-script-content").val();
 
                 var studioApp = require('StudioApp');
                 // propagating changes to the model
@@ -908,7 +907,7 @@ define(
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(editorValue, "text/plain");
-                studioApp.views.catalogPublishView.setUrlInputId(urlInputId);
+                studioApp.views.catalogPublishView.setRelatedInputId(urlInputId, true);
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             })
@@ -947,7 +946,7 @@ define(
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");
                 studioApp.views.catalogPublishView.setScriptLanguage(language);
                 studioApp.views.catalogPublishView.setContentToPublish(textAreaValue, "text/plain");
-                studioApp.views.catalogPublishView.setUrlInputId(null);
+                studioApp.views.catalogPublishView.setRelatedInputId(relatedInputId, false);
                 studioApp.views.catalogPublishView.render();
                 $('#catalog-publish-modal').modal();
             })

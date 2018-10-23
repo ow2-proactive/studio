@@ -27,7 +27,7 @@ define(
         },
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
-            'click #catalog-get-objects-table tr': 'selectWorkflow',
+            'click #catalog-get-objects-table tr': 'selectObject',
             'click #catalog-get-revisions-table tr': 'selectRevision',
             'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
         },
@@ -42,11 +42,14 @@ define(
                 if (this.kind.toLowerCase().indexOf('script') == 0) {
                     if (this.inputToImportId.indexOf('_Code') > -1) {
                         $("#get-modal-title").text("Import a Script by copy from the Catalog");
+                        $("#confirm-import-object-message").text("You are about to import a script (inline) from the Catalog. If you continue it will replace and remove the current inline code.");
                     } else if (this.inputToImportId.indexOf('_Url') > -1) {
                         $("#get-modal-title").text("Import a Script by reference from the Catalog");
+                        $("#confirm-import-object-message").text("You are about to import a script (reference) from the Catalog. If you continue it will replace and remove the current reference.");
                     }
                 } else {
                     $("#get-modal-title").text("Import from the Catalog");
+                    $("#confirm-import-object-message").text("You are about to import an object from the Catalog. If you continue it will replace and remove its current value.");
                 }
             } else {
                 $("#catalog-get-as-new-button").show();
@@ -174,7 +177,7 @@ define(
         getSelectedBucketName: function(){
         	return this.getSelectedRowId("#catalog-get-buckets-table .catalog-selected-row", "bucketname");
         },
-        getSelectedWorkflowName: function(){
+        getSelectedObjectName: function(){
         	return this.getSelectedRowId("#catalog-get-objects-table .catalog-selected-row", "objectname");
         },
         getSelectedRowId: function(tableSelector, dataName){
@@ -184,7 +187,7 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectBucket(row);
         },
-        selectWorkflow: function(e){
+        selectObject: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectObject(row);
         },
@@ -213,16 +216,19 @@ define(
                     inputToImport.value = response;
                 $('#catalog-get-close-button').click();
                 StudioClient.alert('Import successful', 'The ' + that.kindLabel + ' has been successfully imported from the Catalog', 'success');
-                //if it's a script, we set the language depending on the file extension
                 if (that.kind.toLowerCase().indexOf('script') == 0) {
+                    //saving script name and bucket for next commits
+                    inputToImport.dataset.scriptName = that.getSelectedObjectName();
+                    inputToImport.dataset.bucketName = that.getSelectedBucketName();
                     try {
+                        //if it's a script, we set the language depending on the file extension
                         var contentDispositionHeader = request.getResponseHeader('content-disposition');
                         var fileName = contentDispositionHeader.split('filename="')[1].slice(0, -1);
                         var indexExt = fileName.lastIndexOf('.');
                         var language  = '';
                         if (indexExt > -1) {
                             var extension = fileName.substring(indexExt+1, fileName.length);
-                            language = config.extensions_to_languages[extension.toLowerCase()];
+                            language = config.extensions_to_languages[extension.toLowerCase()] || '';
                         }
                         var languageElementId;
                         if (isUrlImport)

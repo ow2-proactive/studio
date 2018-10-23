@@ -44,4 +44,13 @@
                 <%=task%>
         <% }) %>
     </taskFlow>
+
+    <metadata>
+        <visualization>
+            <% if (visualization) { %>
+                <![CDATA[ <%=visualization%> ]]>
+            <% } %>
+        </visualization>
+    </metadata>
+
 </job>

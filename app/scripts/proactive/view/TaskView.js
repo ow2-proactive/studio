@@ -22,7 +22,7 @@ define(
 
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png", "ScriptCode": "images/script.png", "ScriptFile": "images/url.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png", "kubernetes": "images/Kubernetes.png",
-            "bash": "images/LinuxBash.png", "scalaw": "images/Scalaw.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
+            "bash": "images/LinuxBash.png", "shell": "images/Shell.png", "scalaw": "images/Scalaw.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
                    "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png",
                    "powershell": "images/PowerShell.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
@@ -35,7 +35,7 @@ define(
                 this.model.set("ScriptExecutable", { "ScriptType": "ScriptCode", "ScriptCode": {"Code" : "println variables.get(\"PA_TASK_NAME\")", "Language" : "groovy" }});
             }
 
-            var base_studio_url = window.location.origin + "/studio" ;
+            var base_studio_url = "/studio" ;
             this.modelType = this.model.get("Type");
             var iconPath = base_studio_url+ "/" +this.icons[this.modelType];
             var hasGenericInfoIcon = false;
