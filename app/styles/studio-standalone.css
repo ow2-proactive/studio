@@ -52,6 +52,7 @@
     -o-transition: -o-box-shadow 0.15s ease-in;
     transition: box-shadow 0.15s ease-in;
     vertical-align: middle;
+    display: inline-table;
 }
 
 /** HOVER EFFECTS **/
