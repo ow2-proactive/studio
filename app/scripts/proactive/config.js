@@ -46,7 +46,7 @@ define(function () {
             'cmd': 'text/plain',
             'kubernetes': 'yaml',
             'docker-compose': 'yaml',
-            'dockerfile': 'yaml',
+            'dockerfile': 'text/plain',
             'scalaw': 'text/x-scala',
             'groovy': 'groovy',
             'javascript': 'javascript',
