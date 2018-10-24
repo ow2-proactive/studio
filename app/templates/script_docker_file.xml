@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
+	name="script_docker" projectName="" priority="normal" onTaskError="continueJobExecution">
+	<description>
+		A workflow that executes a Docker build to create an image.
+	</description>
+	<taskFlow>
+		<task name="DockerFile_Task">
+			<description>
+				Simple task running creating an image with Docker build.
+			</description>
+			<scriptExecutable>
+				<script>
+					<code language="dockerfile">
+                        <![CDATA[
+FROM ubuntu:18.04
+RUN echo "Hello"
+]]>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
+</job>

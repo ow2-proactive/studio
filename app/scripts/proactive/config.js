@@ -24,6 +24,7 @@ define(function () {
             'Linux Bash': 'templates/script_bash.xml',
             'Windows Cmd': 'templates/script_cmd.xml',
             'Docker': 'templates/script_docker_compose.xml',
+            'Dockerfile': 'templates/script_docker_file.xml',
             'Kubernetes': 'templates/script_kubernetes.xml',
             'Java': 'templates/java.xml',
             'Scalaw': 'templates/script_scala.xml',
@@ -45,6 +46,7 @@ define(function () {
             'cmd': 'text/plain',
             'kubernetes': 'yaml',
             'docker-compose': 'yaml',
+            'dockerfile': 'yaml',
             'scalaw': 'text/x-scala',
             'groovy': 'groovy',
             'javascript': 'javascript',
@@ -58,9 +60,9 @@ define(function () {
         languages_available: {
             'Script/selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
             'Script/environment' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"],
-            'Script/pre' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/task' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/post' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/pre' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile","scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/task' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/post' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
             'Script/flow' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
             'Script/clean' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
         },
@@ -79,6 +81,7 @@ define(function () {
             "bat": "cmd",
             "yaml": "kubernetes",
             "yml": "docker-compose",
+            "df": "dockerfile",
             "pl": "perl"
         },
         languages_to_extensions: {
@@ -94,6 +97,7 @@ define(function () {
             "cmd" : "bat",
             "kubernetes" : "yaml",
             "docker-compose" : "yml",
+            "dockerfile" : "df",
             "perl" : "pl",
             "powershell" : "ps"
         },
@@ -110,6 +114,7 @@ define(function () {
             "cmd" : "text/x-sh",
             "kubernetes" : "text/x-yaml",
             "docker-compose" : "text/x-yaml",
+            "dockerfile" : "text/x-sh",
             "perl" : "text/x-perl",
             "powershell" : "application/x-powershell"
         },
