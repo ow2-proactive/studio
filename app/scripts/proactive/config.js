@@ -46,7 +46,7 @@ define(function () {
             'cmd': 'text/plain',
             'kubernetes': 'yaml',
             'docker-compose': 'yaml',
-            'dockerfile': 'text/plain',
+            'dockerfile': 'text/x-dockerfile',
             'scalaw': 'text/x-scala',
             'groovy': 'groovy',
             'javascript': 'javascript',
@@ -81,7 +81,7 @@ define(function () {
             "bat": "cmd",
             "yaml": "kubernetes",
             "yml": "docker-compose",
-            "df": "dockerfile",
+            "dockerfile": "dockerfile",
             "pl": "perl"
         },
         languages_to_extensions: {
@@ -97,7 +97,7 @@ define(function () {
             "cmd" : "bat",
             "kubernetes" : "yaml",
             "docker-compose" : "yml",
-            "dockerfile" : "df",
+            "dockerfile" : "dockerfile",
             "perl" : "pl",
             "powershell" : "ps"
         },
@@ -114,7 +114,7 @@ define(function () {
             "cmd" : "text/x-sh",
             "kubernetes" : "text/x-yaml",
             "docker-compose" : "text/x-yaml",
-            "dockerfile" : "text/x-sh",
+            "dockerfile" : "text/x-dockerfile",
             "perl" : "text/x-perl",
             "powershell" : "application/x-powershell"
         },

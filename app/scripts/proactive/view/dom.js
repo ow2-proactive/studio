@@ -21,6 +21,7 @@ define(
         'codemirror/mode/powershell/powershell',
         'codemirror/mode/r/r',
         'codemirror/mode/yaml/yaml',
+        //'codemirror/addon/simplemode/dockerfile', 
         'codemirror/addon/comment/comment',
         'codemirror/addon/edit/matchbrackets',
         'codemirror/addon/edit/closebrackets',
