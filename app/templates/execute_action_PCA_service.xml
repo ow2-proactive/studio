@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="urn:proactive:jobdescriptor:3.11"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="Execute_Action_PCA_Service" 
-    priority="normal"
-    onTaskError="continueJobExecution"
-     maxNumberOfExecution="2">
+  xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Execute_Action_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
+  <variables>
+    <variable name="INSTANCE_ID" value="" />
+    <variable name="ACTION" value="" />
+  </variables>
+  <description>
+    <![CDATA[ This task allows to finish a PCA service from the client side. It requires the following variables:
+$INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
+$ACTION is the name of the action to be executed e.g. Finish_MySQL, Resume_MongoDB... Possible actions are listed in the Full Services View of the started service in the cloud-automation portal. ]]>
+  </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
   </genericInformation>
@@ -14,15 +18,6 @@
     <task name="Execute_Action_PCA_Service" 
     
     onTaskError="cancelJob" >
-      <description>
-        <![CDATA[ This task allows to finish a PCA service from the client side. It requires the following variables:
-$INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
-$ACTION is the name of the action to be executed (to be retrieved from the Full Services View in the cloud-automation portal) . ]]>
-      </description>
-      <variables>
-        <variable name="INSTANCE_ID" value="" inherited="true" />
-        <variable name="ACTION" value="" inherited="true" />
-      </variables>
       <genericInformation>
         <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
         <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
@@ -92,9 +87,24 @@ println("--- END " + variables.get("PA_TASK_NAME") + " ---")
             381
         </positionTop>
         <positionLeft>
-            1257
+            1501
         </positionLeft>
       </metadata>
     </task>
   </taskFlow>
+  <metadata>
+    <visualization>
+      <![CDATA[ <html><head><link rel="stylesheet" href="/studio/styles/studio-standalone.css"><style>
+        #workflow-designer {
+            left:0 !important;
+            top:0 !important;
+            width:1427px;
+            height:812px;
+            }
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-274px;left:-1014px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_304" style="top: 279px; left: 1019px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png" width="20px">&nbsp;<span class="name">Execute_Action_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 1093.5px; top: 309px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
+ ]]>
+    </visualization>
+  </metadata>
 </job>

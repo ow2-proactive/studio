@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="urn:proactive:jobdescriptor:3.11"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="Start_PCA_Service" 
-    priority="normal"
-    onTaskError="continueJobExecution"
-     maxNumberOfExecution="2">
+  xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Trigger_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
+  <variables>
+    <variable name="SERVICE_ID" value="" />
+    <variable name="INSTANCE_NAME" value="" />
+    <variable name="SERVICE_PARAMS" value="" />
+  </variables>
+  <description>
+    <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
+$INSTANCE_NAME (required) is  some-instance-name
+$SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... ).
+$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized. ]]>
+  </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
   </genericInformation>
   <taskFlow>
-    <task name="Start_PCA_Service" 
+    <task name="Trigger_PCA_Service" 
     
     onTaskError="cancelJob" >
-      <description>
-        <![CDATA[ This task allows to start a PCA service from the client side. It requires the following variables:
-$INSTANCE_NAME=some-instance-name
-$SERVICE_ID= some-service-id (you have to enter an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... ).  ]]>
-      </description>
-      <variables>
-        <variable name="SERVICE_ID" value="" inherited="true" />
-        <variable name="INSTANCE_NAME" value="" inherited="true" />
-      </variables>
       <genericInformation>
         <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
         <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
@@ -45,17 +42,10 @@ import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
 import org.ow2.proactive.pca.service.client.model.ServiceDescription
 import org.ow2.proactive.pca.service.client.model.CloudAutomationWorkflow
 import org.ow2.proactive.pca.service.client.api.CatalogRestApi
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 
 println("BEGIN " + variables.get("PA_TASK_NAME"))
-
-/*********************************************************************************
-* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
-/********************************************************************************/
-
-// It is possible to start a PCA service using some variables. In that case, we retrieve their values in this part.
-//e.g. def MY_Service_VAR_1 = $variables_WORKFLOW_VAR_1
-
-/********************************************************************************/
 
 // Get schedulerapi access
 schedulerapi.connect()
@@ -83,6 +73,18 @@ if (serviceId.isEmpty()) {
 }
 println("SERVICE_ID:    " + serviceId)
 println("INSTANCE_NAME: " + instanceName)
+
+//retrieve service parameters 
+def serviceVars = variables.get("SERVICE_VARS")
+def serviceVarsMap = null
+if(serviceVars.isEmpty()){
+    println("The service is started without any parameters") 
+}
+else{
+    serviceVarsMap = evaluate(serviceVars)
+    println("Service parameters are:") 
+    serviceVarsMap.each{ k, v -> println "${k}:${v}" }
+}
 
 //Check that the provided service id belongs to the existing Service Activation list
 def catalogRestApi = new CatalogRestApi(apiClient)
@@ -126,14 +128,9 @@ if (!instance_exists){
     serviceDescription.setBucketName("cloud-automation")
     serviceDescription.setWorkflowName(serviceId)
     serviceDescription.putVariablesItem("INSTANCE_NAME", instanceName)
-
-/*********************************************************************************
-* THIS PART IS SERVICE SPECIFIC. IF YOU NEED TO MODIFY SOMETHING, DO IT HERE     *
-/********************************************************************************/
-
-//In this part, we add the PCA service variables defined above to the service description before submission.
-//e.g. serviceDescription.putVariablesItem("MY_Service_VAR_1", MY_Service_VAR_1)
-
+if( !serviceVars.isEmpty() ){
+    serviceVarsMap.each{ k, v -> serviceDescription.putVariablesItem("${k}", "${v}") }
+}
 /********************************************************************************/
     // Run service
     def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
@@ -167,10 +164,10 @@ println("END " + variables.get("PA_TASK_NAME"))
       <controlFlow block="none"></controlFlow>
       <metadata>
         <positionTop>
-            348
+            347
         </positionTop>
         <positionLeft>
-            782
+            1613
         </positionLeft>
       </metadata>
     </task>
@@ -181,12 +178,12 @@ println("END " + variables.get("PA_TASK_NAME"))
         #workflow-designer {
             left:0 !important;
             top:0 !important;
-            width:1025px;
-            height:632px;
+            width:1053px;
+            height:812px;
             }
-        </style></head><body><div style="position:relative;top:-196px;left:-278px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_55" style="top: 246px; left: 378px; z-index: 24;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Start_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 428.5px; top: 276px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-240px;left:-752px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_292" style="top: 245px; left: 757px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 812.5px; top: 275px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
-      xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></body></html>
+      xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>
     </visualization>
   </metadata>
