@@ -6,7 +6,7 @@
 		A workflow that executes a Docker compose script.
 	</description>
 	<taskFlow>
-		<task name="Docker_Task">
+		<task name="DockerCompose_Task">
 			<description>
 				Simple task running multi-container applications with Docker.
 			</description>
