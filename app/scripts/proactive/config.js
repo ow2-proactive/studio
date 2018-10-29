@@ -24,7 +24,7 @@ define(function () {
             'Linux Bash': 'templates/script_bash.xml',
             'Windows Cmd': 'templates/script_cmd.xml',
             'Docker': 'templates/script_docker_compose.xml',
-            'Dockerfile': 'templates/script_docker_file.xml',
+            'DockerFile': 'templates/script_docker_file.xml',
             'Kubernetes': 'templates/script_kubernetes.xml',
             'Java': 'templates/java.xml',
             'Scalaw': 'templates/script_scala.xml',
