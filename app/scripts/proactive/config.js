@@ -23,7 +23,7 @@ define(function () {
             'Shell': 'templates/script_shell.xml',
             'Linux Bash': 'templates/script_bash.xml',
             'Windows Cmd': 'templates/script_cmd.xml',
-            'Docker': 'templates/script_docker_compose.xml',
+            'DockerCompose': 'templates/script_docker_compose.xml',
             'DockerFile': 'templates/script_docker_file.xml',
             'Kubernetes': 'templates/script_kubernetes.xml',
             'Java': 'templates/java.xml',
