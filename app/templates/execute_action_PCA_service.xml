@@ -7,9 +7,9 @@
     <variable name="ACTION" value="" />
   </variables>
   <description>
-    <![CDATA[ This task allows to finish a PCA service from the client side. It requires the following variables:
+    <![CDATA[ This workflow allows to manage the life-cycle of on an activated PCA service by executing an action such as Finish_XXXX, Pause_XXX... from the client side. It requires the following variables:
 $INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
-$ACTION is the name of the action to be executed e.g. Finish_MySQL, Resume_MongoDB... Possible actions are listed in the Full Services View of the started service in the cloud-automation portal. ]]>
+$ACTION is the name of the action to be executed. Possible actions are listed in the Full Services View of the started service in the cloud-automation portal. ]]>
   </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
