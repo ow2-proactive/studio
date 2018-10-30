@@ -10,7 +10,7 @@
   <description>
     <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
 $INSTANCE_NAME (required) is  some-instance-name
-$SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... ).
+$SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... .
 $SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized. ]]>
   </description>
   <genericInformation>
