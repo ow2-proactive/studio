@@ -151,7 +151,7 @@ define(
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
-                var username = $(currentRevisionRow).data("username");//'Super Marco !!!';
+        		var username = $(currentRevisionRow).data("username");
         		
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
         		
@@ -160,7 +160,7 @@ define(
 					rawurl: rawurl, 
 					name: name,
 					commitmessage: commitMessage,
-                    username: username,
+					username: username,
 					projectname: projectName,
 					kindLabel: this.kindLabel
 					}));
