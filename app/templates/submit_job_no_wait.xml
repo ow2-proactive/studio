@@ -60,14 +60,6 @@ result = jobid
           </code>
         </script>
       </scriptExecutable>
-      <metadata>
-        <positionTop>
-            327.59375
-        </positionTop>
-        <positionLeft>
-            845.515625
-        </positionLeft>
-      </metadata>
     </task>
   </taskFlow>
 </job>

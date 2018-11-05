@@ -81,15 +81,6 @@ println("--- END " + variables.get("PA_TASK_NAME") + " ---")
           </code>
         </script>
       </scriptExecutable>
-      <controlFlow block="none"></controlFlow>
-      <metadata>
-        <positionTop>
-            381
-        </positionTop>
-        <positionLeft>
-            1501
-        </positionLeft>
-      </metadata>
     </task>
   </taskFlow>
   <metadata>
