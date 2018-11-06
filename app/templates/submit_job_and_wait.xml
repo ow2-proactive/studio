@@ -88,14 +88,6 @@ if(!variables.get("isFinished")){
           </script>
         </loop>
       </controlFlow>
-      <metadata>
-        <positionTop>
-            299
-        </positionTop>
-        <positionLeft>
-            1052.5
-        </positionLeft>
-      </metadata>
     </task>
   </taskFlow>
 </job>

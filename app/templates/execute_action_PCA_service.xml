@@ -7,7 +7,7 @@
     <variable name="ACTION" value="" />
   </variables>
   <description>
-    <![CDATA[ This workflow allows to manage the life-cycle of on an activated PCA service by executing an action such as Finish_XXXX, Pause_XXX... from the client side. It requires the following variables:
+    <![CDATA[ This workflow allows to manage the life-cycle of an active PCA service by executing an action such as Finish_XXXX, Pause_XXX... from the client side. It requires the following variables:
 $INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
 $ACTION is the name of the action to be executed. Possible actions are listed in the Full Services View of the started service in the cloud-automation portal. ]]>
   </description>
@@ -81,15 +81,6 @@ println("--- END " + variables.get("PA_TASK_NAME") + " ---")
           </code>
         </script>
       </scriptExecutable>
-      <controlFlow block="none"></controlFlow>
-      <metadata>
-        <positionTop>
-            381
-        </positionTop>
-        <positionLeft>
-            1501
-        </positionLeft>
-      </metadata>
     </task>
   </taskFlow>
   <metadata>
