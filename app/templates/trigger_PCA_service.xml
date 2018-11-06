@@ -4,14 +4,16 @@
   xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Trigger_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
   <variables>
     <variable name="SERVICE_ID" value="" />
-    <variable name="INSTANCE_NAME" value="" />
     <variable name="SERVICE_VARS" value="" />
+    <variable name="BUCKET_NAME" value="cloud-automation" />
+    <variable name="STARTING_WORKFLOW_NAME" value="" />
   </variables>
   <description>
     <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
-$INSTANCE_NAME (required) is some instance name.
 $SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... .
-$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized. ]]>
+$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized.
+$BUCKET_NAME (required) is the bucket name in which the service is stored.
+$STARTING_WORKFLOW_NAME (optional) is the name of the starting workflow. If it is empty then, the starting workflow name is the same as the service id. ]]>
   </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
@@ -63,28 +65,29 @@ apiClient.setBasePath(pcaUrl)
 //apiClient.setDebugging(true)
 def serviceInstanceRestApi = new ServiceInstanceRestApi(apiClient)
 
-def instanceName = variables.get("INSTANCE_NAME")
-if (instanceName.isEmpty()) {
-    throw new IllegalArgumentException("You have to specify the INSTANCE_NAME value. Empty value is not allowed.");
-}
 def serviceId = variables.get("SERVICE_ID")
 if (serviceId.isEmpty()) {
     throw new IllegalArgumentException("You have to specify a SERVICE_ID value. Empty value is not allowed.");
 }
 println("SERVICE_ID:    " + serviceId)
-println("INSTANCE_NAME: " + instanceName)
 
 //retrieve service parameters 
 def serviceVars = variables.get("SERVICE_VARS")
 def serviceVarsMap = null
 if(serviceVars.isEmpty()){
-    println("The service is started without any parameters") 
+    println("The service " + serviceId + " is started without any variables") 
 }
 else{
     serviceVarsMap = evaluate(serviceVars)
-    println("Service parameters are:") 
+    println("Service variables are:") 
     serviceVarsMap.each{ k, v -> println "${k}:${v}" }
 }
+
+def bucketName= variables.get("BUCKET_NAME")
+if(bucketName.isEmpty()){
+    bucketName = "cloud-automation"
+}
+println("BUCKET_NAME:    " + bucketName)
 
 //Check that the provided service id belongs to the existing Service Activation list
 def catalogRestApi = new CatalogRestApi(apiClient)
@@ -100,61 +103,44 @@ for(String pcaServiceId : listAllWorkflowsByServiceId.keySet()){
 if(!isServiceIdExists){
 	 throw new IllegalArgumentException("The provided SERVICE_ID: " + serviceId + " does not belong to the existing Service Activation list. You have to specify an existing service id.")
 }
-        
-// Check existing service instances
-boolean instance_exists = false
-List<ServiceInstanceData> service_instances = serviceInstanceRestApi.getServiceInstancesUsingGET()
 
-for (ServiceInstanceData serviceInstanceData : service_instances) {
-    if ( (serviceInstanceData.getServiceId() == serviceId) && (serviceInstanceData.getInstanceStatus()  == "RUNNING")){
-        if (serviceInstanceData.getVariables().get("INSTANCE_NAME") == instanceName) {
-            instance_exists = true
-            def instanceId = serviceInstanceData.getInstanceId()
-            endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
-            println("INSTANCE_ID: " + instanceId)
-            println("ENDPOINT:    " + endpoint)
-            variables.put("INSTANCE_ID", instanceId)
-            variables.put("ENDPOINT", endpoint)
-            break
-        }
-  	}
+def workflowName= variables.get("STARTING_WORKFLOW_NAME")
+if(workflowName.isEmpty()){
+    workflowName = serviceId
 }
+println("STARTING_WORKFLOW_NAME:    " + workflowName)
 
-println("INSTANCE_EXISTS ? " + instance_exists)
-
-if (!instance_exists){
-    // Prepare service description
-    ServiceDescription serviceDescription = new ServiceDescription()
-    serviceDescription.setBucketName("cloud-automation")
-    serviceDescription.setWorkflowName(serviceId)
-    serviceDescription.putVariablesItem("INSTANCE_NAME", instanceName)
+// Prepare service description
+ServiceDescription serviceDescription = new ServiceDescription()
+serviceDescription.setBucketName(bucketName)
+serviceDescription.setWorkflowName(workflowName)
 if( !serviceVars.isEmpty() ){
     serviceVarsMap.each{ k, v -> serviceDescription.putVariablesItem("${k}", "${v}") }
 }
 /********************************************************************************/
-    // Run service
-    def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
+// Run service
+def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
 
-    // Acquire service Instance ID
-    def serviceInstanceId = serviceInstanceData.getInstanceId()
+// Acquire service Instance ID
+def serviceInstanceId = serviceInstanceData.getInstanceId()
 
-    // Create synchro channel
-    def channel = "Service_Instance_" + serviceInstanceId
-    println("CHANNEL: " + channel)
-    synchronizationapi.createChannelIfAbsent(channel, false)
-    synchronizationapi.waitUntil(channel, "RUNNING", "{k,x -> x == true}")
+// Create synchro channel
+def channel = "Service_Instance_" + serviceInstanceId
+println("CHANNEL: " + channel)
+synchronizationapi.createChannelIfAbsent(channel, false)
+synchronizationapi.waitUntil(channel, "RUNNING", "{k,x -> x == true}")
 
-    // Acquire service endpoint
-    serviceInstanceData = serviceInstanceRestApi.getServiceInstanceUsingGET(serviceInstanceId)
-    def instanceId = serviceInstanceData.getInstanceId()
-    endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
+// Acquire service endpoint
+serviceInstanceData = serviceInstanceRestApi.getServiceInstanceUsingGET(serviceInstanceId)
+def instanceId = serviceInstanceData.getInstanceId()
+endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
 
-    println("INSTANCE_ID: " + instanceId)
-    println("ENDPOINT: " + endpoint)
+println("INSTANCE_ID: " + instanceId)
+println("ENDPOINT: " + endpoint)
 
-    variables.put("INSTANCE_ID", instanceId)
-    variables.put("ENDPOINT", endpoint)
-}
+variables.put("INSTANCE_ID", instanceId)
+variables.put("ENDPOINT", endpoint)
+
 
 println("END " + variables.get("PA_TASK_NAME"))
 ]]>
@@ -169,10 +155,10 @@ println("END " + variables.get("PA_TASK_NAME"))
         #workflow-designer {
             left:0 !important;
             top:0 !important;
-            width:1053px;
+            width:1427px;
             height:812px;
             }
-        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-240px;left:-752px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_292" style="top: 245px; left: 757px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 812.5px; top: 275px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-263px;left:-535.25px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_79" style="top: 268px; left: 540.25px; z-index: 24;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 595.75px; top: 298px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>
