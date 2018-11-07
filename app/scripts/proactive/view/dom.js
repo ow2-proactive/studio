@@ -793,9 +793,15 @@ define(
                 if (isUrl) {
                     if (inputValue.trim()!='') {
                         var isCatalogScript = inputValue.startsWith(window.location.origin + '/catalog/');
+                        // Check if catalog object URL is relative (using ${PA_CATALOG_REST_URL})
+                        var isRelativeCatalogScript = inputValue.startsWith('${PA_CATALOG_REST_URL}');
                         var headers = {};
-                        if (isCatalogScript) {
+                        if (isCatalogScript || isRelativeCatalogScript) {
                             headers = { 'sessionID': localStorage['pa.session'] };
+                        }
+                        // Replace ${PA_CATALOG_REST_URL} with an absolute URL.
+                        if (isRelativeCatalogScript){
+                            inputValue = inputValue.replace('${PA_CATALOG_REST_URL}',window.location.origin + '/catalog/');
                         }
                         $.ajax({
                             url: inputValue,
