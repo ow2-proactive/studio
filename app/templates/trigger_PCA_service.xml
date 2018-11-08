@@ -5,15 +5,11 @@
   <variables>
     <variable name="SERVICE_ID" value="" />
     <variable name="SERVICE_VARS" value="" />
-    <variable name="BUCKET_NAME" value="cloud-automation" />
-    <variable name="STARTING_WORKFLOW_NAME" value="" />
   </variables>
   <description>
     <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
 $SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... .
-$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized.
-$BUCKET_NAME (required) is the bucket name in which the service is stored.
-$STARTING_WORKFLOW_NAME (optional) is the name of the starting workflow. If it is empty then, the starting workflow name is the same as the service id. ]]>
+$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized. ]]>
   </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
@@ -27,11 +23,11 @@ $STARTING_WORKFLOW_NAME (optional) is the name of the starting workflow. If it i
         <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
       </genericInformation>
       <inputFiles>
-        <files  includes="cloud-automation-service-client-8.2.0-SNAPSHOT.jar" accessMode="transferFromGlobalSpace"/>
+        <files  includes="cloud-automation-service-client-8.4.0-SNAPSHOT.jar" accessMode="transferFromGlobalSpace"/>
       </inputFiles>
       <forkEnvironment >
         <additionalClasspath>
-          <pathElement path="cloud-automation-service-client-8.2.0-SNAPSHOT.jar"/>
+          <pathElement path="cloud-automation-service-client-8.4.0-SNAPSHOT.jar"/>
         </additionalClasspath>
       </forkEnvironment>
       <scriptExecutable>
@@ -83,12 +79,6 @@ else{
     serviceVarsMap.each{ k, v -> println "${k}:${v}" }
 }
 
-def bucketName= variables.get("BUCKET_NAME")
-if(bucketName.isEmpty()){
-    bucketName = "cloud-automation"
-}
-println("BUCKET_NAME:    " + bucketName)
-
 //Check that the provided service id belongs to the existing Service Activation list
 def catalogRestApi = new CatalogRestApi(apiClient)
 def isServiceIdExists = false
@@ -104,16 +94,26 @@ if(!isServiceIdExists){
 	 throw new IllegalArgumentException("The provided SERVICE_ID: " + serviceId + " does not belong to the existing Service Activation list. You have to specify an existing service id.")
 }
 
-def workflowName= variables.get("STARTING_WORKFLOW_NAME")
-if(workflowName.isEmpty()){
-    workflowName = serviceId
+//Identifying the starting workflow and its bucket name in the catalog
+def startingWorkflowName
+def bucketName
+Map<String, List<CloudAutomationWorkflow>> listStartingWorkflowsByServiceId = catalogRestApi.listStartingWorkflowsByServiceIdUsingGET(sessionId)
+for(String serviceIdIterator : listStartingWorkflowsByServiceId.keySet()){
+     if (serviceIdIterator.equals(serviceId)){
+        startingWorkflowName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getName()
+        bucketName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getBucket()
+         break
+     }
 }
-println("STARTING_WORKFLOW_NAME:    " + workflowName)
+
+println("STARTING_WORKFLOW_NAME:    " + startingWorkflowName)
+println("BUCKET_NAME:    " + bucketName)
+
 
 // Prepare service description
 ServiceDescription serviceDescription = new ServiceDescription()
 serviceDescription.setBucketName(bucketName)
-serviceDescription.setWorkflowName(workflowName)
+serviceDescription.setWorkflowName(startingWorkflowName)
 if( !serviceVars.isEmpty() ){
     serviceVarsMap.each{ k, v -> serviceDescription.putVariablesItem("${k}", "${v}") }
 }
@@ -155,10 +155,10 @@ println("END " + variables.get("PA_TASK_NAME"))
         #workflow-designer {
             left:0 !important;
             top:0 !important;
-            width:1427px;
+            width:1107px;
             height:812px;
             }
-        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-263px;left:-535.25px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_79" style="top: 268px; left: 540.25px; z-index: 24;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 595.75px; top: 298px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-323.765625px;left:-631.53125px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_61" style="top: 328.766px; left: 636.531px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 692.5px; top: 359px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>
