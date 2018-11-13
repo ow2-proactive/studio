@@ -22,14 +22,6 @@ $SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) t
         <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
         <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
       </genericInformation>
-      <inputFiles>
-        <files  includes="cloud-automation-service-client-8.4.0-SNAPSHOT.jar" accessMode="transferFromGlobalSpace"/>
-      </inputFiles>
-      <forkEnvironment >
-        <additionalClasspath>
-          <pathElement path="cloud-automation-service-client-8.4.0-SNAPSHOT.jar"/>
-        </additionalClasspath>
-      </forkEnvironment>
       <scriptExecutable>
         <script>
           <code language="groovy">
@@ -67,7 +59,7 @@ if (serviceId.isEmpty()) {
 }
 println("SERVICE_ID:    " + serviceId)
 
-//retrieve service parameters 
+//retrieve service variables
 def serviceVars = variables.get("SERVICE_VARS")
 def serviceVarsMap = null
 if(serviceVars.isEmpty()){
@@ -155,10 +147,10 @@ println("END " + variables.get("PA_TASK_NAME"))
         #workflow-designer {
             left:0 !important;
             top:0 !important;
-            width:1107px;
+            width:1427px;
             height:812px;
             }
-        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-323.765625px;left:-631.53125px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_61" style="top: 328.766px; left: 636.531px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 692.5px; top: 359px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-330.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_275" style="top: 335.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 660.5px; top: 366px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>
