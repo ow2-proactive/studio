@@ -11,7 +11,7 @@
     <![CDATA[ This workflow allows to manage the life-cycle of an active PCA service by executing an action such as Finish_XXXX, Pause_XXX... from the client side. It requires the following variables:
 $INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
 $ACTION is the name of the action to be executed. Possible actions are listed in the Full Services View of the started service in the cloud-automation portal.
-$ACTION_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to execute the action. Note that only variables of the corresponding PCA service in the cloud automation side can be initialized. ]]>
+$ACTION_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to execute the action. Note that only variables of the corresponding PCA service on the cloud automation side can be initialized. ]]>
   </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
@@ -59,14 +59,14 @@ def instanceId
 try{
     instanceId = variables.get("INSTANCE_ID") as int
 } catch(Exception e){
-    throw new IllegalArgumentException("You have to specify a valid INSTANCE_ID value.");
+    throw new IllegalArgumentException("You have to provide a valid INSTANCE_ID value.");
 }
 
 println("INSTANCE_ID: " + instanceId)
 
 def action = variables.get("ACTION")
 if (action.isEmpty()) {
-    throw new IllegalArgumentException("You have to specify the ACTION value. Empty value is not allowed.");
+    throw new IllegalArgumentException("You have to provide an ACTION value. Empty value is not allowed.");
 }
 
 def bucketName
@@ -83,7 +83,7 @@ for (CloudAutomationWorkflow actionIterator : listExecutableActions) {
      }
 }
 if(!isActionExists){
-	 throw new IllegalArgumentException("The provided ACTION: " + action + " does not belong to the existing possible actions for the service. You have to specify an existing action.")
+	 throw new IllegalArgumentException("The provided ACTION: " + action + " does not belong to the existing possible actions that can be applied to the current state of the service. You have to specify a valid action.")
 }
 
 //retrieve action variables 
