@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="script_docker" projectName="" priority="normal" onTaskError="continueJobExecution">
+	name="script_docker_compose" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
 		A workflow that executes a Docker compose script.
 	</description>
 	<taskFlow>
-		<task name="DockerCompose_Task">
+		<task name="Docker_Compose_Task">
 			<description>
 				Simple task running multi-container applications with Docker.
 			</description>
