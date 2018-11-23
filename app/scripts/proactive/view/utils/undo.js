@@ -20,6 +20,8 @@ define(
                     var $t = $(t)
                     var taskName = $t.find("span.name").text()
                     var offset = $t.offset()
+					offset.left = offset.left - $('#workflow-designer').offset().left;
+					offset.top = offset.top - $('#workflow-designer').offset().top;
                     return [taskName, offset]
                 })
             )

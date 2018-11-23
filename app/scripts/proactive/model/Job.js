@@ -411,7 +411,7 @@ define(
             }
             this.populateTemplate(obj, merging);
         } else {
-        this.populateSchema(obj, merging);
+            this.populateSchema(obj, merging);
         }
         this.convertCancelJobOnErrorToOnTaskError(obj);
 
@@ -427,7 +427,7 @@ define(
             var taskModel = new Task();
 
             taskModel.convertCancelJobOnErrorToOnTaskError(task);
-            taskModel.populateSchema(task);
+            taskModel.populateSchema(task, merging, isTemplate);
             taskModel.populateSimpleForm();
 
             // check for unique task name to keep the job valid

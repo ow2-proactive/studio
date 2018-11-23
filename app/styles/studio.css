@@ -23,7 +23,8 @@ footer {
 }
 
 #workflow-designer {
-    height: 100%;
+    min-height: 400%;
+    min-width: 200%;
     position: relative;
 }
 
