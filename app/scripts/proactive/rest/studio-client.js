@@ -80,7 +80,10 @@ define(
                     type: 'POST',
                     success: function(data) {
                         // ProActive Studio login request return invalid json with status code 200
-                        console.log("Should not be there", data)
+                        that.alert("Connected", "Successfully connected user", 'success');
+                        console.log("Session ID is " + data.responseText)
+                        localStorage['pa.session'] = data.responseText;
+                        return onSuccess();
                     },
                     error: function(data) {
                         // even id successful we are here
