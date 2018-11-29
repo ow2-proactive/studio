@@ -158,6 +158,16 @@ define(
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
+								else if (isTemplate && merging && (prop == "PositionTop" || prop == "PositionLeft")) {
+                                    // skip absolute positions when doing drap/drop
+                                    log("Skipping ", prop, "from", placeholder)
+                                }
+								else if (prop == "PositionTop" || prop == "PositionLeft") {
+                                    log("Setting", prop, "from", placeholder, "to", value)
+									// convert position to float
+                                    value = value.trim()
+                                    that.set(prop, parseFloat(value))
+                                }
                                 else if (isTemplate && merging && that.get(prop)) {
                                     // do not override existing value when merging
                                     log("Skipping ", prop, "from", placeholder)
