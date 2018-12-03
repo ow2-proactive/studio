@@ -14,7 +14,7 @@
 	<taskFlow>
 		<task name="Start">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop.png" />
 			</genericInformation>
 			<scriptExecutable>
@@ -30,7 +30,7 @@ print('Loop block start ' + variables.get('PA_TASK_ITERATION'))
 		</task>
 		<task name="Loop">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_loop.png" />
 			</genericInformation>
 			<depends>

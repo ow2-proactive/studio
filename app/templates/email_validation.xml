@@ -7,12 +7,12 @@
     <![CDATA[ Workflow to pause the job and send a validation email ]]>
 	</description>
 	<taskFlow>
-		<task name="EmailValidation" onTaskError="pauseJob">
+		<task name="Email_Validation" onTaskError="pauseJob">
 			<description>
         <![CDATA[ Task to pause the job and send a validation email ]]>
 			</description>
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/email_validation_bis.png" />
 			</genericInformation>
 			<variables>

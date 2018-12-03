@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="script_bash" projectName="" priority="normal" onTaskError="continueJobExecution">
+	name="Script_Bash" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes shell script in JVM.
+		A workflow that executes Shell script in JVM.
 	</description>
 	<taskFlow>
 		<task name="Shell_Task">
 			<description>
-The simplest shell task.
+The simplest Shell task.
 Current one ran by a Korn Shell engine.
 But you can use whatever installed interpreter by using shebang notation.
 			</description>

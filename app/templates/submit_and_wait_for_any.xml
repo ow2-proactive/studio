@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="Submit_and_Wait_for_any" priority="normal" onTaskError="continueJobExecution"
+	name="Submit_And_Wait_For_Any" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
 	<variables>
 		<variable name="taskNames" value="Average1,Average2"/>
 		<variable name="bucket_name" value="basic-examples"/>
-		<variable name="workflow_name" value="distributed_computing_PI"/>
+		<variable name="workflow_name" value="Distributed_Computing_PI"/>
 		<variable name="workflow_variables_json" value="{}"/>
 	</variables>
 	<description>
@@ -19,7 +19,7 @@
 	<taskFlow>
 		<task name="Submit">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
 			</genericInformation>
 			<scriptExecutable>
@@ -49,9 +49,9 @@ variables.put("jobID", job_id)
 				</script>
 			</scriptExecutable>
 		</task>
-		<task name="Wait_for_task">
+		<task name="Wait_For_Task">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
 			</genericInformation>
 			<depends>
@@ -88,7 +88,7 @@ variables["isFinished"] = "yes"
 				</script>
 			</scriptExecutable>
 			<controlFlow>
-				<loop target="Wait_for_task">
+				<loop target="Wait_For_Task">
 					<script>
 						<code language="javascript">
               <![CDATA[
@@ -107,11 +107,11 @@ if(!variables.get("isFinished")){
 		</task>
 		<task name="Next_process">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_and_wait_for_any.png" />
 			</genericInformation>
 			<depends>
-				<task ref="Wait_for_task" />
+				<task ref="Wait_For_Task" />
 			</depends>
 			<scriptExecutable>
 				<script>

@@ -7,12 +7,12 @@
     <![CDATA[ Workflow to pause the job and send a validation message to a notification service ]]>
   </description>
 	<taskFlow>
-		<task name="WebValidation" onTaskError="pauseJob">
+		<task name="Web_Validation" onTaskError="pauseJob">
 			<description>
         <![CDATA[ Task to pause the job and send a validation message to the notification service ]]>
       </description>
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/web_validation.png" />
 			</genericInformation>
 			<scriptExecutable>
