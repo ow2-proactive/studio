@@ -82,7 +82,7 @@ println("I am running on Linux in the If branch")
 				<script>
 					<code language="groovy">
                         <![CDATA[
-print("I am ran after the If or the Else task")
+println("I am ran after the If or the Else task")
 ]]>
 					</code>
 				</script>
