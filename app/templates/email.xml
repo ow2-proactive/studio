@@ -7,9 +7,9 @@
         <![CDATA[ A workflow that sends an email ]]>
     </description>
 	<taskFlow>
-		<task name="EmailNotification">
+		<task name="Email_Notification">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/email_notification_red_one.png" />
 			</genericInformation>
 			<description>

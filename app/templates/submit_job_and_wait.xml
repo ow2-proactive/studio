@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.11"
      xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="Submit_Job_and_Wait"
+    name="Submit_Job_And_Wait"
     priority="normal"
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2">
@@ -11,7 +11,7 @@
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png"/>
   </genericInformation>
   <taskFlow>
-    <task name="Submit_Job_and_Wait" >
+    <task name="Submit_Job_And_Wait" >
       <description>
         <![CDATA[ Submit a workflow referenced in the ProActive Catalog (or accessible by url) and wait for its termination by checking every minute if the job is terminated. ]]>
       </description>
@@ -19,7 +19,7 @@
         <variable name="call_workflow" value="basic-examples/native_task" inherited="true" model="PA:CATALOG_OBJECT"/>
       </variables>
       <genericInformation>
-        <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png"/>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png"/>
       </genericInformation>
       <scriptExecutable>
         <script>
@@ -70,7 +70,7 @@ result = jobid
         </script>
       </scriptExecutable>
       <controlFlow >
-        <loop target="Submit_Job_and_Wait">
+        <loop target="Submit_Job_And_Wait">
           <script>
             <code language="javascript">
               <![CDATA[
