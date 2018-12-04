@@ -50,7 +50,7 @@ if( !variables.get("jobSubmitted") ){
 
     // // add sessionId to request header map
     // requestHeader = Collections.singletonMap("sessionId", schedulerapi.getSession()
-    // jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_PI/raw"
+    // jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_Pi/raw"
     // jobid = schedulerapi.submit(jobURL, variables, generic_infos_map, requestHeader)
 
     println "Job submitted with job id " + jobid
