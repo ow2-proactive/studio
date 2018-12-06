@@ -72,12 +72,15 @@ if (action.isEmpty()) {
 def bucketName
 def isActionExists = false
 def catalogRestApi = new CatalogRestApi(apiClient)
+def actionVariables
 
 Map<String, List<CloudAutomationWorkflow>> listExecutableActionsByInstanceId = catalogRestApi.listExecutableActionsByInstanceIdUsingGET(sessionId)
 List<CloudAutomationWorkflow> listExecutableActions = listExecutableActionsByInstanceId.get(instanceId.toString())
 for (CloudAutomationWorkflow actionIterator : listExecutableActions) {
     if (actionIterator.getName().equals(action)){
         bucketName = actionIterator.getBucket()
+        //retrieve default action variables
+        actionVariables = actionIterator.getVariables().collectEntries {var -> [var.getName(), var.getValue()]}
         isActionExists = true
         break
      }
@@ -88,22 +91,24 @@ if(!isActionExists){
 
 //retrieve action variables 
 def actionVars = variables.get("ACTION_VARS")
-def actionVarsMap = null
+def actionVarsMap = new HashMap()
 if(actionVars.isEmpty()){
-    println("The provided ACTION " + action + " is executed without any variables") 
+    println("The provided ACTION " + action + " is executed without any provided variables. Default configuration is used.") 
 }
 else{
     actionVarsMap = evaluate(actionVars)
-    println("ACTION variables are:") 
+    println("The provided ACTION variables are:") 
     actionVarsMap.each{ k, v -> println "${k}:${v}" }
 }
+actionVariables.putAll(actionVarsMap)
+
 
 // Execute action on service
 ServiceDescription service = new ServiceDescription()
 service.setBucketName(bucketName)
 service.setWorkflowName(action)
-if( !actionVars.isEmpty() ){
-    actionVarsMap.each{ k, v -> service.putVariablesItem("${k}", "${v}") }
+if( !actionVariables.isEmpty() ){
+    actionVariables.each{ k, v -> service.putVariablesItem("${k}", "${v}") }
 }
 serviceInstanceRestApi.launchServiceInstanceActionUsingPUT(sessionId, instanceId, service)
 
@@ -120,10 +125,10 @@ println("--- END " + variables.get("PA_TASK_NAME") + " ---")
         #workflow-designer {
             left:0 !important;
             top:0 !important;
-            width:1427px;
-            height:812px;
+            width:2854px;
+            height:3248px;
             }
-        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-291.765625px;left:-875.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_214" style="top: 296.766px; left: 880.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png" width="20px">&nbsp;<span class="name">Execute_Action_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 955.5px; top: 327px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-356.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_61" style="top: 361.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png" width="20px">&nbsp;<span class="name">Execute_Action_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 679.5px; top: 392px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>
