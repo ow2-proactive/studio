@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="Wait_for_any" priority="normal" onTaskError="continueJobExecution"
+	name="Wait_For_Any" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
 	<description>
     <![CDATA[ Execute processing tasks, and wait for one task from the taskNames list to finish before continuing. ]]>
@@ -11,9 +11,9 @@
 			value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any.png" />
 	</genericInformation>
 	<taskFlow>
-		<task name="Wait_for_task">
+		<task name="Wait_For_Task">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any.png" />
 			</genericInformation>
 			<variables>
@@ -39,7 +39,7 @@ variables["isFinished"] = "true"
 				</script>
 			</scriptExecutable>
 			<controlFlow>
-				<loop target="Wait_for_task">
+				<loop target="Wait_For_Task">
 					<script>
 						<code language="javascript">
               <![CDATA[
@@ -56,13 +56,13 @@ if(!variables.get("isFinished")){
 				</loop>
 			</controlFlow>
 		</task>
-		<task name="Next_process">
+		<task name="Next_Process">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_wait_for_any.png" />
 			</genericInformation>
 			<depends>
-				<task ref="Wait_for_task" />
+				<task ref="Wait_For_Task" />
 			</depends>
 			<scriptExecutable>
 				<script>

@@ -7,12 +7,12 @@
     <![CDATA[ Workflow to send a message to a notification service ]]>
   </description>
 	<taskFlow>
-		<task name="WebNotification">
+		<task name="Web_Notification">
 			<description>
         <![CDATA[ Task to send a message to a notification service ]]>
       </description>
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/web_notification.png" />
 			</genericInformation>
 			<scriptExecutable>

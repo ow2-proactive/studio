@@ -157,8 +157,7 @@ define(function () {
             'Wait_for_any': 'templates/wait_for_any.xml',
             'Wait_for_any_Replicate': 'templates/wait_for_any_replicate.xml',
             'Submit_and_Wait_for_any': 'templates/submit_and_wait_for_any.xml',
-            'Start_PCA_Service': 'templates/start_PCA_service.xml',
-            'Finish_PCA_Service': 'templates/finish_PCA_service.xml',
+            'Trigger_PCA_Service': 'templates/trigger_PCA_service.xml',
             'Execute_Action_PCA_Service': 'templates/execute_action_PCA_service.xml'
         },
          examples_bucket: "basic-examples"
