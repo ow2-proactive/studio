@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="Script_Docker_Compose" projectName="" priority="normal" onTaskError="continueJobExecution">
+	name="script_docker_file" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes a Docker compose script.
+		A workflow that executes a Docker build to create an image.
 	</description>
 	<taskFlow>
-		<task name="Docker_Compose_Task">
+		<task name="Docker_File_Task">
 			<description>
-				Simple task running multi-container applications with Docker.
+				Simple task running creating an image with Docker build.
 			</description>
 			<scriptExecutable>
 				<script>
-					<code language="docker-compose">
+					<code language="dockerfile">
                         <![CDATA[
-helloworld:
-    image: busybox
-    command: echo "Hello ProActive"
+FROM ubuntu:18.04
+RUN echo "Hello"
 ]]>
 					</code>
 				</script>
