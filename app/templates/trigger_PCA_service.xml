@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Trigger_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
   <variables>
-    <variable name="SERVICE_ID" value="" />
+    <variable name="SERVICE_ID" value="HDFS-Spark" />
     <variable name="SERVICE_VARS" value="" />
   </variables>
   <description>
@@ -61,13 +61,13 @@ println("SERVICE_ID:    " + serviceId)
 
 //retrieve service variables
 def serviceVars = variables.get("SERVICE_VARS")
-def serviceVarsMap = null
+def serviceVarsMap = new HashMap()
 if(serviceVars.isEmpty()){
-    println("The service " + serviceId + " is started without any variables") 
+    println("The service " + serviceId + " is started without any variables. Default configuration is used.")
 }
 else{
     serviceVarsMap = evaluate(serviceVars)
-    println("Service variables are:") 
+    println("The provided service variables are:") 
     serviceVarsMap.each{ k, v -> println "${k}:${v}" }
 }
 
@@ -89,27 +89,36 @@ if(!isServiceIdExists){
 //Identifying the starting workflow and its bucket name in the catalog
 def startingWorkflowName
 def bucketName
+def serviceVariables
 Map<String, List<CloudAutomationWorkflow>> listStartingWorkflowsByServiceId = catalogRestApi.listStartingWorkflowsByServiceIdUsingGET(sessionId)
 for(String serviceIdIterator : listStartingWorkflowsByServiceId.keySet()){
      if (serviceIdIterator.equals(serviceId)){
         startingWorkflowName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getName()
         bucketName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getBucket()
-         break
+        //retrieve default pca service variables
+        serviceVariables = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getVariables().collectEntries {var -> [var.getName(), var.getValue()]}
+        break
      }
 }
 
+serviceVariables.putAll(serviceVarsMap)
+
 println("STARTING_WORKFLOW_NAME:    " + startingWorkflowName)
 println("BUCKET_NAME:    " + bucketName)
-
+println("VARIABLES:    " + serviceVariables.toString())
 
 // Prepare service description
 ServiceDescription serviceDescription = new ServiceDescription()
 serviceDescription.setBucketName(bucketName)
 serviceDescription.setWorkflowName(startingWorkflowName)
-if( !serviceVars.isEmpty() ){
-    serviceVarsMap.each{ k, v -> serviceDescription.putVariablesItem("${k}", "${v}") }
+
+
+if( !serviceVariables.isEmpty() ){
+    serviceVariables.each{ k, v -> serviceDescription.putVariablesItem("${k}", "${v}") }
 }
+
 /********************************************************************************/
+
 // Run service
 def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
 
@@ -147,10 +156,10 @@ println("END " + variables.get("PA_TASK_NAME"))
         #workflow-designer {
             left:0 !important;
             top:0 !important;
-            width:1427px;
-            height:812px;
+            width:2854px;
+            height:3248px;
             }
-        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-330.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_275" style="top: 335.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 660.5px; top: 366px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-330.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_37" style="top: 335.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 660.5px; top: 366px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>

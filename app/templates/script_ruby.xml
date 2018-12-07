@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="script_ruby" projectName="" priority="normal" onTaskError="continueJobExecution">
+	name="Script_Ruby" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes ruby in JVM.
+		A workflow that executes Ruby in JVM.
 	</description>
 	<taskFlow>
 		<task name="Ruby_Task">
 			<description>
-				The simplest task, ran by a ruby engine.
+				The simplest task, ran by a Ruby engine.
 			</description>
 			<scriptExecutable>
 				<script>

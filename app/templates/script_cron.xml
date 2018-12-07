@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="script_Cron">
+	name="Script_Cron">
 	<taskFlow>
-		<task name="cron_task">
+		<task name="Cron_Task">
 			<description>Cron task running every minute</description>
 			<scriptExecutable>
 				<script>
@@ -13,7 +13,7 @@
 				</script>
 			</scriptExecutable>
 			<controlFlow>
-				<loop target="cron_task">
+				<loop target="Cron_Task">
 					<script>
 						<code language="javascript">
 							// You can use a Cron Expression here

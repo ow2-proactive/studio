@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.11"
      xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="Submit_Job_and_Wait"
+    name="Submit_Job_And_Wait"
     priority="normal"
     onTaskError="continueJobExecution"
      maxNumberOfExecution="2">
@@ -11,16 +11,15 @@
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_no_wait.png"/>
   </genericInformation>
   <taskFlow>
-    <task name="Submit_Job_and_Wait" >
+    <task name="Submit_Job_And_Wait" >
       <description>
         <![CDATA[ Submit a workflow referenced in the ProActive Catalog (or accessible by url) and wait for its termination by checking every minute if the job is terminated. ]]>
       </description>
       <variables>
-        <variable name="bucket_name" value="basic-examples" inherited="true" />
-        <variable name="workflow_name" value="native_task" inherited="true" />
+        <variable name="call_workflow" value="basic-examples/native_task" inherited="true" model="PA:CATALOG_OBJECT"/>
       </variables>
       <genericInformation>
-        <info name="TASK.ICON" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png"/>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png"/>
       </genericInformation>
       <scriptExecutable>
         <script>
@@ -28,31 +27,30 @@
             <![CDATA[
 // Submit a workflow referenced in the ProActive Catalog (or accessible by url)
 
-// Please add the bucket and workflow names that you want to execute as Task Variables 'bucket_name' and 'workflow_name'
+// Please add the bucket and workflow names that you want to execute as Task Variables 'call_workflow'
 
 // connect to the scheduler
 schedulerapi.connect()
 def jobid
 if( !variables.get("jobSubmitted") ){
     // get the workflow information from Task Variables
-    def bucketName = variables.get("bucket_name")
-    def workflowName = variables.get("workflow_name")
+    def calledWorkflow = variables.get("call_workflow")
 
     // variables submitted to the workflow: Empty in the example, modify this map to give parameters to the submitted workflow
     workflow_variables = Collections.EMPTY_MAP
 
-    println "Submitting workflow " + workflowName + " from bucket " + bucketName
+    println "Submitting workflow " + calledWorkflow
 
     // submitting the job
     def generic_infos_map = ["PARENT_JOB_ID" : variables.get("PA_JOB_ID")]
-    jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), bucketName, workflowName, workflow_variables, generic_infos_map)
+    jobid = schedulerapi.submitFromCatalog(variables.get("PA_CATALOG_REST_URL"), calledWorkflow, workflow_variables, generic_infos_map)
     variables.put("jobSubmitted", true)
 
     // alternatively you can submit a workflow from a direct url
 
     // // add sessionId to request header map
     // requestHeader = Collections.singletonMap("sessionId", schedulerapi.getSession()
-    // jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_PI/raw"
+    // jobUrl = "https://try.activeeon.com/catalog/buckets/basic-examples/resources/distributed_computing_Pi/raw"
     // jobid = schedulerapi.submit(jobURL, variables, generic_infos_map, requestHeader)
 
     println "Job submitted with job id " + jobid
@@ -72,7 +70,7 @@ result = jobid
         </script>
       </scriptExecutable>
       <controlFlow >
-        <loop target="Submit_Job_and_Wait">
+        <loop target="Submit_Job_And_Wait">
           <script>
             <code language="javascript">
               <![CDATA[
