@@ -11,7 +11,7 @@
     <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
 $SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... .
 $SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service on the cloud automation side can be initialized.
-$STARTING_STATE (optional) indicates the starting state of the service. The default value is `RUNNING`.  ]]>
+$STARTING_STATE (optional) indicates the starting state of the service. The default value is `RUNNING`. ]]>
   </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
@@ -64,7 +64,7 @@ println("SERVICE_ID:    " + serviceId)
 //retrieve service variables
 def serviceVars = variables.get("SERVICE_VARS")
 def serviceVarsMap = new HashMap()
-if(serviceVars.isEmpty()){
+if(!serviceVars){
     println("The service " + serviceId + " is started without any variables. Default configuration is used.")
 }
 else{
@@ -74,35 +74,25 @@ else{
 }
 
 def startingState = variables.get("STARTING_STATE")
-if (startingState.isEmpty()) {
+if (!startingState) {
     startingState = "RUNNING"
 }
 
 //Check that the provided service id belongs to the existing Service Activation list
 def catalogRestApi = new CatalogRestApi(apiClient)
-def isServiceIdExists = false
-Map<String, List<CloudAutomationWorkflow>> listAllWorkflowsByServiceId = catalogRestApi.listAllWorkflowsByServiceIdUsingGET(sessionId)
-
-for(String pcaServiceId : listAllWorkflowsByServiceId.keySet()){
-     if (pcaServiceId.equals(serviceId)){
-         isServiceIdExists = true
-         break
-     }
-}
-if(!isServiceIdExists){
-	 throw new IllegalArgumentException("The provided SERVICE_ID: " + serviceId + " does not belong to the existing Service Activation list. You have to specify an existing service id.")
+if(!catalogRestApi.listAllWorkflowsByServiceIdUsingGET(sessionId).keySet().contains(serviceId)){
+    throw new IllegalArgumentException("The provided SERVICE_ID: <" + serviceId + "> does not belong to the existing Service Activation list. You have to specify an existing service id.")
 }
 
-//Identifying the starting workflow and its bucket name in the catalog
+//Identifying the starting workflow, the bucket name and the default variables inside the catalog
 def startingWorkflowName
 def bucketName
-def serviceVariables
+def serviceVariables = new HashMap()
 Map<String, List<CloudAutomationWorkflow>> listStartingWorkflowsByServiceId = catalogRestApi.listStartingWorkflowsByServiceIdUsingGET(sessionId)
 for(String serviceIdIterator : listStartingWorkflowsByServiceId.keySet()){
      if (serviceIdIterator.equals(serviceId)){
         startingWorkflowName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getName()
         bucketName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getBucket()
-        //retrieve default pca service variables
         serviceVariables = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getVariables().collectEntries {var -> [var.getName(), var.getValue()]}
         break
      }
@@ -157,6 +147,14 @@ println("END " + variables.get("PA_TASK_NAME"))
           </code>
         </script>
       </scriptExecutable>
+      <metadata>
+        <positionTop>
+            335.765625
+        </positionTop>
+        <positionLeft>
+            604.78125
+        </positionLeft>
+      </metadata>
     </task>
   </taskFlow>
   <metadata>
@@ -168,7 +166,7 @@ println("END " + variables.get("PA_TASK_NAME"))
             width:2854px;
             height:3248px;
             }
-        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-330.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_37" style="top: 335.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 660.5px; top: 366px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-330.765625px;left:-599.78125px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable" id="jsPlumb_1_814" style="top: 335.766px; left: 604.781px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 660.5px; top: 366px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
       xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
  ]]>
