@@ -147,14 +147,6 @@ println("END " + variables.get("PA_TASK_NAME"))
           </code>
         </script>
       </scriptExecutable>
-      <metadata>
-        <positionTop>
-            335.765625
-        </positionTop>
-        <positionLeft>
-            604.78125
-        </positionLeft>
-      </metadata>
     </task>
   </taskFlow>
   <metadata>
