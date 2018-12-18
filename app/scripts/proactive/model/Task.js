@@ -438,6 +438,8 @@ define(
                                         message: "<br><br>" + validationData.errorMessage
                                     };
                                     return err;
+                                } else {
+                                    delete that.attributes.BackupVariables;
                                 }
                             }
                         }
@@ -562,17 +564,27 @@ define(
                     variable.Value = "";
                 }
                 if (this.attributes.hasOwnProperty('Variables')) {
-                    var variables = this.attributes.Variables;
+                    var variables;
+                    // we save the original Variables attribute in BackupVariables, and use this afterwards
+                    // This way, any modification will only be applied to the original Variables object
+                    // This prevents piling up modifications in the variable list
+                    if (this.attributes.hasOwnProperty('BackupVariables')) {
+                      this.attributes.Variables = JSON.parse(JSON.stringify(this.attributes.BackupVariables));
+                    } else {
+                      this.attributes.BackupVariables = JSON.parse(JSON.stringify(this.attributes.Variables));
+                    }
+                    variables = this.attributes.Variables;
                     var index = -1
                     for (var i = 0; i < variables.length; i++) {
                         if (variables[i].Name == variable.Name) {
                             index = i;
+                            break;
                         }
                     }
                     if (index == -1) {
-                        this.attributes.Variables.push(variable)
+                        variables.push(variable)
                     } else {
-                        this.attributes.Variables[index] = variable
+                        variables[index] = variable
                     }
                 } else {
                     this.attributes.Variables = [variable];
