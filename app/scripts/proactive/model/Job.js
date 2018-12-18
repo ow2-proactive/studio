@@ -335,6 +335,9 @@ define(
 
         if (this.attributes.hasOwnProperty('Variables')) {
           var variables;
+          // we save the original Variables attribute in BackupVariables, and use this afterwards
+          // This way, any modification will only be applied to the original Variables object
+          // This prevents piling up modifications in the variable list
           if (this.attributes.hasOwnProperty('BackupVariables')) {
             this.attributes.Variables = JSON.parse(JSON.stringify(this.attributes.BackupVariables));
           } else {
@@ -345,6 +348,7 @@ define(
           for (var i = 0; i < variables.length; i++) {
             if (variables[i].Name == variable.Name) {
               index = i;
+              break;
             }
           }
           if (index == -1) {
