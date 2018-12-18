@@ -256,6 +256,8 @@ define(
                     message: "<br><br>" + validationData.errorMessage
                   };
                   return err;
+                } else {
+                    delete that.attributes.BackupVariables;
                 }
               }
             }
@@ -332,7 +334,13 @@ define(
         }
 
         if (this.attributes.hasOwnProperty('Variables')) {
-          var variables = this.attributes.Variables;
+          var variables;
+          if (this.attributes.hasOwnProperty('BackupVariables')) {
+            this.attributes.Variables = JSON.parse(JSON.stringify(this.attributes.BackupVariables));
+          } else {
+            this.attributes.BackupVariables = JSON.parse(JSON.stringify(this.attributes.Variables));
+          }
+          variables = this.attributes.Variables;
           var index = -1
           for (var i = 0; i < variables.length; i++) {
             if (variables[i].Name == variable.Name) {
@@ -340,9 +348,9 @@ define(
             }
           }
           if (index == -1) {
-            this.attributes.Variables.push(variable)
+            variables.push(variable)
           } else {
-            this.attributes.Variables[index] = variable
+            variables[index] = variable
           }
         } else {
           this.attributes.Variables = [variable];
