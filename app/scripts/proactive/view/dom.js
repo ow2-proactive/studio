@@ -868,6 +868,7 @@ define(
                     var zIndexModal = parseInt($(".selection-script-code-form").parents().find(".modal").css("z-index"));
                     $("#full-edit-modal").css("z-index", (zIndexModal+1).toString());
                 }
+                $('#full-edit-modal').modal({backdrop: 'static', keyboard: false});
                 $('#full-edit-modal').modal('show');
                 $('#full-edit-modal').data("editor", editor);
 
