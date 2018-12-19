@@ -16,7 +16,7 @@
         <![CDATA[ Submit a workflow referenced in the ProActive Catalog (or accessible by url) and wait for its termination by checking every minute if the job is terminated. ]]>
       </description>
       <variables>
-        <variable name="call_workflow" value="basic-examples/native_task" inherited="true" model="PA:CATALOG_OBJECT"/>
+        <variable name="call_workflow" value="basic-examples/Native_Task" inherited="true" model="PA:CATALOG_OBJECT"/>
       </variables>
       <genericInformation>
         <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/controls_submit_job_and_wait.png"/>
