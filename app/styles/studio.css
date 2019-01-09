@@ -517,10 +517,16 @@ ANALOGIC SCHEME
     min-height: 2em !important;
 }
 
+.textareavalues {
+    min-height: 1em !important;
+    min-width: unset;
+}
+
 textarea {
     min-width: 90%;
     max-width: 90%;
     min-height: 200px !important;
+    resize: vertical;
 }
 
 input {
