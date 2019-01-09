@@ -104,16 +104,18 @@ define(
               fieldAttrs: {
                 'placeholder': '@attributes->value'
               },
-              type: 'Text',
-              editorClass: 'popup-input-text-field'
+              type: 'TextArea',
+              editorClass: 'popup-input-text-field textareavalues',
+              editorAttrs: {'rows': '1'}
             },
             "Model": {
               fieldAttrs: {
                 'placeholder': '@attributes->model'
               },
               title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl + '/user/ProActiveUserGuide.html#_variable_model">documentation</a>.',
-              type: 'Text',
-              editorClass: 'popup-input-text-field'
+              type: 'TextArea',
+              editorClass: 'popup-input-text-field textareavalues',
+              editorAttrs: {'rows': '1'}
             }
           }
         },
@@ -136,10 +138,13 @@ define(
               }
             },
             "Property Value": {
+              type: 'TextArea',
               validators: ['required'],
               fieldAttrs: {
                 'placeholder': '@attributes->value'
-              }
+              },
+              editorClass: 'textareavalues',
+              editorAttrs: {'rows': '1'}
             }
           }
         },
@@ -173,7 +178,7 @@ define(
             "data-help": "A private Data Space started manually by user with the proactive-dataserver command."
           }
         },
-        "Number of Automatic Restarts": {
+        "Number of Execution Attempts": {
           type: 'Number',
           fieldAttrs: {
             "data-tab": "Error Handling",
@@ -229,7 +234,7 @@ define(
           "On Task Error Policy": "continueJobExecution"
         });
         this.set({
-          "Number of Automatic Restarts": 2
+          "Number of Execution Attempts": 2
         });
         this.set({
           "If An Error Occurs Restart Task": "anywhere"

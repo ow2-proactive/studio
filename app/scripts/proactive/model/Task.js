@@ -69,9 +69,9 @@ define(
                     itemToString: Utils.inlineNameValueInherited, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
                     "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
-                    "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
+                    "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} },
                     "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
-                    "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'Text', editorClass: 'popup-input-text-field' }
+                    "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} }
                     },
                     confirmDelete: 'You are about to remove a variable.'
                 },
@@ -89,8 +89,11 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->name'}
                         },
                         "Property Value": {
+                            type: 'TextArea',
                             validators: ['required'],
-                            fieldAttrs: {'placeholder': '@attributes->value'}
+                            fieldAttrs: {'placeholder': '@attributes->value'},
+                            editorClass: 'textareavalues',
+                            editorAttrs: {'rows': '1'}
                         }
                     },
                     confirmDelete: 'You are about to remove a property.'
@@ -188,7 +191,7 @@ define(
                         "simple-view": true
                     }
                 },
-                "Number of Automatic Restarts": {
+                "Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
                         "data-tab": "Error Management",
