@@ -378,6 +378,8 @@ define(
                         var checkRadioValue = $(checkedRadio).val();
                         var inputName = $(checkedRadio).attr('name');
                         inputVariables[input.id] = {'Name': inputName, 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
+                    } else if ($(input).prop("tagName")==='TEXTAREA') {
+                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
                     }
                 }
                 readOrStoreVariablesInModel(inputVariables);
