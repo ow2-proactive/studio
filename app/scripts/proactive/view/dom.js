@@ -295,6 +295,16 @@ define(
             require('StudioApp').views.workflowView.autoLayout();
             save_workflow();
         });
+
+        $("#add-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('secondary');
+        });
+
+        $("#pin-palette-button").click(function (event) {
+            event.preventDefault();
+            require('StudioApp').views.palleteView.pinPalette();
+        });
         $("#zoom-in-button").click(function (event) {
             event.preventDefault();
             require('StudioApp').views.workflowView.zoomIn();

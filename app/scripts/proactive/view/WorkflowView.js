@@ -240,7 +240,9 @@ define(
 
             view.addSourceEndPoint('dependency')
 
-            jsPlumb.draggable(rendering.$el)
+            jsPlumb.draggable(rendering.$el);
+            // Prevent dragged tasks from hiding under the left panel
+            $(rendering.$el).draggable({containment:"#workflow-designer"});
             this.taskViews.push(view);
 
             rendering.$el.data("view", view);
