@@ -92,7 +92,7 @@ footer {
 
 .btn-group {
     width: max-content;
-    height: max-content;
+    height: 26px;
     display: inline-flex;
     margin-top: -2px;
 }
