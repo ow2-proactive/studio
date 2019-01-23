@@ -13,7 +13,8 @@ define(
         return Backbone.View.extend({
 
         initialize: function () {
-            this.$el = $("#palette-container-div");
+            this.$el = $("<div></div>");
+            $("#palette-container-div").append(this.$el);
             if (!localStorage['secondaryBucketNames'])
                 localStorage.setItem('secondaryBucketNames',"[]");
             this.options.app.models.secondaryTemplates = {};
