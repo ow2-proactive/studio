@@ -21,6 +21,8 @@ define(
         'codemirror/mode/powershell/powershell',
         'codemirror/mode/r/r',
         'codemirror/mode/yaml/yaml',
+        'codemirror/addon/mode/simple',
+        'codemirror/mode/dockerfile/dockerfile',
         'codemirror/addon/comment/comment',
         'codemirror/addon/edit/matchbrackets',
         'codemirror/addon/edit/closebrackets',
@@ -294,6 +296,16 @@ define(
             require('StudioApp').views.workflowView.autoLayout();
             save_workflow();
         });
+
+        $("#add-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('secondary');
+        });
+
+        $("#pin-palette-button").click(function (event) {
+            event.preventDefault();
+            require('StudioApp').views.palleteView.pinPalette();
+        });
         $("#zoom-in-button").click(function (event) {
             event.preventDefault();
             require('StudioApp').views.workflowView.zoomIn();
@@ -377,6 +389,8 @@ define(
                         var checkRadioValue = $(checkedRadio).val();
                         var inputName = $(checkedRadio).attr('name');
                         inputVariables[input.id] = {'Name': inputName, 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
+                    } else if ($(input).prop("tagName")==='TEXTAREA') {
+                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
                     }
                 }
                 readOrStoreVariablesInModel(inputVariables);
@@ -430,7 +444,7 @@ define(
 
                 for (var i = 0; i < variables.length; i++) {
                     var variable = variables[i];
-                    if (!(!updatedVariables || updatedVariables === null)) {
+                    if (!(!updatedVariables || updatedVariables == null)) {
                         variables[i] = updatedVariables[variable.Name];
                     }
                     jobVariables[variable.Name] = variable;
@@ -456,7 +470,7 @@ define(
                             isInherited = variable.Inherited;
                         }
                         if (!isInherited) {
-                            if (!(!updatedVariables || updatedVariables === null)) {
+                            if (!(!updatedVariables || updatedVariables == null)) {
                                 variables[j] = updatedVariables[task.get('Task Name') + ":" + variable.Name];
                             }
                             jobVariables[task.get('Task Name') + ":" + variable.Name] = variable;
@@ -477,8 +491,7 @@ define(
         function submit() {
             var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
-            var htmlVisualization = studioApp.views.xmlView.generateHtml();
-            StudioClient.submit(xml, htmlVisualization);
+            StudioClient.submit(xml);
         }
 
         function validate() {
@@ -539,7 +552,6 @@ define(
 
 
             jQuery.get('file.txt', function(data) {
-                   alert(data);
                    //process text file line by line
                    $('#div').html(data.replace('n',''));
             });
@@ -726,15 +738,16 @@ define(
                 var languageElementId;
                 if (isUrl) {
                     languageElementId = relatedInputId.replace('_Url', '_Language');
+                    $("#cancel-script-changes").text("Close");
                 }
                 else {
                     languageElementId = relatedInputId.replace('_Code', '_Language');
+                    $("#cancel-script-changes").text("Cancel");
                 }
                 var languageElement = document.getElementById(languageElementId);
                 var selectedLanguage = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
-                if (isUrl && (!selectedLanguage || selectedLanguage === '')) {
+                if (isUrl && (!selectedLanguage || selectedLanguage == '')) {
                     var indexExt = inputValue.lastIndexOf('.');
-                    var language  = '';
                     if (indexExt > -1) {
                         var extension = inputValue.substring(indexExt+1, inputValue.length);
                         selectedLanguage = config.extensions_to_languages[extension.toLowerCase()] || '';
@@ -795,9 +808,15 @@ define(
                 if (isUrl) {
                     if (inputValue.trim()!='') {
                         var isCatalogScript = inputValue.startsWith(window.location.origin + '/catalog/');
+                        // Check if catalog object URL is relative (using ${PA_CATALOG_REST_URL})
+                        var isRelativeCatalogScript = inputValue.startsWith('${PA_CATALOG_REST_URL}');
                         var headers = {};
-                        if (isCatalogScript) {
+                        if (isCatalogScript || isRelativeCatalogScript) {
                             headers = { 'sessionID': localStorage['pa.session'] };
+                        }
+                        // Replace ${PA_CATALOG_REST_URL} with an absolute URL.
+                        if (isRelativeCatalogScript){
+                            inputValue = inputValue.replace('${PA_CATALOG_REST_URL}',window.location.origin + '/catalog/');
                         }
                         $.ajax({
                             url: inputValue,
@@ -823,7 +842,7 @@ define(
                     content = inputValue;
                     commitScriptChangesButton.hide();
                     setScriptContentButton.show();
-                    $("#set-script-content").data("area", $('#'+relatedInputId));
+                    $("#set-script-content").data("area", relatedInputId);
                 }
                 $("#full-edit-modal-script-content").data('language', selectedLanguage);
                 $("#full-edit-modal-script-content").data('catalog-kind', catalogKind);
@@ -862,6 +881,7 @@ define(
                     var zIndexModal = parseInt($(".selection-script-code-form").parents().find(".modal").css("z-index"));
                     $("#full-edit-modal").css("z-index", (zIndexModal+1).toString());
                 }
+                $('#full-edit-modal').modal({backdrop: 'static', keyboard: false});
                 $('#full-edit-modal').modal('show');
                 $('#full-edit-modal').data("editor", editor);
 
@@ -884,8 +904,8 @@ define(
 
             $("#set-script-content").click(function () {
                 var editor = $('#full-edit-modal').data("editor");
-                editor.save()
-                $(this).data("area").val($("#full-edit-modal-script-content").val());
+                editor.save();
+                document.getElementById($(this).data("area")).value = $("#full-edit-modal-script-content").val();
 
                 var studioApp = require('StudioApp');
                 // propagating changes to the model

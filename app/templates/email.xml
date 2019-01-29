@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.4"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.4 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.4/schedulerjob.xsd"
-	name="Email Notification" projectName="Notifications" priority="normal"
+	name="Email_Notification" projectName="Notifications" priority="normal"
 	onTaskError="continueJobExecution" maxNumberOfExecution="2">
 	<description>
         <![CDATA[ A workflow that sends an email ]]>
     </description>
 	<taskFlow>
-		<task name="EmailNotification">
+		<task name="Email_Notification">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/email_notification_red_one.png" />
 			</genericInformation>
 			<description>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="Email Validation" projectName="Notifications" priority="normal"
+	name="Email_Validation" projectName="Notifications" priority="normal"
 	onTaskError="continueJobExecution" maxNumberOfExecution="2">
 	<description>
     <![CDATA[ Workflow to pause the job and send a validation email ]]>
 	</description>
 	<taskFlow>
-		<task name="EmailValidation" onTaskError="pauseJob">
+		<task name="Email_Validation" onTaskError="pauseJob">
 			<description>
         <![CDATA[ Task to pause the job and send a validation email ]]>
 			</description>
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/email_validation_bis.png" />
 			</genericInformation>
 			<variables>

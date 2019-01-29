@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Trigger_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
+  <variables>
+    <variable name="SERVICE_ID" value="" />
+    <variable name="SERVICE_VARS" value="" />
+    <variable name="STARTING_STATE" value="RUNNING" />
+  </variables>
+  <description>
+    <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
+$SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... .
+$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service on the cloud automation side can be initialized.
+$STARTING_STATE (optional) indicates the starting state of the service. The default value is `RUNNING`.  ]]>
+  </description>
+  <genericInformation>
+    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
+  </genericInformation>
+  <taskFlow>
+    <task name="Trigger_PCA_Service" 
+    
+    onTaskError="cancelJob" >
+      <genericInformation>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
+        <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+import org.ow2.proactive.pca.service.client.ApiClient
+import org.ow2.proactive.pca.service.client.api.ServiceInstanceRestApi
+import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
+import org.ow2.proactive.pca.service.client.model.ServiceDescription
+import org.ow2.proactive.pca.service.client.model.CloudAutomationWorkflow
+import org.ow2.proactive.pca.service.client.api.CatalogRestApi
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
+println("BEGIN " + variables.get("PA_TASK_NAME"))
+
+// Get schedulerapi access
+schedulerapi.connect()
+
+// Acquire session id
+def sessionId = schedulerapi.getSession()
+
+// Define PCA URL
+def scheduler_rest_url = variables.get("PA_SCHEDULER_REST_URL")
+def pcaUrl = scheduler_rest_url.replaceAll("/rest\\z", "/cloud-automation-service")
+
+// Connect to APIs
+def apiClient = new ApiClient()
+apiClient.setBasePath(pcaUrl)
+//apiClient.setDebugging(true)
+def serviceInstanceRestApi = new ServiceInstanceRestApi(apiClient)
+
+def serviceId = variables.get("SERVICE_ID")
+if (serviceId.isEmpty()) {
+    throw new IllegalArgumentException("You have to specify a SERVICE_ID value. Empty value is not allowed.");
+}
+println("SERVICE_ID:    " + serviceId)
+
+//retrieve service variables
+def serviceVars = variables.get("SERVICE_VARS")
+def serviceVarsMap = new HashMap()
+if(serviceVars.isEmpty()){
+    println("The service " + serviceId + " is started without any variables. Default configuration is used.")
+}
+else{
+    serviceVarsMap = evaluate(serviceVars)
+    println("The provided service variables are:") 
+    serviceVarsMap.each{ k, v -> println "${k}:${v}" }
+}
+
+def startingState = variables.get("STARTING_STATE")
+if (startingState.isEmpty()) {
+    startingState = "RUNNING"
+}
+
+//Check that the provided service id belongs to the existing Service Activation list
+def catalogRestApi = new CatalogRestApi(apiClient)
+def isServiceIdExists = false
+Map<String, List<CloudAutomationWorkflow>> listAllWorkflowsByServiceId = catalogRestApi.listAllWorkflowsByServiceIdUsingGET(sessionId)
+
+for(String pcaServiceId : listAllWorkflowsByServiceId.keySet()){
+     if (pcaServiceId.equals(serviceId)){
+         isServiceIdExists = true
+         break
+     }
+}
+if(!isServiceIdExists){
+	 throw new IllegalArgumentException("The provided SERVICE_ID: " + serviceId + " does not belong to the existing Service Activation list. You have to specify an existing service id.")
+}
+
+//Identifying the starting workflow and its bucket name in the catalog
+def startingWorkflowName
+def bucketName
+def serviceVariables
+Map<String, List<CloudAutomationWorkflow>> listStartingWorkflowsByServiceId = catalogRestApi.listStartingWorkflowsByServiceIdUsingGET(sessionId)
+for(String serviceIdIterator : listStartingWorkflowsByServiceId.keySet()){
+     if (serviceIdIterator.equals(serviceId)){
+        startingWorkflowName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getName()
+        bucketName = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getBucket()
+        //retrieve default pca service variables
+        serviceVariables = listStartingWorkflowsByServiceId.get(serviceIdIterator)[0].getVariables().collectEntries {var -> [var.getName(), var.getValue()]}
+        break
+     }
+}
+
+serviceVariables.putAll(serviceVarsMap)
+
+println("STARTING_WORKFLOW_NAME:    " + startingWorkflowName)
+println("BUCKET_NAME:    " + bucketName)
+println("VARIABLES:    " + serviceVariables.toString())
+println("STARTING_STATE:	" + startingState)
+
+// Prepare service description
+ServiceDescription serviceDescription = new ServiceDescription()
+serviceDescription.setBucketName(bucketName)
+serviceDescription.setWorkflowName(startingWorkflowName)
+
+
+if( !serviceVariables.isEmpty() ){
+    serviceVariables.each{ k, v -> serviceDescription.putVariablesItem("${k}", "${v}") }
+}
+
+/********************************************************************************/
+
+// Run service
+def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsingPOST(sessionId, serviceDescription)
+
+// Acquire service Instance ID
+def serviceInstanceId = serviceInstanceData.getInstanceId()
+println("INSTANCE_ID: " + serviceInstanceId)
+
+// Create synchro channel
+def channel = "Service_Instance_" + serviceInstanceId
+println("SYNC CHANNEL: " + channel)
+synchronizationapi.createChannelIfAbsent(channel, false)
+
+// Wait until the service reaches the STARTING_STATE
+synchronizationapi.waitUntil(channel, startingState, "{k,x -> x == true}")
+
+// Acquire service endpoint
+def endpoint
+if(serviceInstanceData.getInstanceEndpoints()){
+    endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
+    println("ENDPOINT: " + endpoint)
+    variables.put("ENDPOINT", endpoint)
+}
+
+variables.put("INSTANCE_ID", serviceInstanceId)
+
+println("END " + variables.get("PA_TASK_NAME"))
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+  <metadata>
+    <visualization>
+      <![CDATA[ <html><head><link rel="stylesheet" href="/studio/styles/studio-standalone.css"><style>
+        #workflow-designer {
+            left:0 !important;
+            top:0 !important;
+            width:2854px;
+            height:3248px;
+            }
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-330.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_37" style="top: 335.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png" width="20px">&nbsp;<span class="name">Trigger_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 660.5px; top: 366px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
+ ]]>
+    </visualization>
+  </metadata>
+</job>

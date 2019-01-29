@@ -104,16 +104,18 @@ define(
               fieldAttrs: {
                 'placeholder': '@attributes->value'
               },
-              type: 'Text',
-              editorClass: 'popup-input-text-field'
+              type: 'TextArea',
+              editorClass: 'popup-input-text-field textareavalues',
+              editorAttrs: {'rows': '1'}
             },
             "Model": {
               fieldAttrs: {
                 'placeholder': '@attributes->model'
               },
               title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl + '/user/ProActiveUserGuide.html#_variable_model">documentation</a>.',
-              type: 'Text',
-              editorClass: 'popup-input-text-field'
+              type: 'TextArea',
+              editorClass: 'popup-input-text-field textareavalues',
+              editorAttrs: {'rows': '1'}
             }
           }
         },
@@ -136,10 +138,13 @@ define(
               }
             },
             "Property Value": {
+              type: 'TextArea',
               validators: ['required'],
               fieldAttrs: {
                 'placeholder': '@attributes->value'
-              }
+              },
+              editorClass: 'textareavalues',
+              editorAttrs: {'rows': '1'}
             }
           }
         },
@@ -173,7 +178,7 @@ define(
             "data-help": "A private Data Space started manually by user with the proactive-dataserver command."
           }
         },
-        "Number of Automatic Restarts": {
+        "Number of Execution Attempts": {
           type: 'Number',
           fieldAttrs: {
             "data-tab": "Error Handling",
@@ -229,7 +234,7 @@ define(
           "On Task Error Policy": "continueJobExecution"
         });
         this.set({
-          "Number of Automatic Restarts": 2
+          "Number of Execution Attempts": 2
         });
         this.set({
           "If An Error Occurs Restart Task": "anywhere"
@@ -256,6 +261,8 @@ define(
                     message: "<br><br>" + validationData.errorMessage
                   };
                   return err;
+                } else {
+                    delete that.attributes.BackupVariables;
                 }
               }
             }
@@ -332,17 +339,27 @@ define(
         }
 
         if (this.attributes.hasOwnProperty('Variables')) {
-          var variables = this.attributes.Variables;
+          var variables;
+          // we save the original Variables attribute in BackupVariables, and use this afterwards
+          // This way, any modification will only be applied to the original Variables object
+          // This prevents piling up modifications in the variable list
+          if (this.attributes.hasOwnProperty('BackupVariables')) {
+            this.attributes.Variables = JSON.parse(JSON.stringify(this.attributes.BackupVariables));
+          } else {
+            this.attributes.BackupVariables = JSON.parse(JSON.stringify(this.attributes.Variables));
+          }
+          variables = this.attributes.Variables;
           var index = -1
           for (var i = 0; i < variables.length; i++) {
             if (variables[i].Name == variable.Name) {
               index = i;
+              break;
             }
           }
           if (index == -1) {
-            this.attributes.Variables.push(variable)
+            variables.push(variable)
           } else {
-            this.attributes.Variables[index] = variable
+            variables[index] = variable
           }
         } else {
           this.attributes.Variables = [variable];
@@ -411,7 +428,7 @@ define(
             }
             this.populateTemplate(obj, merging);
         } else {
-        this.populateSchema(obj, merging);
+            this.populateSchema(obj, merging);
         }
         this.convertCancelJobOnErrorToOnTaskError(obj);
 
@@ -427,7 +444,7 @@ define(
             var taskModel = new Task();
 
             taskModel.convertCancelJobOnErrorToOnTaskError(task);
-            taskModel.populateSchema(task);
+            taskModel.populateSchema(task, merging, isTemplate);
             taskModel.populateSimpleForm();
 
             // check for unique task name to keep the job valid

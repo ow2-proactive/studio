@@ -14,9 +14,7 @@ define(
 
         initialize: function () {
             this.$el = $("<div></div>");
-            $("#palette-container").append(this.$el);
-
-
+            $("#palette-container-div").append(this.$el);
             if (!localStorage['secondaryBucketNames'])
                 localStorage.setItem('secondaryBucketNames',"[]");
             this.options.app.models.secondaryTemplates = {};
@@ -39,14 +37,23 @@ define(
                         menu.append(subMenu);
                         subMenu.data("templateName", property);
                         subMenu.data("templateUrl", template[property]);
-                        subMenu.draggable({helper: "clone", scroll: true, distance:0});
+                        subMenu.draggable({helper: "clone", scroll: true, appendTo: "#workflow-designer", opacity:0.85, zIndex: 999, containment:"#workflow-designer"});
+                        subMenu.bind("drag", function(event, ui) {
+                            ui.helper.css("background-color", "white");
+                            ui.helper.css("padding", "3px 20px");
+                        });
+                        subMenu.click(function(event) {
+                            // simulating drag and drop of this element
+                            var workflowView = that.options.app.views.workflowView
+                            workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
+                        })
                     }
                 }
             }
         },
-        pinUnpin : function(e){
+        pinUnpin : function(){
             var menuElement = $(this).parent().parent();
-            var keepFromClosing = function(event){
+            var keepFromClosing = function(){
                 return false;
             };
             if(menuElement.hasClass('dropdown')){ //not pinned yet
@@ -60,10 +67,26 @@ define(
                 $(this).html('<img src="images/icon-pin.png"> Pin open');
             }
         },
-        setPin : function(menu){
+        setPinMenu : function(menu){
             var pinOpen = $('<li role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
             pinOpen.on('click', this.pinUnpin);
             menu.append(pinOpen);
+        },
+        isPalettePinned : function(){
+            var lockStatus = $('#tools-table').css('position')
+            return (lockStatus==='sticky'||lockStatus==='-webkit-sticky');
+        },
+        pinPalette : function(){
+            if (this.isPalettePinned()) {
+                $('#tools-table').toggleClass('unpinned');
+                $('#pin-palette-button').html('<img width="14px" src="images/icon-pin.png">');
+                $('.templates-menu.locked').toggleClass("locked");
+
+            } else {
+                $('#tools-table').toggleClass('unpinned');
+                $('#pin-palette-button').html('<img width="14px" src="images/icon-unpin.png">');
+                $('.templates-menu').toggleClass("locked");
+            }
         },
         setPositionRelativeToAbsoluteEvent : function(event, ui) {
             if (this.style.position != "absolute") {
@@ -76,34 +99,33 @@ define(
         initMenu: function(menu, config) {
             menu.draggable({helper: "original", distance : 20, stop : this.setPositionRelativeToAbsoluteEvent});
             menu.addClass("dropdown");
-            var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
-            this.setPin(menuContent);
+            var menuContent = $('<ul class="dropdown-menu templates-menu locked" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
+            this.setPinMenu(menuContent);
             this.createMenuFromConfig(config, menuContent);
             menu.append(menuContent);
         },
         render: function () {
             this.$el.html('');
-            var that = this;
             var taskWidget = $(
-                '<span ><span id="task-menu" class="label job-element job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
-                    '<img src="images/gears.png" width="30px" type="button" >Tasks<span class="caret"></span></span></span>');
+                '<span class="palette"><span id="task-menu" class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                    '<img src="images/gears.png" width="20px" type="button" >Tasks<span class="caret"></span></span></span>');
 
             this.initMenu($(taskWidget), config.tasks);
 
             var manualWidget = $(
-                '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span class="palette"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Manuals<span class="caret"></span></span></span>');
 
             this.initMenu($(manualWidget), config.manuals);
 
             var controlWidget = $(
-                '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                '<span class="palette"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >Controls<span class="caret"></span></span></span>');
 
             this.initMenu($(controlWidget), config.controls);
             this.$el.append(taskWidget).append(manualWidget).append(controlWidget);
 
-            this.renderTemplateMainBucket();
+            this.renderTemplateMainBucket(this.mainBucketName);
             var localStorageTemplates = JSON.parse(localStorage.getItem('secondaryBucketNames'));
             var that = this;
             localStorageTemplates.forEach(function(secondaryBucketName) {
@@ -139,21 +161,21 @@ define(
                 return bucketName.replace('_',' ').replace('-',' ');
             }
         },
-        renderTemplateMainBucket : function() {
+        renderTemplateMainBucket : function(bucketName) {
             //rendering page title
-            var nameToDisplay = this.beautifyBucketName(this.mainBucketName);
+            var nameToDisplay = this.beautifyBucketName(bucketName);
             var divBucketName = $("<div id='bucket-name-title'>"+ nameToDisplay +"</div>");
             $("#studio-bucket-title").empty();
             $("#studio-bucket-title").append(divBucketName);
 
             //adding palette
             var templateWidget = $(
-                '<span ><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
-                    '<img src="images/gears.png" width="20px" type="button" >'+ this.mainBucketName +'<span class="caret"></span></span></span>');
+                '<span class="main-palette palette" id="main-palette-'+bucketName+'"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+                    '<img src="images/gears.png" width="20px" type="button" >'+ nameToDisplay +'<span class="caret"></span></span></span>');
             templateWidget.draggable({helper: "original", distance : 20, stop : this.setPositionRelativeToAbsoluteEvent});
             templateWidget.addClass("dropdown");
-            var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
-            this.setPin(menuContent);
+            var menuContent = $('<ul class="dropdown-menu templates-menu locked" role="menu" aria-labelledby="dropdown-templates-menu"></ul>');
+            this.setPinMenu(menuContent);
             $(templateWidget).append(menuContent);
 
             var that = this;
@@ -177,8 +199,12 @@ define(
                         menuItem.tooltip();
                         menuContent.append(menuItem);
                         menuItem.data("templateName", template.get("name"));
-                        menuItem.data("bucketName", that.mainBucketName);
-                        menuItem.draggable({helper: "clone", scroll: true});
+                        menuItem.data("bucketName", bucketName);
+                        menuItem.draggable({helper: "clone", scroll: true, appendTo: "#workflow-designer", opacity:0.85, zIndex: 999, containment:"#workflow-designer"});
+                        menuItem.bind("drag", function(event, ui) {
+                            ui.helper.css("background-color", "white");
+                            ui.helper.css("padding", "3px 20px");
+                        });
 
                         menuItem.click(function(event) {
                             // simulating drag and drop of this element
@@ -186,16 +212,14 @@ define(
                             workflowView.dropElement(event, {draggable:this, offset: {left: event.pageX, top: event.pageY}})
                         })
                     }
-                    
-                    
                 })
             }, this);
             this.$el.append(templateWidget);
         },
         setTemplateMainBucket: function(bucketName){
-              var defaultBucketName = "basic-examples";
-                if (!bucketName)
-            bucketName = defaultBucketName;
+            var defaultBucketName = config.examples_bucket;
+            if (!bucketName)
+                bucketName = defaultBucketName;
             var that = this;
             this.checkAndGetBucketByName(bucketName, true, function(foundBucket){
                 if (foundBucket){
@@ -221,15 +245,15 @@ define(
         },
         renderSecondaryBucket : function(secondaryTemplates,bucketName){
             var nameToDisplay = this.beautifyBucketName(bucketName);
-            var secondaryTemplateWidget = $(
-                '<span class="secondary-palette" id="secondary-palette-'+bucketName+'"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
+            var templateWidget = $(
+                '<span class="secondary-palette palette" id="secondary-palette-'+bucketName+'"><span class="label job-element top-level-menu btn dropdown-toggle" data-toggle="dropdown">' +
                     '<img src="images/gears.png" width="20px" type="button" >'+ nameToDisplay +'<span class="caret"></span></span>'+
                     '<span class="label top-level-menu btn remove-secondary-bucket-btn" id="remove-secondary-bucket-btn-'+bucketName+'">&times;</span></span>');
-            secondaryTemplateWidget.draggable({helper: "original", distance : 20, stop : this.setPositionRelativeToAbsoluteEvent});
-            secondaryTemplateWidget.addClass("dropdown");
-            var menuContent = $('<ul class="dropdown-menu templates-menu" role="menu" aria-labelledby="dropdown-secondary-templates-menu"></ul>');
-            this.setPin(menuContent);
-            $(secondaryTemplateWidget).append(menuContent);
+            templateWidget.draggable({helper: "original", distance : 20, stop : this.setPositionRelativeToAbsoluteEvent});
+            templateWidget.addClass("dropdown");
+            var menuContent = $('<ul class="dropdown-menu templates-menu locked" role="menu" aria-labelledby="dropdown-secondary-templates-menu"></ul>');
+            this.setPinMenu(menuContent);
+            $(templateWidget).append(menuContent);
             secondaryTemplates.groupByProject(function (project, templates) {
                 var header = $('<li role="presentation" class="dropdown-header">'+project+'</li>');
                 menuContent.append(header);
@@ -251,7 +275,11 @@ define(
                         menuContent.append(menuItem);
                         menuItem.data("templateName", template.get("name"));
                         menuItem.data("bucketName", bucketName);
-                        menuItem.draggable({helper: "clone", scroll: true});
+                        menuItem.draggable({helper: "clone", scroll: true, appendTo: "#workflow-designer", opacity:0.85, zIndex: 999, containment:"#workflow-designer"});
+                        menuItem.bind("drag", function(event, ui) {
+                           ui.helper.css("background-color", "white");
+                            ui.helper.css("padding", "3px 20px");
+                        });
 
                         menuItem.click(function(event) {
                             // simulating drag and drop of this element
@@ -261,7 +289,8 @@ define(
                     }
                 })
             }, this);
-            this.$el.append(secondaryTemplateWidget);
+            this.$el.append(templateWidget);
+            // Add remove bucket from palette action
             var that = this;
             $('#remove-secondary-bucket-btn-'+bucketName).click(function(){
                 $('#secondary-palette-'+bucketName).remove();

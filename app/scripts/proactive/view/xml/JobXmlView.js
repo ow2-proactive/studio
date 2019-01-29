@@ -37,7 +37,7 @@ define(
                 });
             }
 
-            var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks});
+            var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks, 'visualization': this.generateHtml()});
 
             // removing multiple \n before closing xml element tag
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
@@ -51,35 +51,35 @@ define(
         generateHtml: function () {
             var workflowDesigner = $("#workflow-designer").html();
 
-            var url = document.URL;
-            var hashPos = url.indexOf("#");
-            if (hashPos != -1) url = url.substr(0, hashPos);
-            if (url.indexOf('?') != -1) url = url.substr(0, url.indexOf('?'));
-            if (url.charAt(url.length - 1) == '/') url = url.substr(0, url.length - 1);
+            //There is no HTML to generate if no workflow is open
+            if (workflowDesigner) {
+                var width = $("#workflow-designer").get(0).scrollWidth;
+                var height = $("#workflow-designer").get(0).scrollHeight;
 
-            var width = $("#workflow-designer").get(0).scrollWidth;
-            var height = $("#workflow-designer").get(0).scrollHeight;
+                var minLeft = width;
+                var minTop = height;
+                $("#workflow-designer").find(".task").each(function () {
+                    if ($(this).position().left < minLeft) {
+                        minLeft = $(this).position().left;
+                    }
+                    if ($(this).position().top < minTop) {
+                        minTop = $(this).position().top;
+                    }
+                })
 
-            var minLeft = width;
-            var minTop = height;
-            $("#workflow-designer").find(".task").each(function () {
-                if ($(this).position().left < minLeft) {
-                    minLeft = $(this).position().left;
-                }
-                if ($(this).position().top < minTop) {
-                    minTop = $(this).position().top;
-                }
-            })
+                var top = (-1 * (minTop - 5)) + "px";
+                var left = (-1 * (minLeft - 5)) + "px";
 
-            var top = (-1 * (minTop - 50)) + "px";
-            var left = (-1 * (minLeft - 100)) + "px";
-            var html = _.template(WorkflowTemplate,
-                {
-                    'url': url, 'content': workflowDesigner,
-                    'width': width, 'height': height, 'top': top, 'left': left
-                });
+                var html = _.template(WorkflowTemplate,
+                    {
+                        'content': workflowDesigner,
+                        'width': width, 'height': height, 'top': top, 'left': left
+                    });
 
-            return html;
+                return html;
+            } else {
+                return undefined;
+            }
         },
         render: function () {
             // indenting using vkbeautify

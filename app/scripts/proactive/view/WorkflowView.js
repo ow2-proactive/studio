@@ -240,7 +240,9 @@ define(
 
             view.addSourceEndPoint('dependency')
 
-            jsPlumb.draggable(rendering.$el)
+            jsPlumb.draggable(rendering.$el);
+            // Prevent dragged tasks from hiding under the left panel
+            $(rendering.$el).draggable({containment:"#workflow-designer"});
             this.taskViews.push(view);
 
             rendering.$el.data("view", view);
@@ -419,14 +421,15 @@ define(
             // computing layout with dagre
             dagre.layout().nodes(nodes).edges(edges).nodeSep(50).rankSep(100).run();
 
-            var leftOffset = uiWithInitialOffset.offset.left-(elemWithInitialOffset.width()/2)+50;
-            var topOffset = uiWithInitialOffset.offset.top-10;
+            // compute offsets relative to workflow-designer
+            var leftOffset = uiWithInitialOffset.offset.left-$('#workflow-designer').offset().left-(elemWithInitialOffset.width()/2)+50;
+            var topOffset = uiWithInitialOffset.offset.top-$('#workflow-designer').offset().top-10;
 
             var job = app.models.jobModel
             $.each(nodes, function (i, node) {
                 var pos = {};
                 if (node.dagre.x) pos.left = node.dagre.x + leftOffset;
-                if (node.dagre.x) pos.top = node.dagre.y + topOffset;
+                if (node.dagre.y) pos.top = node.dagre.y + topOffset;
                 var task = job.getTaskByName(node.dagre.id);
                 task.set('PositionTop', pos.top);
                 task.set('PositionLeft', pos.left);
@@ -445,7 +448,11 @@ define(
                     if (offset.left==0 && offset.top==0) {
                         autolayout = true;
                     }
-                    $(this).offset(offset)
+                    // compute absolute offsets
+					var new_offset = {};
+					new_offset.left = $('#workflow-designer').offset().left + offset.left;
+					new_offset.top = $('#workflow-designer').offset().top + offset.top;					
+                    $(this).offset(new_offset);
                 } else {
                     autolayout = true;
                 }

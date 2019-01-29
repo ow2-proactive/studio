@@ -1,6 +1,6 @@
 <html>
     <head>
-    <link rel="stylesheet" href="<%= url %>/styles/studio-standalone.css">
+    <link rel="stylesheet" href="/studio/styles/studio-standalone.css">
         <style>
         #workflow-designer {
             left:0 !important;
@@ -11,6 +11,6 @@
         </style>
     </head>
     <body>
-        <div style="position:relative;top:<%= top %>;left:<%= left %>"><%= content %></div>
+    <div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:<%= top %>;left:<%= left %>"><%= content %></div></div>
     </body>
 </html>

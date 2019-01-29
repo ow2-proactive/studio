@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="05_workflow_replication">
+	name="Replicate">
 	<description>
 		A sample workflow that solves a classic split/process/merge problem.
 	</description>
@@ -12,7 +12,7 @@
 	<taskFlow>
 		<task name="Split">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 			</genericInformation>
 			<description>
@@ -32,7 +32,7 @@ result = [0:"abc", 1:"def"]
 					<script>
 						<code language="groovy">
                             <![CDATA[
-runs=2
+runs=result.size()
 ]]>
 						</code>
 					</script>
@@ -41,7 +41,7 @@ runs=2
 		</task>
 		<task name="Process">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 			</genericInformation>
 			<description>
@@ -67,7 +67,7 @@ result = input.toUpperCase()
 		</task>
 		<task name="Merge">
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/controls_replicate.png" />
 			</genericInformation>
 			<description>

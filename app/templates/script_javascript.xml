@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="script_javascript" projectName="" priority="normal" onTaskError="continueJobExecution">
+	name="Script_Javascript" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes javaScript in JVM.
+		A workflow that executes JavaScript in JVM.
 	</description>
 	<taskFlow>
 		<task name="Javascript_Task">
 			<description>
-				The simplest task, ran by a javascript engine.
+				The simplest task, ran by a Javascript engine.
 			</description>
 			<scriptExecutable>
 				<script>

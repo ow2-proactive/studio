@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-	name="PHP Prototype" priority="normal" onTaskError="continueJobExecution"
+	name="PHP_Job" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
 	<taskFlow>
-		<task name="PHP_TASK">
+		<task name="PHP_Task">
 			<description>
                 <![CDATA[ Executes a php script. The PHP script be changed through the variable 'pathname' in the task variables. ]]>
 			</description>
@@ -13,7 +13,7 @@
 				<variable name="phpArguments" value="" inherited="false" />
 			</variables>
 			<genericInformation>
-				<info name="TASK.ICON"
+				<info name="task.icon"
 					value="/automation-dashboard/styles/patterns/img/wf-icons/php_task.png" />
 			</genericInformation>
 			<inputFiles>
@@ -44,6 +44,15 @@ try {
 					</code>
 				</script>
 			</selection>
+			<pre>
+				<script>
+					<code language="bash">
+						<![CDATA[
+echo '<?php echo "Hello World" ?>' > script.php
+]]>
+					</code>
+				</script>
+			</pre>
 			<scriptExecutable>
 				<script>
 					<code language="groovy">

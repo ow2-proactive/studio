@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11"
-     xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"
-    name="<%= job["Name"]%>" <% if (job["Project"] && job["Project"].length>0) { %>projectName="<%= job["Project"]%>"<% } %>
-    priority="<%= job["Job Priority"]%>"
-    onTaskError="<%= job["On Task Error Policy"]%>"
-    <% if (job["Number of Automatic Restarts"]&&parseInt(job["Number of Automatic Restarts"])>0) { %> maxNumberOfExecution="<%= job["Number of Automatic Restarts"]%>"<% } %>
-    <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="<%= job["Name"]%>" <% if (job["Project"] && job["Project"].length>0) { %>projectName="<%= job["Project"]%>"<% } %> priority="<%= job["Job Priority"]%>" onTaskError="<%= job["On Task Error Policy"]%>" <% if (job["Number of Execution Attempts"]&&parseInt(job["Number of Execution Attempts"])>0) { %> maxNumberOfExecution="<%= job["Number of Execution Attempts"]%>"<% } %> <% if (job["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= job["If An Error Occurs Restart Task"]%>" <% } %>>
     <% if (job["Variables"] && job["Variables"].length>0) { %>
     <variables>
     <% _.each(job["Variables"], function(variable) { %>
@@ -44,4 +38,13 @@
                 <%=task%>
         <% }) %>
     </taskFlow>
+
+    <metadata>
+        <visualization>
+            <% if (visualization) { %>
+                <![CDATA[ <%=visualization%> ]]>
+            <% } %>
+        </visualization>
+    </metadata>
+
 </job>

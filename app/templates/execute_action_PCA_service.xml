@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Execute_Action_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
+  <variables>
+    <variable name="INSTANCE_ID" value="" />
+    <variable name="ACTION" value="" />
+    <variable name="ACTION_VARS" value="" />
+  </variables>
+  <description>
+    <![CDATA[ This workflow allows to manage the life-cycle of an active PCA service by executing an action such as Finish_XXXX, Pause_XXX... from the client side. It requires the following variables:
+$INSTANCED_ID is the instance id of the active service (to be retrieved from the Activated Service list in the cloud-automation portal)
+$ACTION is the name of the action to be executed. Possible actions are listed in the Full Services View of the started service in the cloud-automation portal.
+$ACTION_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to execute the action. Note that only variables of the corresponding PCA service on the cloud automation side can be initialized. ]]>
+  </description>
+  <genericInformation>
+    <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
+  </genericInformation>
+  <taskFlow>
+    <task name="Execute_Action_PCA_Service" 
+    
+    onTaskError="cancelJob" >
+      <genericInformation>
+        <info name="task.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png"/>
+        <info name="task.documentation" value="https://doc.activeeon.com/latest/PCA/PCAUserGuide.html"/>
+      </genericInformation>
+      <scriptExecutable>
+        <script>
+          <code language="groovy">
+            <![CDATA[
+import org.ow2.proactive.pca.service.client.ApiClient
+import org.ow2.proactive.pca.service.client.api.ServiceInstanceRestApi
+import org.ow2.proactive.pca.service.client.model.ServiceInstanceData
+import org.ow2.proactive.pca.service.client.model.ServiceDescription
+import org.ow2.proactive.pca.service.client.model.CloudAutomationWorkflow
+import org.ow2.proactive.pca.service.client.api.CatalogRestApi
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
+println("--- BEGIN " + variables.get("PA_TASK_NAME") + " ---")
+
+
+// Get schedulerapi access
+schedulerapi.connect()
+
+// Acquire session id
+def sessionId = schedulerapi.getSession()
+
+// Define PCA URL
+def schedulerRestUrl = variables.get("PA_SCHEDULER_REST_URL")
+def pcaUrl = schedulerRestUrl.replaceAll("/rest\\z", "/cloud-automation-service")
+
+// Connect to APIs
+def apiClient = new ApiClient()
+apiClient.setBasePath(pcaUrl)
+//apiClient.setDebugging(true)
+def serviceInstanceRestApi = new ServiceInstanceRestApi(apiClient)
+def instanceId
+try{
+    instanceId = variables.get("INSTANCE_ID") as int
+} catch(Exception e){
+    throw new IllegalArgumentException("You have to provide a valid INSTANCE_ID value.");
+}
+
+println("INSTANCE_ID: " + instanceId)
+
+def action = variables.get("ACTION")
+if (action.isEmpty()) {
+    throw new IllegalArgumentException("You have to provide an ACTION value. Empty value is not allowed.");
+}
+
+def bucketName
+def isActionExists = false
+def catalogRestApi = new CatalogRestApi(apiClient)
+def actionVariables
+
+Map<String, List<CloudAutomationWorkflow>> listExecutableActionsByInstanceId = catalogRestApi.listExecutableActionsByInstanceIdUsingGET(sessionId)
+List<CloudAutomationWorkflow> listExecutableActions = listExecutableActionsByInstanceId.get(instanceId.toString())
+for (CloudAutomationWorkflow actionIterator : listExecutableActions) {
+    if (actionIterator.getName().equals(action)){
+        bucketName = actionIterator.getBucket()
+        //retrieve default action variables
+        actionVariables = actionIterator.getVariables().collectEntries {var -> [var.getName(), var.getValue()]}
+        isActionExists = true
+        break
+     }
+}
+if(!isActionExists){
+	 throw new IllegalArgumentException("The provided ACTION: " + action + " does not belong to the existing possible actions that can be applied to the current state of the service. You have to specify a valid action.")
+}
+
+//retrieve action variables 
+def actionVars = variables.get("ACTION_VARS")
+def actionVarsMap = new HashMap()
+if(actionVars.isEmpty()){
+    println("The provided ACTION " + action + " is executed without any provided variables. Default configuration is used.") 
+}
+else{
+    actionVarsMap = evaluate(actionVars)
+    println("The provided ACTION variables are:") 
+    actionVarsMap.each{ k, v -> println "${k}:${v}" }
+}
+actionVariables.putAll(actionVarsMap)
+
+
+// Execute action on service
+ServiceDescription service = new ServiceDescription()
+service.setBucketName(bucketName)
+service.setWorkflowName(action)
+if( !actionVariables.isEmpty() ){
+    actionVariables.each{ k, v -> service.putVariablesItem("${k}", "${v}") }
+}
+serviceInstanceRestApi.launchServiceInstanceActionUsingPUT(sessionId, instanceId, service)
+
+println("--- END " + variables.get("PA_TASK_NAME") + " ---")
+]]>
+          </code>
+        </script>
+      </scriptExecutable>
+    </task>
+  </taskFlow>
+  <metadata>
+    <visualization>
+      <![CDATA[ <html><head><link rel="stylesheet" href="/studio/styles/studio-standalone.css"><style>
+        #workflow-designer {
+            left:0 !important;
+            top:0 !important;
+            width:2854px;
+            height:3248px;
+            }
+        </style></head><body><div id="workflow-visualization-view"><div id="workflow-visualization" style="position:relative;top:-356.765625px;left:-599.921875px"><div class="task _jsPlumb_endpoint_anchor_ ui-draggable active-task" id="jsPlumb_1_61" style="top: 361.766px; left: 604.922px;"><a class="task-name"><img src="/automation-dashboard/styles/patterns/img/wf-icons/execute_action_PCA_service.png" width="20px">&nbsp;<span class="name">Execute_Action_PCA_Service</span></a></div><div class="_jsPlumb_endpoint source-endpoint dependency-source-endpoint connected _jsPlumb_endpoint_anchor_ ui-draggable ui-droppable" style="position: absolute; height: 20px; width: 20px; left: 679.5px; top: 392px;"><svg style="position:absolute;left:0px;top:0px" width="20" height="20" pointer-events="all" position="absolute" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml"><circle cx="10" cy="10" r="10" version="1.1"
+      xmlns="http://www.w3.org/1999/xhtml" fill="#666" stroke="none" style=""></circle></svg></div></div></div></body></html>
+ ]]>
+    </visualization>
+  </metadata>
+</job>

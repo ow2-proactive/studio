@@ -42,11 +42,14 @@ define(
                 if (this.kind.toLowerCase().indexOf('script') == 0) {
                     if (this.inputToImportId.indexOf('_Code') > -1) {
                         $("#get-modal-title").text("Import a Script by copy from the Catalog");
+                        $("#confirm-import-object-message").text("You are about to import a script (inline) from the Catalog. If you continue it will replace and remove the current inline code.");
                     } else if (this.inputToImportId.indexOf('_Url') > -1) {
                         $("#get-modal-title").text("Import a Script by reference from the Catalog");
+                        $("#confirm-import-object-message").text("You are about to import a script (reference) from the Catalog. If you continue it will replace and remove the current reference.");
                     }
                 } else {
                     $("#get-modal-title").text("Import from the Catalog");
+                    $("#confirm-import-object-message").text("You are about to import an object from the Catalog. If you continue it will replace and remove its current value.");
                 }
             } else {
                 $("#catalog-get-as-new-button").show();
@@ -146,8 +149,9 @@ define(
             if (currentRevisionRow){
 	        	var rawurl = window.location.origin + '/catalog/' + $(currentRevisionRow).data("rawurl") + '/raw';
 	        	var name = $(currentRevisionRow).data("name");
-	        	var commitmessage = $(currentRevisionRow).data("commitmessage");
+	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
+        		var username = $(currentRevisionRow).data("username");
         		
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
         		
@@ -155,7 +159,8 @@ define(
 				$('#catalog-get-description-container').append(RevisionDescription({
 					rawurl: rawurl, 
 					name: name,
-					commitmessage: commitmessage,
+					commitmessage: commitMessage,
+					username: username,
 					projectname: projectName,
 					kindLabel: this.kindLabel
 					}));
@@ -208,7 +213,8 @@ define(
                 var inputToImport = document.getElementById(that.inputToImportId);
                 var isUrlImport = that.inputToImportId.indexOf('_Url') > -1;
                 if (isUrlImport) //if input id contains 'Url', we only import the URL of the selected catalog object
-                    inputToImport.value = $("#catalog-get-revision-description").data("selectedrawurl");
+                    // if catalog host is the same as the studio, make catalog object url relative with ${PA_CATALOG_REST_URL}.
+                    inputToImport.value = $("#catalog-get-revision-description").data("selectedrawurl").replace(window.location.origin + '/catalog/','${PA_CATALOG_REST_URL}/');
                 else //Otherwise, we import the content of the catalog object
                     inputToImport.value = response;
                 $('#catalog-get-close-button').click();

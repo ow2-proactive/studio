@@ -20,9 +20,11 @@ define(function () {
             }
         })(),
         tasks: {
+            'Shell': 'templates/script_shell.xml',
             'Linux Bash': 'templates/script_bash.xml',
             'Windows Cmd': 'templates/script_cmd.xml',
-            'Docker': 'templates/script_docker_compose.xml',
+            'Docker_Compose': 'templates/script_docker_compose.xml',
+            'Docker_File': 'templates/script_docker_file.xml',
             'Kubernetes': 'templates/script_kubernetes.xml',
             'Java': 'templates/java.xml',
             'Scalaw': 'templates/script_scala.xml',
@@ -39,10 +41,12 @@ define(function () {
             'LDAP Query': 'templates/script_ldap_query.xml'
         },
         modes: {
+            'shell': 'shell',
             'bash': 'shell',
             'cmd': 'text/plain',
             'kubernetes': 'yaml',
             'docker-compose': 'yaml',
+            'dockerfile': 'text/x-dockerfile',
             'scalaw': 'text/x-scala',
             'groovy': 'groovy',
             'javascript': 'javascript',
@@ -56,11 +60,11 @@ define(function () {
         languages_available: {
             'Script/selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
             'Script/environment' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"],
-            'Script/pre' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/task' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/post' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/pre' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile","scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/task' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/post' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
             'Script/flow' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
-            'Script/clean' : [" ", "bash", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
+            'Script/clean' : [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
         },
         extensions_to_languages: {
             "sc": "scalaw",
@@ -72,10 +76,12 @@ define(function () {
             "rb": "ruby",
             "ps": "powershell",
             "r": "R",
-            "sh": "bash",
+            "bash": "bash",
+            "sh": "shell",
             "bat": "cmd",
             "yaml": "kubernetes",
             "yml": "docker-compose",
+            "dockerfile": "dockerfile",
             "pl": "perl"
         },
         languages_to_extensions: {
@@ -86,10 +92,12 @@ define(function () {
             "cpython" : "cpy",
             "ruby" : "rb",
             "r" : "r",
-            "bash" : "sh",
+            "shell" : "sh",
+            "bash" : "bash",
             "cmd" : "bat",
             "kubernetes" : "yaml",
             "docker-compose" : "yml",
+            "dockerfile" : "dockerfile",
             "perl" : "pl",
             "powershell" : "ps"
         },
@@ -101,14 +109,17 @@ define(function () {
             "cpython" : "text/x-python",
             "ruby" : "text/x-ruby",
             "r" : "text/x-R",
+            "shell" : "text/x-sh",
             "bash" : "text/x-sh",
             "cmd" : "text/x-sh",
             "kubernetes" : "text/x-yaml",
             "docker-compose" : "text/x-yaml",
+            "dockerfile" : "text/x-dockerfile",
             "perl" : "text/x-perl",
             "powershell" : "application/x-powershell"
         },
         keywords: {
+            'shell': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],
             'bash': ['case','do','done','elif','else','esac','fi','for','function','if','in','select','then','time','until','while','ls','cd','mkdir','touch','cat','mv','cp','rm','rmdir','chmod','ln','grep','ps','curl','wget','sed','awk','cut','chown','echo','cat','exit','kill','pwd','sudo','date','df','hostname','sleep','quota','uptime','zip','unzip','tar','find','locate','install','open','bzip2','apt-get','ftp','sftp','yum'],
             'cmd' : ['Append','Attrib','Backup','Break','Call','Cd','Chcp','Chdir','Choice','Cls','Command','Copy','Ctty','Date','Debug','Del','Deltree','Dir','Doskey','Echo','Erase','Exit','Expand','Fasthelp','Fastopen','Fc','Fdisk','Find','For','Format','Goto','Graphics','Help','If','Interlnk','Intersvr','Keyb','Label','Lh','Loadfix','Loadhigh','Md','Mem','Mkdir','Mode','More','Move','Nlsfunc','Path','Pause','Power','Print','Prompt','Rd','Rem','Ren','Rename','Replace','Restore','Rmdir','Scandisk','Set','Setver','Share','Shift','Smartdrv','Sort','Subst','Sys','Time','Tree','Type','Undelete','Unformat','Ver','Verify','Vol','Xcopy'],
             'kubernetes' : ['apiVersion', 'kind', 'metadata', 'name', 'namespace', 'labels', 'data', 'spec', 'ports', 'port', 'targetPort', 'protocol', 'selector', 'type', 'externalIPs', 'replicas', 'template', 'containers', 'image', 'resources', 'limits', 'requests', 'cpu', 'memory', 'env', 'value', 'volumeMounts', 'mountPath', 'subPath', 'containerPort', 'readinessProbe', 'httpGet', 'path', 'initialDelaysSeconds', 'periodSeconds', 'timeoutSeconds', 'livenessProbe', 'exec', 'command', 'failureThreshold', 'lifecycle', 'postStart', 'preStop', 'args', 'volumes', 'azureFile', 'awsElasticBlockStore', 'azureDisk', 'gcePersistentDisk', 'gitRepo', 'emptyDir', 'persistentVolumeClaim', 'hostPath', 'secret', 'secretName', 'shareName', 'configMap', 'Deployment', 'Service', 'ConfigMap', 'Job', 'Ingress', 'CronJob', 'Pod', 'schedule', 'DaemonSet', 'annotations', 'labels', 'valueFrom', 'fieldRef', 'fieldPath', 'tls', 'backend'],
@@ -131,21 +142,24 @@ define(function () {
         'PA_NODE_URL', 'PA_NODE_NAME', 'PA_NODE_HOST'
         ],
         manuals: {
-            'Email Notification' : 'templates/email.xml',
-            'Web Notification' : 'templates/webnotification.xml',
-            'Email Validation' : 'templates/email_validation.xml',
-            'Web Validation' : 'templates/web_validation.xml'
+            'Email_Notification' : 'templates/email.xml',
+            'Web_Notification' : 'templates/web_notification.xml',
+            'Email_Validation' : 'templates/email_validation.xml',
+            'Web_Validation' : 'templates/web_validation.xml'
         },
         controls: {
-            'If': 'templates/07_workflow_branch.xml',
-            'Loop': 'templates/06_workflow_loop.xml',
-            'Replicate': 'templates/05_workflow_replication.xml',
-            'Task Dependencies': 'templates/02_task_dependencies.xml',
-            'Submit Job No Wait': 'templates/SubmitJobNoWait.xml',
-            'Submit Job And Wait': 'templates/SubmitJobAndWait.xml',
-            'Wait for Any': 'templates/wait_for_any.xml',
-            'Wait for Any Replicate': 'templates/wait_for_any_replicate.xml',
-            'Submit and Wait for Any': 'templates/submit_and_wait_for_any.xml'
-        }
+            'If': 'templates/branch.xml',
+            'Loop': 'templates/loop.xml',
+            'Replicate': 'templates/replicate.xml',
+            'Task_Dependencies': 'templates/task_dependencies.xml',
+            'Submit_Job_no_Wait': 'templates/submit_job_no_wait.xml',
+            'Submit_Job_and_Wait': 'templates/submit_job_and_wait.xml',
+            'Wait_for_any': 'templates/wait_for_any.xml',
+            'Wait_for_any_Replicate': 'templates/wait_for_any_replicate.xml',
+            'Submit_and_Wait_for_any': 'templates/submit_and_wait_for_any.xml',
+            'Trigger_PCA_Service': 'templates/trigger_PCA_service.xml',
+            'Execute_Action_PCA_Service': 'templates/execute_action_PCA_service.xml'
+        },
+         examples_bucket: "basic-examples"
     };
 });
