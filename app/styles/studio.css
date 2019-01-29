@@ -1364,4 +1364,9 @@ li.success {
 #catalog-publish-objects-table td, #catalog-get-objects-table td,
 #catalog-publish-revisions-table td, #catalog-get-revisions-table {
     cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 200px;
+    max-width:200px;
 }
