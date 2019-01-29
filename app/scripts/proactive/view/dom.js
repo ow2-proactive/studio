@@ -203,6 +203,7 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
+                save_workflow();
                 studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
                 studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml());
                 studioApp.views.catalogPublishView.render();
