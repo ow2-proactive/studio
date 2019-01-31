@@ -1360,6 +1360,10 @@ li.success {
     width: 900px;
 }
 
+#catalog-get-modal .modal-dialog {
+    width: 1100px;
+}
+
 #catalog-publish-buckets-table td, #catalog-get-buckets-table td,
 #catalog-publish-objects-table td, #catalog-get-objects-table td,
 #catalog-publish-revisions-table td, #catalog-get-revisions-table {
