@@ -745,7 +745,7 @@ define(
                     $("#cancel-script-changes").text("Cancel");
                 }
                 var languageElement = document.getElementById(languageElementId);
-                var selectedLanguage = languageElement.options[languageElement.selectedIndex].value.toLowerCase();
+                var selectedLanguage = languageElement.options[languageElement.selectedIndex].value;
                 if (isUrl && (!selectedLanguage || selectedLanguage == '')) {
                     var indexExt = inputValue.lastIndexOf('.');
                     if (indexExt > -1) {
@@ -753,6 +753,7 @@ define(
                         selectedLanguage = config.extensions_to_languages[extension.toLowerCase()] || '';
                     }
                 }
+                selectedLanguage = selectedLanguage.toLowerCase()
                 var modes = config.modes
                 var language = 'text/plain'
                 for (var property in modes) {
