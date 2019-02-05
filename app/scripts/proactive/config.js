@@ -55,7 +55,7 @@ define(function () {
             'ruby': 'ruby',
             'perl': 'perl',
             'powershell': 'powershell',
-            'R': 'r'
+            'r': 'text/x-rsrc'
         },
         languages_available: {
             'Script/selection' : [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
@@ -75,7 +75,7 @@ define(function () {
             "py" : "python",
             "rb": "ruby",
             "ps": "powershell",
-            "r": "R",
+            "r": "r",
             "bash": "bash",
             "sh": "shell",
             "bat": "cmd",
@@ -108,7 +108,7 @@ define(function () {
             "python" : "text/x-python",
             "cpython" : "text/x-python",
             "ruby" : "text/x-ruby",
-            "r" : "text/x-R",
+            "r" : "text/x-rsrc",
             "shell" : "text/x-sh",
             "bash" : "text/x-sh",
             "cmd" : "text/x-sh",
@@ -132,7 +132,7 @@ define(function () {
             'ruby': ['__ENCODING__','__LINE__','__FILE__','BEGIN','END','alias','and','begin','break','case','class','def','defined?','do','else','elsif','end','ensure','false','for','if','in','module','next','new','nil','not','or','redo','rescue','retry','return','self','super','then','true','undef','unless','until','when','while','yield','puts','EOF','initialize','each','print','Array','Hash','Time','Dir','to_s','to_i','to_java','from_java'].concat(java_keywords),
             'perl': ['print','die','split','while','foreach','if','else','elseif','open','close','sleep','exit','mkdir','rename','chmod'],
             'powershell': ['Begin','Break','Catch','Class','Continue','Data','Define','Do','DynamicParam','Else','Elseif','End','Enum','Exit','Filter','Finally','For','ForEach','From','Function','Hidden','If','In','Param','Process','Return','Static','Switch','Throw','Trap','Try','Until','Using','Var','While','ForEach-Object','Where-Object','Add-Content','Add-PSSnapIn','Get-Content','Set-Location','Clear-Content','Clear-Host','Clear-History','Clear-Item','Clear-ItemProperty','Clear-Variable','Connect-PSSession','Compare-Object','Copy-Item','Copy-ItemProperty','Invoke-WebRequest','Convert-Path','Disable-PSBreakpoint','Remove-Item','Get-ChildItem','Disconnect-PSSession','Enable-PSBreakpoint','Write-Host','Write-Output','Export-Alias','Export-Csv','Export-PSSession','Enter-PSSession','Exit-PSSession','Format-Custom','Format-List','ForEach-Object','Format-Table','Format-Wide','Get-Alias','Get-PSBreakpoint','Get-Content','Get-ChildItem','Get-Command','Get-PSCallStack','Get-PSDrive','Get-History','Get-Item','Get-Job','Get-Location','Get-Member','Get-Module','Get-ItemProperty','Get-Process','Group-Object','Get-PSSession','Get-PSSnapIn','Get-Service','Get-Unique','Get-Variable','Get-WmiObject','Get-History','Invoke-Command','Invoke-Expression','Invoke-History','Invoke-Item','Import-Alias','Import-Csv','Import-Module','Import-PSSession','Invoke-History','Invoke-RestMethod','Invoke-WMIMethod','Invoke-WebRequest','Stop-Process','Out-Printer','Get-ChildItem','help','mkdir','Measure-Object','Move-Item','New-PSDrive','Move-ItemProperty','New-Alias','New-Item','New-Module','New-PSSessionConfigurationFile','New-PSSession','New-Variable','Out-GridView','Out-Host','Pop-Location','Push-Location','Receive-Job','Receive-PSSession','Remove-Item','Remove-PSDrive','Remove-Job','Remove-Module','Remove-ItemProperty','Remove-PSBreakpoint','Remove-PSSession','Remove-PSSnapin','Remove-Variable','Remove-WMIObject','Rename-Item','Rename-ItemProperty','Resume-Job','Resolve-Path','Set-Alias','Set-PSBreakpoint','Set-Content','Select-Object','Set-Variable','Set-Item','Show-Command','Start-Job','Start-Process','Start-Service'],
-            'R': ['if','else','repeat','while','function','for','in','next','break','TRUE','FALSE','NULL','Inf','NaN','NA','cbind','subset','beta','gamma','choose','factorial','dnorm','pnorm','qnorm','rnorm','replace','scrub','cut','round','ceiling','floor','as.integer','as.matrix','factor','transform','all','any','max','min','mean','median','sum','var','table','rev','print','apply','colSums','rowSums','rowsum','colMeans','rowMeans','rnorm'],
+            'r': ['if','else','repeat','while','function','for','in','next','break','TRUE','FALSE','NULL','Inf','NaN','NA','cbind','subset','beta','gamma','choose','factorial','dnorm','pnorm','qnorm','rnorm','replace','scrub','cut','round','ceiling','floor','as.integer','as.matrix','factor','transform','all','any','max','min','mean','median','sum','var','table','rev','print','apply','colSums','rowSums','rowsum','colMeans','rowMeans','rnorm'],
         },
         dictionary: ['variables', 'nodesurl', 'genericInformation', 'localspace', 'cachespace', 'inputspace', 'outputspace',
         'globalspace', 'userspace', 'globalspaceapi', 'userspaceapi', 'forkEnvironment', 'schedulerapi', 'synchronizationapi',
