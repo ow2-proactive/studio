@@ -3,13 +3,15 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Trigger_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
   <variables>
-    <variable name="SERVICE_ID" value="HDFS-Spark" />
+    <variable name="SERVICE_ID" value="" />
     <variable name="SERVICE_VARS" value="" />
+    <variable name="STARTING_STATE" value="RUNNING" />
   </variables>
   <description>
     <![CDATA[ This task allows to start a PCA service from the client side. It uses the following variables:
 $SERVICE_ID (required) is the service id. You have to provide an existing SERVICE_ID from the Service Activation list in the Cloud Automation portal e.g. MongoDB, MySQL, Kibana ... .
-$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service on the cloud automation side can be initialized. ]]>
+$SERVICE_VARS (optional) is a map as a String (['k1': 'v1', 'k2': 'v2', ....]) that contains a set of initialized variables used to start the service. Note that only variables of the corresponding PCA service on the cloud automation side can be initialized.
+$STARTING_STATE (optional) indicates the starting state of the service. The default value is `RUNNING`.  ]]>
   </description>
   <genericInformation>
     <info name="workflow.icon" value="/automation-dashboard/styles/patterns/img/wf-icons/start_PCA_service.png"/>
@@ -71,6 +73,11 @@ else{
     serviceVarsMap.each{ k, v -> println "${k}:${v}" }
 }
 
+def startingState = variables.get("STARTING_STATE")
+if (startingState.isEmpty()) {
+    startingState = "RUNNING"
+}
+
 //Check that the provided service id belongs to the existing Service Activation list
 def catalogRestApi = new CatalogRestApi(apiClient)
 def isServiceIdExists = false
@@ -106,6 +113,7 @@ serviceVariables.putAll(serviceVarsMap)
 println("STARTING_WORKFLOW_NAME:    " + startingWorkflowName)
 println("BUCKET_NAME:    " + bucketName)
 println("VARIABLES:    " + serviceVariables.toString())
+println("STARTING_STATE:	" + startingState)
 
 // Prepare service description
 ServiceDescription serviceDescription = new ServiceDescription()
@@ -124,24 +132,25 @@ def serviceInstanceData = serviceInstanceRestApi.createRunningServiceInstanceUsi
 
 // Acquire service Instance ID
 def serviceInstanceId = serviceInstanceData.getInstanceId()
+println("INSTANCE_ID: " + serviceInstanceId)
 
 // Create synchro channel
 def channel = "Service_Instance_" + serviceInstanceId
-println("CHANNEL: " + channel)
+println("SYNC CHANNEL: " + channel)
 synchronizationapi.createChannelIfAbsent(channel, false)
-synchronizationapi.waitUntil(channel, "RUNNING", "{k,x -> x == true}")
+
+// Wait until the service reaches the STARTING_STATE
+synchronizationapi.waitUntil(channel, startingState, "{k,x -> x == true}")
 
 // Acquire service endpoint
-serviceInstanceData = serviceInstanceRestApi.getServiceInstanceUsingGET(serviceInstanceId)
-def instanceId = serviceInstanceData.getInstanceId()
-endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
+def endpoint
+if(serviceInstanceData.getInstanceEndpoints()){
+    endpoint = serviceInstanceData.getInstanceEndpoints().entrySet().iterator().next().getValue()
+    println("ENDPOINT: " + endpoint)
+    variables.put("ENDPOINT", endpoint)
+}
 
-println("INSTANCE_ID: " + instanceId)
-println("ENDPOINT: " + endpoint)
-
-variables.put("INSTANCE_ID", instanceId)
-variables.put("ENDPOINT", endpoint)
-
+variables.put("INSTANCE_ID", serviceInstanceId)
 
 println("END " + variables.get("PA_TASK_NAME"))
 ]]>

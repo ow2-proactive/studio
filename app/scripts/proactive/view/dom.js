@@ -205,6 +205,7 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
+                save_workflow();
                 studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
                 studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml());
                 studioApp.views.catalogPublishView.render();
@@ -294,6 +295,16 @@ define(
             event.preventDefault();
             require('StudioApp').views.workflowView.autoLayout();
             save_workflow();
+        });
+
+        $("#add-bucket-button").click(function (event) {
+            event.preventDefault();
+            openSetTemplatesMenuModal('secondary');
+        });
+
+        $("#pin-palette-button").click(function (event) {
+            event.preventDefault();
+            require('StudioApp').views.palleteView.pinPalette();
         });
         $("#zoom-in-button").click(function (event) {
             event.preventDefault();

@@ -202,20 +202,30 @@
                 <td id="left-panel-properties">
                     <div id="properties-container"></div>
                 </td>
-                <td style="height:100%;width:75%; padding-right:10px;">
+                <td style="height:100%;width:75%; padding-right:5px;">
                     <div id="workflow-designer-outer">
                         <table id="tools-table">
                             <tr>
-                                <td id="palette-container" style="padding-right:20px">
-                                </td>
-                                <td>
-                                    <div id="tools-panel">
+                                <td id="palette-container">
+                                    <div style="display: inline-flex;">
                                         <div class="btn-group">
                                             <button id="layout-button" type="button" class="btn"
-                                                    title="Layout"><i
-                                                class="glyphicon glyphicon-align-center"></i></button>
+                                                    title="Auto layout">
+                                                <i class="glyphicon glyphicon-align-center"></i>
+                                            </button>
                                         </div>
-                                    </div>
+                                        <div id="palette-container-div"></div>
+                                        <div class="btn-group">
+                                            <button id="add-bucket-button" type="button" class="btn"
+                                                    title="Add bucket">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                            </button>
+                                            <button id="pin-palette-button" type="button" class="btn"
+                                                    title="Pin Catalog menu">
+                                                <img width="13px" src="images/icon-unpin.png">
+                                            </button>
+                                        </div>
+                                </div>
                                 </td>
                             </tr>
                         </table>
@@ -256,7 +266,7 @@
         </div>
 
         <div id="catalog-get-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" style="width:1050px">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
