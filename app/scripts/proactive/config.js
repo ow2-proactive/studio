@@ -66,6 +66,8 @@ define(function () {
             'Script/flow': [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
             'Script/clean': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
         },
+        // convert the file extension taken from a script url or the catalog to the name of the language as it appears in the drop-down list
+        // R language must be kept uppercase in this structure (as it's the corresponding value appearing in the list)
         extensions_to_languages: {
             "sc": "scalaw",
             "scala": "scalaw",
@@ -75,7 +77,7 @@ define(function () {
             "py": "python",
             "rb": "ruby",
             "ps": "powershell",
-            "r": "r",
+            "r": "R",
             "bash": "bash",
             "sh": "shell",
             "bat": "cmd",
