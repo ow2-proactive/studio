@@ -39,10 +39,13 @@ define(
 
         models : {
             jobModel : undefined, // TODO move it to workflow
+            // Currently open workflow
             currentWorkflow : undefined,
+            // List of opened workflows to display in WorkflowList
             workflows: undefined,
+            // List of all templates (workflows from all buckets in the palette)
             templates: undefined,
-            paletteBuckets: undefined,
+            // List of all buckets in the Catalog
             catalogBuckets: undefined,
             openedAccordion : undefined
         },

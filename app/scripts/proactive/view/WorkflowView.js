@@ -56,13 +56,10 @@ define(
                         templateUrl = elem.data("templateUrl");
                       else {
                         var templateName =  elem.data('templateName');
-                        var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == templateName});
-                        if (!templateModel) {
-                            templateModel = that.options.app.models.paletteBuckets[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
-                        }
-                        var bucket_name = templateModel.attributes.bucket_name;
-                        var workflow_name = templateModel.attributes.name;
-                        templateUrl = '/catalog/buckets/' + bucket_name + '/resources/'+workflow_name+'/raw';
+                        var templateModel = that.options.app.models.templates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
+                        var bucketName = templateModel.attributes.bucket_name;
+                        var workflowName = templateModel.attributes.name;
+                        templateUrl = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/raw';
                       }
                       $.ajax({
                           type: "GET",

@@ -17,7 +17,7 @@ define(
             $("#palette-container-div").append(this.$el);
             if (!localStorage['paletteBuckets'])
                 localStorage.setItem('paletteBuckets',"[]");
-            this.options.app.models.paletteBuckets = {};
+            this.options.app.models.templates = {};
         },
         createMenuFromConfig: function (template, menu) {
             var that = this;
@@ -162,6 +162,7 @@ define(
         createPaletteMenu: function (bucketName, menuContent, project, templates) {
             var header = $('<li role="presentation" class="dropdown-header">' + project + '</li>');
             menuContent.append(header);
+            var that = this;
             _.each(templates, function (template) {
                 if (template.get("name")) {
                     var iconName;
@@ -194,7 +195,7 @@ define(
                     });
                     menuItem.click(function (event) {
                         // simulating drag and drop of this element
-                        var workflowView = that.options.app.views.workflowView
+                        var workflowView = that.options.app.views.workflowView;
                         workflowView.dropElement(event, {
                             draggable: this,
                             offset: {left: event.pageX, top: event.pageY}
@@ -247,7 +248,7 @@ define(
                 var index = localStorageTemplates.indexOf(bucketName);
                 localStorageTemplates.splice(index, 1);
                 localStorage.setItem('paletteBuckets', JSON.stringify(localStorageTemplates));
-                delete that.options.app.models.paletteBuckets[bucketName];
+                delete that.options.app.models.templates[bucketName];
             });
         },
         addPaletteBucketMenu : function(bucketName, onPageLoad) {
@@ -279,7 +280,7 @@ define(
                 localStorageTemplates.push(bucketName);
                 localStorage.setItem('paletteBuckets', JSON.stringify(localStorageTemplates));
             }
-            this.options.app.models.paletteBuckets[bucketName] = bucketTemplates;
+            this.options.app.models.templates[bucketName] = bucketTemplates;
             return true;
         }
     })
