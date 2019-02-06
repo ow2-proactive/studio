@@ -333,7 +333,7 @@ a:hover {
     color: orange !important;
 }
 
-.catalog-selected-row{
+.catalog-selected-row, .preset-selected-row{
 	color: black;
 	background-color: #4A90D9;
 }
@@ -1009,6 +1009,7 @@ li.success {
 .secondary-palette > .dropdown-toggle{
     border-top-right-radius: unset;
     border-bottom-right-radius: unset;
+    text-transform: capitalize;
 }
 
 .sub-menu > a {

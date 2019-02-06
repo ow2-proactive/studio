@@ -6,6 +6,7 @@ define(
         'jsplumb',
         'pnotify',
         'jquery.ui.droppable',
+        'proactive/config',
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
         'proactive/model/CatalogBucketCollection',
@@ -19,6 +20,7 @@ define(
         'proactive/view/CatalogGetView',
         'proactive/view/CatalogPublishView',
         'proactive/view/CatalogSetTemplatesBucketView',
+        'proactive/view/SetPresetView',
         'proactive/view/WorkflowListView',
         'xml2json',
         'proactive/router',
@@ -29,7 +31,7 @@ define(
         
     ],
 
-    function ($, jsPlumb, PNotify, ui, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, WorkflowListView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, PNotify, ui, Config, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, SetPresetView, WorkflowListView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -40,13 +42,13 @@ define(
             currentWorkflow : undefined,
             workflows: undefined,
             templates: undefined,
-            secondaryTemplates: undefined,
+            paletteBuckets: undefined,
             catalogBuckets: undefined,
             openedAccordion : undefined
         },
 
         views : {
-            palleteView : undefined,
+            paletteView : undefined,
             workflowView : undefined,
             propertiesView : undefined,
             xmlView : undefined,
@@ -54,7 +56,7 @@ define(
             logoutView : undefined,
             catalogGetView : undefined,
             catalogPublishView : undefined,
-            catalogSetMainTemplatesBucketView : undefined,
+            setPresetView : undefined,
             catalogSetSecondaryTemplatesBucketView : undefined
         },
 
@@ -81,16 +83,15 @@ define(
             this.models.catalogBuckets = new CatalogBucketCollection({kind:'workflow'});
 
             this.models.catalogBuckets.fetch();
-            this.modelsToRemove = [];
 
-            this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.palleteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
-            this.views.palleteView = new PaletteView({templatesBucketName: this.models.templatesBucketName, app: this});
+            this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.paletteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
+            this.views.paletteView = new PaletteView({templatesBucketName: this.models.templatesBucketName, app: this});
             this.views.logoutView = new LogoutView({app: this});
             this.views.workflowView = new EmptyWorkflowView();
             this.views.catalogGetView = new CatalogGetView({buckets: this.models.catalogBuckets});
             this.views.catalogPublishView = new CatalogPublishView({buckets: this.models.catalogBuckets});
-            this.views.catalogSetMainTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets, order: 'main'});
-            this.views.catalogSetSecondaryTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets, order:'secondary'});
+            this.views.catalogSetSecondaryTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets});
+            this.views.setPresetView = new SetPresetView({presets: Config.palette_presets});
 
             this.router = new StudioRouter(this);
         },
