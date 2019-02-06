@@ -160,7 +160,8 @@ define(
             // showing target endpoints
             jsPlumb.bind('connectionDrag', function (connection) {
                 $('.task').each(function (i, task) {
-                    if ($(task).attr('id') != connection.sourceId) {
+                    // do not display the possible destination on the same element as the origin, except for the loop
+                    if (connection.scope == 'loop' || $(task).attr('id') != connection.sourceId) {
                         $(task).data('view').addTargetEndPoint(connection.scope);
                     }
                 })
