@@ -215,29 +215,31 @@ define(
             }
         });
 
-        function openSetTemplatesMenuModal(order){
+        function openAddPaletteBucketMenuModal(){
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
                 studioApp.models.catalogBuckets.setKind("workflow");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                studioApp.modelsToRemove = [];
-                if (order=='main')
-                    studioApp.views.catalogSetMainTemplatesBucketView.render();
-                else if (order=='secondary')
-                    studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
-                $('#set-templates-'+order+'-bucket-modal').modal();
+                studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
+                $('#set-templates-secondary-bucket-modal').modal();
             }else{
                 $('#open-a-workflow-modal').modal();
             }
         }
-        $("#set-templates-main-bucket-button").click(function (event) {
-            event.preventDefault();
-            openSetTemplatesMenuModal('main');
-        });
+
+        function openSetPresetModal(){
+            var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+                studioApp.views.setPresetView.render();
+                $('#set-preset-modal').modal();
+            }else{
+                $('#open-a-workflow-modal').modal();
+            }
+        }
 
         $("#set-templates-secondary-bucket-button").click(function (event) {
             event.preventDefault();
-            openSetTemplatesMenuModal('secondary');
+            openAddPaletteBucketMenuModal();
         });
 
         $("#catalog-get-as-new-button").click(function (event) {
@@ -288,7 +290,26 @@ define(
 
         $("#set-templates-secondary-bucket-select-button").click(function () {
             var bucketName = ($(($("#catalog-set-templates-secondary-bucket-table .catalog-selected-row"))[0])).text();
-            require('StudioApp').views.palleteView.setSecondaryTemplatesBucket(bucketName, false);
+            // Leave modal open if bucket could not be added (normally because it's already in the Palette)
+            if (require('StudioApp').views.paletteView.addPaletteBucketMenu(bucketName, false)){
+                $('#set-templates-secondary-bucket-modal').modal('hide');
+            }
+        });
+
+        // Set default preset on startup
+        if (!localStorage['palettePreset']){
+            localStorage.setItem('palettePreset',config.default_preset);
+        }
+
+        $("#set-preset-button").click(function (event) {
+            event.preventDefault();
+            openSetPresetModal();
+        });
+
+        $("#set-preset-select-button").click(function () {
+            var presetName = ($(($("#presets-set-preset-table .preset-selected-row"))[0])).text();
+            var selectedIndex = config.palette_presets.findIndex(obj => obj.name==presetName);
+            require('StudioApp').views.paletteView.render(selectedIndex, true);
         });
 
         $("#layout-button").click(function (event) {
@@ -299,12 +320,12 @@ define(
 
         $("#add-bucket-button").click(function (event) {
             event.preventDefault();
-            openSetTemplatesMenuModal('secondary');
+            openAddPaletteBucketMenuModal();
         });
 
         $("#pin-palette-button").click(function (event) {
             event.preventDefault();
-            require('StudioApp').views.palleteView.pinPalette();
+            require('StudioApp').views.paletteView.pinPalette();
         });
         $("#zoom-in-button").click(function (event) {
             event.preventDefault();
