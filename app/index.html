@@ -1,687 +1,751 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>ProActive Workflow Studio</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-        <link rel="icon" type="image/vnd.microsoft.icon"
-              href="favicon.ico">
-        <!-- build:css styles/vendor.css -->
-        <!-- bower:css -->
-        <link rel="stylesheet" href="libs/codemirror/lib/codemirror.css" />
-        <link rel="stylesheet" href="libs/codemirror/addon/fold/foldgutter.css" />
-        <link rel="stylesheet" href="libs/codemirror/addon/scroll/simplescrollbars.css" />
-        <link rel="stylesheet" href="libs/codemirror/addon/hint/show-hint.css" />
-        <link rel="stylesheet" href="libs/codemirror/addon/dialog/dialog.css" />
-        <link rel="stylesheet" href="libs/codemirror/theme/eclipse.css" />
-        <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css" />
-        <!-- endbower -->
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ProActive Workflow Studio</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/vnd.microsoft.icon"
+          href="favicon.ico">
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="libs/codemirror/lib/codemirror.css"/>
+    <link rel="stylesheet" href="libs/codemirror/addon/fold/foldgutter.css"/>
+    <link rel="stylesheet" href="libs/codemirror/addon/scroll/simplescrollbars.css"/>
+    <link rel="stylesheet" href="libs/codemirror/addon/hint/show-hint.css"/>
+    <link rel="stylesheet" href="libs/codemirror/addon/dialog/dialog.css"/>
+    <link rel="stylesheet" href="libs/codemirror/theme/eclipse.css"/>
+    <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css"/>
+    <!-- endbower -->
 
-        <link href="libs/pnotify/dist/pnotify.css" rel="stylesheet" type="text/css" />
-        <link href="libs/pnotify/dist/pnotify.buttons.css" rel="stylesheet" type="text/css" />
-        <!-- endbuild -->
-        <!-- build:css(.tmp) styles/studio.css -->
-        <link rel="stylesheet" href="styles/login.css">
-        <link rel="stylesheet" href="styles/studio.css">
+    <link href="libs/pnotify/dist/pnotify.css" rel="stylesheet" type="text/css"/>
+    <link href="libs/pnotify/dist/pnotify.buttons.css" rel="stylesheet" type="text/css"/>
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/studio.css -->
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/studio.css">
 
 
-        <script src="studio-conf.js"></script>
+    <script src="studio-conf.js"></script>
 
-        <!-- endbuild -->
-    </head>
+    <!-- endbuild -->
+</head>
 <body data-library="jquery" style="zoom: 1;display:none">
-        <!--[if lt IE 10]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
 
-        <div id="navbar-fixed" class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div id="navbar-fixed" class="navbar navbar-default navbar-fixed-top" role="navigation">
 
-           <div class="navbar-header" style="min-width:100%;">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <icons class="flex-center">
-				  <div>
-                      <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px">ProActive Workflow Studio </a>
-
-                  </div>
-                    <p id="studio-bucket-title"/>
-				  <div style="padding-top: 0px;">
-                    <img src="images/company-icon-squared.png" style="height:40px;display:block;margin:auto;">
-				  </div>
-				  <div>
-                      <a href="http://activeeon.com/" target="_blank" class="navbar-brand no-padding pull-right"><img src="images/AE-Logo.png" style="height:40px"></a>
-				  </div>
-				</icons>
+    <div class="navbar-header" style="min-width:100%;">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <icons class="flex-center">
+            <div>
+                <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px">ProActive
+                    Workflow Studio </a>
 
             </div>
+            <p id="studio-bucket-title"/>
+            <div style="padding-top: 0px;">
+                <img src="images/company-icon-squared.png" style="height:40px;display:block;margin:auto;">
+            </div>
+            <div>
+                <a href="http://activeeon.com/" target="_blank" class="navbar-brand no-padding pull-right"><img
+                        src="images/AE-Logo.png" style="height:40px"></a>
+            </div>
+        </icons>
 
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown" id="file-dropdown" > File <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-			  <li><a id="validate-button" href="#" class="pointer"
-				 title="Check the validity of current workflow.">
-			      <i class="glyphicon glyphicon-ok "></i> Check</a></li>
-                            <li><a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
-                                <i class="glyphicon glyphicon-hdd"></i> Save </a></li>
-                            <li><a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
-                                <i class="glyphicon glyphicon-folder-close"></i> Close</a></li>
-                            <li><a id="import-button" href="" class="pointer"
-                                   title="Import existing workflows (.xml files).">
-				<i class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
-                            <li><a id="add-button" href="#" class="pointer"
-                                   title="Add existing workflows (.xml files) to current one.">
-				<i class="glyphicon glyphicon-plus"></i> Add to current workflow</a></li>
-                            <li><a id="export-button" href="#" class="pointer"
-                                   title="Export current workflow as .xml file.">
-				<i class="glyphicon glyphicon-export"></i> Export</a></li>
+    </div>
 
-                        </ul>
-                    </li>
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" id="file-dropdown"> File <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a id="validate-button" href="#" class="pointer"
+                           title="Check the validity of current workflow.">
+                        <i class="glyphicon glyphicon-ok "></i> Check</a></li>
+                    <li><a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
+                        <i class="glyphicon glyphicon-hdd"></i> Save </a></li>
+                    <li><a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
+                        <i class="glyphicon glyphicon-folder-close"></i> Close</a></li>
+                    <li><a id="import-button" href="" class="pointer"
+                           title="Import existing workflows (.xml files).">
+                        <i class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
+                    <li><a id="add-button" href="#" class="pointer"
+                           title="Add existing workflows (.xml files) to current one.">
+                        <i class="glyphicon glyphicon-plus"></i> Add to current workflow</a></li>
+                    <li><a id="export-button" href="#" class="pointer"
+                           title="Export current workflow as .xml file.">
+                        <i class="glyphicon glyphicon-export"></i> Export</a></li>
+                </ul>
+            </li>
 
 
-                    <li class="divider-vertical"></li>
+            <li class="divider-vertical"></li>
 
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown" id="edit-dropdown" > Edit <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                          <li><a id="clear-button" href="#" class="pointer" title="Clear current workflow.">
-			      <i class="glyphicon glyphicon-repeat"></i> Clear</a></li>
-                          <li><a id="undo-button" href="#" class="pointer">
-			      <i class="glyphicon glyphicon-arrow-left"></i> Undo</a></li>
-                          <li><a id="redo-button" href="#" class="pointer">
-			      <i class="glyphicon glyphicon-arrow-right"></i> Redo</a></li>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" id="edit-dropdown"> Edit <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a id="clear-button" href="#" class="pointer" title="Clear current workflow.">
+                        <i class="glyphicon glyphicon-repeat"></i> Clear</a></li>
+                    <li><a id="undo-button" href="#" class="pointer">
+                        <i class="glyphicon glyphicon-arrow-left"></i> Undo</a></li>
+                    <li><a id="redo-button" href="#" class="pointer">
+                        <i class="glyphicon glyphicon-arrow-right"></i> Redo</a></li>
 
-                        </ul>
-                    </li>
+                </ul>
+            </li>
 
-                    <li class="divider-vertical"></li>
+            <li class="divider-vertical"></li>
 
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown" id="catalog-dropdown" >
-                        	<i class="glyphicon glyphicon-folder-open"></i> Catalog <b class="caret"></b>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" id="view-dropdown"> View <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a id="set-preset-button" href="#" class="pointer"
+                           title="Change the default preset of the Palette.">
+                            <i class="glyphicon glyphicon-th-large"></i> Change Palette Preset
                         </a>
-                        <ul class="dropdown-menu">
-                          	<li>
-                          		<a id="get-from-catalog-button" href="#" class="pointer">
-			      					<i class="glyphicon glyphicon-arrow-left"></i>
-			      					 Get a Workflow from the Catalog
-			      				</a>
-			      			</li>
-                          	<li>
-                          		<a id="publish-to-catalog-button" href="#" class="pointer">
-			      					<i class="glyphicon glyphicon-arrow-right"></i>
-			      					 Publish current Workflow to the Catalog
-			      				</a>
-			      			</li>
-                            <li>
-                                <a id="set-templates-main-bucket-button" href="#" class="pointer">
-                                    <i class="glyphicon glyphicon-cog"></i>
-                                    Set Bucket as Main Catalog Menu
-                                </a>
-                            </li>
-                            <li>
-                                <a id="set-templates-secondary-bucket-button" href="#" class="pointer">
-                                    <i class="glyphicon glyphicon-cog"></i>
-                                    Add Bucket as Extra Catalog Menu
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-                    <li class="divider-vertical"></li>
-
-                    <li><a id="submit-button" href="#" class="pointer"
-                           title="Execute current workflow on the Scheduler you are connected to.">
-			<i class="glyphicon glyphicon-share"></i> Execute</a></li>
-		    <li><a id="plan-button" href="#" class="pointer"
-                           title="Plan current worklfow with the job planner portal.">
-			<i class="glyphicon glyphicon-calendar"></i> Plan</a></li>
-                    <li class="divider-vertical"></li>
-                    <li class="dropdown">
-						    <a href="#" data-toggle="dropdown" > Help <b class="caret"></b></a>
-						    <ul class="dropdown-menu">
-						        <li><a class="pointer" target="_blank" id="documentationLinkId" href="http://doc.activeeon.com/"><i class="glyphicon glyphicon-book"></i> Documentation</a></li>
-						        <li><a class="pointer" href="#" id="about-button"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
-						    </ul>
+                    <li>
+                        <a id="set-templates-secondary-bucket-button" href="#" class="pointer">
+                            <i class="glyphicon glyphicon-cog"></i> Add Bucket Menu to the Palette
+                        </a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+            </li>
+
+            <li class="divider-vertical"></li>
+
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" id="catalog-dropdown">
+                    <i class="glyphicon glyphicon-folder-open"></i> Catalog <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
                     <li>
-                        <div>
-                            <form class="navbar-form" style="padding-right: 12px">
-                                <a class="btn btn-small btn-default" href="/automation-dashboard/" target="/automation-dashboard/"><img src="images/automation_dashboard_30.png" class="right-padding" style="height:25px">Automation Dashboard</a>
-                            </form>
-                        </div>
+                        <a id="get-from-catalog-button" href="#" class="pointer">
+                            <i class="glyphicon glyphicon-arrow-left"></i>
+                            Get a Workflow from the Catalog
+                        </a>
                     </li>
-
                     <li>
-                        <div>
-                            <form class="navbar-form" style="padding-right: 12px">
-                                <a class="btn btn-small btn-default active" href="#"><img src="images/studio_30.png" class="right-padding" style="height:25px">Workflow Studio</a>
-                            </form>
-                        </div>
+                        <a id="publish-to-catalog-button" href="#" class="pointer">
+                            <i class="glyphicon glyphicon-arrow-right"></i>
+                            Publish current Workflow to the Catalog
+                        </a>
                     </li>
-
-                    <li>
-                    <div>
-                    	<form class="navbar-form" style="padding-right: 12px">
-                    		<a class="btn btn-small btn-default" href="/scheduler/" target="/scheduler/"><img src="images/scheduler_30.png"class="right-padding" style="height:25px">Scheduling & Orchestration</a>
-                    	</form>
-                    </div>
-                    </li>
-
-                     <li>
-                    <div>
-                    	<form class="navbar-form" style="padding-right: 0px">
-                    		<a class="btn btn-small btn-default" href="/rm/" target="/rm/"><img src="images/rm_30.png" class="right-padding" style="height:25px">Resource Manager</a>
-                    	</form>
-                    </div>
-                    </li>
-
-                    <li class="divider-vertical"></li>
-
-                    <li id="logout-view-container" > </li>
                 </ul>
-            </div>
+            </li>
+            <li class="divider-vertical"></li>
 
-            <div style="height: 3px; background: #f47930;"></div>
-        </div>
+            <li><a id="submit-button" href="#" class="pointer"
+                   title="Execute current workflow on the Scheduler you are connected to.">
+                <i class="glyphicon glyphicon-share"></i> Execute</a></li>
+            <li><a id="plan-button" href="#" class="pointer"
+                   title="Plan current worklfow with the job planner portal.">
+                <i class="glyphicon glyphicon-calendar"></i> Plan</a></li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown"> Help <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a class="pointer" target="_blank" id="documentationLinkId" href="http://doc.activeeon.com/"><i
+                            class="glyphicon glyphicon-book"></i> Documentation</a></li>
+                    <li><a class="pointer" href="#" id="about-button"><i class="glyphicon glyphicon-question-sign"></i>
+                        About</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <div>
+                    <form class="navbar-form" style="padding-right: 12px">
+                        <a class="btn btn-small btn-default" href="/automation-dashboard/"
+                           target="/automation-dashboard/"><img src="images/automation_dashboard_30.png"
+                                                                class="right-padding" style="height:25px">Automation
+                            Dashboard</a>
+                    </form>
+                </div>
+            </li>
 
-        <table id="body-container" style="min-width:100%;height:100%">
-            <tbody style="height:100%">
-            <tr style="height:100%">
-                <td id="left-panel-properties">
-                    <div id="properties-container"></div>
-                </td>
-                <td style="height:100%;width:75%; padding-right:5px;">
-                    <div id="workflow-designer-outer">
-                        <table id="tools-table">
-                            <tr>
-                                <td id="palette-container">
-                                    <div style="display: inline-flex;">
-                                        <div class="btn-group">
-                                            <button id="layout-button" type="button" class="btn"
-                                                    title="Auto layout">
-                                                <i class="glyphicon glyphicon-align-center"></i>
-                                            </button>
-                                        </div>
-                                        <div id="palette-container-div"></div>
-                                        <div class="btn-group">
-                                            <button id="add-bucket-button" type="button" class="btn"
-                                                    title="Add bucket">
-                                                <i class="glyphicon glyphicon-plus"></i>
-                                            </button>
-                                            <button id="pin-palette-button" type="button" class="btn"
-                                                    title="Pin Catalog menu">
-                                                <img width="13px" src="images/icon-unpin.png">
-                                            </button>
-                                        </div>
+            <li>
+                <div>
+                    <form class="navbar-form" style="padding-right: 12px">
+                        <a class="btn btn-small btn-default active" href="#"><img src="images/studio_30.png"
+                                                                                  class="right-padding"
+                                                                                  style="height:25px">Workflow
+                            Studio</a>
+                    </form>
+                </div>
+            </li>
+
+            <li>
+                <div>
+                    <form class="navbar-form" style="padding-right: 12px">
+                        <a class="btn btn-small btn-default" href="/scheduler/" target="/scheduler/"><img
+                                src="images/scheduler_30.png" class="right-padding" style="height:25px">Scheduling &
+                            Orchestration</a>
+                    </form>
+                </div>
+            </li>
+
+            <li>
+                <div>
+                    <form class="navbar-form" style="padding-right: 0px">
+                        <a class="btn btn-small btn-default" href="/rm/" target="/rm/"><img src="images/rm_30.png"
+                                                                                            class="right-padding"
+                                                                                            style="height:25px">Resource
+                            Manager</a>
+                    </form>
+                </div>
+            </li>
+
+            <li class="divider-vertical"></li>
+
+            <li id="logout-view-container"></li>
+        </ul>
+    </div>
+
+    <div style="height: 3px; background: #f47930;"></div>
+</div>
+
+<table id="body-container" style="min-width:100%;height:100%">
+    <tbody style="height:100%">
+    <tr style="height:100%">
+        <td id="left-panel-properties">
+            <div id="properties-container"></div>
+        </td>
+        <td style="height:100%;width:75%; padding-right:5px;">
+            <div id="workflow-designer-outer">
+                <table id="tools-table">
+                    <tr>
+                        <td id="palette-container">
+                            <div style="display: inline-flex;">
+                                <div class="btn-group">
+                                    <button id="layout-button" type="button" class="btn"
+                                            title="Auto layout">
+                                        <i class="glyphicon glyphicon-align-center"></i>
+                                    </button>
                                 </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <form>
-        <input type="file" id="import-file" style="display:none"/>
-        </form>
-
-        <form>
-        <input type="file" id="add-file" style="display:none"/>
-        </form>
-
-        <form>
-        <input type="file" id="import-archive-file" style="display:none"/>
-        </form>
-
-        <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Workflow XML</h3>
-                    </div>
-                    <div id="workflow-xml-body" class="modal-body" style="height:100%">
-                        <div id="workflow-xml-container"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Download</button>
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="catalog-get-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="get-modal-title">Get from the Catalog</h3>
-                    </div>
-                    <div id="catalog-get-body" class="modal-body" style="height:100%">
-                    	<div id="catalog-get-container"></div>
-                    </div>
-                    <div class="modal-footer">
-                    	<button id="catalog-get-as-new-button" class="btn btn-primary" aria-hidden="true">
-                            Open as a new<br>Workflow
-                        </button>
-                    	<button id="catalog-get-append-button" class="btn btn-primary" aria-hidden="true">
-                            Append to current<br>Workflow
-                        </button>
-                        <button id="catalog-get-import-button" class="btn btn-primary" aria-hidden="true">
-                            Import
-                        </button>
-                        <button id="catalog-get-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="catalog-publish-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 id="catalog-publish-modal-title">Publish to the Catalog</h3>
-                    </div>
-                    <div id="catalog-publish-body" class="modal-body" style="height:100%">
-                    	<div id="catalog-publish-container"></div>
-                    </div>
-                    <div class="modal-footer">
-                    	<button id="catalog-publish-current" class="btn btn-primary" aria-hidden="true">
-                            Publish
-                        </button>
-                        <button id="catalog-publish-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="set-templates-main-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" style="width:30%">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Set Bucket as Main Catalog Menu</h3>
-                    </div>
-                    <div id="set-templates-main-bucket-body" class="modal-body" style="height:100%"></div>
-                    <div class="modal-footer">
-                        <button id="set-templates-main-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
-                            Select
-                        </button>
-                        <button id="set-templates-main-bucket-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="set-templates-secondary-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" style="width:30%">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Add Bucket as Extra Catalog Menu</h3>
-                    </div>
-                    <div id="set-templates-secondary-bucket-body" class="modal-body" style="height:100%"></div>
-                    <div class="modal-footer">
-                        <button id="set-templates-secondary-bucket-select-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
-                            Select
-                        </button>
-                        <button id="set-templates-secondary-bucket-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Please open a workflow</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        In order to perform this action you need to choose an existing workflow or create a new one.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="select-archive-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Please select a ZIP archive</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        In order to perform this action you need to choose an existing ZIP archive containing workflows.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="open-a-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Please open a Workflow</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        In order to perform this action you need to open a Workflow.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="publish-current-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Publish to Catalog</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        Do you want to publish your object in the Catalog?
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Yes</button>
-                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">No</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="import-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Import Workflow from Catalog</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        You are about to import a Workflow from the Catalog. If you continue it will replace and remove the current workflow in the Studio.
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-import-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="add-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Add Workflow from Catalog</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        You are about to add a Workflow from the Catalog to the current workflow in the Studio.
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-add-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="import-catalog-object-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Import from Catalog</h3>
-                    </div>
-                    <div class="modal-body" id="confirm-import-object-message" style="height:100%">
-                        You are about to import an object from the Catalog. If you continue it will replace and remove its current value.
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-import-catalog-object-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="about-modal" class="modal fade no-padding" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>ProActive Workflow Studio</h3>
-                    </div>
-                    <div class="modal-body no-padding" style="height:100%">
-                    <div class="row">
-					    <div class="col-sm-3">
-					      <img src="images/about_115.png" style="height:100%;display:block;">
-					    </div>
-					    <div class="col-sm-9">
-					      <p>Version: <b id="version"></b></p>
-                        	<p>Copyright (C) 1997-<div id="current-year"></div> INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
-                            <script>
-                              var date = document.getElementById("current-year");
-                              date.innerText = (new Date()).getFullYear();
-                            </script>
-	                        <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
-	                        <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
-	                        <p>REST server	<a target="_blank" href="" id="restServer"></a></p>
-	                        <p>REST version	<b id="restVersion"></b></p>
-	                        <p>Studio version	<b id="studioVersion"></b></p>
-					    </div>
-					  </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div id="execute-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" >
-                <div class="modal-content" style="min-width: 900px;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Execute your workflow as a job</h3>
-                        <h4>Set the variables used for the job</h4>
-                    </div>
-                    <div class="modal-body" id="job-variables" style="height:100%">
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" id="check-button" type="button">Check</button>
-                        <button class="btn btn-primary" id="exec-button" type="button">Execute</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="plan-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" >
-                <div class="modal-content" style="min-width: 900px;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Plan your workflow at specific time using the Job Planner Portal</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%; text-align: center;">
-                        <h4>You will open a new tab with the Job Planner Portal. Do you confirm?</h4>
-                    </div>
-                    <div class="modal-footer" style="text-align: center;margin-top: unset;">
-                        <div>
-                            <button class="btn btn-primary" type="button" onclick="window.open('/automation-dashboard/#/portal/job-planner-calendar-def-workflows')"  data-dismiss="modal" >Yes</button>
-                            <button class="btn btn-primary" data-dismiss="modal" type="button">No</button>
-                        </div>
-                        <span class="glyphicon glyphicon-warning-sign" style="font-size: 1.5em;"></span> <i>Workflows need to be published to the Catalog in order to be planned</i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="full-edit-modal" class="modal fade" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" style="width:90%;height:90%">
-                <div class="modal-content" style="height: 100%;">
-                    <table style="min-height:100%;width:100%">
-                        <tr>
-                            <td style="height:80px">
-                                <div class="modal-header">
-
-                                    <div class="row"
-                                         style="width:100%;margin-left: 0px;margin-right: 0px;display: flex;align-items: flex-end;">
-
-                                        <div class="col col-md-2 col-lg-2" style="text-align:left;font-size:18px;margin-bottom: -4px;">
-                                            Script Editor
-                                        </div>
-                                        <div class="col col-md-2 col-lg-2" style="text-align:center;font-size:14px;margin-bottom: -2px;">
-                                            <a id="variable_reference_link"
-                                               href="#"
-                                               target="_blank">Documentation</a></div>
-                                        <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
-                                            <b>Ctrl+Space:</b>
-                                            <i>Auto-Complete</i></div>
-                                        <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
-                                            <b>[Shift-]Ctrl+F:</b>
-                                            <i>Find[Replace]</i></div>
-                                        <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
-                                            <b>Shift-Tab:</b>
-                                            <i>Indent</i></div>
-                                        <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
-                                            <b>Ctrl-/:</b>
-                                            <i>Comment</i></div>
-                                        <div class="col col-md-1 col-lg-1"
-                                             style="text-align:right;font-size:10px;">
-                                            <div class="hover-editor-container">
-                                                <div class="hover-editor-content" onclick="$(this).toggleClass('hover-editor-content-hovered');">
-                                                    <b>Ctrl-[:</b> indentLess<br>
-                                                    <b>Ctrl-]:</b> indentMore<br>
-                                                    <b>Shift-Ctrl-K:</b> deleteLine<br>
-                                                    <b>Alt-Left:</b> goSubwordLeft<br>
-                                                    <b>Alt-Right:</b> goSubwordRight<br>
-                                                    <b>Ctrl-Up:</b> scrollLineUp<br>
-                                                    <b>Ctrl-Down:</b> scrollLineDown<br>
-                                                    <b>Ctrl-L:</b> selectLine<br>
-                                                    <b>Shift-Ctrl-L:</b> splitSelectionByLine<br>
-                                                    <b>Ctrl-Enter:</b> insertLineAfter<br>
-                                                    <b>Shift-Ctrl-Enter:</b> insertLineBefore<br>
-                                                    <b>Ctrl-D:</b> selectNextOccurrence<br>
-                                                    <b>Shift-Ctrl-Space:</b> selectScope<br>
-                                                    <b>Shift-Ctrl-M:</b> selectBetweenBrackets<br>
-                                                    <b>Ctrl-M:</b> goToBracket<br>
-                                                    <b>Shift-Ctrl-Up:</b> swapLineUp<br>
-                                                    <b>Shift-Ctrl-Down:</b> swapLineDown<br>
-                                                    <b>Ctrl-J:</b> joinLines<br>
-                                                    <b>Shift-Ctrl-D:</b> duplicateLine<br>
-                                                    <b>F9:</b> sortLines<br>
-                                                    <b>Ctrl-F9:</b> sortLinesInsensitive<br>
-                                                    <b>Shift-F2:</b> prevBookmark<br>
-                                                    <b>Ctrl-F2:</b> toggleBookmark<br>
-                                                    <b>Shift-Ctrl-F2:</b> clearBookmarks<br>
-                                                    <b>Alt-F2:</b> selectBookmarks<br>
-                                                    <b>Ctrl-K Ctrl-K:</b> delLineRight<br>
-                                                    <b>Ctrl-K Ctrl-U:</b> upcaseAtCursor<br>
-                                                    <b>Ctrl-K Ctrl-L:</b> downcaseAtCursor<br>
-                                                    <b>Ctrl-K Ctrl-Space:</b> setSublimeMark<br>
-                                                    <b>Ctrl-K Ctrl-A:</b> selectToSublimeMark<br>
-                                                    <b>Ctrl-K Ctrl-W:</b> deleteToSublimeMark<br>
-                                                    <b>Ctrl-K Ctrl-X:</b> swapWithSublimeMark<br>
-                                                    <b>Ctrl-K Ctrl-Y:</b> sublimeYank<br>
-                                                    <b>Ctrl-K Ctrl-C:</b> showInCenter<br>
-                                                    <b>Ctrl-K Ctrl-G:</b> clearBookmarks<br>
-                                                    <b>Ctrl-K Ctrl-Backspace:</b> delLineLeft<br>
-                                                    <b>Ctrl-K Ctrl-0:</b> unfoldAll<br>
-                                                    <b>Ctrl-K Ctrl-1:</b> foldAll<br>
-                                                    <b>Ctrl-Alt-Up:</b> addCursorToPrevLine<br>
-                                                    <b>Ctrl-Alt-Down:</b> addCursorToNextLine<br>
-                                                    <b>Ctrl-F3:</b> findUnder<br>
-                                                    <b>Shift-Ctrl-F3:</b> findUnderPrevious<br>
-                                                </div>
-                                                Other Keys
-                                            </div>
-
-
-                                        </div>
-                                        <div class="col col-md-1 col-lg-1"
-                                             style="text-align:right;font-size: 18px;margin-bottom: -3px;">
-
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                                ×
-                                            </button>
-                                        </div>
-
-
-                                    </div>
+                                <div id="palette-container-div"></div>
+                                <div class="btn-group">
+                                    <button id="add-bucket-button" type="button" class="btn"
+                                            title="Add bucket">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </button>
+                                    <button id="pin-palette-button" type="button" class="btn"
+                                            title="Pin Catalog menu">
+                                        <img width="13px" src="images/icon-unpin.png">
+                                    </button>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="code-editor-container"><td style="height:99%;min-height:99%;vertical-align: top;">
-                            <textarea id="full-edit-modal-script-content" class="form-control" style="width:100%;height:100%"></textarea>
-                        </td></tr>
-                        <tr><td style="height:80px">
-                            <div class="modal-footer">
-                                <button class="btn btn-white pull-right" id="cancel-script-changes" data-dismiss="modal" aria-hidden="true" style="margin-left: 5px;">Cancel</button>
-                                <button id="set-script-content" class="btn btn-primary pull-right" data-dismiss="modal" aria-hidden="true">Save & Close</button>
-                                <button id="commit-script-changes" class="btn btn-primary pull-right" aria-hidden="true">Publish to the catalog</button>
                             </div>
-                        </td></tr>
-                    </table>
-                    <!--<div class="modal-body" style="height: 70%;">-->
-                    <!--</div>-->
-                </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form>
+    <input type="file" id="import-file" style="display:none"/>
+</form>
+
+<form>
+    <input type="file" id="add-file" style="display:none"/>
+</form>
+
+<form>
+    <input type="file" id="import-archive-file" style="display:none"/>
+</form>
+
+<div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Workflow XML</h3>
+            </div>
+            <div id="workflow-xml-body" class="modal-body" style="height:100%">
+                <div id="workflow-xml-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="download-xml-button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    Download
+                </button>
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <div id="confirm-data-loss" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3>Data loss warning</h3>
-                    </div>
-                    <div class="modal-body" style="height:100%">
-                        After switching to simple view all custom selection scripts will be lost.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                        <button id="data-loss-continue" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Continue</button>
-                    </div>
-                </div>
+<div id="catalog-get-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="get-modal-title">Get from the Catalog</h3>
+            </div>
+            <div id="catalog-get-body" class="modal-body" style="height:100%">
+                <div id="catalog-get-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="catalog-get-as-new-button" class="btn btn-primary" aria-hidden="true">
+                    Open as a new<br>Workflow
+                </button>
+                <button id="catalog-get-append-button" class="btn btn-primary" aria-hidden="true">
+                    Append to current<br>Workflow
+                </button>
+                <button id="catalog-get-import-button" class="btn btn-primary" aria-hidden="true">
+                    Import
+                </button>
+                <button id="catalog-get-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
+                    Close
+                </button>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="catalog-publish-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="catalog-publish-modal-title">Publish to the Catalog</h3>
+            </div>
+            <div id="catalog-publish-body" class="modal-body" style="height:100%">
+                <div id="catalog-publish-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="catalog-publish-current" class="btn btn-primary" aria-hidden="true">
+                    Publish
+                </button>
+                <button id="catalog-publish-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="set-templates-secondary-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:30%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 style="text-align: center">Add bucket menu to the palette</h3>
+            </div>
+            <div id="set-templates-secondary-bucket-body" class="modal-body" style="height:100%"></div>
+            <div class="modal-footer">
+                <button id="set-templates-secondary-bucket-select-button" class="btn btn-primary"
+                        aria-hidden="true">
+                    Select
+                </button>
+                <button id="set-templates-secondary-bucket-close-button" class="btn btn-white" data-dismiss="modal"
+                        aria-hidden="true">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="set-preset-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:30%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 style="text-align: center">Select a preset for the palette</h3>
+            </div>
+            <div id="set-preset-body" class="modal-body" style="height:100%"></div>
+            <div class="modal-footer">
+                <button id="set-preset-select-button" class="btn btn-primary" data-dismiss="modal"
+                        aria-hidden="true">
+                    Select
+                </button>
+                <button id="set-preset-close-button" class="btn btn-white" data-dismiss="modal"
+                        aria-hidden="true">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Please open a workflow</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                In order to perform this action you need to choose an existing workflow or create a new one.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="select-archive-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Please select a ZIP archive</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                In order to perform this action you need to choose an existing ZIP archive containing workflows.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="open-a-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Please open a Workflow</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                In order to perform this action you need to open a Workflow.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="publish-current-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Publish to Catalog</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                Do you want to publish your object in the Catalog?
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-publication-to-catalog" class="btn btn-primary" data-dismiss="modal"
+                        aria-hidden="true">Yes
+                </button>
+                <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Import Workflow from Catalog</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                You are about to import a Workflow from the Catalog. If you continue it will replace and remove the
+                current workflow in the Studio.
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-import-from-catalog" class="btn btn-primary" data-dismiss="modal"
+                        aria-hidden="true">Confirm
+                </button>
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="add-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Add Workflow from Catalog</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                You are about to add a Workflow from the Catalog to the current workflow in the Studio.
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-add-from-catalog" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    Confirm
+                </button>
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import-catalog-object-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Import from Catalog</h3>
+            </div>
+            <div class="modal-body" id="confirm-import-object-message" style="height:100%">
+                You are about to import an object from the Catalog. If you continue it will replace and remove its
+                current value.
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-import-catalog-object-from-catalog" class="btn btn-primary" data-dismiss="modal"
+                        aria-hidden="true">Confirm
+                </button>
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="about-modal" class="modal fade no-padding" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>ProActive Workflow Studio</h3>
+            </div>
+            <div class="modal-body no-padding" style="height:100%">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <img src="images/about_115.png" style="height:100%;display:block;">
+                    </div>
+                    <div class="col-sm-9">
+                        <p>Version: <b id="version"></b></p>
+                        <p>Copyright (C) 1997-
+                        <div id="current-year"></div>
+                        INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                        <script>
+                            var date = document.getElementById("current-year");
+                            date.innerText = (new Date()).getFullYear();
+                        </script>
+                        <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and
+                            <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
+                        <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
+                        <p>REST server <a target="_blank" href="" id="restServer"></a></p>
+                        <p>REST version <b id="restVersion"></b></p>
+                        <p>Studio version <b id="studioVersion"></b></p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="execute-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="min-width: 900px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Execute your workflow as a job</h3>
+                <h4>Set the variables used for the job</h4>
+            </div>
+            <div class="modal-body" id="job-variables" style="height:100%">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="check-button" type="button">Check</button>
+                <button class="btn btn-primary" id="exec-button" type="button">Execute</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="plan-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="min-width: 900px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Plan your workflow at specific time using the Job Planner Portal</h3>
+            </div>
+            <div class="modal-body" style="height:100%; text-align: center;">
+                <h4>You will open a new tab with the Job Planner Portal. Do you confirm?</h4>
+            </div>
+            <div class="modal-footer" style="text-align: center;margin-top: unset;">
+                <div>
+                    <button class="btn btn-primary" type="button"
+                            onclick="window.open('/automation-dashboard/#/portal/job-planner-calendar-def-workflows')"
+                            data-dismiss="modal">Yes
+                    </button>
+                    <button class="btn btn-primary" data-dismiss="modal" type="button">No</button>
+                </div>
+                <span class="glyphicon glyphicon-warning-sign" style="font-size: 1.5em;"></span> <i>Workflows need to be
+                published to the Catalog in order to be planned</i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="full-edit-modal" class="modal fade" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width:90%;height:90%">
+        <div class="modal-content" style="height: 100%;">
+            <table style="min-height:100%;width:100%">
+                <tr>
+                    <td style="height:80px">
+                        <div class="modal-header">
+
+                            <div class="row"
+                                 style="width:100%;margin-left: 0px;margin-right: 0px;display: flex;align-items: flex-end;">
+
+                                <div class="col col-md-2 col-lg-2"
+                                     style="text-align:left;font-size:18px;margin-bottom: -4px;">
+                                    Script Editor
+                                </div>
+                                <div class="col col-md-2 col-lg-2"
+                                     style="text-align:center;font-size:14px;margin-bottom: -2px;">
+                                    <a id="variable_reference_link"
+                                       href="#"
+                                       target="_blank">Documentation</a></div>
+                                <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
+                                    <b>Ctrl+Space:</b>
+                                    <i>Auto-Complete</i></div>
+                                <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
+                                    <b>[Shift-]Ctrl+F:</b>
+                                    <i>Find[Replace]</i></div>
+                                <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
+                                    <b>Shift-Tab:</b>
+                                    <i>Indent</i></div>
+                                <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
+                                    <b>Ctrl-/:</b>
+                                    <i>Comment</i></div>
+                                <div class="col col-md-1 col-lg-1"
+                                     style="text-align:right;font-size:10px;">
+                                    <div class="hover-editor-container">
+                                        <div class="hover-editor-content"
+                                             onclick="$(this).toggleClass('hover-editor-content-hovered');">
+                                            <b>Ctrl-[:</b> indentLess<br>
+                                            <b>Ctrl-]:</b> indentMore<br>
+                                            <b>Shift-Ctrl-K:</b> deleteLine<br>
+                                            <b>Alt-Left:</b> goSubwordLeft<br>
+                                            <b>Alt-Right:</b> goSubwordRight<br>
+                                            <b>Ctrl-Up:</b> scrollLineUp<br>
+                                            <b>Ctrl-Down:</b> scrollLineDown<br>
+                                            <b>Ctrl-L:</b> selectLine<br>
+                                            <b>Shift-Ctrl-L:</b> splitSelectionByLine<br>
+                                            <b>Ctrl-Enter:</b> insertLineAfter<br>
+                                            <b>Shift-Ctrl-Enter:</b> insertLineBefore<br>
+                                            <b>Ctrl-D:</b> selectNextOccurrence<br>
+                                            <b>Shift-Ctrl-Space:</b> selectScope<br>
+                                            <b>Shift-Ctrl-M:</b> selectBetweenBrackets<br>
+                                            <b>Ctrl-M:</b> goToBracket<br>
+                                            <b>Shift-Ctrl-Up:</b> swapLineUp<br>
+                                            <b>Shift-Ctrl-Down:</b> swapLineDown<br>
+                                            <b>Ctrl-J:</b> joinLines<br>
+                                            <b>Shift-Ctrl-D:</b> duplicateLine<br>
+                                            <b>F9:</b> sortLines<br>
+                                            <b>Ctrl-F9:</b> sortLinesInsensitive<br>
+                                            <b>Shift-F2:</b> prevBookmark<br>
+                                            <b>Ctrl-F2:</b> toggleBookmark<br>
+                                            <b>Shift-Ctrl-F2:</b> clearBookmarks<br>
+                                            <b>Alt-F2:</b> selectBookmarks<br>
+                                            <b>Ctrl-K Ctrl-K:</b> delLineRight<br>
+                                            <b>Ctrl-K Ctrl-U:</b> upcaseAtCursor<br>
+                                            <b>Ctrl-K Ctrl-L:</b> downcaseAtCursor<br>
+                                            <b>Ctrl-K Ctrl-Space:</b> setSublimeMark<br>
+                                            <b>Ctrl-K Ctrl-A:</b> selectToSublimeMark<br>
+                                            <b>Ctrl-K Ctrl-W:</b> deleteToSublimeMark<br>
+                                            <b>Ctrl-K Ctrl-X:</b> swapWithSublimeMark<br>
+                                            <b>Ctrl-K Ctrl-Y:</b> sublimeYank<br>
+                                            <b>Ctrl-K Ctrl-C:</b> showInCenter<br>
+                                            <b>Ctrl-K Ctrl-G:</b> clearBookmarks<br>
+                                            <b>Ctrl-K Ctrl-Backspace:</b> delLineLeft<br>
+                                            <b>Ctrl-K Ctrl-0:</b> unfoldAll<br>
+                                            <b>Ctrl-K Ctrl-1:</b> foldAll<br>
+                                            <b>Ctrl-Alt-Up:</b> addCursorToPrevLine<br>
+                                            <b>Ctrl-Alt-Down:</b> addCursorToNextLine<br>
+                                            <b>Ctrl-F3:</b> findUnder<br>
+                                            <b>Shift-Ctrl-F3:</b> findUnderPrevious<br>
+                                        </div>
+                                        Other Keys
+                                    </div>
 
 
-        <script data-main="scripts/main" src="libs/requirejs/require.js"></script>
+                                </div>
+                                <div class="col col-md-1 col-lg-1"
+                                     style="text-align:right;font-size: 18px;margin-bottom: -3px;">
+
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        ×
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="code-editor-container">
+                    <td style="height:99%;min-height:99%;vertical-align: top;">
+                        <textarea id="full-edit-modal-script-content" class="form-control"
+                                  style="width:100%;height:100%"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height:80px">
+                        <div class="modal-footer">
+                            <button class="btn btn-white pull-right" id="cancel-script-changes" data-dismiss="modal"
+                                    aria-hidden="true" style="margin-left: 5px;">Cancel
+                            </button>
+                            <button id="set-script-content" class="btn btn-primary pull-right" data-dismiss="modal"
+                                    aria-hidden="true">Save & Close
+                            </button>
+                            <button id="commit-script-changes" class="btn btn-primary pull-right" aria-hidden="true">
+                                Publish to the catalog
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <!--<div class="modal-body" style="height: 70%;">-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+<div id="confirm-data-loss" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Data loss warning</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                After switching to simple view all custom selection scripts will be lost.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-white" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button id="data-loss-continue" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script data-main="scripts/main" src="libs/requirejs/require.js"></script>
 </body>
 </html>
