@@ -3,10 +3,11 @@ define(
         'jquery',
         'backbone',
         'proactive/config',
-        'proactive/model/CatalogWorkflowCollection'
+        'proactive/model/CatalogWorkflowCollection',
+        'proactive/rest/studio-client'
     ],
 
-    function ($, Backbone, config, CatalogWorkflowCollection) {
+    function ($, Backbone, config, CatalogWorkflowCollection, StudioClient) {
 
         "use strict";
 
@@ -27,7 +28,6 @@ define(
                     if (typeof template[property] == "object") {
                         var header = $('<li role="presentation" class="dropdown-header">'+property+'</li>');
                         menu.append(header);
-
                         this.createMenuFromConfig(template[property], menu);
                     } else {
                     	var iconName = property.replace(/\s+/g, '');
@@ -129,6 +129,7 @@ define(
                     that.addPaletteBucketMenu(secondaryBucketName, true);
                 });
             }
+            console.log('Preset changed successfully to '+config.palette_presets[palettePresetIndex]);
         },
         checkAndGetBucketByName : function(bucketName, onPageLoad, callback){
             $.ajax({
@@ -142,10 +143,9 @@ define(
                     });
                     callback(foundBucket);
                 },
-
-                error: function (data) {
+                error: function () {
                     if (!onPageLoad)
-                        alert('The bucket "'+ bucketName + '" couldn\'t be found.');
+                        StudioClient.alert('Bucket not found!', 'The bucket "' + bucketName + '" couldn\'t be found.', 'error');
                     else
                         console.log('The bucket "'+ bucketName + '" couldn\'t be found.');
                     return;
@@ -166,18 +166,22 @@ define(
             _.each(templates, function (template) {
                 if (template.get("name")) {
                     var iconName;
+                    var description='';
                     var menuItem;
                     var objectKeyVal = template.get("object_key_values");
                     for (var i in objectKeyVal) {
-                        if (objectKeyVal[i]["key"] == 'workflow.icon') {
+                        if (objectKeyVal[i]["key"].toLowerCase() == 'workflow.icon'.toLowerCase()) {
                             iconName = objectKeyVal[i]["value"];
+                        }
+                        if (objectKeyVal[i]["key"].toLowerCase() === 'description'.toLowerCase()) {
+                            description = objectKeyVal[i]["value"];
                         }
                     }
                     if (iconName)
-                        menuItem = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me" ><a class="" href="#" onclick="return false;"> <img src=" ' + iconName + '" width="20px"> ' + template.get("name") + '</a></li>');
+                        menuItem = $('<li class="sub-menu draggable ui-draggable job-element"><a class="" onclick="return false;"> <img src=" ' + iconName + '" width="20px"> ' + template.get("name") + '</a></li>');
                     else
-                        menuItem = $('<li class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me" ><a class="" href="#" onclick="return false;">' + template.get("name") + '</a></li>');
-                    menuItem.tooltip();
+                        menuItem = $('<li class="sub-menu draggable ui-draggable job-element"><a class="" href="#" onclick="return false;">' + template.get("name") + '</a></li>');
+                    menuItem.tooltip({title: description?description:"Drag&Drop me", placement: "top", delay:300});
                     menuContent.append(menuItem);
                     menuItem.data("templateName", template.get("name"));
                     menuItem.data("bucketName", bucketName);
@@ -263,7 +267,7 @@ define(
                     foundBucketName = foundBucket.name;
                 else {
                     if (!onPageLoad)
-                        alert('The bucket "'+ bucketName + '" couldn\'t be found.');
+                        StudioClient.alert('Bucket not found!','The bucket "'+ bucketName + '" couldn\'t be found.','error');
                     else
                         console.log('The bucket "'+ bucketName + '" couldn\'t be found.');
                 }
