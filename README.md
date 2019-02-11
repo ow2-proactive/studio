@@ -25,7 +25,7 @@ npm install
 bower install
 ```
 
-Then to deploy the studio with the scheduler create a symlink in `$SCHEDULING_HOME/dist/war`
+Then to deploy the studio with the scheduler, create a symlink called `studio` in `$SCHEDULING_HOME/dist/war`
 pointing to `app`.
 
 # Tests
