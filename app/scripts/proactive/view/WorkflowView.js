@@ -509,7 +509,7 @@ define(
                 return (name === view.model.get("Task Name"));
             })
         },
-        copyPasteTasks: function (tasks, position) {
+        copyPasteTasks: function (tasks, position , newTaskModels, Taks) {
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
@@ -519,12 +519,8 @@ define(
             var jobModel = StudioApp.models.jobModel;
 
             var newTaskViews = {};
-            $.each(tasks, function (i, t) {
-                var task = $(t);
-                var taskView = task.data("view");
-
-                var newTaskModel = jQuery.extend(true, {}, taskView.model);
-
+            $.each(newTaskModels, function (i, newTaskModel) {
+                var taskView = Taks[i];
                 // cloning of scripts in branches does not work properly
                 // do it manually here
                 if (newTaskModel.controlFlow) {

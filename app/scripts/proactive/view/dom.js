@@ -998,7 +998,7 @@ define(
         })();
 
         $(document).ready(function () {
-
+            var task = [];
             var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
@@ -1016,7 +1016,7 @@ define(
 
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
-            var copied = false;
+            var copied = [];
             var pasteAllow = true;
 
             $(document).keydown(function (e) {
@@ -1027,16 +1027,24 @@ define(
 
             $(document).keydown(function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
+                    task = [];
                     console.log("copy");
                     copied = [];
                     $(".selected-task").each(function (i, t) {
                         copied.push(t);
+                        task.push($(t).data( "view" ))
                     })
                 }
                 if (ctrlDown && e.keyCode == vKey) {
                     if (pasteAllow) {
-                        console.log("paste");
-                        require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
+                        var newTaskModel = []
+                        var Tasksview = [];
+                         $.each(copied, function (i, t) {
+                            Tasksview.push(task[i]);
+                            newTaskModel.push(jQuery.extend(true, {}, task[i].model));
+
+                        });
+                        require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow,newTaskModel, Tasksview);
                     }
                 }
                 if (ctrlDown && e.keyCode == zKey) {
