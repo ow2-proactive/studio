@@ -155,9 +155,10 @@ define(['jquery',
                     router.navigate("workflows", {trigger: true})
                     return;
                 }
-                var app = this.options.app;
-                app.import(model);
-                app.router.navigate("workflows/" + model.get('id'));
+
+                this.options.app.import(model);
+                console.log('fragment' + "workflows/" + model.get('id'));
+                this.options.app.router ? this.options.app.router.navigate("workflows/" + model.get('id')) : null;
             },
             saveCurrentWorkflow: function (name, workflowXml, metadata) {
                 this.saveTasksPositions();
