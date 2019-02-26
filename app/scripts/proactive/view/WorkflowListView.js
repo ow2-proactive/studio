@@ -157,8 +157,7 @@ define(['jquery',
                 }
 
                 this.options.app.import(model);
-                console.log('fragment' + "workflows/" + model.get('id'));
-                this.options.app.router ? this.options.app.router.navigate("workflows/" + model.get('id')) : null;
+                Backbone.history.navigate("workflows/" + model.get('id'))
             },
             saveCurrentWorkflow: function (name, workflowXml, metadata) {
                 this.saveTasksPositions();
