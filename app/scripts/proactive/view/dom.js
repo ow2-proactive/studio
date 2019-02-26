@@ -998,7 +998,7 @@ define(
         })();
 
         $(document).ready(function () {
-            var copiedTask = [];
+            var copiedTasks = [];
             var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
@@ -1026,19 +1026,19 @@ define(
 
             $(document).keydown(function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
-                    copiedTask = [];
+                    copiedTasks = [];
                     console.log("copy");
                     $(".selected-task").each(function (i, t) {
-                        copiedTask.push($(t).data( "view" ))
+                        copiedTasks.push($(t).data( "view" ))
                     })
                 }
                 if (ctrlDown && e.keyCode == vKey) {
                     if (pasteAllow) {
                         var newTaskModel = []
                         var tasksView = [];
-                         $.each(copiedTask, function (i) {
-                            tasksView.push(copiedTask[i]);
-                            newTaskModel.push(jQuery.extend(true, {}, copiedTask[i].model));
+                         $.each(copiedTasks, function (i) {
+                            tasksView.push(copiedTasks[i]);
+                            newTaskModel.push(jQuery.extend(true, {}, copiedTasks[i].model));
 
                         });
                         require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView);
