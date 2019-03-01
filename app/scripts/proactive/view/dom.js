@@ -215,29 +215,31 @@ define(
             }
         });
 
-        function openSetTemplatesMenuModal(order){
+        function openAddPaletteBucketMenuModal(){
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
                 studioApp.models.catalogBuckets.setKind("workflow");
                 studioApp.models.catalogBuckets.fetch({reset: true, async: false});
-                studioApp.modelsToRemove = [];
-                if (order=='main')
-                    studioApp.views.catalogSetMainTemplatesBucketView.render();
-                else if (order=='secondary')
-                    studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
-                $('#set-templates-'+order+'-bucket-modal').modal();
+                studioApp.views.catalogSetSecondaryTemplatesBucketView.render();
+                $('#set-templates-secondary-bucket-modal').modal();
             }else{
                 $('#open-a-workflow-modal').modal();
             }
         }
-        $("#set-templates-main-bucket-button").click(function (event) {
-            event.preventDefault();
-            openSetTemplatesMenuModal('main');
-        });
+
+        function openSetPresetModal(){
+            var studioApp = require('StudioApp');
+            if (studioApp.isWorkflowOpen()){
+                studioApp.views.setPresetView.render();
+                $('#set-preset-modal').modal();
+            }else{
+                $('#open-a-workflow-modal').modal();
+            }
+        }
 
         $("#set-templates-secondary-bucket-button").click(function (event) {
             event.preventDefault();
-            openSetTemplatesMenuModal('secondary');
+            openAddPaletteBucketMenuModal();
         });
 
         $("#catalog-get-as-new-button").click(function (event) {
@@ -288,7 +290,26 @@ define(
 
         $("#set-templates-secondary-bucket-select-button").click(function () {
             var bucketName = ($(($("#catalog-set-templates-secondary-bucket-table .catalog-selected-row"))[0])).text();
-            require('StudioApp').views.palleteView.setSecondaryTemplatesBucket(bucketName, false);
+            // Leave modal open if bucket could not be added (normally because it's already in the Palette)
+            if (require('StudioApp').views.paletteView.addPaletteBucketMenu(bucketName, false)){
+                $('#set-templates-secondary-bucket-modal').modal('hide');
+            }
+        });
+
+        // Set default preset on startup
+        if (!localStorage['palettePreset']){
+            localStorage.setItem('palettePreset',config.default_preset);
+        }
+
+        $("#set-preset-button").click(function (event) {
+            event.preventDefault();
+            openSetPresetModal();
+        });
+
+        $("#set-preset-select-button").click(function () {
+            var presetName = ($(($("#presets-set-preset-table .preset-selected-row"))[0])).text();
+            var selectedIndex = config.palette_presets.findIndex(obj => obj.name==presetName);
+            require('StudioApp').views.paletteView.render(selectedIndex, true);
         });
 
         $("#layout-button").click(function (event) {
@@ -299,12 +320,12 @@ define(
 
         $("#add-bucket-button").click(function (event) {
             event.preventDefault();
-            openSetTemplatesMenuModal('secondary');
+            openAddPaletteBucketMenuModal();
         });
 
         $("#pin-palette-button").click(function (event) {
             event.preventDefault();
-            require('StudioApp').views.palleteView.pinPalette();
+            require('StudioApp').views.paletteView.pinPalette();
         });
         $("#zoom-in-button").click(function (event) {
             event.preventDefault();
@@ -977,7 +998,8 @@ define(
         })();
 
         $(document).ready(function () {
-
+            var copiedTasks = [];
+            var positions = [];
             var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
@@ -995,8 +1017,8 @@ define(
 
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
-            var copied = false;
             var pasteAllow = true;
+            var canDoPast = false
 
             $(document).keydown(function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
@@ -1006,16 +1028,27 @@ define(
 
             $(document).keydown(function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
+                   copiedTasks = [];
+                   positions = []
                     console.log("copy");
-                    copied = [];
                     $(".selected-task").each(function (i, t) {
-                        copied.push(t);
+                    positions.push({left: $(t).position().left, top: $(t).position().top})
+                        copiedTasks.push($(t).data( "view" ))
                     })
+                    // let the user how he can do past(ctr-v)
+                     StudioClient.alert('alert-success', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
+
                 }
                 if (ctrlDown && e.keyCode == vKey) {
                     if (pasteAllow) {
-                        console.log("paste");
-                        require('StudioApp').views.workflowView.copyPasteTasks(copied, pasteAllow);
+                        var newTaskModel = []
+                        var tasksView = [];
+                         $.each(copiedTasks, function (i) {
+                            tasksView.push(copiedTasks[i]);
+                            newTaskModel.push(jQuery.extend(true, {}, copiedTasks[i].model));
+
+                        });
+                        require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
                     }
                 }
                 if (ctrlDown && e.keyCode == zKey) {

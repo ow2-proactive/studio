@@ -56,14 +56,10 @@ define(
                         templateUrl = elem.data("templateUrl");
                       else {
                         var templateName =  elem.data('templateName');
-                        var templateModel = that.options.app.models.templates.find(function(template) {return template.attributes.name == templateName});
-                        if (!templateModel) {
-                            var localStorageTemplates = JSON.parse(localStorage.getItem('secondaryBucketNames'));
-                            templateModel = that.options.app.models.secondaryTemplates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
-                        }
-                        var bucket_name = templateModel.attributes.bucket_name;
-                        var workflow_name = templateModel.attributes.name;
-                        templateUrl = '/catalog/buckets/' + bucket_name + '/resources/'+workflow_name+'/raw';
+                        var templateModel = that.options.app.models.templates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
+                        var bucketName = templateModel.attributes.bucket_name;
+                        var workflowName = templateModel.attributes.name;
+                        templateUrl = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/raw';
                       }
                       $.ajax({
                           type: "GET",
@@ -233,7 +229,6 @@ define(
             this.initJsPlumb()
         },
         addView: function (view, position) {
-
             var that = this;
             var rendering = view.render();
             this.workFlowDesigner.append(rendering.$el);
@@ -452,7 +447,7 @@ define(
                     // compute absolute offsets
 					var new_offset = {};
 					new_offset.left = $('#workflow-designer').offset().left + offset.left;
-					new_offset.top = $('#workflow-designer').offset().top + offset.top;					
+					new_offset.top = $('#workflow-designer').offset().top + offset.top;
                     $(this).offset(new_offset);
                 } else {
                     autolayout = true;
@@ -513,7 +508,7 @@ define(
                 return (name === view.model.get("Task Name"));
             })
         },
-        copyPasteTasks: function (tasks, position) {
+        copyPasteTasks: function (position , newTaskModels, tasksView, tasksPosition) {
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
@@ -521,14 +516,19 @@ define(
             var thizz = this;
             var StudioApp = require('StudioApp');
             var jobModel = StudioApp.models.jobModel;
-
             var newTaskViews = {};
-            $.each(tasks, function (i, t) {
-                var task = $(t);
-                var taskView = task.data("view");
+            var minLeft = 0;
+            var minTop = 0;
+            function sort(arr, type){
+                return Array.prototype.slice.call(arr).sort(function(a,b){
+                    return a[type] - b[type];
+                })
+            }
+            minLeft = sort(tasksPosition, 'left')[0].left;
+            minTop = sort(tasksPosition, 'top')[0].top;
 
-                var newTaskModel = jQuery.extend(true, {}, taskView.model);
-
+            $.each(newTaskModels, function (i, newTaskModel) {
+                var taskView = tasksView[i];
                 // cloning of scripts in branches does not work properly
                 // do it manually here
                 if (newTaskModel.controlFlow) {
@@ -549,16 +549,27 @@ define(
                     suffix += 1;
                     newTaskName = newTaskModel.get("Task Name") + suffix
                 }
-
                 newTaskModel.set("Task Name", newTaskName)
                 jobModel.addTask(newTaskModel);
 
                 var newTaskView = new TaskView({model: newTaskModel});
+
                 if (!position.top) {
                     position = {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100};
                 }
-                thizz.addView(newTaskView, position);
 
+               if(tasksPosition[i].left == minLeft){
+                   tasksPosition[i].left = position.left
+               } else if(minLeft){
+                   tasksPosition[i].left = tasksPosition[i].left - minLeft + position.left
+             }
+
+              if(tasksPosition[i].top == minTop){
+                   tasksPosition[i].top = position.top
+            } else if(minTop){
+               tasksPosition[i].top = tasksPosition[i].top - minTop + position.top
+               }
+                thizz.addView(newTaskView, {left: tasksPosition[i].left , top: tasksPosition[i].top  })
                 newTaskViews[taskView.model.get("Task Name")] = newTaskView;
             })
             // process dependencies

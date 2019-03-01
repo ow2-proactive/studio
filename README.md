@@ -5,8 +5,15 @@
 
 ## Requirements
 You need npm installed (Node.js).
-Selenium-standalone is required for the UI tests (installed locally by npm).
+Selenium-standalone is required for the UI tests (installed locally by npm). If you intend to run the tests locally, you'll need to update your Chrome browser and install the latest version of Selenium-standalone:
 
+```
+npm install selenium-standalone@latest
+```
+
+Not updating both Chrome and selenium-standalone can result in selenium not able to _attach_ to the browser when running the tests.
+
+:boom::boom: Do not commit your changes to the selenium-standalone version :boom::boom:
 
 ## Setup
 
@@ -18,7 +25,7 @@ npm install
 bower install
 ```
 
-Then to deploy the studio with the scheduler create a symlink in `$SCHEDULING_HOME/dist/war`
+Then to deploy the studio with the scheduler, create a symlink called `studio` in `$SCHEDULING_HOME/dist/war`
 pointing to `app`.
 
 # Tests
