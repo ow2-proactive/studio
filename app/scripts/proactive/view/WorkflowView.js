@@ -524,12 +524,8 @@ define(
                     return a[type] - b[type];
                 })
             }
-            console.log(tasksPosition)
             minLeft = sort(tasksPosition, 'left')[0].left;
             minTop = sort(tasksPosition, 'top')[0].top;
-            console.log('------------------*************tasksPosition ' + minLeft)
-            console.log(tasksPosition)
-            console.log('tasksPosition ' +  minTop)
 
             $.each(newTaskModels, function (i, newTaskModel) {
                 var taskView = tasksView[i];
