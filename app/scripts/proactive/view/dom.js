@@ -999,6 +999,7 @@ define(
 
         $(document).ready(function () {
             var copiedTasks = [];
+            var positions = [];
             var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
@@ -1017,6 +1018,7 @@ define(
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
             var pasteAllow = true;
+            var canDoPast = false
 
             $(document).keydown(function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
@@ -1026,11 +1028,16 @@ define(
 
             $(document).keydown(function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
-                    copiedTasks = [];
+                   copiedTasks = [];
+                   positions = []
                     console.log("copy");
                     $(".selected-task").each(function (i, t) {
+                    positions.push({left: $(t).position().left, top: $(t).position().top})
                         copiedTasks.push($(t).data( "view" ))
                     })
+                    // let the user how he can do past(ctr-v)
+                     StudioClient.alert('alert-success', 'Click on where you want to do past and then do ctrl-V.', 'warning');
+
                 }
                 if (ctrlDown && e.keyCode == vKey) {
                     if (pasteAllow) {
@@ -1041,7 +1048,7 @@ define(
                             newTaskModel.push(jQuery.extend(true, {}, copiedTasks[i].model));
 
                         });
-                        require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView);
+                        require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
                     }
                 }
                 if (ctrlDown && e.keyCode == zKey) {
