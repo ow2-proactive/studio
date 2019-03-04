@@ -819,8 +819,8 @@ div[name="Arguments"] button {
 }
 
 .selected-task {
-    /*border-width: 2px;*/
-    background-color: #E8E8E8;
+    border-width: 2px;
+    background-color: #CFD8DC;
 }
 
 .table-hover {
@@ -964,7 +964,7 @@ li {
 
 .active-task {
     border: 2px solid #346789;
-    background-color: #E8E8E8;
+    background-color: #B0BEC5;
 }
 
 li.success {
@@ -1053,7 +1053,7 @@ li.success {
 }
 
 .ui-pnotify {
-    top: 70px !important;
+    top: 110px !important;
 }
 
 .menu-button {
