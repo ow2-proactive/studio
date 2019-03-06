@@ -1016,7 +1016,7 @@ define(
 
 
             var ctrlDown = false;
-            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
+            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89, aKey = 65;
             var pasteAllow = true;
             var canDoPast = false
 
@@ -1056,6 +1056,10 @@ define(
                 }
                 if (ctrlDown && e.keyCode == yKey) {
                     undoManager.redoIfEnabled();
+                }
+                if(ctrlDown  && e.keyCode == aKey ){
+                       e.preventDefault();
+                       $(".task").addClass("selected-task");
                 }
             });
 
