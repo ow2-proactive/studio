@@ -1019,14 +1019,13 @@ define(
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89, aKey = 65;
             var pasteAllow = true;
             var canDoPast = false
-
-            $(document).keydown(function (e) {
+            $('#workflow-designer-outer').bind('keydown', function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
             }).keyup(function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
             });
 
-            $(document).keydown(function (e) {
+            $('#workflow-designer-outer').bind('keydown',function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
                    copiedTasks = [];
                    positions = []
