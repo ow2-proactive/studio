@@ -1035,7 +1035,7 @@ define(
                         copiedTasks.push($(t).data( "view" ))
                     })
                     // let the user how he can do past(ctr-v)
-                     StudioClient.alert('alert-success', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
+                     StudioClient.alert('Copy/Paste', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
 
                 }
                 if (ctrlDown && e.keyCode == vKey) {
