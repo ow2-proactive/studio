@@ -223,7 +223,10 @@ define(
       initialize: function() {
 
         var StudioApp = require('StudioApp');
-
+        $(function() {
+                console.log
+                 $('#workflow-designer-outer').focus();
+              });
         this.set({
           "Name": "Untitled Workflow 1"
         });
@@ -365,6 +368,7 @@ define(
           this.attributes.Variables = [variable];
         }
       },
+
       addTask: function(task) {
         console.log("Adding task", task)
         this.tasks.push(task)
