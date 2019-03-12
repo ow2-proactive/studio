@@ -224,7 +224,6 @@ define(
 
         var StudioApp = require('StudioApp');
         $(function() {
-                console.log
                  $('#workflow-designer-outer').focus();
               });
         this.set({
@@ -370,8 +369,11 @@ define(
       },
 
       addTask: function(task) {
-        console.log("Adding task", task)
-        this.tasks.push(task)
+        console.log("Adding task", task);
+        this.tasks.push(task);
+        // We call these methods in order to save the last state of the workflow
+        undoManager._enable();
+        undoManager.save();
       },
       removeTask: function(task) {
         console.log("Removing task", task)
