@@ -1050,8 +1050,9 @@ define(
                         require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
                     }
                 }
-                if (ctrlDown && e.keyCode == zKey) {
-                    undoManager.undoIfEnabled();
+                if ( (ctrlDown && e.keyCode == zKey)) {
+                    // copiedTasks.length number of the tasks that we added to the workflow
+                    undoManager.undoIfEnabled(positions.length);
                 }
                 if (ctrlDown && e.keyCode == yKey) {
                     undoManager.redoIfEnabled();
