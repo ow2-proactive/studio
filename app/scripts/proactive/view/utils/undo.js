@@ -44,7 +44,7 @@ define(
             }
             // We want to know where we call this function: undo of workflow variables, tasks,...
             num = num || 0;
-            if(num.length > 0){
+            if(num > 0){
                 var length = undoStates.length;
                 for(var i= 1; i<num + 1; i++){
                     undoStates = undoStates.slice(0,length - i + 1);
