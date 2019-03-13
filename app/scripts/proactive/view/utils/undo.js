@@ -42,9 +42,16 @@ define(
                 StudioClient.alert("No further undo data", "");
                 return;
             }
-            var length = undoStates.length;
-            for(var i= 1; i<num + 1; i++){
-            undoStates = undoStates.slice(0,length - i + 1);
+            // We want to know where we call this function: undo of workflow variables or tasks
+            num = num || 0;
+            if(num.length > 0){
+                var length = undoStates.length;
+                for(var i= 1; i<num + 1; i++){
+                    undoStates = undoStates.slice(0,length - i + 1);
+                    this._move(undoStates, redoStates);
+                    this._restoreLastState();
+                }
+            } else {
                 this._move(undoStates, redoStates);
                 this._restoreLastState();
             }
