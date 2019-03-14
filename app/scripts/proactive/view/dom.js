@@ -739,13 +739,13 @@ define(
             undoManager.redo()
         });
 
-        $(document).on('focus', "*", function () {
-            undoManager._disable();
-        });
 
         $(document).on('focusout', function () {
             undoManager._enable();
-            undoManager.save();
+        });
+        $(window).on('hashchange', function(e){
+         undoManager._enable();
+         undoManager.save();
         });
 
         (function scriptManagement() {
