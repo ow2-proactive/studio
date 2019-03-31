@@ -209,16 +209,19 @@ define(
             })
         },
         setPalettePreset: function(presetIndex){
-            if (!presetIndex && presetIndex!==0) {
+            if (!presetIndex && presetIndex !== 0) {
                 presetIndex = localStorage.getItem('palettePreset');
-            }else{
-                localStorage.setItem('palettePreset',presetIndex);
+            } else {
+                localStorage.setItem('palettePreset', presetIndex);
             }
             var presetName = config.palette_presets[presetIndex].name;
+            var allPresetNames = config.palette_presets.map(function(p) {return p.name});
+
             //rendering page title
-            var divBucketName = $("<div id='bucket-name-title'>"+ presetName +"</div>");
+            var presetsMenu = this.createPresetMenu(presetName, allPresetNames);
             $("#studio-bucket-title").empty();
-            $("#studio-bucket-title").append(divBucketName);
+            $("#studio-bucket-title").append(presetsMenu);
+            this.updateDimensions();
             // return Preset Index
             return presetIndex;
         },
@@ -286,6 +289,34 @@ define(
             }
             this.options.app.models.templates[bucketName] = bucketTemplates;
             return true;
-        }
+        },
+            createPresetMenu : function (presetName, allPresetNames) {
+                var divBucketName = $("<div id='preset-title'><span id='preset-title-text' class='ellipsis'>"+ presetName +"</span><a id = 'preset-caret' class='dropdown-toggle' href='#' data-toggle='dropdown'><span class='caret'></span></a></div>");
+                var presetsDropDown = $('<ul id = "presets-list" class="dropdown-menu" role="menu"></ul>');
+                allPresetNames.forEach(function (preset) {
+                    var item = $('<li><a href="javascript:void(0)" class="pointer">'+preset+'</a></li>');
+                    presetsDropDown.append(item);
+                });
+                divBucketName.append(presetsDropDown);
+                return divBucketName;
+            },
+            updateDimensions: function () {
+
+                var windowWidth = document.documentElement.clientWidth;
+
+                var right = document.getElementById('ae-logo').offsetWidth;
+                var left = document.getElementById('shortcuts-toolbar').offsetWidth;
+                var container = document.getElementById('preset-caret').offsetWidth + 20; //20 is the left/right padding value of the container
+
+                var presetTitle = document.getElementById('preset-title-text');
+                var oldWidth = presetTitle.offsetWidth;
+                var availableWidth = windowWidth - (right + left + container);
+
+                if (windowWidth == 1200) {
+                    presetTitle.style.width = '31px';
+                } else if (oldWidth >= availableWidth || availableWidth > 10) {
+                    presetTitle.style.width = (availableWidth-10) + 'px';
+                }
+            }
     })
-})
+});

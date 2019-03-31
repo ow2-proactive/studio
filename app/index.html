@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="libs/codemirror/addon/dialog/dialog.css"/>
     <link rel="stylesheet" href="libs/codemirror/theme/eclipse.css"/>
     <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="libs/components-font-awesome/css/fontawesome-all.css"/>
     <!-- endbower -->
 
     <link href="libs/pnotify/dist/pnotify.css" rel="stylesheet" type="text/css"/>
@@ -47,78 +48,134 @@
 <div id="navbar-fixed" class="navbar navbar-default navbar-fixed-top" role="navigation">
 
     <div class="navbar-header" style="min-width:100%;">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <icons class="flex-center">
-            <div>
-                <a class="navbar-brand no-padding"><img src="images/proactive_32.png" style="height:40px">ProActive
-                    Workflow Studio </a>
+        <div class="pull-left" style="display: inline-flex; margin-bottom: 5px">
+            <div id = "ae-logo">
+                <a href="http://activeeon.com/" target="_blank" class="navbar-brand no-padding">
+                    <img src="images/AE-Logo.png" style="height:40px">
+                </a>
+            </div>
+            <!--div id="powered-by-logo">
+                <!--img src="images/powered_by_azure.png" style="width: 121px;height:35px;display:block;margin: 4px 6px;"-->
+                <!--img src="images/company-icon-squared.png" style="width: 121px;height:35px;display:block;margin: 4px 6px;"-->
+            <!--/div-->
+            <div id="studio-bucket-title"></div>
+        </div>
+        <div id = "shortcuts-toolbar" class="btn-toolbar pull-right" role="toolbar">
 
+            <!-- Automation Dashboard -->
+            <div class="btn-group pa-shortcuts" style="width: 188px">
+                <a class="btn btn-small btn-default pa-shortcuts" href="/automation-dashboard/"
+                   target="/automation-dashboard/">
+                    <img src="images/automation_dashboard_30.png" class="right-padding" style="height:25px; margin: auto;">
+                    <div class="pa-shortcut" style="width: 145px;">Automation Dashboard</div>
+                </a>
             </div>
-            <p id="studio-bucket-title"/>
-            <div style="padding-top: 0px;">
-                <img src="images/company-icon-squared.png" style="height:40px;display:block;margin:auto;">
-            </div>
-            <div>
-                <a href="http://activeeon.com/" target="_blank" class="navbar-brand no-padding pull-right"><img
-                        src="images/AE-Logo.png" style="height:40px"></a>
-            </div>
-        </icons>
 
+            <!-- Studio -->
+            <div class="btn-group pa-shortcuts" style="width: 146px">
+                <a class="btn btn-small btn-default pa-shortcuts active" href="#">
+                    <img src="images/studio_30.png" class="right-padding" style="height:25px; margin: auto;">
+                    <div class="pa-shortcut" style="width: 103px;">Workflow Studio</div>
+                </a>
+            </div>
+
+            <!-- Scheduler Portal -->
+            <div class="btn-group pa-shortcuts" style="width: 214px">
+                <a class="btn btn-small btn-default pa-shortcuts" href="/scheduler/" target="/scheduler/">
+                    <img src="images/scheduler_30.png" class="right-padding" style="height:25px; margin: auto;">
+                    <div class="pa-shortcut" style="width: 171px;">Scheduling & Orchestration</div>
+                </a>
+            </div>
+
+            <!-- Resource Manager -->
+            <div class="btn-group pa-shortcuts" style="width: 161px">
+                <a class="btn btn-small btn-default pa-shortcuts" href="/rm/" target="/rm/">
+                    <img src="images/rm_30.png" class="right-padding" style="height:25px; margin: auto;">
+                    <span class="pa-shortcut" style="width: 118px;">Resource Manager</span>
+                </a>
+            </div>
+            <div class="btn-group pa-shortcuts" id="logout-view-container">
+                <div class="divider-vertical" style="height: 34px; margin-top: 3px; margin-left: 0px"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
+    <div class="navbar-header">
+    <!--div class="collapse navbar-collapse"-->
+
+        <!-- MENU BAR -->
+
+        <ul class="nav navbar-nav pull-left">
+
+            <!-- File -->
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown" id="file-dropdown"> File <b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown" id="file-dropdown">File</a>
                 <ul class="dropdown-menu">
-                    <li><a id="validate-button" href="#" class="pointer"
+                    <!-- Check -->
+                    <li>
+                        <a id="validate-button" href="#" class="pointer"
                            title="Check the validity of current workflow.">
-                        <i class="glyphicon glyphicon-ok "></i> Check</a></li>
-                    <li><a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
-                        <i class="glyphicon glyphicon-hdd"></i> Save </a></li>
-                    <li><a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
-                        <i class="glyphicon glyphicon-folder-close"></i> Close</a></li>
-                    <li><a id="import-button" href="" class="pointer"
+                            <i class="fas fa-check"></i> Check
+                        </a>
+                    </li>
+                    <!-- Save -->
+                    <li>
+                        <a href="#" id="save-button" class="pointer dropdown-toggle" title="Save current workflow.">
+                            <i class="fas fa-save"></i> Save
+                        </a>
+                    </li>
+                    <!-- Close -->
+                    <li>
+                        <a href="#" id="close-button" class="pointer dropdown-toggle" title="Close current workflow.">
+                            <i class="fas fa-window-close"></i> Close
+                        </a>
+                    </li>
+                    <!-- Import as current workflow -->
+                    <li>
+                        <a id="import-button" href="" class="pointer"
                            title="Import existing workflows (.xml files).">
-                        <i class="glyphicon glyphicon-import"></i> Import as current workflow</a></li>
-                    <li><a id="add-button" href="#" class="pointer"
+                            <i class="glyphicon glyphicon-import"></i> Import as current workflow
+                        </a>
+                    </li>
+                    <!-- Append to current workflow -->
+                    <li>
+                        <a id="add-button" href="#" class="pointer"
                            title="Add existing workflows (.xml files) to current one.">
-                        <i class="glyphicon glyphicon-plus"></i> Add to current workflow</a></li>
-                    <li><a id="export-button" href="#" class="pointer"
+                            <i class="glyphicon glyphicon-plus"></i> Add to current workflow
+                        </a>
+                    </li>
+                    <!-- Export Workflow -->
+                    <li>
+                        <a id="export-button" href="#" class="pointer"
                            title="Export current workflow as .xml file.">
-                        <i class="glyphicon glyphicon-export"></i> Export</a></li>
+                            <i class="glyphicon glyphicon-export"></i> Export
+                        </a>
+                    </li>
                 </ul>
             </li>
 
-
-            <li class="divider-vertical"></li>
-
+            <!-- Edit -->
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown" id="edit-dropdown"> Edit <b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown" id="edit-dropdown">Edit</a>
                 <ul class="dropdown-menu">
                     <li><a id="clear-button" href="#" class="pointer" title="Clear current workflow.">
-                        <i class="glyphicon glyphicon-repeat"></i> Clear</a></li>
+                        <i class="fas fa-trash-alt"></i> Clear</a></li>
                     <li><a id="undo-button" href="#" class="pointer">
-                        <i class="glyphicon glyphicon-arrow-left"></i> Undo</a></li>
+                        <i class="fas fa-undo"></i> Undo</a></li>
                     <li><a id="redo-button" href="#" class="pointer">
-                        <i class="glyphicon glyphicon-arrow-right"></i> Redo</a></li>
+                        <i class="fas fa-redo"></i> Redo</a></li>
 
                 </ul>
             </li>
 
-            <li class="divider-vertical"></li>
-
+            <!-- View -->
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown" id="view-dropdown"> View <b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown" id="view-dropdown">View</a>
                 <ul class="dropdown-menu">
                     <li>
                         <a id="set-preset-button" href="#" class="pointer"
                            title="Change the default preset of the Palette.">
-                            <i class="glyphicon glyphicon-th-large"></i> Change Palette Preset
+                            <i class="fas fa-th-large"></i> Change Palette Preset
                         </a>
                     </li>
                     <li>
@@ -129,97 +186,123 @@
                 </ul>
             </li>
 
-            <li class="divider-vertical"></li>
-
+            <!-- Catalog -->
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown" id="catalog-dropdown">
-                    <i class="glyphicon glyphicon-folder-open"></i> Catalog <b class="caret"></b>
-                </a>
+                <a href="#" data-toggle="dropdown" id="catalog-dropdown">Catalog</a>
                 <ul class="dropdown-menu">
                     <li>
                         <a id="get-from-catalog-button" href="#" class="pointer">
-                            <i class="glyphicon glyphicon-arrow-left"></i>
+                            <i class="fas fa-file-import"></i>
                             Get a Workflow from the Catalog
                         </a>
                     </li>
                     <li>
                         <a id="publish-to-catalog-button" href="#" class="pointer">
-                            <i class="glyphicon glyphicon-arrow-right"></i>
+                            <i class="fas fa-file-export"></i>
                             Publish current Workflow to the Catalog
                         </a>
                     </li>
                 </ul>
             </li>
-            <li class="divider-vertical"></li>
 
-            <li><a id="submit-button" href="#" class="pointer"
-                   title="Execute current workflow on the Scheduler you are connected to.">
-                <i class="glyphicon glyphicon-share"></i> Execute</a></li>
-            <li><a id="plan-button" href="#" class="pointer"
-                   title="Plan current worklfow with the job planner portal.">
-                <i class="glyphicon glyphicon-calendar"></i> Plan</a></li>
-            <li class="divider-vertical"></li>
+            <!-- Help -->
             <li class="dropdown">
-                <a href="#" data-toggle="dropdown"> Help <b class="caret"></b></a>
+                <a href="#" data-toggle="dropdown">Help</a>
                 <ul class="dropdown-menu">
-                    <li><a class="pointer" target="_blank" id="documentationLinkId" href="http://doc.activeeon.com/"><i
-                            class="glyphicon glyphicon-book"></i> Documentation</a></li>
-                    <li><a class="pointer" href="#" id="about-button"><i class="glyphicon glyphicon-question-sign"></i>
-                        About</a></li>
+                    <li>
+                        <a class="pointer" target="_blank" id="documentationLinkId" href="http://doc.activeeon.com/">
+                            <i class="glyphicon glyphicon-book"></i>
+                            Documentation
+                        </a>
+                    </li>
+                    <li>
+                        <a class="pointer" href="#" id="about-button">
+                            <i class="fas fa-book"></i>
+                            About
+                        </a>
+                    </li>
                 </ul>
             </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <div>
-                    <form class="navbar-form" style="padding-right: 12px">
-                        <a class="btn btn-small btn-default" href="/automation-dashboard/"
-                           target="/automation-dashboard/"><img src="images/automation_dashboard_30.png"
-                                                                class="right-padding" style="height:25px">Automation
-                            Dashboard</a>
-                    </form>
-                </div>
-            </li>
 
-            <li>
-                <div>
-                    <form class="navbar-form" style="padding-right: 12px">
-                        <a class="btn btn-small btn-default active" href="#"><img src="images/studio_30.png"
-                                                                                  class="right-padding"
-                                                                                  style="height:25px">Workflow
-                            Studio</a>
-                    </form>
-                </div>
-            </li>
+        </ul>  <!-- END MENU BAR -->
 
-            <li>
-                <div>
-                    <form class="navbar-form" style="padding-right: 12px">
-                        <a class="btn btn-small btn-default" href="/scheduler/" target="/scheduler/"><img
-                                src="images/scheduler_30.png" class="right-padding" style="height:25px">Scheduling &
-                            Orchestration</a>
-                    </form>
-                </div>
-            </li>
+        <!-- TOOLBAR -->
 
-            <li>
-                <div>
-                    <form class="navbar-form" style="padding-right: 0px">
-                        <a class="btn btn-small btn-default" href="/rm/" target="/rm/"><img src="images/rm_30.png"
-                                                                                            class="right-padding"
-                                                                                            style="height:25px">Resource
-                            Manager</a>
-                    </form>
-                </div>
-            </li>
+        <div class="btn-toolbar pull-left" role="toolbar">
 
             <li class="divider-vertical"></li>
 
-            <li id="logout-view-container"></li>
-        </ul>
+            <!-- GROUP 1 -->
+            <div class="btn-group pa-tools">
+                <!-- Execute -->
+                <a id="submit-button" href="#" class="pointer pa-tool-btn"
+                   title="Execute current workflow on the Scheduler you are connected to.">
+                    <i class="fas fa-play"></i>
+                </a>
+                <!-- Check -->
+                <a id="validate-button-tool" href="#" class="pointer pa-tool-btn"
+                   title="Check the validity of current workflow.">
+                    <i class="fas fa-check"></i>
+                </a>
+                <!-- Plan -->
+                <a id="plan-button" href="#" class="pointer pa-tool-btn"
+                   title="Plan current worklfow with the job planner portal.">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </a>
+            </div>
+
+            <div class="divider-vertical"></div>
+
+            <!-- GROUP 2 -->
+            <div class="btn-group pa-tools">
+                <!-- Save -->
+                <a href="#" id="save-button-tool" class="pointer pa-tool-btn" title="Save current workflow.">
+                    <i class="fas fa-save"></i>
+                </a>
+                <!-- Import from Catalog -->
+                <a id="get-from-catalog-button-tool" href="#" class="pointer pa-tool-btn">
+                    <i class="fas fa-file-import"></i>
+                </a>
+                <!-- Export to Catalog -->
+                <a id="publish-to-catalog-button-tool" href="#" class="pointer pa-tool-btn">
+                    <i class="fas fa-file-export"></i>
+                </a>
+            </div>
+
+            <div class="divider-vertical"></div>
+
+            <!-- GROUP 3 -->
+            <div class="btn-group pa-tools">
+                <!-- Clear -->
+                <a id="clear-button-tool" href="#" class="pointer pa-tool-btn" title="Clear current workflow.">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+                <!-- Undo -->
+                <a id="undo-button-tool" href="#" class="pointer pa-tool-btn">
+                    <i class="fas fa-undo"></i>
+                </a>
+                <!-- Redo -->
+                <a id="redo-button-tool" href="#" class="pointer pa-tool-btn">
+                    <i class="fas fa-redo"></i>
+                </a>
+            </div>
+        </div> <!-- END TOOLBAR -->
+
+        <!-- Proactive Nostalgia -->
+        <div class="btn-group pull-right extra-logos">
+            <div id="powered-by-logo">
+                <img src="images/company-icon-squared.png" style="height:25px;margin: 4px 6px;">
+                <!-- TODO rename company-icon-squared.png to powered_by_azure.png-->
+                <!--img src="images/powered_by_azure.png" style="height:25px;margin: 4px 6px;"-->
+            </div>
+            <a class="pa-logo" href="http://proactive.inria.fr" target="/rm/">
+                <img src="images/proactive_40.png" class="right-padding" style="height:25px">
+            </a>
+        </div>
+
     </div>
 
-    <div style="height: 3px; background: #f47930;"></div>
+    <div style="height: 3px; background: #f47930; margin-top: 1px;"></div>
 </div>
 
 <table id="body-container" style="min-width:100%;height:100%">
