@@ -6,16 +6,13 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
             .createTask()
-            .toggleMenu()
             .clickSaveWorkflow()
             .assert.notification("Saved")
             .closeNotification()
-            .toggleMenu()
             .clickValidateWorkflow()
             .assert.notification('Workflow is valid')
             .closeNotification()
@@ -26,7 +23,6 @@ module.exports = {
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -36,17 +32,14 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
             .createPythonTask()
-            .toggleMenu()
             .clickSaveWorkflow()
             .assert.notification("Saved")
             .closeNotification()
-            .toggleMenu()
-            .click('#validate-button')
+            .clickValidateWorkflow()
             .assert.notification('Workflow is valid')
             .closeNotification()
             .checkExport(function (select, jobXmlDocument) {
@@ -72,7 +65,6 @@ module.exports = {
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -82,7 +74,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -114,7 +105,6 @@ module.exports = {
             .pause(browser.globals.menuAnimationTime)
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -124,13 +114,11 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
             .createTask()
             .waitForElementVisible('.task')
-            .toggleMenu()
             .clickClearWorkflow()
             .checkExport(function (select, jobXmlDocument) {
                 var task = select("//p:task", jobXmlDocument)[0]
@@ -138,7 +126,6 @@ module.exports = {
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -150,7 +137,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -162,7 +148,6 @@ module.exports = {
             .clearValue("input[name='Task Name']")
             .setValue("input[name='Task Name']", _taskNameVal)
             .assert.containsText('.task-name > .name', _taskNameVal)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -172,7 +157,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -181,7 +165,6 @@ module.exports = {
             .waitForElementVisible('.task')
             .click(".task")
             .assert.attributeEquals("a[id='Multi-Node Execution']", "data-help", "Configuration of resources requirements")
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();

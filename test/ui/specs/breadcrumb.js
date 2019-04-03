@@ -26,7 +26,6 @@ module.exports = {
             .assert.containsText("#workflow-list", 'Project: Default')
             .assert.containsText("#breadcrumb", 'Workflows')
 
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();

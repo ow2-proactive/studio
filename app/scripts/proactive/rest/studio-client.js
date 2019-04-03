@@ -353,7 +353,6 @@ define(
                 if (async) {
                     request.onreadystatechange = function() {
                         if (request.readyState == 4) {
-                            console.log("Response", request)
                             try {
                                 var result = JSON.parse(request.responseText)
                             } catch (err) {
