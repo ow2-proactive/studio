@@ -39,6 +39,10 @@ footer {
     vertical-align: middle;
 }
 
+.ellipsis.dropdown-toggle{
+    cursor: pointer;
+}
+
 #workflow-designer {
     min-height: 400%;
     min-width: 200%;
@@ -1145,9 +1149,6 @@ li.success {
         border-color: transparent;
     }
 
-    .pa-shortcut {
-    }
-
     .extra-logos{
         max-width: 0px!important;
     }
@@ -1336,6 +1337,12 @@ li.success {
     color: #333 !important;
     font-weight: bold;
     font-size: 13px;
+}
+
+.preset-menu-header{
+    padding: 3px 10px 0px 7px;
+    text-transform: none;
+    font-weight: 400;
 }
 
 #login-view {

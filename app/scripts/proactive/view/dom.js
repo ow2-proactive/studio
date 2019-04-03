@@ -112,7 +112,7 @@ define(
         Backbone.Form.editors.Text.prototype.setValue = function(value) {
             this.previousValue = value;
             this.$el.val(value);
-        }
+        };
 
         function closeCollapsedMenu() {
             $('.navbar-collapse.in').collapse('hide');
@@ -120,11 +120,11 @@ define(
 
         $("#import-button").click(function (event) {
             add_or_import(event, '#import-file');
-        })
+        });
 
         $("#add-button").click(function (event) {
             add_or_import(event, '#add-file');
-        })
+        });
 
         function add_or_import(event, buttonSelector){
             event.preventDefault();
@@ -142,11 +142,11 @@ define(
             import_file(env, true);
             PNotify.removeAll();
 
-        })
+        });
 
         $('#add-file').change(function (env) {
             import_file(env, false);
-        })
+        });
 
         function import_file(env, clearFirst){
             var studioApp = require('StudioApp');
@@ -327,7 +327,7 @@ define(
         function updateDimensions() {
 
             var windowWidth = document.documentElement.clientWidth;
-            var right = document.getElementById('ae-logo').offsetWidth;// + document.getElementById('powered-by-logo').offsetWidth;
+            var right = document.getElementById('ae-logo').offsetWidth;
             var left = document.getElementById('shortcuts-toolbar').offsetWidth;
             var container = document.getElementById('preset-caret').offsetWidth; //20 is the left/right padding value of the container
 

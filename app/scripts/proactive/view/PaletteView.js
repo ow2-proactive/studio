@@ -19,6 +19,8 @@ define(
             if (!localStorage['paletteBuckets'])
                 localStorage.setItem('paletteBuckets',"[]");
             this.options.app.models.templates = {};
+            //rendering page title
+            this.createPresetsMenu();
         },
         createMenuFromConfig: function (template, menu) {
             var that = this;
@@ -215,12 +217,9 @@ define(
                 localStorage.setItem('palettePreset', presetIndex);
             }
             var presetName = config.palette_presets[presetIndex].name;
-            var allPresetNames = config.palette_presets.map(function(p) {return p.name});
-
-            //rendering page title
-            var presetsMenu = this.createPresetMenu(presetName, allPresetNames);
-            $("#studio-bucket-title").empty();
-            $("#studio-bucket-title").append(presetsMenu);
+            $('#preset-title-text').text(presetName);
+            //$("#studio-bucket-title").empty();
+            //$("#studio-bucket-title").append(presetsMenu);
             this.updateDimensions();
             // return Preset Index
             return presetIndex;
@@ -290,15 +289,22 @@ define(
             this.options.app.models.templates[bucketName] = bucketTemplates;
             return true;
         },
-            createPresetMenu : function (presetName, allPresetNames) {
-                var divBucketName = $("<div id='preset-title'><span id='preset-title-text' class='ellipsis'>"+ presetName +"</span><a id = 'preset-caret' class='dropdown-toggle' href='#' data-toggle='dropdown'><span class='caret'></span></a></div>");
+            createPresetsMenu : function () {
+                var allPresetNames = config.palette_presets.map(function(p) {return p.name});
+                var divBucketName = $('#preset-title');
                 var presetsDropDown = $('<ul id = "presets-list" class="dropdown-menu" role="menu"></ul>');
+                var presetsMenuHeader = $('<li><span class="preset-menu-header dropdown-header"><i class="fas fa-th-large"></i> Change palette preset</span></li>' +
+                    '<li role="separator" class="divider"></li>');
+                presetsDropDown.append(presetsMenuHeader);
                 allPresetNames.forEach(function (preset) {
+                    // calling href="#" would wrong the router to un-display the current workflow
                     var item = $('<li><a href="javascript:void(0)" class="pointer">'+preset+'</a></li>');
                     presetsDropDown.append(item);
                 });
                 divBucketName.append(presetsDropDown);
-                return divBucketName;
+                //return divBucketName;
+                $("#studio-bucket-title").empty();
+                $("#studio-bucket-title").append(divBucketName);
             },
             updateDimensions: function () {
 
