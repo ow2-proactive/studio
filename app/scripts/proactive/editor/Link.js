@@ -59,7 +59,6 @@ define(
             },
             // Value: JSON of name and url, where name is the link name and the url is the value for the href attribute
             setValue: function(value) {
-                console.log('Setting new value', value);
                 try {
                     // Parse recieved value
                     var parsedValue = JSON.parse(value);

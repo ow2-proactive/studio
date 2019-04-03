@@ -131,7 +131,6 @@ define(
                     that.addPaletteBucketMenu(secondaryBucketName, true);
                 });
             }
-            console.log('Preset changed successfully to '+config.palette_presets[palettePresetIndex]);
         },
         checkAndGetBucketByName : function(bucketName, onPageLoad, callback){
             $.ajax({
