@@ -20,8 +20,7 @@ footer {
     font-weight: bold;
     text-transform: uppercase;
     float: right;
-    display: inline-block;
-    display: -moz-inline-block;
+    display: table;
     line-height: 25px;
     cursor: default;
 }
@@ -37,6 +36,27 @@ footer {
     min-width: 20px;
     display: inline-block;
     vertical-align: middle;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* IE10+ CSS */
+    .ellipsis{
+        display: inline!important;
+    }
+}
+
+@supports (-ms-accelerator:true) {
+    /* IE Edge 12-15 CSS */
+    ellipsis{
+        display: inline!important;
+    }
+}
+
+@supports (-ms-ime-align:auto) {
+    /* IE Edge 16+ CSS */
+    .ellipsis{
+        display: inline!important;
+    }
 }
 
 .ellipsis.dropdown-toggle{
@@ -115,12 +135,16 @@ footer {
 .btn-group {
     width: max-content;
     height: 26px;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
     display: inline-flex;
     margin-top: -2px;
 }
 
 .btn-group.pa-shortcuts {
     height: 40px;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
     display: inline-flex;
     margin-top: 5px;
     margin-bottom: 3px;
@@ -1060,6 +1084,7 @@ li.success {
 
 .btn-toolbar {
     display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
     display: inline-flex;
 }
 
@@ -1091,8 +1116,9 @@ li.success {
 .menu-button {
     margin-right: 6px;
     padding: 6px 6px;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
     display: inline-flex;
-    display:-webkit-inline-flex;
 }
 
 @media (max-width: 767px) {
@@ -1121,6 +1147,8 @@ li.success {
     }
 
     .navbar-nav > li {
+        display: -webkit-inline-flex;
+        display: -ms-inline-flexbox;
         display: inline-flex;
     }
 
@@ -1201,9 +1229,9 @@ li.success {
 
 #navbar-fixed {
     background-color: white;
-    display: grid;
     display: -moz-grid;
     display: -ms-grid;
+    display: grid;
 }
 
 #navbar-fixed a {
@@ -1248,11 +1276,9 @@ li.success {
     -webkit-transition-timing-function: ease;
 }
 
-.pa-logo:hover{
-    background-color: gainsboro;
-}
-
 .pa-shortcut {
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
     display: inline-flex;
     overflow-x: hidden;
     transition: width 300ms;
@@ -1260,6 +1286,7 @@ li.success {
     -webkit-transition: width 300ms;
     -webkit-transition-timing-function: ease;
     margin-left: 4px;
+    line-height: 25px;
 }
 
 .pa-shortcuts > .active {
@@ -1272,8 +1299,9 @@ li.success {
     transition-timing-function: ease;
     -webkit-transition: width 500ms;
     -webkit-transition-timing-function: ease;
-    display: inline-flex;
     display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
 }
 
 .pa-tools {
@@ -1315,6 +1343,7 @@ li.success {
     transition-timing-function: ease;
     -webkit-transition: width 500ms;
     -webkit-transition-timing-function: ease;
+    line-height: 25px;
 }
 
 #logout-view-container{
