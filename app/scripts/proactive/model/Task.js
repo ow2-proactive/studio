@@ -105,6 +105,13 @@ define(
                         "data-help": 'Executes the task under your system account.'
                     }
                 },
+                "Task Precious Result For Job": {
+                                    type: "Checkbox",
+                                    fieldAttrs: {
+                                        'placeholder': '@attributes->preciousResult',
+                                        "data-help": 'Indicates if you want to save the result of this task in the job result.'
+                                    }
+                },
                 "Input Files": {
                     type: 'List',
                     itemType: 'Object',
@@ -144,13 +151,6 @@ define(
                     },
                     itemTemplate: Utils.bigCrossTemplate,
                     confirmDelete: 'You are about to remove an output file.'
-                },
-                "Precious Result": {
-                    type: "Checkbox",
-                    fieldAttrs: {
-                        'placeholder': '@attributes->preciousResult',
-                        "data-help": 'Indicates if you want to save the result of this task in the job result.'
-                    }
                 },
                 "Store Task Logs in a File": {
                     type: "Checkbox",
