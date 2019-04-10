@@ -2,7 +2,7 @@
   %><% if (task["Number of Execution Attempts"] && parseInt(task["Number of Execution Attempts"])>0) { %>maxNumberOfExecution="<%=task["Number of Execution Attempts"]%>"<% } %>
     <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
     <% if (task["On Task Error Policy"]!='none') { %>onTaskError="<%=task["On Task Error Policy"]%>" <% } %>
-    <% if (task["Precious Result"]) { %>preciousResult="<%=task["Precious Result"]%>" <% } %>
+    <% if (task["Task Precious Result For Job"]) { %>preciousResult="<%=task["Task Precious Result For Job"]%>" <% } %>
     <% if (task["Run as me"]) { %>runAsMe="<%=task["Run as me"]%>" <% } %>
     <% if (task["If An Error Occurs Restart Task"] && task["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= task["If An Error Occurs Restart Task"]%>" <% } %>
 
