@@ -105,7 +105,7 @@ define(
                         "data-help": 'Executes the task under your system account.'
                     }
                 },
-                "Task Precious Result For Job": {
+                "Task Result Added to Job Result": {
                                     type: "Checkbox",
                                     fieldAttrs: {
                                         'placeholder': '@attributes->preciousResult',
