@@ -112,7 +112,7 @@ define(
         Backbone.Form.editors.Text.prototype.setValue = function(value) {
             this.previousValue = value;
             this.$el.val(value);
-        }
+        };
 
         function closeCollapsedMenu() {
             $('.navbar-collapse.in').collapse('hide');
@@ -120,11 +120,11 @@ define(
 
         $("#import-button").click(function (event) {
             add_or_import(event, '#import-file');
-        })
+        });
 
         $("#add-button").click(function (event) {
             add_or_import(event, '#add-file');
-        })
+        });
 
         function add_or_import(event, buttonSelector){
             event.preventDefault();
@@ -142,11 +142,11 @@ define(
             import_file(env, true);
             PNotify.removeAll();
 
-        })
+        });
 
         $('#add-file').change(function (env) {
             import_file(env, false);
-        })
+        });
 
         function import_file(env, clearFirst){
             var studioApp = require('StudioApp');
@@ -193,7 +193,7 @@ define(
             $('#xml-view-modal').modal();
         })
 
-        $("#get-from-catalog-button").click(function (event) {
+        $("#get-from-catalog-button, #get-from-catalog-button-tool").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
             studioApp.views.catalogGetView.setKind("workflow/standard", "Workflow");
@@ -201,7 +201,7 @@ define(
             $('#catalog-get-modal').modal();
         });
 
-        $("#publish-to-catalog-button").click(function (event) {
+        $("#publish-to-catalog-button, #publish-to-catalog-button-tool").click(function (event) {
             event.preventDefault();
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()){
@@ -308,9 +308,39 @@ define(
 
         $("#set-preset-select-button").click(function () {
             var presetName = ($(($("#presets-set-preset-table .preset-selected-row"))[0])).text();
-            var selectedIndex = config.palette_presets.findIndex(obj => obj.name==presetName);
+            var selectedIndex = config.palette_presets.findIndex(function(obj) {return obj.name==presetName});
             require('StudioApp').views.paletteView.render(selectedIndex, true);
         });
+
+        $("#studio-bucket-title").on( 'click', '#preset-title > #presets-list > li > a', function () {
+            var presetName = $(this).text();
+            console.log("ul pressed");
+
+            var selectedIndex = config.palette_presets.findIndex(function(obj) {return obj.name==presetName});
+            require('StudioApp').views.paletteView.render(selectedIndex, true);
+        });
+
+        window.onresize = updateDimensions;
+
+        window.onload = updateDimensions;
+
+        function updateDimensions() {
+
+            var windowWidth = document.documentElement.clientWidth;
+            var right = document.getElementById('ae-logo').offsetWidth;
+            var left = document.getElementById('shortcuts-toolbar').offsetWidth;
+            var container = document.getElementById('preset-caret').offsetWidth; //20 is the left/right padding value of the container
+
+            var presetTitle = document.getElementById('preset-title-text');
+            var oldWidth = presetTitle.offsetWidth;
+            var availableWidth = windowWidth - (right + left + container);
+
+            if (windowWidth == 1200) {
+                presetTitle.style.width = '31px';
+            } else if (oldWidth >= availableWidth || availableWidth > 10) {
+                presetTitle.style.width = (availableWidth-20) + 'px';
+            }
+        }
 
         $("#layout-button").click(function (event) {
             event.preventDefault();
@@ -521,7 +551,7 @@ define(
             return StudioClient.validate(xml, studioApp.models.jobModel);
         }
 
-        $("#clear-button").click(function (event) {
+        $("#clear-button, #clear-button-tool").click(function (event) {
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -536,7 +566,7 @@ define(
             studioApp.clear();
         });
 
-        $("#save-button").click(function (event) {
+        $("#save-button, #save-button-tool").click(function (event) {
 
             event.preventDefault();
 
@@ -700,7 +730,7 @@ define(
             }
         }
 
-        $("#validate-button").click(function (event) {
+        $('#validate-button, #validate-button-tool').click(function (event) {
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -715,7 +745,7 @@ define(
             validate_job(false);
         });
 
-        $("#undo-button").click(function (event) {
+        $("#undo-button, #undo-button-tool").click(function (event) {
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -727,7 +757,7 @@ define(
             undoManager.undo()
         });
 
-        $("#redo-button").click(function (event) {
+        $("#redo-button, #redo-button-tool").click(function (event) {
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -736,16 +766,16 @@ define(
                 return;
             }
             closeCollapsedMenu();
-            undoManager.redo()
+            undoManager.redo();
         });
 
-        $(document).on('focus', "*", function () {
-            undoManager._disable();
-        });
 
         $(document).on('focusout', function () {
             undoManager._enable();
-            undoManager.save();
+        });
+        $(window).on('hashchange', function(e){
+         undoManager._enable();
+         undoManager.save();
         });
 
         (function scriptManagement() {
@@ -887,8 +917,8 @@ define(
                     "Shift-Ctrl-F": "replace",
                     "Shift-Cmd-F": "replace",
                     "Shift-Tab": "indentAuto",
-                    "Ctrl-]":"indentMore", "Cmd-]":"indentMore",
-                    "Ctrl-[":"indentLess", "Cmd-]":"indentLess",
+                    "Ctrl-]":"indentMore",
+                    "Ctrl-[":"indentLess",
                     "Ctrl-K Ctrl-1":"foldAll","Cmd-K Cmd-1":"foldAll"
                     },
                     foldGutter: true,
@@ -1016,17 +1046,16 @@ define(
 
 
             var ctrlDown = false;
-            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89;
+            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89, aKey = 65;
             var pasteAllow = true;
             var canDoPast = false
-
-            $(document).keydown(function (e) {
+            $('#workflow-designer-outer').bind('keydown', function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
             }).keyup(function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
             });
 
-            $(document).keydown(function (e) {
+            $('#workflow-designer-outer').bind('keydown',function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
                    copiedTasks = [];
                    positions = []
@@ -1036,7 +1065,7 @@ define(
                         copiedTasks.push($(t).data( "view" ))
                     })
                     // let the user how he can do past(ctr-v)
-                     StudioClient.alert('alert-success', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
+                     StudioClient.alert('Copy/Paste', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
 
                 }
                 if (ctrlDown && e.keyCode == vKey) {
@@ -1051,11 +1080,16 @@ define(
                         require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
                     }
                 }
-                if (ctrlDown && e.keyCode == zKey) {
-                    undoManager.undoIfEnabled();
+                if ( (ctrlDown && e.keyCode == zKey)) {
+                    // copiedTasks.length number of the tasks that we added to the workflow
+                    undoManager.undoIfEnabled(positions.length);
                 }
                 if (ctrlDown && e.keyCode == yKey) {
                     undoManager.redoIfEnabled();
+                }
+                if(ctrlDown  && e.keyCode == aKey ){
+                       e.preventDefault();
+                       $(".task").addClass("selected-task");
                 }
             });
 

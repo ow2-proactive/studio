@@ -223,7 +223,9 @@ define(
       initialize: function() {
 
         var StudioApp = require('StudioApp');
-
+        $(function() {
+                 $('#workflow-designer-outer').focus();
+              });
         this.set({
           "Name": "Untitled Workflow 1"
         });
@@ -365,9 +367,13 @@ define(
           this.attributes.Variables = [variable];
         }
       },
+
       addTask: function(task) {
-        console.log("Adding task", task)
-        this.tasks.push(task)
+        console.log("Adding task", task);
+        this.tasks.push(task);
+        // We call these methods in order to save the last state of the workflow
+        undoManager._enable();
+        undoManager.save();
       },
       removeTask: function(task) {
         console.log("Removing task", task)

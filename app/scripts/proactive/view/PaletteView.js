@@ -19,6 +19,8 @@ define(
             if (!localStorage['paletteBuckets'])
                 localStorage.setItem('paletteBuckets',"[]");
             this.options.app.models.templates = {};
+            //rendering page title
+            this.createPresetsMenu();
         },
         createMenuFromConfig: function (template, menu) {
             var that = this;
@@ -129,7 +131,6 @@ define(
                     that.addPaletteBucketMenu(secondaryBucketName, true);
                 });
             }
-            console.log('Preset changed successfully to '+config.palette_presets[palettePresetIndex]);
         },
         checkAndGetBucketByName : function(bucketName, onPageLoad, callback){
             $.ajax({
@@ -209,16 +210,16 @@ define(
             })
         },
         setPalettePreset: function(presetIndex){
-            if (!presetIndex && presetIndex!==0) {
+            if (!presetIndex && presetIndex !== 0) {
                 presetIndex = localStorage.getItem('palettePreset');
-            }else{
-                localStorage.setItem('palettePreset',presetIndex);
+            } else {
+                localStorage.setItem('palettePreset', presetIndex);
             }
             var presetName = config.palette_presets[presetIndex].name;
-            //rendering page title
-            var divBucketName = $("<div id='bucket-name-title'>"+ presetName +"</div>");
-            $("#studio-bucket-title").empty();
-            $("#studio-bucket-title").append(divBucketName);
+            $('#preset-title-text').text(presetName);
+            //$("#studio-bucket-title").empty();
+            //$("#studio-bucket-title").append(presetsMenu);
+            this.updateDimensions();
             // return Preset Index
             return presetIndex;
         },
@@ -286,6 +287,41 @@ define(
             }
             this.options.app.models.templates[bucketName] = bucketTemplates;
             return true;
-        }
+        },
+            createPresetsMenu : function () {
+                var allPresetNames = config.palette_presets.map(function(p) {return p.name});
+                var divBucketName = $('#preset-title');
+                var presetsDropDown = $('<ul id = "presets-list" class="dropdown-menu" role="menu"></ul>');
+                var presetsMenuHeader = $('<li><span class="preset-menu-header dropdown-header"><i class="fas fa-th-large"></i> Change palette preset</span></li>' +
+                    '<li role="separator" class="divider"></li>');
+                presetsDropDown.append(presetsMenuHeader);
+                allPresetNames.forEach(function (preset) {
+                    // calling href="#" would wrong the router to un-display the current workflow
+                    var item = $('<li><a href="javascript:void(0)" class="pointer">'+preset+'</a></li>');
+                    presetsDropDown.append(item);
+                });
+                divBucketName.append(presetsDropDown);
+                //return divBucketName;
+                $("#studio-bucket-title").empty();
+                $("#studio-bucket-title").append(divBucketName);
+            },
+            updateDimensions: function () {
+
+                var windowWidth = document.documentElement.clientWidth;
+
+                var right = document.getElementById('ae-logo').offsetWidth;
+                var left = document.getElementById('shortcuts-toolbar').offsetWidth;
+                var container = document.getElementById('preset-caret').offsetWidth + 20; //20 is the left/right padding value of the container
+
+                var presetTitle = document.getElementById('preset-title-text');
+                var oldWidth = presetTitle.offsetWidth;
+                var availableWidth = windowWidth - (right + left + container);
+
+                if (windowWidth == 1200) {
+                    presetTitle.style.width = '31px';
+                } else if (oldWidth >= availableWidth || availableWidth > 10) {
+                    presetTitle.style.width = (availableWidth-10) + 'px';
+                }
+            }
     })
-})
+});
