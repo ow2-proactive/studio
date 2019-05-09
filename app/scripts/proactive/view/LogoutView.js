@@ -14,8 +14,9 @@ define(
         return Backbone.View.extend({
             initialize: function () {
                 this.$el = $("<div></div>");
-                $("#logout-view-container").append(this.$el)
+                $("#logout-view-container").append(this.$el);
                 this.render();
+                document.getElementById('logout-text').style.width = (document.getElementById('logout-text').offsetWidth + 1) + 'px';
             },
             logout: function () {
                 var that = this;
@@ -23,14 +24,12 @@ define(
             render: function () {
                 var that = this;
 
-               var buttonLogout = $('<button class="btn btn-small menu-button btn-default" data-toggle="dropdown">'
-                    + '<b>'+localStorage["pa.login"] + '</b>'
-                    + '<img src="images/logout_30.png" class="left-padding" style="height:25px;padding-left: 5px;">'
+                var menu = $('<button class="btn btn-small menu-button btn-default" data-toggle="dropdown">'
+                    + '<div id="logout-text">'+localStorage["pa.login"] + '</div>'
+                    + '<img src="images/logout_30.png" class="left-padding" style="height:25px; margin: auto;">'
                     +'</button>');
-                var menu = $('<form class="navbar-form"></form>');
-                menu.append(buttonLogout);
 
-                buttonLogout.click(function () {
+                menu.click(function () {
                     StudioClient.logout();
                     PNotify.removeAll();
                     that.options.app.logout();

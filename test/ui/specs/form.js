@@ -6,7 +6,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -17,7 +16,6 @@ module.exports = {
             .waitForElementVisible('#accordion-properties')
             .assert.elementNotPresent("#simple-form")
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -27,7 +25,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -43,7 +40,6 @@ module.exports = {
             .click("#form-switch")
             .waitForElementVisible('#accordion-properties')
             .assert.elementPresent("[placeholder='@attributes->priority']")
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -53,7 +49,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -68,7 +63,6 @@ module.exports = {
             .click("#data-loss-continue")
             .waitForElementVisible('#simple-form')
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
@@ -84,7 +78,6 @@ module.exports = {
         browser
             .login()
             .closeNotification()
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -121,7 +114,6 @@ module.exports = {
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();
