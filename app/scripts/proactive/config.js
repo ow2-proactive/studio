@@ -11,14 +11,7 @@ define(function () {
     return {
         restApiUrl: '/rest/studio',
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
-        docUrl: 'http://doc.activeeon.com/' + (function () {
-            if (conf.studioVersion.indexOf("SNAPSHOT") > -1) {
-                return "dev";
-            }
-            else {
-                return conf.studioVersion;
-            }
-        })(),
+        docUrl: '/doc/',
         tasks: {
             'Shell': 'templates/script_shell.xml',
             'Linux Bash': 'templates/script_bash.xml',
