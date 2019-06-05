@@ -163,11 +163,11 @@ define(function () {
             },
             {
                 'name': 'Machine Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization', 'auto-ml-optimization']
             },
             {
                 'name': 'Deep Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'deep-learning', 'deep-learning-workflows', 'data-visualization', 'azure-cognitive-services']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'deep-learning', 'deep-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'azure-cognitive-services']
             },
             {
                 'name': 'Big Data',
