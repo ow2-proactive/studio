@@ -61,6 +61,7 @@ define(
               var $el = this.$el,
                   options = this.options,
                   content = options.content;
+              options.modalOptions = {backdrop : 'static'};
 
               //Create the modal container
               $el.html(options.template(options));
