@@ -20,7 +20,8 @@
     "jquery-ui-touch-punch": "*",
     "jquery-ui": "~1.10.3",
     "jquery-mousewheel": "~3.1.9",
-    "xml2json": "./app/scripts/thirdparties/xml2json.js"
+    "xml2json": "./app/scripts/thirdparties/xml2json.js",
+    "components-font-awesome": "^5.4.2"
   },
   "devDependencies": {}
 }

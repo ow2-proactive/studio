@@ -69,9 +69,9 @@ define(
                     itemToString: Utils.inlineNameValueInherited, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
                     "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
-                    "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'Text', editorClass: 'popup-input-text-field' },
+                    "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} },
                     "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
-                    "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'Text', editorClass: 'popup-input-text-field' }
+                    "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} }
                     },
                     confirmDelete: 'You are about to remove a variable.'
                 },
@@ -89,8 +89,11 @@ define(
                             fieldAttrs: {'placeholder': '@attributes->name'}
                         },
                         "Property Value": {
+                            type: 'TextArea',
                             validators: ['required'],
-                            fieldAttrs: {'placeholder': '@attributes->value'}
+                            fieldAttrs: {'placeholder': '@attributes->value'},
+                            editorClass: 'textareavalues',
+                            editorAttrs: {'rows': '1'}
                         }
                     },
                     confirmDelete: 'You are about to remove a property.'
@@ -101,6 +104,13 @@ define(
                         'placeholder': '@attributes->runAsMe',
                         "data-help": 'Executes the task under your system account.'
                     }
+                },
+                "Task Result Added to Job Result": {
+                                    type: "Checkbox",
+                                    fieldAttrs: {
+                                        'placeholder': '@attributes->preciousResult',
+                                        "data-help": 'Indicates if you want to save the result of this task in the job result.'
+                                    }
                 },
                 "Input Files": {
                     type: 'List',
@@ -142,13 +152,6 @@ define(
                     itemTemplate: Utils.bigCrossTemplate,
                     confirmDelete: 'You are about to remove an output file.'
                 },
-                "Precious Result": {
-                    type: "Checkbox",
-                    fieldAttrs: {
-                        'placeholder': '@attributes->preciousResult',
-                        "data-help": 'Indicates if you want to save the result of this task in the job result.'
-                    }
-                },
                 "Store Task Logs in a File": {
                     type: "Checkbox",
                     fieldAttrs: {
@@ -188,7 +191,7 @@ define(
                         "simple-view": true
                     }
                 },
-                "Number of Automatic Restarts": {
+                "Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
                         "data-tab": "Error Management",
@@ -438,6 +441,8 @@ define(
                                         message: "<br><br>" + validationData.errorMessage
                                     };
                                     return err;
+                                } else {
+                                    delete that.attributes.BackupVariables;
                                 }
                             }
                         }
@@ -562,17 +567,27 @@ define(
                     variable.Value = "";
                 }
                 if (this.attributes.hasOwnProperty('Variables')) {
-                    var variables = this.attributes.Variables;
+                    var variables;
+                    // we save the original Variables attribute in BackupVariables, and use this afterwards
+                    // This way, any modification will only be applied to the original Variables object
+                    // This prevents piling up modifications in the variable list
+                    if (this.attributes.hasOwnProperty('BackupVariables')) {
+                      this.attributes.Variables = JSON.parse(JSON.stringify(this.attributes.BackupVariables));
+                    } else {
+                      this.attributes.BackupVariables = JSON.parse(JSON.stringify(this.attributes.Variables));
+                    }
+                    variables = this.attributes.Variables;
                     var index = -1
                     for (var i = 0; i < variables.length; i++) {
                         if (variables[i].Name == variable.Name) {
                             index = i;
+                            break;
                         }
                     }
                     if (index == -1) {
-                        this.attributes.Variables.push(variable)
+                        variables.push(variable)
                     } else {
-                        this.attributes.Variables[index] = variable
+                        variables[index] = variable
                     }
                 } else {
                     this.attributes.Variables = [variable];

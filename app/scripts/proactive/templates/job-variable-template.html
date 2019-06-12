@@ -32,7 +32,7 @@
         <li class="formLayout">
             <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- key %></label>
             <% if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:list')!=-1) {  %>
-                <select class="form-control variableValue" name="<%- variable.Name %>" id="<%- key %>" data-variable-model="<%- variable.Model %>">
+                <select class="form-control variableValue" name="<%- variable.Name %>" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
                     <% var indexBegin = variable.Model.indexOf('(');
                         var indexEnd = variable.Model.lastIndexOf(')');
                         var options = variable.Model.substring(indexBegin +1 , indexEnd).split(',');
@@ -45,7 +45,7 @@
                     <% } %>
                 </select>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
-                <div class="variableValue radio-div" id="<%- key %>" data-variable-model="<%- variable.Model %>">
+                <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
                 <% if (variable.Value.toLowerCase() === 'true' || variable.Value == 1) %>
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true" checked/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false"/>FALSE</label>
@@ -54,7 +54,7 @@
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false" checked/>FALSE</label>
                 </div>
             <% } else {  %>
-                <input class="variableValue" type="text" name="<%- variable.Name %>" value="<%- variable.Value %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" />
+            <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% }  %>
         </li>

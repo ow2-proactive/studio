@@ -16,9 +16,9 @@ define(
                 'workflows' : 'listWorkflows',
                 'workflows/:id' : 'openWorkflow',
                 'workflows/:id/' : 'openWorkflow',
-                'workflows/:id/templates/:bucketName' : 'openWorkflowWithTemplates',
-                'workflows/:id/templates/' : 'openWorkflow',
-                'workflows/templates/:bucketName' : 'listWorkflowsWithTemplates',
+                'workflows/:id/presets/:presetIndex' : 'openWorkflowWithTemplates',
+                'workflows/:id/presets/' : 'openWorkflow',
+                'presets/:presetIndex' : 'listWorkflowsWithTemplates',
                 'workflowcatalog/:bucketName/workflow/:workflowName' : 'openCatalogWorkflow',
                 '*others' : 'gotoWorkflows'
             },
@@ -35,23 +35,23 @@ define(
 
             listWorkflows: function() {
                 this.app.views.propertiesView.listWorkflows();
-                this.app.views.palleteView.setTemplateMainBucket();
+                this.app.views.paletteView.render();
             },
             openWorkflow: function(id) {
                 this.app.views.propertiesView.listWorkflows(id);
-                this.app.views.palleteView.setTemplateMainBucket();
+                this.app.views.paletteView.render();
             },
-            openWorkflowWithTemplates: function(id, bucketName) {
+            openWorkflowWithTemplates: function(id, presetIndex) {
                 this.app.views.propertiesView.listWorkflows(id);
-                this.app.views.palleteView.setTemplateMainBucket(bucketName);
+                this.app.views.paletteView.render(presetIndex, true);
             },
-            listWorkflowsWithTemplates: function(bucketName) {
+            listWorkflowsWithTemplates: function(presetIndex) {
                 this.app.views.propertiesView.listWorkflows();
-                this.app.views.palleteView.setTemplateMainBucket(bucketName);
+                this.app.views.paletteView.render(presetIndex, true);
             },
             openCatalogWorkflow : function(bucketName, workflowName) {
                 this.app.views.propertiesView.listWorkflows();
-                this.app.views.palleteView.setTemplateMainBucket();
+                this.app.views.paletteView.render();
                 this.app.openWorkflowFromCatalog(bucketName, workflowName);
             }
         });

@@ -31,7 +31,6 @@ module.exports = {
             })
             .keys(browser.Keys.ESCAPE)
             .pause(browser.globals.menuAnimationTime)
-            .toggleMenu()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();

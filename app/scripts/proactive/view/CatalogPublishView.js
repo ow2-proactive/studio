@@ -240,7 +240,14 @@ define(
                     }
                 }
             }).error(function (response) {
-                StudioClient.alert('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
+                try{
+                    var errorObject = response['responseText'];
+                    var errorMessage = JSON.parse(errorObject)['errorMessage'].split('Error')[0];
+                    StudioClient.alert('Error', errorMessage, 'error');
+                } catch(error){
+                    StudioClient.alert('Error', 'Error publishing the '+ that.kindLabel +' to the Catalog', 'error');
+                }
+
             });
         },
         showAllChanged : function(kind) {

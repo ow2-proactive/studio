@@ -86,7 +86,6 @@ define(
                         // even id successful we are here
                         if (data.status == 200) {
                             that.alert("Connected", "Successfully connected user", 'success');
-                            console.log("Session ID is " + data.responseText)
                             localStorage['pa.session'] = data.responseText;
                             return onSuccess();
                         } else {
@@ -354,7 +353,6 @@ define(
                 if (async) {
                     request.onreadystatechange = function() {
                         if (request.readyState == 4) {
-                            console.log("Response", request)
                             try {
                                 var result = JSON.parse(request.responseText)
                             } catch (err) {

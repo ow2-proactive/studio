@@ -2,7 +2,6 @@ exports.command = function (xpathCheck) {
     var self = this;
     
     this
-        .toggleMenu()
         .openDropdown('#file-dropdown')
     	.moveToElement('#export-button', 0, 250)
     	.click('#export-button')
