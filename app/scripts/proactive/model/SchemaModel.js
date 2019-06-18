@@ -158,7 +158,7 @@ define(
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
-								else if (isTemplate && merging && (prop == "PositionTop" || prop == "PositionLeft")) {
+								else if (this.hasOwnProperty("isDragAndDrop") && this.isDragAndDrop && (prop == "PositionTop" || prop == "PositionLeft")) {
                                     // skip absolute positions when doing drap/drop
                                     log("Skipping ", prop, "from", placeholder)
                                 }
