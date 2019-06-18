@@ -369,14 +369,12 @@ define(
       },
 
       addTask: function(task) {
-        console.log("Adding task", task);
         this.tasks.push(task);
         // We call these methods in order to save the last state of the workflow
         undoManager._enable();
         undoManager.save();
       },
       removeTask: function(task) {
-        console.log("Removing task", task)
         var index = this.tasks.indexOf(task)
         if (index != -1) this.tasks.splice(index, 1)
         $.each(this.tasks, function(i, t) {
@@ -466,7 +464,6 @@ define(
                 "Task Name": originalName + counter
               });
             }
-            console.log("Adding task to workflow", taskModel)
             that.tasks.push(taskModel);
             name2Task[taskModel.get("Task Name")] = taskModel;
             name2Task[originalName] = taskModel;

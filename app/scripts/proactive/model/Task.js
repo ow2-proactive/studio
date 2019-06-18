@@ -559,7 +559,6 @@ define(
                 if (index == -1) {
                     this.dependencies.push(task)
                     this.trigger("change")
-                    console.log("Adding dependency to", this, "from", task)
                 }
             },
             updateVariable: function (variable) {
