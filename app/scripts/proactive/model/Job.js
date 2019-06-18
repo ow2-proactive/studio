@@ -191,7 +191,7 @@ define(
           type: 'Select',
           fieldAttrs: {
             'placeholder': '@attributes->onTaskError',
-            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Kill job (running tasks are killed)."
+            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started)."
           },
           options: [{
               val: "continueJobExecution",
@@ -199,7 +199,7 @@ define(
             },
             {
               val: "suspendTask",
-              label: "Only suspend dependencies of In-Error tasks"
+              label: "Only suspend dependencies of In-Error tasks and set job as In-Error"
             },
             {
               val: "pauseJob",
@@ -207,7 +207,7 @@ define(
             },
             {
               val: "cancelJob",
-              label: "Kill job (running tasks are killed)"
+              label: "Cancel job (running tasks are aborted and remaining ones not started)"
             }
           ]
         },

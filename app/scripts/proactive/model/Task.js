@@ -211,13 +211,13 @@ define(
                     type: 'Select',
                     fieldAttrs: {
                         'placeholder': '@attributes->onTaskError',
-                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default)<br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Kill job (running tasks are killed).'
+                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default)<br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started).'
                     },
                     options: [
                               {val: "continueJobExecution", label: "Ignore error and continue job execution (Default)"},
-                              {val: "suspendTask", label: "Only suspend dependencies of In-Error tasks"},
+                              {val: "suspendTask", label: "Only suspend dependencies of In-Error tasks and set job as In-Error"},
                               {val: "pauseJob", label: "Pause job execution (running tasks can terminate)"},
-                              {val: "cancelJob", label: "Kill job (running tasks are killed)"},
+                              {val: "cancelJob", label: "Cancel job (running tasks are aborted and remaining ones not started)"},
                               {val: "none", label: "default (defined at job level)"}
                               ]
                 },
