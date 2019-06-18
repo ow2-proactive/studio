@@ -375,13 +375,44 @@ define(
             var app = this.options.app;
             var elemWithInitialOffset = $(uiWithInitialOffset.draggable);
 
+            var minTop = Number.MAX_SAFE_INTEGER;
+            var minLeft = Number.MAX_SAFE_INTEGER;
+            var positionTop = 0;
+            var positionLeft = 0;
+
+            if (uiWithInitialOffset.position) {
+                positionTop = uiWithInitialOffset.position.top;
+                positionLeft = uiWithInitialOffset.position.left;
+            }
+
+            $.each(this.model.tasks, function (i, task) {
+                if (task.get("NewPositionTop") < minTop) {
+                    minTop = task.get("NewPositionTop");
+                }
+                if (task.get("NewPositionLeft") < minLeft) {
+                    minLeft = task.get("NewPositionLeft");
+                }
+            })
+
+            if (minTop == Number.MAX_SAFE_INTEGER) {
+                minTop = 0;
+            }
+            if (minLeft == Number.MAX_SAFE_INTEGER) {
+                minLeft = 0;
+            }
+
             // finding task that are not layouted
             var nodes = [];
             $.each(this.model.tasks, function (i, task) {
                 var taskName = task.get("Task Name");
                 var offset = {};
-                offset["top"] = task.get("PositionTop");
-                offset["left"] = task.get("PositionLeft");
+                if (task.get("PositionTop") && task.get("PositionLeft")) {
+                    offset["top"] = positionTop + task.get("PositionTop") - minTop;
+                    offset["left"] = positionLeft + task.get("PositionLeft") - minLeft;
+                } else {
+                    offset["top"] = task.get("PositionTop");
+                    offset["left"] = task.get("PositionLeft");
+                }
                 if (!offset["left"] || !offset["top"] || offset["left"]===0 || offset["top"]===0) {
                     nodes.push({id: taskName, task: task, width: 78, height: 28});
                 }

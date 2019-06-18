@@ -166,7 +166,7 @@ define(
                                     log("Setting", prop, "from", placeholder, "to", value)
 									// convert position to float
                                     value = value.trim()
-                                    that.set(prop, parseFloat(value))
+                                    that.set("New" + prop, parseFloat(value))
                                 }
                                 else if (isTemplate && merging && that.get(prop)) {
                                     // do not override existing value when merging
