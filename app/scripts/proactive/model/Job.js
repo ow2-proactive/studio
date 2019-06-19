@@ -369,14 +369,12 @@ define(
       },
 
       addTask: function(task) {
-        console.log("Adding task", task);
         this.tasks.push(task);
         // We call these methods in order to save the last state of the workflow
         undoManager._enable();
         undoManager.save();
       },
       removeTask: function(task) {
-        console.log("Removing task", task)
         var index = this.tasks.indexOf(task)
         if (index != -1) this.tasks.splice(index, 1)
         $.each(this.tasks, function(i, t) {
@@ -418,6 +416,7 @@ define(
         var StudioApp = require('StudioApp');
         // remove the unnecessary GI in case of appending workflow to the current one.
         const COMMON_GI = ["bucketname","documentation", "group", "workflow.icon"];
+        this.isDragAndDrop = isTemplate;
         if (isTemplate) {
             if(obj[GENERIC_INFORMATION]){
                 var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
@@ -448,7 +447,7 @@ define(
           var name2Task = {};
           $.each(obj.taskFlow.task, function(i, task) {
             var taskModel = new Task();
-
+            taskModel.isDragAndDrop = isTemplate;
             taskModel.convertCancelJobOnErrorToOnTaskError(task);
             taskModel.populateSchema(task, merging, isTemplate);
             taskModel.populateSimpleForm();
@@ -465,10 +464,10 @@ define(
                 "Task Name": originalName + counter
               });
             }
-            console.log("Adding task to workflow", taskModel)
             that.tasks.push(taskModel);
             name2Task[taskModel.get("Task Name")] = taskModel;
             name2Task[originalName] = taskModel;
+            taskModel.isDragAndDrop = false;
           });
           // adding dependencies after all tasks are populated
           $.each(obj.taskFlow.task, function(i, task) {
@@ -518,6 +517,8 @@ define(
             }
           })
         }
+
+        this.isDragAndDrop = false;
 
         var genericInformation = this.attributes["Generic Info"];
         var workflowVariables = this.attributes["Variables"];
