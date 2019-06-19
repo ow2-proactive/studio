@@ -1032,7 +1032,6 @@ define(
             var positions = [];
 
             $.getScript("studio-conf.js", function () {
-                console.log('conf:', conf);
                 $("#documentationLinkId").attr("href", config.docUrl);
             });
 
