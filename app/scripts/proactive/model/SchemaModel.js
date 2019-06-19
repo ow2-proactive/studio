@@ -55,12 +55,6 @@ define(
             // change this to true to display in the console the model parsing
             var logEnabled = false;
 
-            var log = function(...args) {
-                if (logEnabled) {
-                    console.log.apply(that, args)
-                }
-            }
-
             var selectedNestedModel = null;
             var radioButtonNestedModelOptions = [];
 
@@ -89,7 +83,6 @@ define(
                                 var listElemValue = that.getListElementValue(that.schema[prop], v)
                                 if (listElemValue) {
                                     newElements.push(listElemValue)
-                                    log("Adding to list", prop, listElemValue)
                                 }
                             })
                             this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
@@ -104,7 +97,6 @@ define(
                             var choicePh = choicePlaceholders[i];
                             var value = this.getValue(choicePh, obj);
                             if (value) {
-                                log("Setting", prop, "to", this.schema[prop].options[i].val)
                                 this.set(prop, this.schema[prop].options[i].val);
                                 // in the current schema, only the following NestedModel will be populated.
                                 selectedNestedModel = this.schema[prop].options[i].val;
@@ -129,13 +121,11 @@ define(
                                     // looking for a field in the value matching select options
                                     if (this.schema[prop].fieldAttrs.strategy && this.schema[prop].fieldAttrs.strategy == 'checkpresence') {
                                         if (value) {
-                                            log("Setting", prop, "from", placeholder, "to", "true")
                                             that.set(prop, "true")
                                         }
                                     } else {
                                         $.each(this.schema[prop].options, function(i, option) {
                                             if (value[option] || value[option.val]) {
-                                                log("Setting", prop, "from", placeholder, "to", option.val ? option.val : option)
                                                 that.set(prop, option.val ? option.val : option)
                                                 return false;
                                             }
@@ -145,35 +135,25 @@ define(
                                     isCurrentSelectedNestedModelIfRequired(selectedNestedModel, radioButtonNestedModelOptions, prop)) {
                                     var model = new this.schema[prop].model();
                                     model.populateSchema(value)
-                                    log("Setting", prop, "from", placeholder, "to", model)
                                     that.set(prop, model)
-                                } else if (this.schema[prop].type == "NestedModel") {
-                                    log("Skipping", prop, "from", placeholder, "as it was not selected")
-                                } else {
-                                    log("Should not be here", prop, value);
                                 }
                             } else {
                                 if (isTemplate && merging && that.get(prop) && typeof that.get(prop) == 'string' && that.get(prop).toLowerCase().includes('untitled workflow')){
-                                    log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
 								else if (this.hasOwnProperty("isDragAndDrop") && this.isDragAndDrop && (prop == "PositionTop" || prop == "PositionLeft")) {
                                     // skip absolute positions when doing drap/drop
-                                    log("Skipping ", prop, "from", placeholder)
                                 }
 								else if (prop == "PositionTop" || prop == "PositionLeft") {
-                                    log("Setting", prop, "from", placeholder, "to", value)
 									// convert position to float
                                     value = value.trim()
                                     that.set(prop, parseFloat(value))
                                 }
                                 else if (isTemplate && merging && that.get(prop)) {
                                     // do not override existing value when merging
-                                    log("Skipping ", prop, "from", placeholder)
                                 }
                                 else {
-                                    log("Setting", prop, "from", placeholder, "to", value)
                                     value = value.trim()
                                     that.set(prop, value)
                                 }
