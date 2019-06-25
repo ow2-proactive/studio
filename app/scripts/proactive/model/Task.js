@@ -597,7 +597,6 @@ define(
                 if (index != -1) {
                     this.dependencies.splice(index, 1);
                     this.trigger("change")
-                    console.log("Removing dependency", task, "from", this)
                 }
             },
             setControlFlow: function (controlFlowType, task) {
@@ -627,21 +626,18 @@ define(
 
                 this.controlFlow['if'].task = task;
                 this.controlFlow['if'].model = new FlowScript();
-                console.log('Adding if branch', this.controlFlow['if'], 'to', this)
             },
             setelse: function (task) {
                 if (!task) {
                     return;
                 }
                 this.controlFlow['if']['else'] = {task: task};
-                console.log('Adding else branch', this.controlFlow['if']['else'], 'to', this)
             },
             setcontinuation: function (task) {
                 if (!task) {
                     return;
                 }
                 this.controlFlow['if']['continuation'] = {task: task};
-                console.log('Adding continuation branch', this.controlFlow['if']['continuation'], 'to', this)
             },
             removeif: function (task) {
                 this.set({'Control Flow': 'none'});
