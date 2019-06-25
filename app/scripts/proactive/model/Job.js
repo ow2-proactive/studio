@@ -555,7 +555,6 @@ define(
 
       findDuplicates: function(type, inputArray, property, valeur){
          if (inputArray != null) {
-            console.log("Identification of duplicated " + type + "...");
             var myArray = this.sortByKey(inputArray, property);
             var mapResult = this.filterByName(myArray, property, valeur);
             if(mapResult.size>0){
