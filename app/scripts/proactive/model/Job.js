@@ -302,7 +302,12 @@ define(
 
                   // Needed to update UI
                   $('a[name="Generic Info Documentation"]').text(documentationValue);
-                  $('a[name="Generic Info Documentation"]').attr("href", documentationValue);
+                  if (documentationValue.indexOf('://') > 0) {
+                    $('a[name="Generic Info Documentation"]').attr("href", documentationValue);
+                  } else {
+                    $('a[name="Generic Info Documentation"]').attr("href", config.docUrl + documentationValue);
+                  }
+
                 } else {
                   if ($('a[name="Generic Info Documentation"]')) {
                     $('a[name="Generic Info Documentation"]').text("Undefined");
@@ -625,8 +630,10 @@ define(
         if (data) {
           if (data.toLowerCase() === 'undefined') {
             url = config.docUrl + '/user/ProActiveUserGuide.html#_a_simple_example';
-          } else {
+          } else if (data.indexOf('://') > 0) {
             url = data;
+          } else {
+            url = config.docUrl + data;
           }
         }
 
