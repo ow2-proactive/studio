@@ -191,7 +191,7 @@ define(
           type: 'Select',
           fieldAttrs: {
             'placeholder': '@attributes->onTaskError',
-            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Kill job (running tasks are killed)."
+            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started)."
           },
           options: [{
               val: "continueJobExecution",
@@ -199,7 +199,7 @@ define(
             },
             {
               val: "suspendTask",
-              label: "Only suspend dependencies of In-Error tasks"
+              label: "Only suspend dependencies of In-Error tasks and set job as In-Error"
             },
             {
               val: "pauseJob",
@@ -207,7 +207,7 @@ define(
             },
             {
               val: "cancelJob",
-              label: "Kill job (running tasks are killed)"
+              label: "Cancel job (running tasks are aborted and remaining ones not started)"
             }
           ]
         },
@@ -369,14 +369,12 @@ define(
       },
 
       addTask: function(task) {
-        console.log("Adding task", task);
         this.tasks.push(task);
         // We call these methods in order to save the last state of the workflow
         undoManager._enable();
         undoManager.save();
       },
       removeTask: function(task) {
-        console.log("Removing task", task)
         var index = this.tasks.indexOf(task)
         if (index != -1) this.tasks.splice(index, 1)
         $.each(this.tasks, function(i, t) {
@@ -418,6 +416,7 @@ define(
         var StudioApp = require('StudioApp');
         // remove the unnecessary GI in case of appending workflow to the current one.
         const COMMON_GI = ["bucketname","documentation", "group", "workflow.icon"];
+        this.isDragAndDrop = isTemplate;
         if (isTemplate) {
             if(obj[GENERIC_INFORMATION]){
                 var jobGenericInfos =  StudioApp.models.jobModel.get("Generic Info");
@@ -448,7 +447,7 @@ define(
           var name2Task = {};
           $.each(obj.taskFlow.task, function(i, task) {
             var taskModel = new Task();
-
+            taskModel.isDragAndDrop = isTemplate;
             taskModel.convertCancelJobOnErrorToOnTaskError(task);
             taskModel.populateSchema(task, merging, isTemplate);
             taskModel.populateSimpleForm();
@@ -465,10 +464,10 @@ define(
                 "Task Name": originalName + counter
               });
             }
-            console.log("Adding task to workflow", taskModel)
             that.tasks.push(taskModel);
             name2Task[taskModel.get("Task Name")] = taskModel;
             name2Task[originalName] = taskModel;
+            taskModel.isDragAndDrop = false;
           });
           // adding dependencies after all tasks are populated
           $.each(obj.taskFlow.task, function(i, task) {
@@ -519,6 +518,8 @@ define(
           })
         }
 
+        this.isDragAndDrop = false;
+
         var genericInformation = this.attributes["Generic Info"];
         var workflowVariables = this.attributes["Variables"];
         // Find duplicates in generic information
@@ -554,7 +555,6 @@ define(
 
       findDuplicates: function(type, inputArray, property, valeur){
          if (inputArray != null) {
-            console.log("Identification of duplicated " + type + "...");
             var myArray = this.sortByKey(inputArray, property);
             var mapResult = this.filterByName(myArray, property, valeur);
             if(mapResult.size>0){

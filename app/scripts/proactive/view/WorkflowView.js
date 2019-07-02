@@ -50,7 +50,6 @@ define(
                 if (elem.hasClass('task-menu')) {
                     that.createTask(ui)
                 } else {
-                      console.log("Dropped element: ", elem.data("templateName"), elem.data("templateUrl"));
                       var templateUrl;
                       if (elem.data("templateUrl"))
                         templateUrl = elem.data("templateUrl");

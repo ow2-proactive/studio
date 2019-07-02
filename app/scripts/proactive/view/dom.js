@@ -1030,18 +1030,9 @@ define(
         $(document).ready(function () {
             var copiedTasks = [];
             var positions = [];
-            var result = "http://doc.activeeon.com/" ;
 
             $.getScript("studio-conf.js", function () {
-                console.log('conf:', conf);
-                if (conf.studioVersion.indexOf("SNAPSHOT") > -1){
-                    result = result + "dev";
-                }
-                else{
-                    result = result + conf.studioVersion;
-                }
-
-                $("#documentationLinkId").attr("href", result);
+                $("#documentationLinkId").attr("href", config.docUrl);
             });
 
 
