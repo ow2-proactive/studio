@@ -678,6 +678,9 @@ define(
                 // create a new workflow, open it and import the xml into it
                 var clickAndOpenEvent = jQuery.Event( "click" );
                 clickAndOpenEvent.openWorkflow = true;
+                if(!$('.create-workflow-button').length){// When we do open the studio the first time, we should reload the page
+                    location.reload();
+                }
                 $('.create-workflow-button').trigger(clickAndOpenEvent);
             }
         }
