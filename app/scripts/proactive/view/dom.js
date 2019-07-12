@@ -1013,6 +1013,7 @@ define(
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
             })
+
             $(document).on("click", '.publish-script-to-catalog', function (event) {
                 event.preventDefault();
                 var relatedInputId = $(this).attr('data-related-input');
@@ -1045,8 +1046,6 @@ define(
                 $("#documentationLinkId").attr("href", config.docUrl);
             });
             $('#workflow-designer-outer').on('contextmenu', function(e) {
-                    console.log('e')
-                    console.log(e);
                     var top = e.offsetY + 30;
                     var left = e.offsetX - 10;
                     $(".context-menu-task").hide();
@@ -1162,6 +1161,7 @@ define(
         $(document).on('click', 'button[data-action="add"]', function () {
             $('input').addClass("form-control");
         })
+
         // saving job xml every min to local store
         setInterval(save_workflow, 10000);
         // validating job periodically

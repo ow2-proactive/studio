@@ -1252,6 +1252,7 @@ li.success {
 .navbar-nav > li:focus {
     background-color: gainsboro;
 }
+
 .context-menu-task li a,
 .context-menu-canav li a {
     color:#8AD5FF;
