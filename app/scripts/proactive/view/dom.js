@@ -689,18 +689,26 @@ define(
             var studioApp = require('StudioApp');
             studioApp.views.catalogPublishView.publishToCatalog();
         })
-
+        // The aim object of this function is to delete sected tasks
+        function removeTasks(){
+            // del pressed
+            var selectedTask = $(".selected-task");
+            if (selectedTask.length > 0) {
+                selectedTask.each(function (i, t) {
+                    var taskView = $(t).data('view');
+                    require('StudioApp').views.workflowView.removeView(taskView);
+                })
+            }
+        }
+        // removing a task when we click on delete in the menu
+        $('.delete-task').on("click", function() {
+                            removeTasks();
+                          });
         // removing a task by del
         $('body').keyup(function (e) {
             if (e.keyCode == 46) {
                 // del pressed
-                var selectedTask = $(".selected-task");
-                if (selectedTask.length > 0) {
-                    selectedTask.each(function (i, t) {
-                        var taskView = $(t).data('view');
-                        require('StudioApp').views.workflowView.removeView(taskView);
-                    })
-                }
+                removeTasks();
             }
         })
 
@@ -1005,7 +1013,6 @@ define(
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
             })
-
             $(document).on("click", '.publish-script-to-catalog', function (event) {
                 event.preventDefault();
                 var relatedInputId = $(this).attr('data-related-input');
@@ -1037,10 +1044,29 @@ define(
             $.getScript("studio-conf.js", function () {
                 $("#documentationLinkId").attr("href", config.docUrl);
             });
-
+            $('#workflow-designer-outer').on('contextmenu', function(e) {
+                    console.log('e')
+                    console.log(e);
+                    var top = e.offsetY + 30;
+                    var left = e.offsetX - 10;
+                    $(".context-menu-task").hide();
+                    $(".context-menu-canav").css({
+                      top: top,
+                      left: left
+                    }).show();
+                    return false; //blocks default Webbrowser right click menu
+                  }).on("click", function() {
+                     $(".context-menu-canav").hide();
+                   });
+            $("#workflow-designer").on("focusout", function() {
+                                              $(".context-menu-canav").hide();
+                                        });
+            $(".context-menu-canav li").on("click", function() {
+                                 $(".context-menu-canav").hide();
+                               });
 
             var ctrlDown = false;
-            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89, aKey = 65;
+            var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89, aKey = 65, xKey = 88;
             var pasteAllow = true;
             var canDoPast = false
             $('#workflow-designer-outer').bind('keydown', function (e) {
@@ -1048,31 +1074,60 @@ define(
             }).keyup(function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = false;
             });
+            function copyTasks(){
+                copiedTasks = [];
+                positions = []
+                console.log("copy");
+                $(".selected-task").each(function (i, t) {
+                positions.push({left: $(t).position().left, top: $(t).position().top})
+                    copiedTasks.push($(t).data( "view" ))
+                })
+                // let the user how he can do past(ctr-v)
+                if(copiedTasks.length > 0){
+                    StudioClient.alert('Copy/Paste', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
+                } else {
+                    StudioClient.alert('Copy/Paste', 'Select at least one task.', 'warning');
+                }
+            }
 
+            function pasteTasks(){
+                var newTaskModel = []
+                var tasksView = [];
+                 $.each(copiedTasks, function (i) {
+                    tasksView.push(copiedTasks[i]);
+                    newTaskModel.push(jQuery.extend(true, {}, copiedTasks[i].model));
+
+                });
+                require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
+            }
+            $('.copy-task').on("click", function() {
+                        copyTasks();
+                      });
+            $('.paste-task').on("click", function() {
+                if(pasteAllow){
+                    pasteTasks();
+                }
+            });
+            $('.select-all').on("click", function(){
+                $(".task").addClass("selected-task");
+            });
+            $('.cut-task').on("click", function(){
+                copyTasks();
+                removeTasks();
+            })
             $('#workflow-designer-outer').bind('keydown',function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
-                   copiedTasks = [];
-                   positions = []
-                    console.log("copy");
-                    $(".selected-task").each(function (i, t) {
-                    positions.push({left: $(t).position().left, top: $(t).position().top})
-                        copiedTasks.push($(t).data( "view" ))
-                    })
-                    // let the user how he can do past(ctr-v)
-                     StudioClient.alert('Copy/Paste', 'Click on the canvas where you want to paste and then do ctrl-V.', 'warning');
+                   copyTasks();
 
                 }
                 if (ctrlDown && e.keyCode == vKey) {
                     if (pasteAllow) {
-                        var newTaskModel = []
-                        var tasksView = [];
-                         $.each(copiedTasks, function (i) {
-                            tasksView.push(copiedTasks[i]);
-                            newTaskModel.push(jQuery.extend(true, {}, copiedTasks[i].model));
-
-                        });
-                        require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
+                        pasteTasks();
                     }
+                }
+                if(ctrlDown && e.keyCode == xKey){
+                    copyTasks();
+                    removeTasks();
                 }
                 if ( (ctrlDown && e.keyCode == zKey)) {
                     // copiedTasks.length number of the tasks that we added to the workflow
@@ -1107,7 +1162,6 @@ define(
         $(document).on('click', 'button[data-action="add"]', function () {
             $('input').addClass("form-control");
         })
-
         // saving job xml every min to local store
         setInterval(save_workflow, 10000);
         // validating job periodically

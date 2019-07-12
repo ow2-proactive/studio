@@ -457,6 +457,26 @@ define(
                 } else {
                     // selecting the current task
                     that.$el.addClass("selected-task");
+                    $('.selected-task').on('contextmenu', function(e) {
+                     var top = that.$el[0].offsetTop + 54;
+                     var left = that.$el[0].offsetLeft + 50;
+                     $(".context-menu-canav").hide();
+                     $(".context-menu-task").css({
+                       top: top,
+                       left: left
+                     }).show();
+                     return false; //blocks default Webbrowser right click menu
+                   }).on("click", function() {
+                     $(".context-menu-task").hide();
+                   });
+                   $("#workflow-designer, #breadcrumb-list-workflows").on("click", function() {
+                                                                          $(".context-menu-task").hide();
+                                                                          $(".context-menu-canav").hide();
+                                                                        });
+
+                   $(".context-menu-task li").on("click", function() {
+                     $(".context-menu-task").hide();
+                   });
                 }
 
                 $(".active-task").removeClass("active-task");
