@@ -1049,19 +1049,19 @@ define(
                     var top = e.offsetY + 30;
                     var left = e.offsetX - 10;
                     $(".context-menu-task").hide();
-                    $(".context-menu-canav").css({
+                    $(".context-menu-canva").css({
                       top: top,
                       left: left
                     }).show();
                     return false; //blocks default Webbrowser right click menu
                   }).on("click", function() {
-                     $(".context-menu-canav").hide();
+                     $(".context-menu-canva").hide();
                    });
             $("#workflow-designer").on("focusout", function() {
-                                              $(".context-menu-canav").hide();
+                                              $(".context-menu-canva").hide();
                                         });
-            $(".context-menu-canav li").on("click", function() {
-                                 $(".context-menu-canav").hide();
+            $(".context-menu-canva li").on("click", function() {
+                                 $(".context-menu-canva").hide();
                                });
 
             var ctrlDown = false;

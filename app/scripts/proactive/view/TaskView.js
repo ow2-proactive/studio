@@ -471,7 +471,7 @@ define(
                    });
                    $("#workflow-designer, #breadcrumb-list-workflows").on("click", function() {
                                                                           $(".context-menu-task").hide();
-                                                                          $(".context-menu-canav").hide();
+                                                                          $(".context-menu-canva").hide();
                                                                         });
 
                    $(".context-menu-task li").on("click", function() {
