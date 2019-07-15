@@ -1049,19 +1049,16 @@ define(
                     var top = e.offsetY + 30;
                     var left = e.offsetX - 10;
                     $(".context-menu-task").hide();
-                    $(".context-menu-canva").css({
+                    $(".context-menu-canvas").css({
                       top: top,
                       left: left
                     }).show();
                     return false; //blocks default Webbrowser right click menu
                   }).on("click", function() {
-                     $(".context-menu-canva").hide();
+                     $(".context-menu-canvas").hide();
                    });
-            $("#workflow-designer").on("focusout", function() {
-                                              $(".context-menu-canva").hide();
-                                        });
-            $(".context-menu-canva li").on("click", function() {
-                                 $(".context-menu-canva").hide();
+            $(".context-menu-canvas li").on("click", function() {
+                                 $(".context-menu-canvas").hide();
                                });
 
             var ctrlDown = false;
@@ -1142,7 +1139,6 @@ define(
             });
 
             $('body').mousedown(function (e) {
-
                 if (e.isPropagationStopped()) {
                     return;
                 }
