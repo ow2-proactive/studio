@@ -1084,10 +1084,6 @@ define(
                 } else {
                     StudioClient.alert('Copy/Paste', 'Select at least one task.', 'warning');
                 }
-
-                console.log('positions')
-                console.log(positions)
-
             }
 
             function pasteTasks(){
