@@ -460,7 +460,7 @@ define(
                     $('.selected-task').on('contextmenu', function(e) {
                      var top = that.$el[0].offsetTop + 54;
                      var left = that.$el[0].offsetLeft + 50;
-                     $(".context-menu-canav").hide();
+                     $(".context-menu-canvas").hide();
                      $(".context-menu-task").css({
                        top: top,
                        left: left
