@@ -689,7 +689,7 @@ define(
             var studioApp = require('StudioApp');
             studioApp.views.catalogPublishView.publishToCatalog();
         })
-        // The aim object of this function is to delete sected tasks
+        // The aim object of this function is to delete selected tasks
         function removeTasks(){
             // del pressed
             var selectedTask = $(".selected-task");
@@ -1072,7 +1072,7 @@ define(
             });
             function copyTasks(){
                 copiedTasks = [];
-                positions = []
+                positions = [];
                 console.log("copy");
                 $(".selected-task").each(function (i, t) {
                 positions.push({left: $(t).position().left, top: $(t).position().top})
@@ -1084,6 +1084,10 @@ define(
                 } else {
                     StudioClient.alert('Copy/Paste', 'Select at least one task.', 'warning');
                 }
+
+                console.log('positions')
+                console.log(positions)
+
             }
 
             function pasteTasks(){
