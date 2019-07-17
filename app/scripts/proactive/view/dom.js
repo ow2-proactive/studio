@@ -689,26 +689,30 @@ define(
             var studioApp = require('StudioApp');
             studioApp.views.catalogPublishView.publishToCatalog();
         })
-        // The aim object of this function is to delete selected tasks
-        function removeTasks(){
-            // del pressed
+        // The aim object of this function is to remove selected tasks
+        function removeTasks(withDependencies){
             var selectedTask = $(".selected-task");
             if (selectedTask.length > 0) {
                 selectedTask.each(function (i, t) {
                     var taskView = $(t).data('view');
-                    require('StudioApp').views.workflowView.removeView(taskView);
+                    if(withDependencies){
+                        require('StudioApp').views.workflowView.removeViewWithDependencies(taskView);
+                    } else {
+                        require('StudioApp').views.workflowView.removeViewWithoutDependencies(taskView);
+                    }
+
                 })
             }
         }
         // removing a task when we click on delete in the menu
         $('.delete-task').on("click", function() {
-                            removeTasks();
+                            removeTasks(true);
                           });
         // removing a task by del
         $('body').keyup(function (e) {
             if (e.keyCode == 46) {
                 // del pressed
-                removeTasks();
+                removeTasks(true);
             }
         })
 
@@ -1064,7 +1068,6 @@ define(
             var ctrlDown = false;
             var ctrlKey = 17, commandKey = 91, vKey = 86, cKey = 67, zKey = 90, yKey = 89, aKey = 65, xKey = 88;
             var pasteAllow = true;
-            var canDoPast = false
             $('#workflow-designer-outer').bind('keydown', function (e) {
                 if (e.keyCode == ctrlKey || e.keyCode == commandKey) ctrlDown = true;
             }).keyup(function (e) {
@@ -1109,7 +1112,7 @@ define(
             });
             $('.cut-task').on("click", function(){
                 copyTasks();
-                removeTasks();
+                removeTasks(false);
             })
             $('#workflow-designer-outer').bind('keydown',function (e) {
                 if (ctrlDown && e.keyCode == cKey) {
@@ -1123,7 +1126,7 @@ define(
                 }
                 if(ctrlDown && e.keyCode == xKey){
                     copyTasks();
-                    removeTasks();
+                    removeTasks(false);
                 }
                 if ( (ctrlDown && e.keyCode == zKey)) {
                     // copiedTasks.length number of the tasks that we added to the workflow

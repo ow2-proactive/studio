@@ -243,7 +243,22 @@ define(
             rendering.$el.data("view", view);
             return rendering;
         },
-        removeView: function (view) {
+        removeViewWithoutDependencies: function (view) {
+           var thizz = this;
+           undoManager.runWithDisabled(function() {
+               view.removing = true;
+               thizz.model.removeTask(view.model);
+               view.$el.remove();
+               jsPlumb.remove(view.$el);
+               var index = thizz.taskViews.indexOf(view);
+               if (index != -1) {
+                   thizz.taskViews.splice(index, 1);
+               }
+
+               thizz.$el.click();
+           })
+        },
+        removeViewWithDependencies: function (view) {
             var thizz = this;
             undoManager.runWithDisabled(function() {
                 view.removing = true;

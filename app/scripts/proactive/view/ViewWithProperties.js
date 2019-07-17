@@ -314,7 +314,7 @@ define(
 						var that = this;
 						var removeTask = $('<a href="#" class="btn btn-danger btn-sm pull-right bottom-btn" title="Remove task">Remove task</a>');
 						removeTask.click(function () {
-							StudioApp.views.workflowView.removeView(that);
+							StudioApp.views.workflowView.removeViewWithDependencies(that);
 							return false;
 						})
 						StudioApp.views.propertiesView.$el.append(removeTask)
