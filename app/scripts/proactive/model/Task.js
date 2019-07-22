@@ -98,6 +98,13 @@ define(
                     },
                     confirmDelete: 'You are about to remove a property.'
                 },
+                "Fork": {
+                    type: "Checkbox",
+                    fieldAttrs: {
+                        'placeholder': '@attributes->fork',
+                        "data-help": 'Executes the task in a forked JVM.'
+                    }
+                },
                 "Run as me": {
                     type: "Checkbox",
                     fieldAttrs: {
@@ -418,6 +425,7 @@ define(
                 this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Task Name": "Task" + (++Task.counter)});
                 this.set({"Maximum Number of Execution Attempts": ""});
+                this.set({"Fork": true});
                 this.set({"Run as me": false});
                 this.set({"Precious Result": false});
                 this.set({"On Task Error Policy": "none"});
