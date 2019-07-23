@@ -139,11 +139,29 @@ define(
          * @param changed
          */
         updateForkEnvironment: function (changed) {
+            var forkMode = changed.changed['Fork'];
+            if (typeof forkMode != 'undefined') {
+                if (!forkMode) {
+                    console.log("fork disabled");
+                    // when the task is non-forked, it can't be in runAsMe mode
+                    $('[id*="_Run as me"]').val(false); //.attr('checked', false);
+                    $('[id*="_Run as me"]').attr('disabled', true);
+                    $('[id*="_Fork Execution Environment"]').attr('disabled', true);
+                    $('[id*="_Fork Environment"]').attr('disabled', true);
+                    return;
+                } else {
+                    console.log("fork enabled");
+                    $('[id*="_Run as me"]').attr('disabled', false);
+                    $('[id*="_Fork Execution Environment"]').attr('disabled', false);
+                    $('[id*="_Fork Environment"]').attr('disabled', false);
+                }
+            }
             // Query changed for Fork Execution Environment. If it contains Fork Execution Environment,
             // then it was altered. If it was not altered, then changed will not contain
             // Fork Execution Environment, then jump out of this function.
             // Otherwise the script will be overwritten that means that the user's input will be overwritten.
             var forkExecutionEnvironmentSelector = changed.changed['Fork Execution Environment'];
+
             if (typeof forkExecutionEnvironmentSelector == 'undefined') {
                 // Fork Execution Environment was not altered -> don't change (overwrite)
                 // anything in this case.
