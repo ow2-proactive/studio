@@ -557,7 +557,7 @@ define(
                     }
                 }
 
-                var suffix = 2;
+                var suffix = 1;
                 var newTaskName = newTaskModel.get("Task Name");
                 while (jobModel.getTaskByName(newTaskName)) {
                     suffix += 1;
