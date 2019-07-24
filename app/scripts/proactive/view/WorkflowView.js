@@ -558,10 +558,10 @@ define(
                 }
 
                 var suffix = 2;
-                var newTaskName = newTaskModel.get("Task Name") + suffix;
+                var newTaskName = newTaskModel.get("Task Name");
                 while (jobModel.getTaskByName(newTaskName)) {
                     suffix += 1;
-                    newTaskName = newTaskModel.get("Task Name") + suffix
+                    newTaskName = newTaskModel.get("Task Name") + suffix;
                 }
                 newTaskModel.set("Task Name", newTaskName)
                 jobModel.addTask(newTaskModel);
