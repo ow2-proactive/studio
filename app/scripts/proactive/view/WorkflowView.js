@@ -243,7 +243,22 @@ define(
             rendering.$el.data("view", view);
             return rendering;
         },
-        removeView: function (view) {
+        removeViewWithoutDependencies: function (view) {
+           var thizz = this;
+           undoManager.runWithDisabled(function() {
+               view.removing = true;
+               thizz.model.removeTask(view.model);
+               view.$el.remove();
+               jsPlumb.remove(view.$el);
+               var index = thizz.taskViews.indexOf(view);
+               if (index != -1) {
+                   thizz.taskViews.splice(index, 1);
+               }
+
+               thizz.$el.click();
+           })
+        },
+        removeViewWithDependencies: function (view) {
             var thizz = this;
             undoManager.runWithDisabled(function() {
                 view.removing = true;
@@ -542,11 +557,11 @@ define(
                     }
                 }
 
-                var suffix = 2;
-                var newTaskName = newTaskModel.get("Task Name") + suffix;
+                var suffix = 1;
+                var newTaskName = newTaskModel.get("Task Name");
                 while (jobModel.getTaskByName(newTaskName)) {
                     suffix += 1;
-                    newTaskName = newTaskModel.get("Task Name") + suffix
+                    newTaskName = newTaskModel.get("Task Name") + suffix;
                 }
                 newTaskModel.set("Task Name", newTaskName)
                 jobModel.addTask(newTaskModel);
