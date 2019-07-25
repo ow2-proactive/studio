@@ -287,6 +287,16 @@ define(
                         });
 					}
 
+					// disable fork environment elements if task fork is false
+					var disableForkEnv = !this.model.get('Fork');
+					if (disableForkEnv) {
+						accordion.find('[id*="_Run as me"]').attr('disabled', disableForkEnv);
+						accordion.find('[id*="_Fork Execution Environment"]').attr('disabled', disableForkEnv);
+						accordion.find('[id*="_Fork Environment"]').attr('disabled', disableForkEnv);
+						// disable input and button of List parameters
+						accordion.find('[id*="_Fork Environment"] :input').attr('disabled', disableForkEnv);
+						accordion.find('[id*="_Fork Environment"] :button').attr('disabled', disableForkEnv);
+					}
 
 					accordion.find("[simple-view]").remove()
 					return accordion;
