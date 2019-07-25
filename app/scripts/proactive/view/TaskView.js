@@ -77,6 +77,7 @@ define(
             this.model.on("change:Type", this.updateIcon, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
+            this.model.on("change:Fork", this.updateFork, this);
             // Register a handler, listening for changes on Fork Execution Environment,
             // sadly it gets executed at different change events as well.
             this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
@@ -90,6 +91,13 @@ define(
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
+
+            // convert model fork value from String to boolean
+            var forkEnabled = JSON.parse(this.model.get('Fork'));
+            this.model.set("Fork", forkEnabled);
+            // configure the fork environment elements status based on whether fork is enabled
+            this.configForkParametersStatus();
+            $('[id*="_Fork Environment"]').find('input').attr('disabled', false);
         },
 
         updateTaskName: function () {
@@ -135,34 +143,43 @@ define(
         },
 
         /**
+         * This function is invoked when the task fork mode is changed.
+         * @param changed
+         */
+        updateFork: function (changed) {
+            var forkChanged = changed.changed['Fork'];
+            if (typeof forkChanged != 'undefined') {
+                this.configForkParametersStatus();
+            }
+        },
+
+        configForkParametersStatus: function () {
+            if (this.model.get('Fork')) {
+                console.log("fork enabled");
+                $('[id*="_Run as me"]').attr('disabled', false);
+                $('[id*="_Fork Execution Environment"]').attr('disabled', false);
+                $('[id*="_Fork Environment"]').attr('disabled', false);
+                $('[id*="_Fork Environment"]').find('input').attr('disabled', false);
+                $('[id*="_Fork Environment"]').find('button').attr('disabled', false);
+            } else {
+                console.log("fork disabled");
+                // when the task is non-forked, it can't be in runAsMe mode
+                this.model.set("Run as me", false);
+                $('[id*="_Run as me"]').attr('checked', false);
+                // disable editing all the related fork env parameters
+                $('[id*="_Run as me"]').attr('disabled', true);
+                $('[id*="_Fork Execution Environment"]').attr('disabled', true);
+                $('[id*="_Fork Environment"]').attr('disabled', true);
+                // disable input and button of List parameters
+                $('[id*="_Fork Environment"]').find('input').attr('disabled', true);
+                $('[id*="_Fork Environment"]').find('button').attr('disabled', true);
+            }
+        },
+        /**
          * This function is invoked when changes occur in the fork environment section.
          * @param changed
          */
         updateForkEnvironment: function (changed) {
-            var forkChanged = changed.changed['Fork'];
-            if (typeof forkChanged != 'undefined') {
-                if (!this.model.get('Fork')) {
-                    console.log("fork disabled");
-                    // when the task is non-forked, it can't be in runAsMe mode
-                    $('[id*="_Run as me"]').val(false);
-                    $('[id*="_Run as me"]').attr('checked', false);
-                    // disable editing all the related fork env parameters
-                    $('[id*="_Run as me"]').attr('disabled', true);
-                    $('[id*="_Fork Execution Environment"]').attr('disabled', true);
-                    $('[id*="_Fork Environment"]').attr('disabled', true);
-                    // disable input and button of List parameters
-                    $('[id*="_Fork Environment"]').find('input').attr('disabled', true);
-                    $('[id*="_Fork Environment"]').find('button').attr('disabled', true);
-                    return;
-                } else {
-                    console.log("fork enabled");
-                    $('[id*="_Run as me"]').attr('disabled', false);
-                    $('[id*="_Fork Execution Environment"]').attr('disabled', false);
-                    $('[id*="_Fork Environment"]').attr('disabled', false);
-                    $('[id*="_Fork Environment"]').find('input').attr('disabled', false);
-                    $('[id*="_Fork Environment"]').find('button').attr('disabled', false);
-                }
-            }
             // Query changed for Fork Execution Environment. If it contains Fork Execution Environment,
             // then it was altered. If it was not altered, then changed will not contain
             // Fork Execution Environment, then jump out of this function.
