@@ -288,20 +288,9 @@ define(
                         });
 					}
 
-					// disable fork environment elements if task fork is false
-					var disableForkEnv = !this.model.get('Fork');
-					if (disableForkEnv) {
-						accordion.find('[id*="_Run as me"]').attr('disabled', disableForkEnv);
-						accordion.find('[id*="_Fork Execution Environment"]').attr('disabled', disableForkEnv);
-						accordion.find('[id*="_Fork Environment"]').attr('disabled', disableForkEnv);
-						// disable input and button of List parameters
-						accordion.find('[id*="_Fork Environment"] :input').attr('disabled', disableForkEnv);
-						accordion.find('[id*="_Fork Environment"] :button').attr('disabled', disableForkEnv);
-					}
-
 					StudioClient.getSchedulerProperties(this.model, function (taskModel) {
-						// function called when received and saved the scheduler properties in localStorage
-						var globalProperties = new Map(JSON.parse(localStorage['pa.scheduler.property']));
+						// function called when received and saved the scheduler properties in sessionStorage
+						var globalProperties = new Map(JSON.parse(sessionStorage['pa.scheduler.property']));
 						if(globalProperties.get("runasme") == "true"){
 							console.debug("configure runasme globally true");
 							// called when the scheduler is configured to be globally runAsMe
@@ -338,6 +327,17 @@ define(
 							forkField.prop('disabled', true);
 						}
 					});
+
+					// disable fork environment elements if task fork is false
+					var disableForkEnv = !this.model.get('Fork');
+					if (disableForkEnv) {
+						accordion.find('[id*="_Run as me"]').attr('disabled', disableForkEnv);
+						accordion.find('[id*="_Fork Execution Environment"]').attr('disabled', disableForkEnv);
+						accordion.find('[id*="_Fork Environment"]').attr('disabled', disableForkEnv);
+						// disable input and button of List parameters
+						accordion.find('[id*="_Fork Environment"] :input').attr('disabled', disableForkEnv);
+						accordion.find('[id*="_Fork Environment"] :button').attr('disabled', disableForkEnv);
+					}
 
 					accordion.find("[simple-view]").remove()
 					return accordion;

@@ -388,8 +388,8 @@ define(
             },
 
             getSchedulerProperties: function(taskModel, setGlobalPropertiesIfNeeded) {
-                if(localStorage['pa.scheduler.property']) {
-                    console.debug("Using stored scheduler properties", localStorage['pa.scheduler.property']);
+                if(sessionStorage['pa.scheduler.property']) {
+                    console.debug("Using stored scheduler properties", sessionStorage['pa.scheduler.property']);
                     setGlobalPropertiesIfNeeded(taskModel);
                 } else {
                     $.ajax({
@@ -404,7 +404,7 @@ define(
                             var relatedProperties = new Map();
                             relatedProperties.set("runasme", map["pa.scheduler.task.runasme"])
                             relatedProperties.set("fork", map["pa.scheduler.task.fork"])
-                            localStorage['pa.scheduler.property'] = JSON.stringify(Array.from(relatedProperties));
+                            sessionStorage['pa.scheduler.property'] = JSON.stringify(Array.from(relatedProperties));
                             setGlobalPropertiesIfNeeded(taskModel);
                         },
                         error: function(data) {
