@@ -49,7 +49,7 @@ module.exports = {
                 var selected = select("//p:scriptExecutable/p:script/p:code[@language='python']", jobXmlDocument);
                 this.assert.ok(true, "selected code: " + selected);
 
-                var data = selected[0].toString().replace(" xmlns=\"urn:proactive:jobdescriptor:3.11\"", "");
+                var data = selected[0].toString().replace(" xmlns=\"urn:proactive:jobdescriptor:3.12\"", "");
 
                 this.assert.ok(true, "selected data: " + data);
 
