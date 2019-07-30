@@ -385,7 +385,34 @@ define(
                     curDate = new Date();
                 }
                 while (curDate - date < millis);
-            }
+            },
+
+            getSchedulerProperties: function(taskModel, setGlobalPropertiesIfNeeded) {
+                if(localStorage['pa.scheduler.property']) {
+                    console.debug("Using stored scheduler properties", localStorage['pa.scheduler.property']);
+                    setGlobalPropertiesIfNeeded(taskModel);
+                } else {
+                    $.ajax({
+                        type: "GET",
+                        url: config.schedulerRestApiUrl + "/properties",
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                        },
+                        success: function(data) {
+                            console.debug("Request scheduler properties", data);
+                            var map = JSON.parse(JSON.stringify(data));
+                            var relatedProperties = new Map();
+                            relatedProperties.set("runasme", map["pa.scheduler.task.runasme"])
+                            relatedProperties.set("fork", map["pa.scheduler.task.fork"])
+                            localStorage['pa.scheduler.property'] = JSON.stringify(Array.from(relatedProperties));
+                            setGlobalPropertiesIfNeeded(taskModel);
+                        },
+                        error: function(data) {
+                            console.log("Failed to get scheduler properties", data)
+                        }
+                    });
+                }
+            },
         }
 
     })

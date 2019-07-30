@@ -2,11 +2,12 @@ define(
 		[
 		 'jquery',
 		 'backbone',
+		 'proactive/rest/studio-client',
 		 'proactive/view/ViewWatchingModelChange',
 		 'proactive/view/utils/undo'
 		 ],
 
-		 function ($, Backbone, ViewWatchingModelChange, undoManager) {
+		 function ($, Backbone, StudioClient, ViewWatchingModelChange, undoManager) {
 
 			"use strict";
 
@@ -297,6 +298,46 @@ define(
 						accordion.find('[id*="_Fork Environment"] :input').attr('disabled', disableForkEnv);
 						accordion.find('[id*="_Fork Environment"] :button').attr('disabled', disableForkEnv);
 					}
+
+					StudioClient.getSchedulerProperties(this.model, function (taskModel) {
+						// function called when received and saved the scheduler properties in localStorage
+						var globalProperties = new Map(JSON.parse(localStorage['pa.scheduler.property']));
+						if(globalProperties.get("runasme") == "true"){
+							console.debug("configure runasme globally true");
+							// called when the scheduler is configured to be globally runAsMe
+							// in this case, task runAsMe and fork is always true and non-configurable
+							var runAsMeField = accordion.find("input[id='" + taskModel.cid + "_Run as me']");
+							var forkField = accordion.find("input[id='" + taskModel.cid + "_Fork']");
+							taskModel.set('Run as me', true);
+							taskModel.set('Fork', true);
+							runAsMeField.prop('checked', true);
+							runAsMeField.prop('disabled', true);
+							forkField.prop('checked', true);
+							forkField.prop('disabled', true);
+						}
+						if(globalProperties.get("fork") == "true"){
+							console.debug("configure fork globally true");
+							// called when the scheduler is configured to be globally fork
+							// in this case, task fork is always true and non-configurable
+							var forkField = accordion.find("input[id='" + taskModel.cid + "_Fork']");
+							taskModel.set('Fork', true);
+							forkField.prop('checked', true);
+							forkField.prop('disabled', true);
+						}
+						if(globalProperties.get("fork") == "false"){
+							console.debug("configure fork globally false");
+							// called when the scheduler is configured to be globally non-fork
+							// in this case, task runAsMe and fork is always false and non-configurable
+							var runAsMeField = accordion.find("input[id='" + taskModel.cid + "_Run as me']");
+							var forkField = accordion.find("input[id='" + taskModel.cid + "_Fork']");
+							taskModel.set('Run as me', false);
+							taskModel.set('Fork', false);
+							runAsMeField.prop('checked', false);
+							runAsMeField.prop('disabled', true);
+							forkField.prop('checked', false);
+							forkField.prop('disabled', true);
+						}
+					});
 
 					accordion.find("[simple-view]").remove()
 					return accordion;
