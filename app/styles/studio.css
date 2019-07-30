@@ -1253,6 +1253,10 @@ li.success {
     background-color: gainsboro;
 }
 
+.context-menu-task li a,
+.context-menu-canvas li a {
+    color:#428bca;
+}
 .pa-logo{
     border-radius: 13px;
     padding-top: 4px;
@@ -1329,6 +1333,16 @@ li.success {
     position: absolute;
     background-color: white;
     right: 0px;
+}
+.context-menu-task {
+  width: 20px;
+}
+.custom-menu {
+    z-index:1000;
+    position: absolute;
+    background-color:#C0C0C0;
+    border: 1px solid black;
+    padding: 2px;
 }
 
 #logout-text{
