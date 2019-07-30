@@ -331,12 +331,12 @@ define(
 					// disable fork environment elements if task fork is false
 					var disableForkEnv = !this.model.get('Fork');
 					if (disableForkEnv) {
-						accordion.find('[id*="_Run as me"]').attr('disabled', disableForkEnv);
-						accordion.find('[id*="_Fork Execution Environment"]').attr('disabled', disableForkEnv);
-						accordion.find('[id*="_Fork Environment"]').attr('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Run as me']").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Fork Execution Environment']").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Fork Environment']").prop('disabled', disableForkEnv);
 						// disable input and button of List parameters
-						accordion.find('[id*="_Fork Environment"] :input').attr('disabled', disableForkEnv);
-						accordion.find('[id*="_Fork Environment"] :button').attr('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Fork Environment'] :input").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Fork Environment'] :button").prop('disabled', disableForkEnv);
 					}
 
 					accordion.find("[simple-view]").remove()

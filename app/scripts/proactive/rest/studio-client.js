@@ -387,6 +387,9 @@ define(
                 while (curDate - date < millis);
             },
 
+            // saved the scheduler properties in sessionStorage
+            // Note, the properties are only reloaded from the server when a new page session is initiated. (i.e., open a new tab, or re-open a closed the browser)
+            // ref: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
             getSchedulerProperties: function(taskModel, setGlobalPropertiesIfNeeded) {
                 if(sessionStorage['pa.scheduler.property']) {
                     console.debug("Using stored scheduler properties", sessionStorage['pa.scheduler.property']);

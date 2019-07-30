@@ -150,13 +150,13 @@ define(
                 return;
             }
             if (this.model.get('Fork')) {
-                console.log("fork enabled");
+                console.debug("fork enabled");
                 this.updateForkEnvironmentDisableStatus(false);
             } else {
-                console.log("fork disabled");
+                console.debug("fork disabled");
                 // when the task is non-forked, it can't be in runAsMe mode
                 this.model.set("Run as me", false);
-                $('[id*="_Run as me"]').attr('checked', false);
+                $("[id='" + this.model.cid + "_Run as me']").prop('checked', false);
                 this.updateForkEnvironmentDisableStatus(true);
             }
         },
@@ -166,12 +166,12 @@ define(
         * @param disabled whether the fork environment elements should be disabled
         */
         updateForkEnvironmentDisableStatus: function (disabled) {
-          $('[id*="_Run as me"]').attr('disabled', disabled);
-          $('[id*="_Fork Execution Environment"]').attr('disabled', disabled);
-          $('[id*="_Fork Environment"]').attr('disabled', disabled);
+          $("[id='" + this.model.cid + "_Run as me']").prop('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Execution Environment']").prop('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Environment']").prop('disabled', disabled);
           // List elements cannot be directly enabled/disabled, need to search all the input and button elements to enable or disable them
-          $('[id*="_Fork Environment"]').find('input').attr('disabled', disabled);
-          $('[id*="_Fork Environment"]').find('button').attr('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Environment'] :input").prop('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Environment'] :button").prop('disabled', disabled);
         },
 
         /**
