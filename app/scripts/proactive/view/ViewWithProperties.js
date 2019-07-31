@@ -62,7 +62,8 @@ define(
 					} else {
 						jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + modelInUse.get("Name") + '</span></li>');
 						breadcrumb.append(jobBreadcrumb)
-
+                        //hidden the context-menu
+                        $(".context-menu-canvas").hide();
 						// selected-task class is used for copy/paste, delete operations, group task moving etc
 						$(".selected-task").removeClass("selected-task");
 						// active-task class is used to identify which task is currently shown in the properties view
@@ -313,7 +314,7 @@ define(
 						var that = this;
 						var removeTask = $('<a href="#" class="btn btn-danger btn-sm pull-right bottom-btn" title="Remove task">Remove task</a>');
 						removeTask.click(function () {
-							StudioApp.views.workflowView.removeView(that);
+							StudioApp.views.workflowView.removeViewWithDependencies(that);
 							return false;
 						})
 						StudioApp.views.propertiesView.$el.append(removeTask)
