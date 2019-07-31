@@ -356,7 +356,7 @@ define(
                     type: "Checkbox",
                     fieldAttrs: {
                         'placeholder': '@attributes->runAsMe',
-                        "data-help": 'Executes the task under your system account.'
+                        "data-help": 'Executes the task under your system account, it also implies the task is executed in a forked JVM.'
                     }
                 },
                 // Add the Fork Execution Environment select before the Fork Environment model. Because
