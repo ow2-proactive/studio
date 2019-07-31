@@ -10,6 +10,7 @@ define(function () {
 
     return {
         restApiUrl: '/rest/studio',
+        schedulerRestApiUrl: '/rest/scheduler',
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
         docUrl: '/doc/',
         tasks: {

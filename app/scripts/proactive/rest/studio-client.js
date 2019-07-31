@@ -385,7 +385,37 @@ define(
                     curDate = new Date();
                 }
                 while (curDate - date < millis);
-            }
+            },
+
+            // saved the scheduler properties in sessionStorage
+            // Note, the properties are only reloaded from the server when a new page session is initiated. (i.e., open a new tab, or re-open a closed the browser)
+            // ref: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+            getSchedulerProperties: function(taskModel, setGlobalPropertiesIfNeeded) {
+                if(sessionStorage['pa.scheduler.property']) {
+                    console.debug("Using stored scheduler properties", sessionStorage['pa.scheduler.property']);
+                    setGlobalPropertiesIfNeeded(taskModel);
+                } else {
+                    $.ajax({
+                        type: "GET",
+                        url: config.schedulerRestApiUrl + "/properties",
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                        },
+                        success: function(data) {
+                            console.debug("Request scheduler properties", data);
+                            var map = JSON.parse(JSON.stringify(data));
+                            var relatedProperties = new Map();
+                            relatedProperties.set("runasme", map["pa.scheduler.task.runasme"])
+                            relatedProperties.set("fork", map["pa.scheduler.task.fork"])
+                            sessionStorage['pa.scheduler.property'] = JSON.stringify(Array.from(relatedProperties));
+                            setGlobalPropertiesIfNeeded(taskModel);
+                        },
+                        error: function(data) {
+                            console.log("Failed to get scheduler properties", data)
+                        }
+                    });
+                }
+            },
         }
 
     })

@@ -3,6 +3,7 @@
     <% if (task["Store Task Logs in a File"]) { %>preciousLogs="<%=task["Store Task Logs in a File"]%>" <% } %>
     <% if (task["On Task Error Policy"]!='none') { %>onTaskError="<%=task["On Task Error Policy"]%>" <% } %>
     <% if (task["Task Result Added to Job Result"]) { %>preciousResult="<%=task["Task Result Added to Job Result"]%>" <% } %>
+    fork="<%=task["Fork"]%>"
     <% if (task["Run as me"]) { %>runAsMe="<%=task["Run as me"]%>" <% } %>
     <% if (task["If An Error Occurs Restart Task"] && task["If An Error Occurs Restart Task"]!='anywhere') { %> restartTaskOnError="<%= task["If An Error Occurs Restart Task"]%>" <% } %>
 
@@ -13,7 +14,7 @@
     <% if (task["Description"] && task["Description"].length>0) { %>
     <description> <![CDATA[ <%= task["Description"]%> ]]> </description>
     <% } %>
-    
+
     <% if (task["Variables"] && task["Variables"].length>0) { %>
     <variables>
     <% _.each(task["Variables"], function(variable) { %>
@@ -65,7 +66,7 @@
         </selection>
     <% } %>
 
-    <%=forkEnvironment%>
+    <% if (task["Fork"]) { %> <%=forkEnvironment%> <% } %>
 
     <% if (preScript && preScript.length>0) { %>
     <% print("<pre"+">") %>
