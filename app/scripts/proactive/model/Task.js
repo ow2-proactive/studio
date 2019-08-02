@@ -349,7 +349,7 @@ define(
                         "data-tab": "Fork Environment",
                         "data-tab-help": "Fork environment is a new customisable JVM started to only run the task it belongs to. Also specify how to start this JVM, like in a Docker container for example.",
                         'placeholder': '@attributes->fork',
-                        "data-help": 'Executes the task in a forked JVM, when it is false, all the other fork environment configurations are not taken into account.'
+                        "data-help": 'Executes the task in a forked JVM. When it is false, all the other fork environment configurations are not taken into account.'
                     }
                 },
                 "Run as me": {
