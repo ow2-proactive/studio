@@ -223,7 +223,7 @@ define(
             type: "Text",
             fieldAttrs: {
                 'placeholder': '@attributes->taskRetryDelay',
-                "data-help": 'Specifies how long to wait before restarting the task in error. <br/><br/>Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'
+                "data-help": 'Specifies how long to wait before restart the task in error. <br/><br/>Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'
             }
         }
       },
