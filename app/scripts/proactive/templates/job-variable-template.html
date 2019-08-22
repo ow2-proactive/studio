@@ -1,5 +1,5 @@
 <center>
-<% _.each(jobGenericInfos, function(gi) { 
+<% _.each(jobGenericInfos, function(gi) {
     		var label = gi["Property Name"];
     		if (label == "workflow.icon" )  %>
     			<img src="<%=gi["Property Value"]%>" style="width:100px;height:100px;">
@@ -8,18 +8,18 @@
 <h4 class="modal-title"><%- jobName %> </h4>
 <small class="font-bold"><b>Description : </b><%- jobDescription %></small><br>
 <small class="font-bold"><b>Project name : </b><%- jobProjectName %></small><br>
-<% _.each(jobGenericInfos, function(gi) { 
+<% _.each(jobGenericInfos, function(gi) {
     var label = gi["Property Name"];
     if (label == "bucketName" )  %>
     	<small class="font-bold"><b>Bucket name : </b><%=gi["Property Value"] %></small><br>
 <% }) %>
-    
-<% _.each(jobGenericInfos, function(gi) { 
+
+<% _.each(jobGenericInfos, function(gi) {
 	var label = gi["Property Name"];
     if (label == "Documentation" )  %>
 		<small class="font-bold"><b> Documentation : </b><a href='<%=gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small><br>
 <% }) %>
-   
+
 </center>
 
 
@@ -53,6 +53,9 @@
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true"/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false" checked/>FALSE</label>
                 </div>
+            <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
+                <input class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" name="<%- variable.Name %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" />
+                <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% } else {  %>
             <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
