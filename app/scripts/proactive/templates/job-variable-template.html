@@ -54,7 +54,7 @@
                     <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false" checked/>FALSE</label>
                 </div>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
-                <input class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" name="<%- variable.Name %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" />
+                <input class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" name="<%- variable.Name %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% } else {  %>
             <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
