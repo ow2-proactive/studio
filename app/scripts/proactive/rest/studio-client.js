@@ -285,7 +285,9 @@ define(
 
                 }
                 var that = this;
-                return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function(result) {
+                return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {
+                    "sessionid": localStorage['pa.session']
+                }, function(result) {
 
                     if (that.lastResult) {
 
@@ -318,7 +320,9 @@ define(
                 if (!localStorage['pa.session']) return;
 
                 var that = this;
-                return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, null, false);
+                return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {
+                    "sessionid": localStorage['pa.session']
+                }, null, false);
             },
             resetLastValidationResult: function() {
                 this.lastResult = undefined;
