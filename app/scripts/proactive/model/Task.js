@@ -446,7 +446,7 @@ define(
                 var that = this;
                 this.schema.Variables.subSchema.Model.validators = [
                     function checkVariableValue(value, formValues) {
-                        if (formValues.Model.length > 0) {
+                        if (formValues.Model.length > 0 && formValues.Model.toLowerCase() != "pa:credential") {
                             var StudioApp = require('StudioApp');
                             if (StudioApp.isWorkflowOpen()) {
                                 that.updateVariable(formValues);
