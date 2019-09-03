@@ -263,7 +263,7 @@ define(
             if (formValues.Model.length > 0) {
               if (StudioApp.isWorkflowOpen()) {
                 that.updateVariable(formValues);
-                var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+                var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel, false);
                 if (!validationData.valid) {
                   var err = {
                     type: 'Validation',
