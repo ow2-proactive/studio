@@ -282,12 +282,13 @@ define(
                     if ((jobModel.getTasksCount() == 0)) {
                         return false;
                     }
-
                 }
+
                 var that = this;
-                return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {
-                    "sessionid": localStorage['pa.session']
-                }, function(result) {
+                // during automaticValidation, not pass sessionId to disable checking the validity of PA:CREDENTIALS variables default value
+                var headers = automaticValidation ? {} : {"sessionid": localStorage['pa.session']};
+
+                return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, headers, function(result) {
 
                     if (that.lastResult) {
 
@@ -316,13 +317,13 @@ define(
                     that.lastResult = result;
                 }, true)]);
             },
-            validate: function(jobXml, jobModel) {
+            validate: function(jobXml, jobModel, checkCredential) {
                 if (!localStorage['pa.session']) return;
 
                 var that = this;
-                return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {
-                    "sessionid": localStorage['pa.session']
-                }, null, false);
+                // only pass sessionId when want to check the validity of PA:CREDENTIALS variables
+                var headers = checkCredential ? {"sessionid": localStorage['pa.session']} : {};
+                return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, headers, null, false);
             },
             resetLastValidationResult: function() {
                 this.lastResult = undefined;

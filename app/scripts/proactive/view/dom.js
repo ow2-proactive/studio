@@ -548,7 +548,7 @@ define(
         function validate() {
             var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
-            return StudioClient.validate(xml, studioApp.models.jobModel);
+            return StudioClient.validate(xml, studioApp.models.jobModel, true);
         }
 
         $("#clear-button, #clear-button-tool").click(function (event) {

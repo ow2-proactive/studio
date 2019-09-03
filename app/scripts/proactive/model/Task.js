@@ -446,11 +446,11 @@ define(
                 var that = this;
                 this.schema.Variables.subSchema.Model.validators = [
                     function checkVariableValue(value, formValues) {
-                        if (formValues.Model.length > 0 && formValues.Model.toLowerCase() != "pa:credential") {
+                        if (formValues.Model.length > 0) {
                             var StudioApp = require('StudioApp');
                             if (StudioApp.isWorkflowOpen()) {
                                 that.updateVariable(formValues);
-                                var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+                                var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel, false);
                                 if (!validationData.valid) {
                                     var err = {
                                         type: 'Validation',
