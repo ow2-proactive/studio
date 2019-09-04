@@ -56,8 +56,11 @@
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
                 <input class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" name="<%- variable.Name %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
+            <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:credential')!=-1) {  %>
+                <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <button id="third-party-credential-button" type="button" class="btn"><%- variable.Model %></button>
             <% } else {  %>
-            <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% }  %>
         </li>
@@ -65,3 +68,20 @@
 </ul>
 <label style="color:red;text-align:center;width:100%"><%- errorMessage %></label>
 <label style="color:green;text-align:center;width:100%"><%- infoMessage %></label>
+
+<div id="third-party-credential-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow:hidden; outline:none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Third-Party Credentials</h3>
+            </div>
+            <div id="third-party-credential-body" class="modal-body" style="height:100%">
+                <div id="third-party-credential-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="third-party-credential-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true"> Close </button>
+            </div>
+        </div>
+    </div>
+</div>

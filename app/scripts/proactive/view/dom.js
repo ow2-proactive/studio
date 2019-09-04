@@ -7,7 +7,7 @@ define(
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
-        'text!proactive/templates/job-variable-template.html',
+        'proactive/view/JobVariableView',
         'proactive/view/BeautifiedModalAdapter',
         'pnotify',
         'pnotify.buttons',
@@ -51,7 +51,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, jobVariablesTemplate, BeautifiedModalAdapter, PNotify) {
+    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, JobVariableView, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -395,8 +395,7 @@ define(
                 return;
             }
 
-            var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
-            $('#job-variables').html(template);
+            new JobVariableView({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
         });
 
@@ -454,11 +453,9 @@ define(
                 var validationData = validate();
 
                 if (!validationData.valid) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
-                    $('#job-variables').html(template);
+                    new JobVariableView({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
                 } else if (check) {
-                    var template = _.template(jobVariablesTemplate, {'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
-                    $('#job-variables').html(template);
+                    new JobVariableView({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
