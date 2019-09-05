@@ -76,19 +76,18 @@
                 <button type="button" class="close third-party-credential-close" aria-hidden="true">×</button>
                 <h3>Third-Party Credentials</h3>
             </div>
-            <div id="third-party-credential-body" class="modal-body" style="height:100%">
-                <div id="third-party-credential-container">
-                    <table class="table">
+            <div id="third-party-credential-body" class="modal-body" style="overflow-y: scroll; height: 200px;">
+                <div id="third-party-credential-container" >
+                    <table id="third-party-credential-table" class="table">
+                        <thead>
                         <tr>
                             <th>Key</th>
                             <th>Credential</th>
                             <th> </th>
                         </tr>
-                        <tr>
-                            <td>mykey1</td>
-                            <td>mycred1</td>
-                            <td> X </td>
-                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>

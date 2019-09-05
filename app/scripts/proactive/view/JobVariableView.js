@@ -1,10 +1,12 @@
 define(
     [
         'backbone',
-        'text!proactive/templates/job-variable-template.html'
+        'text!proactive/templates/job-variable-template.html',
+        'text!proactive/templates/third-party-credential.html',
+        'proactive/model/ThirdPartyCredentialCollection'
     ],
 
-    function (Backbone, jobVariableTemplate) {
+    function (Backbone, jobVariableTemplate, thirdPartyCredentialTemplate, ThirdPartyCredentialCollection) {
 
     "use strict";
 
@@ -27,6 +29,16 @@ define(
         },
 
         showThirdPartyCredentialModal: function(event){
+            var objectsModel = new ThirdPartyCredentialCollection({
+                callback: function (thirdPartyCredentialObjects) {
+                    $('#third-party-credential-table tbody').empty();
+                    _.each(thirdPartyCredentialObjects, function (obj) {
+                        var credentialTemplate = _.template(thirdPartyCredentialTemplate);
+                        $('#third-party-credential-table tbody').append(credentialTemplate({credentialKey: obj}));
+                    });
+                }
+            });
+            objectsModel.fetch({async:false});
             $('#third-party-credential-modal').modal();
         },
 
