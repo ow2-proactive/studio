@@ -7,7 +7,6 @@ define(
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
-        'proactive/view/JobVariableView',
         'proactive/view/BeautifiedModalAdapter',
         'pnotify',
         'pnotify.buttons',
@@ -51,7 +50,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, JobVariableView, BeautifiedModalAdapter, PNotify) {
+    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -395,7 +394,7 @@ define(
                 return;
             }
 
-            new JobVariableView({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
+            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
         });
 
@@ -453,9 +452,9 @@ define(
                 var validationData = validate();
 
                 if (!validationData.valid) {
-                    new JobVariableView({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
                 } else if (check) {
-                    new JobVariableView({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
+                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){

@@ -1,33 +1,37 @@
 define(
     [
         'backbone',
-        'text!proactive/templates/job-variable-template.html',
-        'proactive/view/ThirdPartyCredentialView'
+        'text!proactive/templates/job-variable-template.html'
     ],
 
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView) {
+    function (Backbone, jobVariableTemplate) {
 
     "use strict";
 
     return Backbone.View.extend({
 
-        template: undefined,
+        template: _.template(jobVariableTemplate),
 
-        initialize: function (infos) {
-            this.$el = $('#job-variables');
-            this.template = _.template(jobVariableTemplate, {'jobVariables': infos.jobVariables, 'jobName': infos.jobName, 'jobProjectName': infos.jobProjectName, 'jobDescription': infos.jobDescription, 'jobDocumentation': infos.jobDocumentation, 'jobGenericInfos': infos.jobGenericInfos, 'errorMessage': infos.errorMessage, 'infoMessage': infos.infoMessage});
-            this.render();
+        events: {
+            'click #third-party-credential-button': 'showThirdPartyCredentialModal',
+            'click .third-party-credential-close': 'closeThirdPartyCredential'
         },
 
-        render: function () {
-            this.$el.html(this.template);
+        initialize: function () {
+            this.$el = $('#job-variables');
+        },
 
-            $("#third-party-credential-button").click(function (event) {
-                new ThirdPartyCredentialView().render();
-                $('#third-party-credential-modal').modal();
-            });
-
+        render: function (infos) {
+            this.$el.html(this.template({'jobVariables': infos.jobVariables, 'jobName': infos.jobName, 'jobProjectName': infos.jobProjectName, 'jobDescription': infos.jobDescription, 'jobDocumentation': infos.jobDocumentation, 'jobGenericInfos': infos.jobGenericInfos, 'errorMessage': infos.errorMessage, 'infoMessage': infos.infoMessage}));
             return this;
+        },
+
+        showThirdPartyCredentialModal: function(event){
+            $('#third-party-credential-modal').modal();
+        },
+
+        closeThirdPartyCredential: function (event) {
+            $('#third-party-credential-modal').modal('hide');
         }
     })
-});
+})
