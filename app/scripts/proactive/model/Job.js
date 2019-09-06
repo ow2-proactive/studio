@@ -218,6 +218,13 @@ define(
             "data-help": "Defines whether tasks that have to be restarted will restart on an other computing node."
           },
           options: ["anywhere", "elsewhere"]
+        },
+        "Delay Before Retry Task (hh:mm:ss)": {
+            type: "Text",
+            fieldAttrs: {
+                'placeholder': '@attributes->taskRetryDelay',
+                "data-help": 'Specifies how long to wait before restart the task in error. <br/><br/>Format is the following:<br/><br/>5 means 5 seconds<br/><br/>10:5 means 10 minutes 5 seconds<br/><br/>1:02:03 is 1 hour 2 minutes and 3 seconds.'
+            }
         }
       },
       initialize: function() {
@@ -256,7 +263,7 @@ define(
             if (formValues.Model.length > 0) {
               if (StudioApp.isWorkflowOpen()) {
                 that.updateVariable(formValues);
-                var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel);
+                var validationData = StudioClient.validate(StudioApp.views.xmlView.generateXml(), StudioApp.models.jobModel, false);
                 if (!validationData.valid) {
                   var err = {
                     type: 'Validation',

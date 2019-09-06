@@ -282,10 +282,13 @@ define(
                     if ((jobModel.getTasksCount() == 0)) {
                         return false;
                     }
-
                 }
+
                 var that = this;
-                return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, function(result) {
+                // during automaticValidation, not pass sessionId to disable checking the validity of PA:CREDENTIALS variables default value
+                var headers = automaticValidation ? {} : {"sessionid": localStorage['pa.session']};
+
+                return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, headers, function(result) {
 
                     if (that.lastResult) {
 
@@ -314,11 +317,13 @@ define(
                     that.lastResult = result;
                 }, true)]);
             },
-            validate: function(jobXml, jobModel) {
+            validate: function(jobXml, jobModel, checkCredential) {
                 if (!localStorage['pa.session']) return;
 
                 var that = this;
-                return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, {}, null, false);
+                // only pass sessionId when want to check the validity of PA:CREDENTIALS variables
+                var headers = checkCredential ? {"sessionid": localStorage['pa.session']} : {};
+                return that.send_multipart_request(config.restApiUrl + "/validate", jobXml, headers, null, false);
             },
             resetLastValidationResult: function() {
                 this.lastResult = undefined;
@@ -385,7 +390,37 @@ define(
                     curDate = new Date();
                 }
                 while (curDate - date < millis);
-            }
+            },
+
+            // saved the scheduler properties in sessionStorage
+            // Note, the properties are only reloaded from the server when a new page session is initiated. (i.e., open a new tab, or re-open a closed the browser)
+            // ref: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+            getSchedulerProperties: function(taskModel, setGlobalPropertiesIfNeeded) {
+                if(sessionStorage['pa.scheduler.property']) {
+                    console.debug("Using stored scheduler properties", sessionStorage['pa.scheduler.property']);
+                    setGlobalPropertiesIfNeeded(taskModel);
+                } else {
+                    $.ajax({
+                        type: "GET",
+                        url: config.schedulerRestApiUrl + "/properties",
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                        },
+                        success: function(data) {
+                            console.debug("Request scheduler properties", data);
+                            var map = JSON.parse(JSON.stringify(data));
+                            var relatedProperties = new Map();
+                            relatedProperties.set("runasme", map["pa.scheduler.task.runasme"])
+                            relatedProperties.set("fork", map["pa.scheduler.task.fork"])
+                            sessionStorage['pa.scheduler.property'] = JSON.stringify(Array.from(relatedProperties));
+                            setGlobalPropertiesIfNeeded(taskModel);
+                        },
+                        error: function(data) {
+                            console.log("Failed to get scheduler properties", data)
+                        }
+                    });
+                }
+            },
         }
 
     })

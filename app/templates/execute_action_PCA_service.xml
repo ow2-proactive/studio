@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="urn:proactive:jobdescriptor:3.11" xsi:schemaLocation="urn:proactive:jobdescriptor:3.11 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.11/schedulerjob.xsd"  name="Execute_Action_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
+  xmlns="urn:proactive:jobdescriptor:3.12" xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"  name="Execute_Action_PCA_Service"  priority="normal" onTaskError="continueJobExecution"  maxNumberOfExecution="2" >
   <variables>
     <variable name="INSTANCE_ID" value="" />
     <variable name="ACTION" value="" />

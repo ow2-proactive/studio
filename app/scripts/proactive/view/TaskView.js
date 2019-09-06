@@ -77,6 +77,7 @@ define(
             this.model.on("change:Type", this.updateIcon, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
+            this.model.on("change:Fork", this.updateFork, this);
             // Register a handler, listening for changes on Fork Execution Environment,
             // sadly it gets executed at different change events as well.
             this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
@@ -90,6 +91,9 @@ define(
                 + this.model.get("Task Name") + '</span></a></div>');
 
             this.showBlockInTask();
+
+            // convert model fork value from String to boolean
+            this.model.set("Fork", JSON.parse(this.model.get('Fork')));
         },
 
         updateTaskName: function () {
@@ -135,6 +139,42 @@ define(
         },
 
         /**
+         * This function is invoked when the task fork mode is changed,
+         * The fork environment elements status are configured (enabled/disabled) based on whether fork is enabled
+         * @param changed
+         */
+        updateFork: function (changed) {
+            var forkChanged = changed.changed['Fork'];
+            if (typeof forkChanged == 'undefined') {
+                // when fork value is not changed, no need to configure fork environment elements
+                return;
+            }
+            if (this.model.get('Fork')) {
+                console.debug("fork enabled");
+                this.updateForkEnvironmentDisableStatus(false);
+            } else {
+                console.debug("fork disabled");
+                // when the task is non-forked, it can't be in runAsMe mode
+                this.model.set("Run as me", false);
+                $("[id='" + this.model.cid + "_Run as me']").prop('checked', false);
+                this.updateForkEnvironmentDisableStatus(true);
+            }
+        },
+
+        /**
+        * enable or disable editing of all the related fork environment elements
+        * @param disabled whether the fork environment elements should be disabled
+        */
+        updateForkEnvironmentDisableStatus: function (disabled) {
+          $("[id='" + this.model.cid + "_Run as me']").prop('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Execution Environment']").prop('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Environment']").prop('disabled', disabled);
+          // List elements cannot be directly enabled/disabled, need to search all the input and button elements to enable or disable them
+          $("[id='" + this.model.cid + "_Fork Environment'] :input").prop('disabled', disabled);
+          $("[id='" + this.model.cid + "_Fork Environment'] :button").prop('disabled', disabled);
+        },
+
+        /**
          * This function is invoked when changes occur in the fork environment section.
          * @param changed
          */
@@ -144,6 +184,7 @@ define(
             // Fork Execution Environment, then jump out of this function.
             // Otherwise the script will be overwritten that means that the user's input will be overwritten.
             var forkExecutionEnvironmentSelector = changed.changed['Fork Execution Environment'];
+
             if (typeof forkExecutionEnvironmentSelector == 'undefined') {
                 // Fork Execution Environment was not altered -> don't change (overwrite)
                 // anything in this case.
