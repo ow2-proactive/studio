@@ -87,6 +87,13 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <% for (var index in credentialKeys) { %>
+                        <tr>
+                            <td><%- credentialKeys[index] %></td>
+                            <td>******</td>
+                            <td> <button id="<%- credentialKeys[index] %>" class="btn remove-third-party-credential"> - </button> </td>
+                        </tr>
+                        <% } %>
                         </tbody>
                     </table>
                 </div>

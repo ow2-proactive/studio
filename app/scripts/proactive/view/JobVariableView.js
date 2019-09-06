@@ -2,11 +2,9 @@ define(
     [
         'backbone',
         'text!proactive/templates/job-variable-template.html',
-        'text!proactive/templates/third-party-credential.html',
         'proactive/model/ThirdPartyCredentialCollection'
     ],
-
-    function (Backbone, jobVariableTemplate, thirdPartyCredentialTemplate, ThirdPartyCredentialCollection) {
+    function (Backbone, jobVariableTemplate, ThirdPartyCredentialCollection) {
 
     "use strict";
 
@@ -14,10 +12,13 @@ define(
 
         template: _.template(jobVariableTemplate),
 
+        viewInfos: undefined,
+
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
             'click .third-party-credential-close': 'closeThirdPartyCredential',
-            'submit #add-third-party-credential': 'submitThirdPartyCredential'
+            'submit #add-third-party-credential': 'submitThirdPartyCredential',
+            'click .remove-third-party-credential': 'removeThirdPartyCredential'
         },
 
         initialize: function () {
@@ -25,18 +26,18 @@ define(
         },
 
         render: function (infos) {
-            this.$el.html(this.template({'jobVariables': infos.jobVariables, 'jobName': infos.jobName, 'jobProjectName': infos.jobProjectName, 'jobDescription': infos.jobDescription, 'jobDocumentation': infos.jobDocumentation, 'jobGenericInfos': infos.jobGenericInfos, 'errorMessage': infos.errorMessage, 'infoMessage': infos.infoMessage}));
+            this.viewInfos = infos;
+            this.viewInfos['credentialKeys'] = [];
+            this.$el.html(this.template(this.viewInfos));
             return this;
         },
 
         showThirdPartyCredentialModal: function() {
+            var that = this;
             var objectsModel = new ThirdPartyCredentialCollection({
                 callback: function (thirdPartyCredentialObjects) {
-                    $('#third-party-credential-table tbody').empty();
-                    _.each(thirdPartyCredentialObjects, function (obj) {
-                        var credentialTemplate = _.template(thirdPartyCredentialTemplate);
-                        $('#third-party-credential-table tbody').append(credentialTemplate({credentialKey: obj}));
-                    });
+                    that.viewInfos['credentialKeys'] = thirdPartyCredentialObjects;
+                    that.$el.html(that.template(that.viewInfos));
                 }
             });
             objectsModel.fetch({async:false});
@@ -56,6 +57,22 @@ define(
                 },
                 error: function (xhr, status, error) {
                     alert('Failed to adding the third-party credential.' + xhr.status + ': ' + xhr.statusText);
+                }
+            });
+        },
+
+        removeThirdPartyCredential: function(event) {
+            var credentialKey = event.target.id;
+            var that = this;
+            $.ajax({
+                url: "/rest/scheduler/credentials/" + credentialKey,
+                type: "DELETE",
+                headers: { "sessionid": localStorage['pa.session'] },
+                success: function (data) {
+                    that.showThirdPartyCredentialModal();
+                },
+                error: function (xhr, status, error) {
+                    alert('Failed to removing the third-party credential.' + xhr.status + ': ' + xhr.statusText);
                 }
             });
         },
