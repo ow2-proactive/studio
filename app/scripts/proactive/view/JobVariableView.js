@@ -16,7 +16,8 @@ define(
 
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
-            'click .third-party-credential-close': 'closeThirdPartyCredential'
+            'click .third-party-credential-close': 'closeThirdPartyCredential',
+            'submit #add-third-party-credential': 'submitThirdPartyCredential'
         },
 
         initialize: function () {
@@ -28,7 +29,7 @@ define(
             return this;
         },
 
-        showThirdPartyCredentialModal: function(event){
+        showThirdPartyCredentialModal: function() {
             var objectsModel = new ThirdPartyCredentialCollection({
                 callback: function (thirdPartyCredentialObjects) {
                     $('#third-party-credential-table tbody').empty();
@@ -40,6 +41,23 @@ define(
             });
             objectsModel.fetch({async:false});
             $('#third-party-credential-modal').modal();
+        },
+
+        submitThirdPartyCredential: function(event) {
+            event.preventDefault();
+            var that = this;
+            $.ajax({
+                url: "/rest/scheduler/credentials/" + $('#new-cred-key').val(),
+                type: "POST",
+                headers: { "sessionid": localStorage['pa.session'] },
+                data: { value: $('#new-cred-value').val() },
+                success: function (data) {
+                    that.showThirdPartyCredentialModal();
+                },
+                error: function (xhr, status, error) {
+                    alert('Failed to adding the third-party credential.' + xhr.status + ': ' + xhr.statusText);
+                }
+            });
         },
 
         closeThirdPartyCredential: function (event) {

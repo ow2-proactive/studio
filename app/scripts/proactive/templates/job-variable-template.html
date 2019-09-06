@@ -76,8 +76,8 @@
                 <button type="button" class="close third-party-credential-close" aria-hidden="true">×</button>
                 <h3>Third-Party Credentials</h3>
             </div>
-            <div id="third-party-credential-body" class="modal-body" style="overflow-y: scroll; height: 200px;">
-                <div id="third-party-credential-container" >
+            <div id="third-party-credential-body" class="modal-body" style="height: 250px;">
+                <div id="third-party-credential-container" style="overflow-y: scroll; height: 160px;">
                     <table id="third-party-credential-table" class="table">
                         <thead>
                         <tr>
@@ -89,6 +89,22 @@
                         <tbody>
                         </tbody>
                     </table>
+                </div>
+                <br>
+                <div id="add-third-party-credential-container">
+                    <form id="add-third-party-credential">
+                        <table>
+                            <tr>
+                                <td><label for="new-cred-key">Key:</label></td>
+                                <td><label for="new-cred-value">Credential:</label></td>
+                            </tr>
+                            <tr>
+                                <td><input class="textareavalues" name="Key:" type="text" id="new-cred-key" /></td>
+                                <td><input class="textareavalues" name="Value:" type="password" id="new-cred-value" autocomplete="new-password" /></td>
+                                <td><button id="add-third-party-credential-button" class="btn"> Add </button></td>
+                            </tr>
+                        </table>
+                    </form>
                 </div>
             </div>
             <div class="modal-footer">
