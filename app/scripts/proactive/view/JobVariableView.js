@@ -1,10 +1,9 @@
 define(
     [
         'backbone',
-        'text!proactive/templates/job-variable-template.html',
-        'proactive/model/ThirdPartyCredentialCollection'
+        'text!proactive/templates/job-variable-template.html'
     ],
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialCollection) {
+    function (Backbone, jobVariableTemplate) {
 
     "use strict";
 
@@ -17,7 +16,7 @@ define(
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
             'click .third-party-credential-close': 'closeThirdPartyCredential',
-            'submit #add-third-party-credential': 'submitThirdPartyCredential',
+            'click #add-third-party-credential-button': 'addThirdPartyCredential',
             'click .remove-third-party-credential': 'removeThirdPartyCredential'
         },
 
@@ -34,45 +33,38 @@ define(
 
         showThirdPartyCredentialModal: function() {
             var that = this;
-            var objectsModel = new ThirdPartyCredentialCollection({
-                callback: function (thirdPartyCredentialObjects) {
-                    that.viewInfos['credentialKeys'] = thirdPartyCredentialObjects;
+            $.ajax({
+                url: "/rest/scheduler/credentials/",
+                headers: { "sessionid": localStorage['pa.session'] },
+                async: false,
+                success: function (data){
+                    that.viewInfos['credentialKeys'] = data;
                     that.$el.html(that.template(that.viewInfos));
                 }
             });
-            objectsModel.fetch({async:false});
             $('#third-party-credential-modal').modal();
         },
 
-        submitThirdPartyCredential: function(event) {
-            event.preventDefault();
-            var that = this;
-            $.ajax({
-                url: "/rest/scheduler/credentials/" + $('#new-cred-key').val(),
-                type: "POST",
-                headers: { "sessionid": localStorage['pa.session'] },
-                data: { value: $('#new-cred-value').val() },
-                success: function (data) {
-                    that.showThirdPartyCredentialModal();
-                },
-                error: function (xhr, status, error) {
-                    alert('Failed to adding the third-party credential.' + xhr.status + ': ' + xhr.statusText);
-                }
-            });
+        addThirdPartyCredential: function(event) {
+            this.thirdPartyCredentialRequest($('#new-cred-key').val(), "POST", { value: $('#new-cred-value').val() });
         },
 
         removeThirdPartyCredential: function(event) {
-            var credentialKey = event.target.id;
+            this.thirdPartyCredentialRequest(event.target.id, "DELETE", {});
+        },
+
+        thirdPartyCredentialRequest: function(credentialKey, typeRequest, requestData) {
             var that = this;
             $.ajax({
                 url: "/rest/scheduler/credentials/" + credentialKey,
-                type: "DELETE",
+                type: typeRequest,
+                data: requestData,
                 headers: { "sessionid": localStorage['pa.session'] },
                 success: function (data) {
                     that.showThirdPartyCredentialModal();
                 },
                 error: function (xhr, status, error) {
-                    alert('Failed to removing the third-party credential.' + xhr.status + ': ' + xhr.statusText);
+                    alert('Failed to edit the third-party credential.' + xhr.status + ': ' + xhr.statusText);
                 }
             });
         },
