@@ -31,19 +31,6 @@ define(
 
         showThirdPartyCredentialModal: function() {
             new ThirdPartyCredentialView().render();
-        },
-
-        refreshThirdPartyCredential: function() {
-            var that = this;
-            $.ajax({
-                url: "/rest/scheduler/credentials/",
-                headers: { "sessionid": localStorage['pa.session'] },
-                async: false,
-                success: function (data){
-                    that.viewInfos['credentialKeys'] = data;
-                    that.$el.html(that.template(that.viewInfos));
-                }
-            });
         }
     })
 })

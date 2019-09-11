@@ -31,14 +31,13 @@ define(
         },
 
         refreshThirdPartyCredential: function() {
-            console.error("refresh");
             var that = this;
             $.ajax({
                 url: "/rest/scheduler/credentials/",
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
-                    that.model['credentialKeys'] = data;
+                    that.model['credentialKeys'] = data.sort();
                     that.$el.html(that.template(that.model));
                 }
             });
