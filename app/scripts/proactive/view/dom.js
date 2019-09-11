@@ -370,6 +370,18 @@ define(
             require('StudioApp').views.workflowView.setZoom(1);
         });
 
+        function initializeSubmitFormForTaskVariables() {
+            var toggler = document.getElementsByClassName("caretUL");
+            var i;
+
+            for (i = 0; i < toggler.length; i++) {
+                toggler[i].addEventListener("click", function() {
+                    this.parentElement.querySelector(".nestedUL").classList.toggle("activeUL");
+                    this.classList.toggle("caretUL-down");
+                });
+            }
+        }
+
         $("#submit-button").click(function (event) {
             event.preventDefault();
 
@@ -398,6 +410,8 @@ define(
             var template = _.template(jobVariablesTemplate, {'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#job-variables').html(template);
             $('#execute-workflow-modal').modal();
+
+            initializeSubmitFormForTaskVariables();
         });
 
         $("#plan-button").click(function (event) {
@@ -429,19 +443,31 @@ define(
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
                 var inputReceived = $('#job-variables .variableValue');
+
+                var extractVariableName = function (key) { return (key.split(":").length == 2 ? key.split(":")[1] : key) };
+                var isTaskVariable = function (key) { return (key.split(":").length == 2) }
+                function setInheritedField(key) {
+                  if (isTaskVariable(key)) {
+                    inputVariables[input.id].Inherited = false;
+                  }
+                }
                 for (var i = 0; i < inputReceived.length; i++) {
                     var input = inputReceived[i];
-                    if ($(input).prop("tagName")==='SELECT')
-                        inputVariables[input.id] = {'Name': input.name, 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
-                    else if ($(input).prop("tagName")==='INPUT'){
-                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
+                    if ($(input).prop("tagName")==='SELECT') {
+                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
+                        setInheritedField(input.name);
+                    } else if ($(input).prop("tagName")==='INPUT'){
+                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model")};
+                        setInheritedField(input.name);
                     } else if ($(input).prop("tagName")==='DIV'){
                         var checkedRadio = $(input).find("input[type='radio']:checked");
                         var checkRadioValue = $(checkedRadio).val();
                         var inputName = $(checkedRadio).attr('name');
-                        inputVariables[input.id] = {'Name': inputName, 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
+                        inputVariables[input.id] = {'Name': extractVariableName(inputName), 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
+                        setInheritedField(inputName);
                     } else if ($(input).prop("tagName")==='TEXTAREA') {
-                        inputVariables[input.id] = {'Name': input.name, 'Value': input.value, 'Model': $(input).data("variable-model")};
+                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model")};
+                        setInheritedField(input.name);
                     }
                 }
                 readOrStoreVariablesInModel(inputVariables);
@@ -469,6 +495,8 @@ define(
 
                 }
                 readOrStoreVariablesInModel(oldVariables);
+
+                initializeSubmitFormForTaskVariables();
             })
         }
 
@@ -502,7 +530,7 @@ define(
                 }
             }
             // task variables are for now disabled in the job execution form
-            // readOrStoreTaskVariablesInModel(studioApp, updatedVariables, jobVariables);
+            readOrStoreTaskVariablesInModel(studioApp, updatedVariables, jobVariables);
             return jobVariables;
         }
 
