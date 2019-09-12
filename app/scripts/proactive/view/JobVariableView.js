@@ -12,7 +12,7 @@ define(
 
         template: _.template(jobVariableTemplate),
 
-        viewInfos: undefined,
+        model: undefined,
 
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
@@ -22,10 +22,9 @@ define(
             this.$el = $('#job-variables');
         },
 
-        render: function (infos) {
-            this.viewInfos = infos;
-            this.viewInfos['credentialKeys'] = [];
-            this.$el.html(this.template(this.viewInfos));
+        render: function (jobInfos) {
+            this.model = $.extend(this.model, jobInfos);
+            this.$el.html(this.template(this.model));
             return this;
         },
 

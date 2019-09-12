@@ -21,20 +21,21 @@ define(
 
         initialize: function () {
             this.$el = $('#third-party-credential-modal');
-            $('#third-party-credential-modal').on('hidden.bs.modal', function(event) {
-                // stop inside modal trigger parent modal hidden
+            var that = this;
+            // stop inside modal trigger parent modal hidden event
+            this.$el.on('hidden.bs.modal', function(event) {
                 event.stopPropagation();
             });
+            // whenever parent modal is hidden, close inside modal
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {
-                // whenever parent modal is hidden, close inside modal
-                $('#third-party-credential-modal').modal('hide');
+                that.closeThirdPartyCredential()
             });
         },
 
         render: function () {
             this.refreshThirdPartyCredential();
             this.$el.html(this.template(this.model));
-            $('#third-party-credential-modal').modal('show');
+            this.$el.modal('show');
             return this;
         },
 
@@ -75,8 +76,8 @@ define(
             });
         },
 
-        closeThirdPartyCredential: function (event) {
-            $('#third-party-credential-modal').modal('hide');
+        closeThirdPartyCredential: function () {
+            this.$el.modal('hide');
         }
     })
 })
