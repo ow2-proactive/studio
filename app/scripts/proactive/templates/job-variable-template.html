@@ -24,15 +24,43 @@
 
 
 <br>
-<ul>
-    <% for (var key in jobVariables) {
+<ul id="submitFormUL">
+    <label for="Job_Variables" class="Name" style="text-align:left" data-toggle="tooltip">Job Variables</label>
+    <%
+
+      var currentTask = null;
+      for (var key in jobVariables) {
          if (jobVariables.hasOwnProperty(key)) {
             var variable = jobVariables[key];
+
+            var splitted = key.split(":");
+            if (splitted.length == 2) {
+                if (currentTask == null) {
+                    currentTask = splitted[0];
+                %>
+    <li class="formLayout">
+    <label for="Tasks_Variables" class="Name caretUL" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left" data-toggle="tooltip">Tasks Variables</label>
+    <ul class="nestedUL">
+    <li class="formLayout">
+    <label for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left" data-toggle="tooltip"><%- splitted[0] %></label>
+    <ul class="nestedUL">
+                <%
+                } else if (currentTask != splitted[0]) {
+                    currentTask = splitted[0];
+        %>
+    </ul>
+    </li>
+    <li class="formLayout">
+    <label for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left" data-toggle="tooltip"><%- splitted[0] %></label>
+    <ul class="nestedUL">
+        <%
+                }
+            }
     %>
         <li class="formLayout">
-            <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- key %></label>
+            <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label>
             <% if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:list')!=-1) {  %>
-                <select class="form-control variableValue" name="<%- variable.Name %>" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
+                <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
                     <% var indexBegin = variable.Model.indexOf('(');
                         var indexEnd = variable.Model.lastIndexOf(')');
                         var options = variable.Model.substring(indexBegin +1 , indexEnd).split(',');
@@ -47,25 +75,36 @@
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
                 <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
                 <% if (variable.Value.toLowerCase() === 'true' || variable.Value == 1) %>
-                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true" checked/>TRUE</label>
-                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false"/>FALSE</label>
+                    <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
+                    <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
                 <% else %>
-                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="true"/>TRUE</label>
-                    <label class="radio-inline"><input type="radio" name="<%- variable.Name %>" value="false" checked/>FALSE</label>
+                    <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
+                    <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
                 </div>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
-                <input class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
+                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:credential')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
                 <button id="third-party-credential-button" type="button" class="btn" style="background-color:Transparent"><img src="images/key.png"></button>
             <% } else {  %>
-                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% }  %>
         </li>
-    <%} }%>
+    <%    }
+        }
+        if (currentTask != null) {
+        %>
+    </ul>
+    </li>
+    </ul>
+    </li>
+        <%
+        }
+
+        %>
 </ul>
 <label style="color:red;text-align:center;width:100%"><%- errorMessage %></label>
 <label style="color:green;text-align:center;width:100%"><%- infoMessage %></label>
