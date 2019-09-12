@@ -21,6 +21,14 @@ define(
 
         initialize: function () {
             this.$el = $('#third-party-credential-modal');
+            $('#third-party-credential-modal').on('hidden.bs.modal', function(event) {
+                // stop inside modal trigger parent modal hidden
+                event.stopPropagation();
+            });
+            $('#execute-workflow-modal').on('hidden.bs.modal', function() {
+                // whenever parent modal is hidden, close inside modal
+                $('#third-party-credential-modal').modal('hide');
+            });
         },
 
         render: function () {
