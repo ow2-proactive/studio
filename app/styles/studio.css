@@ -1488,9 +1488,22 @@ li.success {
     margin-left: 5px;
 }
 
+.formLayout .submitVariableValue {
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    vertical-align: middle;
+    color: #555;
+}
+
 .formLayout label.Extra {
     text-align: left;
     width: 20%;
+}
+
+.formLayout label.short {
+    text-align: left;
+    display:inline;
+    width: 15%;
 }
 
 .formLayout {

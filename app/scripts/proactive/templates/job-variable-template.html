@@ -82,10 +82,14 @@
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
                 </div>
             <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
-                <input class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" name="<%- key %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
+                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
+            <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:credential')!=-1) {  %>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <label class="short" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
+                <button id="third-party-credential-button" type="button" class="btn" style="background-color:Transparent"><img src="images/key.png"></button>
             <% } else {  %>
-            <textarea class="variableValue textareavalues" style="border-radius: 4px; border: 1px solid #ccc; vertical-align: middle; color: #555;" rows=1 name="<%- key %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
             <% }  %>
         </li>
@@ -104,3 +108,6 @@
 </ul>
 <label style="color:red;text-align:center;width:100%"><%- errorMessage %></label>
 <label style="color:green;text-align:center;width:100%"><%- infoMessage %></label>
+
+<div id="third-party-credential-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow:hidden; outline:none">
+</div>
