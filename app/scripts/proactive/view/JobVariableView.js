@@ -12,7 +12,7 @@ define(
 
         template: _.template(jobVariableTemplate),
 
-        model: undefined,
+        model: {'jobVariables': {}, 'jobName':'', 'jobProjectName':'', 'jobDescription':'', 'jobDocumentation':'', 'jobGenericInfos':[], 'errorMessage':'', 'infoMessage' :''},
 
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
