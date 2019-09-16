@@ -532,8 +532,14 @@ define(
 
         function readOrStoreTaskVariablesInModel(studioApp, updatedVariables, jobVariables) {
             var tasks = studioApp.models.jobModel.tasks;
+            var orderedTasks = [];
             for (var i = 0; i < tasks.length; i++) {
-                var task = tasks[i];
+                orderedTasks[i] = tasks[i];
+            }
+            orderedTasks.sort(function(task_a, task_b){ return task_a.get('Task Name').localeCompare(task_b.get('Task Name'))});
+
+            for (var i = 0; i < orderedTasks.length; i++) {
+                var task = orderedTasks[i];
                 if (task.has('Variables')) {
                     var variables = task.get('Variables');
                     for (var j = 0; j < variables.length; j++) {
