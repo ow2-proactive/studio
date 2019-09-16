@@ -446,26 +446,26 @@ define(
                 var isTaskVariable = function (key) { return (key.split(":").length == 2) }
                 function setInheritedField(key) {
                   if (isTaskVariable(key)) {
-                    inputVariables[input.id].Inherited = false;
+                    inputVariables[key].Inherited = false;
                   }
                 }
                 for (var i = 0; i < inputReceived.length; i++) {
                     var input = inputReceived[i];
                     if ($(input).prop("tagName")==='SELECT') {
                         inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
-                        setInheritedField(input.name);
+                        setInheritedField(input.id);
                     } else if ($(input).prop("tagName")==='INPUT'){
                         inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model")};
-                        setInheritedField(input.name);
+                        setInheritedField(input.id);
                     } else if ($(input).prop("tagName")==='DIV'){
                         var checkedRadio = $(input).find("input[type='radio']:checked");
                         var checkRadioValue = $(checkedRadio).val();
                         var inputName = $(checkedRadio).attr('name');
                         inputVariables[input.id] = {'Name': extractVariableName(inputName), 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
-                        setInheritedField(inputName);
+                        setInheritedField(input.id);
                     } else if ($(input).prop("tagName")==='TEXTAREA') {
                         inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model")};
-                        setInheritedField(input.name);
+                        setInheritedField(input.id);
                     }
                 }
                 readOrStoreVariablesInModel(inputVariables);
