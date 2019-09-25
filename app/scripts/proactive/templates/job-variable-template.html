@@ -76,8 +76,12 @@
                         urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_URL}', origin + 'rest');
                         $.ajax({url: urlToFetch,
                             async: false,
+                            dataType: "text",
                             success: function(data) {
                                 model = data;
+                            },
+                            error: function(xhr, ajaxOptions, thrownError) {
+                                alert("Could not fetch model from url '" + urlToFetch + "': " + xhr.responseText);
                             }
                         });
                         // failure to fetch implies no change in the model
