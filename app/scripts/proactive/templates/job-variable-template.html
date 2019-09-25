@@ -59,11 +59,35 @@
     %>
         <li class="formLayout">
             <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label>
-            <% if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:list')!=-1) {  %>
-                <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
-                    <% var indexBegin = variable.Model.indexOf('(');
-                        var indexEnd = variable.Model.lastIndexOf(')');
-                        var options = variable.Model.substring(indexBegin +1 , indexEnd).split(',');
+            <%
+               var model;
+               if (variable.hasOwnProperty("Model")) {
+                   model = variable.Model;
+                   if (model.toLowerCase().indexOf('pa:model_from_url') != -1) {
+                        // fetch the specified urls and replace the current model by the result
+                        var indexBegin = model.indexOf('(');
+                        var indexEnd = model.lastIndexOf(')');
+                        var urlToFetch = model.substring(indexBegin + 1 , indexEnd)
+                        var origin = window.location.origin
+                        if (!origin.endsWith('/')) {
+                            origin += '/'
+                        }
+                        urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_URL}', origin + 'catalog');
+                        urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_URL}', origin + 'rest');
+                        $.ajax({url: urlToFetch,
+                            async: false,
+                            success: function(data) {
+                                model = data;
+                            }
+                        });
+                        // failure to fetch implies no change in the model
+                   }
+               }
+               if (model && model.toLowerCase().indexOf('pa:list')!=-1) {  %>
+                <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- model %>">
+                    <% var indexBegin = model.indexOf('(');
+                        var indexEnd = model.lastIndexOf(')');
+                        var options = model.substring(indexBegin +1 , indexEnd).split(',');
                         for (var i in options) {
                             var option = options[i].trim();
                             if (option === variable.Value) { %>
@@ -72,8 +96,8 @@
                                 <option><%- option %></option>
                     <% } %>
                 </select>
-            <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
-                <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- variable.Model %>">
+            <% } else if (model && model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
+                <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- model %>">
                 <% if (variable.Value.toLowerCase() === 'true' || variable.Value == 1) %>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
@@ -81,16 +105,16 @@
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
                 </div>
-            <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
-                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" data-variable-model="<%- variable.Model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
-                <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
-            <% } else if (variable.hasOwnProperty("Model") && variable.Model.toLowerCase().indexOf('pa:credential')!=-1) {  %>
-                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
-                <label class="short" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
+            <% } else if (model && model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
+                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" data-variable-model="<%- model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
+                <label class="Extra" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
+            <% } else if (model && model.toLowerCase().indexOf('pa:credential')!=-1) {  %>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
                 <button id="third-party-credential-button" type="button" class="btn" style="background-color:Transparent"><img src="images/key.png"></button>
             <% } else {  %>
-                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- variable.Model %>" id="<%- key %>" ><%- variable.Value %></textarea>
-                <label class="Extra" data-toggle="tooltip" title="<%- variable.Model %>"><%- variable.hasOwnProperty("Model") ? ((variable.Model.length >= 20) ? variable.Model.substring(0, 20) + " ..." : variable.Model):""  %></label>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
+                <label class="Extra" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
             <% }  %>
         </li>
     <%    }
