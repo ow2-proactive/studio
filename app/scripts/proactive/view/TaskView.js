@@ -2,6 +2,7 @@ define(
     [
         'jquery',
         'backbone',
+        'proactive/config',
         'pnotify',
         'proactive/rest/studio-client',
         'proactive/model/Task',
@@ -14,7 +15,7 @@ define(
         'proactive/model/ScriptExecutable'
     ],
 
-    function ($, Backbone, PNotify, StudioClient, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
+    function ($, Backbone, config, PNotify, StudioClient, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
 
     "use strict";
 
@@ -194,8 +195,8 @@ define(
             if (this.model.get('Fork Execution Environment') == "Docker") {
                 // Docker was selected on the dropdown, insert a template script in the language python
                 var javaHome = '/usr';
-                var prefixCommandLanguage = 'python';
-                var prefixDockerCommandString = "# In the Java Home location field, use the value: \"/usr\" to force using the JRE provided in the docker image below (Recommended).\n# Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.\n# Prepare Docker parameters \ncontainerName = 'java' \ndockerRunCommand =  'docker run ' \ndockerParameters = '--rm ' \n# Prepare ProActive home volume \npaHomeHost = variables.get(\"PA_SCHEDULER_HOME\") \npaHomeContainer = variables.get(\"PA_SCHEDULER_HOME\") \nproActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' ' \n# Prepare working directory (For Dataspaces and serialized task file) \nworkspaceHost = localspace \nworkspaceContainer = localspace \nworkspaceVolume = '-v '+localspace +':'+localspace+' ' \n# Prepare container working directory \ncontainerWorkingDirectory = '-w '+workspaceContainer+' ' \n# Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node \npreJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + containerWorkingDirectory + containerName";
+                var prefixCommandLanguage = 'groovy';
+                var prefixDockerCommandString = config.docker_env_script;
                 // Set the script and language inside the Browser, this will render it immediately.
                 // We did not find a way to render the model, so the last possibility was to
                 // just set it in the DOM.
