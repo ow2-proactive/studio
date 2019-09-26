@@ -60,7 +60,7 @@
         <li class="formLayout">
             <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label>
             <%
-               var model;
+               var model = null;
                if (variable.hasOwnProperty("Model")) {
                    model = variable.Model;
                    if (model.toLowerCase().indexOf('pa:model_from_url') != -1) {
