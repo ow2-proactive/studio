@@ -176,22 +176,24 @@ define(function () {
             }
         ],
         docker_env_script: `
+// This script creates a docker fork environment using java as docker image
+
 // In the Java Home location field, use the value: "/usr" to force using the JRE provided in the docker image below (Recommended).
 // Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.
 // Prepare Docker parameters
 containerName = "java"
 dockerRunCommand =  "docker run "
-dockerParameters = "--rm "
+dockerParameters = "--rm --env HOME=/tmp "
 // Prepare ProActive home volume
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
 paHomeContainer = variables.get("PA_SCHEDULER_HOME")
-proActiveHomeVolume = '-v '+paHomeHost +':'+paHomeContainer+' '
+proActiveHomeVolume = "-v " + paHomeHost + ":" + paHomeContainer + " "
 // Prepare working directory (For Dataspaces and serialized task file)
 workspaceHost = localspace
 workspaceContainer = localspace
-workspaceVolume = '-v '+localspace +':'+localspace+' '
+workspaceVolume = "-v " + workspaceHost + ":" + workspaceContainer + " "
 // Prepare container working directory
-containerWorkingDirectory = '-w '+workspaceContainer+' '
+containerWorkingDirectory = "-w " + workspaceContainer + " "
 
 sigar = new org.hyperic.sigar.Sigar()
 try {
@@ -209,6 +211,7 @@ try {
 
 // Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node
 preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + userDefinition + containerWorkingDirectory + containerName
+println "DOCKER_FULL_CMD:    " + preJavaHomeCmd
         `
     };
 });
