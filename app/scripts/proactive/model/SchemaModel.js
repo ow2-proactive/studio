@@ -79,12 +79,24 @@ define(
                             if (!Array.isArray(value)) {
                                 value = [value];
                             }
-                            $.each(value, function(i, v) {
-                                var listElemValue = that.getListElementValue(that.schema[prop], v)
-                                if (listElemValue) {
-                                    newElements.push(listElemValue)
-                                }
-                            })
+                            if(this.schema[prop].itemType === 'NestedModel' && value[0].script.length > 1 ){
+                                  $.each(value[0].script, function(i, v) {
+                                      var val = value[0];
+                                      val.script = v;
+                                      var listElemValue = that.getListElementValue(that.schema[prop], val);
+                                      if (listElemValue) {
+                                          newElements.push(listElemValue)
+                                      }
+                                  })
+                            } else {
+                                $.each(value, function(i, v) {
+                                    var listElemValue = that.getListElementValue(that.schema[prop], v)
+                                    if (listElemValue) {
+                                        newElements.push(listElemValue)
+                                    }
+                                })
+                            }
+
                             this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
                         }
                     } else if (this.schema[prop].type && this.schema[prop].type == 'TaskTypeRadioEditor') {
