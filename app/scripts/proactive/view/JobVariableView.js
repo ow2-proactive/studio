@@ -22,7 +22,6 @@ define(
             this.$el = $('#job-variables');
             // fix overlays of nested modal "third-party-credential-modal" inside "execute-workflow-modal" (backdrop overlays the previous modal)
             $(document).on('show.bs.modal', '.modal', function () {
-                console.log("show.bs.modal")
                 var zIndex = 1040 + (10 * $('.modal:visible').length);
                 $(this).css('z-index', zIndex);
                 // setTimeout is used because the .modal-backdrop isn't created when the event show.bs.modal is triggered.
