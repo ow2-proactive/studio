@@ -78,8 +78,8 @@ define(
                         if (value) {
                             if (prop == "Node Selection" && Array.isArray(value.script)) {
                                 value = value.script.map(function(val){
-                                    return { script: val}
-                                })
+                                            return { script: val}
+                                        })
                             } else if (!Array.isArray(value)) {
                                 value = [value];
                             }
