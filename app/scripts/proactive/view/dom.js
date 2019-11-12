@@ -165,7 +165,7 @@ define(
                     if (evt.target.readyState == FileReader.DONE) {
                         var json = xml2json.xmlToJson(xml2json.parseXml(evt.target.result));
                         StudioClient.resetLastValidationResult();
-                        if(!StudioClient.validateWithPopup(evt.target.result, json, false)){
+                        if(!StudioClient.validateWithPopup(evt.target.result, json, false, true)){
                            return;
                         }
                         studioApp.merge(json, null);
@@ -771,7 +771,9 @@ define(
             $(".invalid-task").removeClass("invalid-task");
             var studioApp = require('StudioApp');
             if (studioApp.isWorkflowOpen()) {
-                StudioClient.validateWithPopup(studioApp.views.xmlView.generateXml(), studioApp.models.jobModel, automaticValidation);
+                // disable checking the validity of PA:CREDENTIALS variables in case of automaticValidation, to facilitate workflow designer
+                var disableCheckCredential = automaticValidation;
+                StudioClient.validateWithPopup(studioApp.views.xmlView.generateXml(), studioApp.models.jobModel, automaticValidation, disableCheckCredential);
             }
         }
 

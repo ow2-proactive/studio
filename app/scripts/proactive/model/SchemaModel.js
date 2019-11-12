@@ -76,15 +76,21 @@ define(
                         var newElements = [];
                         var value = this.getValue(placeholder, obj);
                         if (value) {
-                            if (!Array.isArray(value)) {
+                            if (prop == "Node Selection" && Array.isArray(value.script)) {
+                                value = value.script.map(function(val){
+                                            return { script: val}
+                                        })
+                            } else if (!Array.isArray(value)) {
                                 value = [value];
                             }
+
                             $.each(value, function(i, v) {
                                 var listElemValue = that.getListElementValue(that.schema[prop], v)
                                 if (listElemValue) {
                                     newElements.push(listElemValue)
                                 }
                             })
+
                             this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
                         }
                     } else if (this.schema[prop].type && this.schema[prop].type == 'TaskTypeRadioEditor') {

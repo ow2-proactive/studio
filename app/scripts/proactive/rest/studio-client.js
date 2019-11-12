@@ -275,7 +275,7 @@ define(
 
             },
 
-            validateWithPopup: function(jobXml, jobModel, automaticValidation) {
+            validateWithPopup: function(jobXml, jobModel, automaticValidation, disableCheckCredential) {
                 if (!localStorage['pa.session']) return false;
 
                 if (automaticValidation) {
@@ -285,8 +285,8 @@ define(
                 }
 
                 var that = this;
-                // during automaticValidation, not pass sessionId to disable checking the validity of PA:CREDENTIALS variables default value
-                var headers = automaticValidation ? {} : {"sessionid": localStorage['pa.session']};
+                // not pass sessionId to disable checking the validity of PA:CREDENTIALS variables default value
+                var headers = disableCheckCredential ? {} : {"sessionid": localStorage['pa.session']};
 
                 return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, headers, function(result) {
 

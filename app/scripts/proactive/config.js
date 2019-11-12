@@ -164,7 +164,7 @@ define(function () {
             },
             {
                 'name': 'Machine Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization', 'auto-ml-optimization']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'model-as-a-service']
             },
             {
                 'name': 'Deep Learning',
