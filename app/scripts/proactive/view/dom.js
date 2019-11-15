@@ -1079,6 +1079,10 @@ define(
             var positions = [];
 
             $.getScript("studio-conf.js", function () {
+                var docUrl = config.docUrl;
+                if (!docUrl.endsWith("/")) {
+                    docUrl = docUrl + "/";
+                }
                 $("#documentationLinkId").attr("href", config.docUrl);
             });
             $('#workflow-designer-outer').on('contextmenu', function(e) {
