@@ -12,7 +12,7 @@ define(function () {
         restApiUrl: '/rest/studio',
         schedulerRestApiUrl: '/rest/scheduler',
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
-        docUrl: '/doc/',
+        docUrl: '/doc',
         tasks: {
             'Shell': 'templates/script_shell.xml',
             'Linux Bash': 'templates/script_bash.xml',

@@ -312,6 +312,9 @@ define(
                   if (documentationValue.indexOf('://') > 0) {
                     $('a[name="Generic Info Documentation"]').attr("href", documentationValue);
                   } else {
+                    if (!documentationValue.startsWith("/")) {
+                       documentationValue = "/" + documentationValue;
+                    }
                     $('a[name="Generic Info Documentation"]').attr("href", config.docUrl + documentationValue);
                   }
 
@@ -640,6 +643,9 @@ define(
           } else if (data.indexOf('://') > 0) {
             url = data;
           } else {
+            if (!data.startsWith("/")) {
+               data = "/" + data;
+            }
             url = config.docUrl + data;
           }
         }
