@@ -13,6 +13,25 @@ define(
         PNotify.prototype.options.styling = "bootstrap3";
 
         var cachedScripts;
+        function checkPortalAccessRestriction() {
+            $.ajax({
+                    async: false,
+                    type: "GET",
+                    url: JSON.parse(localStorage['restUrl']) + '/common/permissions/portals/studio',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('sessionid', localStorage['pa.session'],
+                                            'Content-Type', 'application/json')
+                    },
+                    success: function(data) {
+                        return data
+                    },
+                    error: function(data) {
+                        return false;
+                    }
+        });
+        }
+
+        var hasPermissionToOpenStudio = checkPortalAccessRestriction();
 
         return {
 
@@ -85,9 +104,29 @@ define(
                     error: function(data) {
                         // even id successful we are here
                         if (data.status == 200) {
-                            that.alert("Connected", "Successfully connected user", 'success');
                             localStorage['pa.session'] = data.responseText;
-                            return onSuccess();
+
+                            $.ajax({
+                                async: false,
+                                type: "GET",
+                                url: JSON.parse(localStorage['restUrl']) + '/common/permissions/portals/studio',
+                                beforeSend: function(xhr) {
+                                    xhr.setRequestHeader('sessionid', localStorage['pa.session'],
+                                                        'Content-Type', 'application/json')
+                                },
+                                success: function(response) {
+                                    if(response){
+                                        that.alert("Connected", "Successfully connected user", 'success');
+                                        return onSuccess();
+                                    } else {
+                                        that.alert("Cannot connect to ProActive Studio", 'The access to studio portal is not authorized' , 'error');
+                                    }
+
+                                },
+                                error: function(data) {
+                                    console.log("Failed to know the user permission", data)
+                                }
+                            });
                         } else {
                             var reason = data.responseText.length > 0 ? data.responseText : "";
                             try {
@@ -140,25 +179,43 @@ define(
                 var that = this;
                 if (localStorage['pa.session']) {
                     $.ajax({
+                        async: false,
                         type: "GET",
-                        url: config.restApiUrl + "/connected",
+                        url: JSON.parse(localStorage['restUrl']) + '/common/permissions/portals/studio',
                         beforeSend: function(xhr) {
-                            xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                            xhr.setRequestHeader('sessionid', localStorage['pa.session'],
+                                                'Content-Type', 'application/json')
                         },
-                        success: function(data) {
-                            if (data) {
-                                console.log("Connected to the studio", data)
-                                success()
+                        success: function(response) {
+                            if(response){
+                                $.ajax({
+                                    type: "GET",
+                                    url: config.restApiUrl + "/connected",
+                                    beforeSend: function(xhr) {
+                                        xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                                    },
+                                    success: function(data) {
+                                        if (data) {
+                                            console.log("Connected to the studio", data)
+                                            success()
+                                        } else {
+                                            console.log("Not connected to the studio", data)
+                                            localStorage.removeItem('pa.session');
+                                            fail()
+                                        }
+                                    },
+                                    error: function(data) {
+                                        console.log("Not connected to the studio", data)
+                                        localStorage.removeItem('pa.session')
+                                        fail()
+                                    }
+                                });
                             } else {
-                                console.log("Not connected to the studio", data)
-                                localStorage.removeItem('pa.session');
-                                fail()
+                                fail();
                             }
                         },
-                        error: function(data) {
-                            console.log("Not connected to the studio", data)
-                            localStorage.removeItem('pa.session')
-                            fail()
+                        error: function(response) {
+                            console.error("Failed to know the user permission", response)
                         }
                     });
                 } else {
