@@ -13,26 +13,6 @@ define(
         PNotify.prototype.options.styling = "bootstrap3";
 
         var cachedScripts;
-        function checkPortalAccessRestriction() {
-            $.ajax({
-                    async: false,
-                    type: "GET",
-                    url: JSON.parse(localStorage['restUrl']) + '/common/permissions/portals/studio',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('sessionid', localStorage['pa.session'],
-                                            'Content-Type', 'application/json')
-                    },
-                    success: function(data) {
-                        return data
-                    },
-                    error: function(data) {
-                        return false;
-                    }
-        });
-        }
-
-        var hasPermissionToOpenStudio = checkPortalAccessRestriction();
-
         return {
 
             alert: function(caption, message, type) {
@@ -119,12 +99,12 @@ define(
                                         that.alert("Connected", "Successfully connected user", 'success');
                                         return onSuccess();
                                     } else {
-                                        that.alert("Cannot connect to ProActive Studio", 'The access to studio portal is not authorized' , 'error');
+                                        document.getElementById("permission-error").style.display = "block";
                                     }
 
                                 },
                                 error: function(data) {
-                                    console.log("Failed to know the user permission", data)
+                                    console.error("Failed to know the user permission", data);
                                 }
                             });
                         } else {
@@ -145,7 +125,9 @@ define(
 
                             }
 
-                            that.alert("Cannot connect to ProActive Studio", reason, 'error');
+                            document.getElementById("authentication-error").append(reason);
+                            document.getElementById("authentication-error").style.display = "block";
+                            //that.alert("Cannot connect to ProActive Studio", reason, 'error');
                             console.log("Error", data)
                         }
                     }
@@ -196,10 +178,8 @@ define(
                                     },
                                     success: function(data) {
                                         if (data) {
-                                            console.log("Connected to the studio", data)
                                             success()
                                         } else {
-                                            console.log("Not connected to the studio", data)
                                             localStorage.removeItem('pa.session');
                                             fail()
                                         }
