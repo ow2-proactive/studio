@@ -67,13 +67,19 @@ server.put('/rest/studio/logout', function (req, res, next) {
     res.end();
 });
 
-server.get('/rest/studio/connected', function (req, res, next) {
-    console.log('CHECK FOR AUTH');
-    res.status(200);
-    res.write('true');
-    res.end();
+server.get('/rest/common/permissions/portals/studio', function (reqq, ress, next) {
+    console.log('CHECK FOR PERMISSION');
+    ress.status(200);
+    ress.write('true');
+    ress.setHeader('content-type', 'application/json');
+    ress.end();
+    server.get('/rest/studio/connected', function (req, res, next) {
+        console.log('CHECK FOR AUTH');
+        res.status(200);
+        res.write('true');
+        res.end();
+    });
 });
-
 server.post('/rest/studio/validate', function (req, res, next) {
     console.log('VALIDATE');
     res.status(200);
