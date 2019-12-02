@@ -21,42 +21,42 @@ var templatesRouter = jsonServer.router('test/json-server-data/templates.json');
 var middlewares = jsonServer.defaults();
 server.use(middlewares);
 
-server.post('/rest/studio/login', function (req, res, next) {
-    console.log('LOGIN');
-    parseFormdata(req, function (err, data) {
-        console.log("Received body data:");
-    	console.log('received:');
-    	console.log(JSON.stringify(data));
-        if (err) throw err
+server.get('/rest/common/permissions/portals/studio', function (reqq, ress, nextt) {
+    console.log('CHECK FOR PERMISSION');
+    ress.status(200);
+    ress.write('true');
+    ress.setHeader('content-type', 'application/json');
+    ress.end();
+    server.post('/rest/studio/login', function (req, res, next) {
+        console.log('LOGIN');
+        parseFormdata(req, function (err, data) {
+            console.log("Received body data:");
+        	console.log('received:');
+        	console.log(JSON.stringify(data));
+            if (err) throw err
 
-        if (err) throw err
-            console.log('fields:', data.fields)
-            data.parts.forEach(function (part) {
-                console.log('part:', part.fieldname)
-            })
-        // We assume the request is well formed
-        var username = data.fields.username;
-        var password = data.fields.password;
+            if (err) throw err
+                console.log('fields:', data.fields)
+                data.parts.forEach(function (part) {
+                    console.log('part:', part.fieldname)
+                })
+            // We assume the request is well formed
+            var username = data.fields.username;
+            var password = data.fields.password;
 
-        console.log("username : "+ username);
-        console.log("password : "+ password);
+            console.log("username : "+ username);
+            console.log("password : "+ password);
 
-        // check the user/pass
-        var statusCode = 404;
-        if (username === 'user' && password === 'pwd') {
-            server.get('/rest/common/permissions/portals/studio', function (reqq, ress, next) {
-                console.log('CHECK FOR PERMISSION');
-                ress.status(200);
-                ress.write('true');
-                ress.setHeader('content-type', 'application/json');
-                ress.end();
+            // check the user/pass
+            var statusCode = 404;
+            if (username === 'user' && password === 'pwd') {
                 statusCode = 200;
-            });
-        }
-        res.status(statusCode);
-        res.setHeader('content-type', 'application/json');
-        res.write('MOCKED_SESSION_ID');
-        res.end();
+            }
+            res.status(statusCode);
+            res.setHeader('content-type', 'application/json');
+            res.write('MOCKED_SESSION_ID');
+            res.end();
+        });
     });
 });
 
