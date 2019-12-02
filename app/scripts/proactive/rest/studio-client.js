@@ -104,7 +104,7 @@ define(
 
                                 },
                                 error: function(data) {
-                                    console.error("Failed to know the user permission", data);
+                                    console.error("Unknown User Permission", data);
                                 }
                             });
                         } else {
@@ -195,7 +195,7 @@ define(
                             }
                         },
                         error: function(response) {
-                            console.error("Failed to know the user permission", response)
+                            console.error("Unknown User Permission", response)
                         }
                     });
                 } else {
