@@ -44,13 +44,7 @@ server.post('/rest/studio/login', function (req, res, next) {
         // check the user/pass
         var statusCode = 404;
         if (username === 'user' && password === 'pwd') {
-            server.get('/rest/common/permissions/portals/studio', function (req, res, next) {
-                console.log('CHECK FOR PERMISSION');
-                res.status(200);
-                res.write('true');
-                res.end();
-                statusCode = 200;
-            });
+            statusCode = 200;
         }
         res.status(statusCode);
         res.setHeader('content-type', 'application/json');
@@ -65,7 +59,12 @@ server.put('/rest/studio/logout', function (req, res, next) {
     res.setHeader('content-type', 'application/json');
     res.end();
 });
-
+server.get('/rest/common/permissions/portals/studio', function (req, res, next) {
+    console.log('CHECK FOR PERMISSION');
+    res.status(200);
+    res.write('true');
+    res.end();
+});
 server.get('/rest/studio/connected', function (req, res, next) {
     console.log('CHECK FOR AUTH');
     res.status(200);
