@@ -86,11 +86,18 @@ define(
             this.model.on("change:Generic Information", this.updateIcon, this);
 
             this.model.on("invalid", this.setInvalid, this);
-                    
-            this.element = $('<div class="task"><a class="task-name"><img src="'
-                + iconPath + '" width="20px">&nbsp;<span class="name">'
-                + this.model.get("Task Name") + '</span></a><span class="glyphicon glyphicon-info-sign pointer help-sign" style="top: -8px;" data-toggle="tooltip" data-placement="right" title="'
-                + this.model.get("Description") + '"></span></div>');
+            if(this.model.get("Description")){
+                this.element = $('<div class="task"><a class="task-name"><img src="'
+                        + iconPath + '" width="20px">&nbsp;<span class="name">'
+                        + this.model.get("Task Name") + '</span></a><span class="glyphicon glyphicon-info-sign pointer help-sign" style="top: -8px;" data-toggle="tooltip" data-placement="right" title="'
+                        + this.model.get("Description") + '"></span></div>');
+            } else {
+                this.element = $('<div class="task"><a class="task-name"><img src="'
+                        + iconPath + '" width="20px">&nbsp;<span class="name">'
+                        + this.model.get("Task Name") + '</span></a><span class="glyphicon glyphicon-info-sign pointer help-sign" style="top: -8px;" data-toggle="tooltip" data-placement="right" title="'
+                        + "No description to show" + '"></span></div>');
+            }
+
 
             this.showBlockInTask();
 
