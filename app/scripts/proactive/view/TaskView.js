@@ -86,10 +86,12 @@ define(
             this.model.on("change:Generic Information", this.updateIcon, this);
 
             this.model.on("invalid", this.setInvalid, this);
-                    
+            var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
             this.element = $('<div class="task"><a class="task-name"><img src="'
-                + iconPath + '" width="20px">&nbsp;<span class="name">'
-                + this.model.get("Task Name") + '</span></a></div>');
+                    + iconPath + '" width="20px">&nbsp;<span class="name">'
+                    + this.model.get("Task Name") + '</span></a><span class="glyphicon glyphicon-info-sign pointer help-sign" style="top: -8px;" data-toggle="tooltip" data-placement="right" title="'
+                    + description + '"></span></div>');
+
 
             this.showBlockInTask();
 

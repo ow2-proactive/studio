@@ -203,8 +203,8 @@ OperatingSystemFamily family = operatingSystem.getFamily();
 
 switch (family) {
     case OperatingSystemFamily.WINDOWS:
-    	isWindows = true;
-    	break;
+        isWindows = true;
+        break;
     default:
         isWindows = false;
 }
@@ -212,7 +212,7 @@ forkEnvironment.setDockerWindowsToLinux(isWindows)
 
 // Prepare ProActive home volume
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
-paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(variables.get("PA_SCHEDULER_HOME")) : variables.get("PA_SCHEDULER_HOME"))
+paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(paHomeHost) : paHomeHost)
 cmd.add("-v")
 cmd.add(paHomeHost + ":" + paHomeContainer)
 // Prepare working directory (For Dataspaces and serialized task file)
@@ -223,13 +223,18 @@ cmd.add(workspaceHost + ":" + workspaceContainer)
 
 cachespaceHost = cachespace
 cachespaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(cachespaceHost) : cachespaceHost)
-cmd.add("-v")
-cmd.add(cachespaceHost + ":" + cachespaceContainer)
+cachespaceHostFile = new File(cachespaceHost)
+if (cachespaceHostFile.exists() && cachespaceHostFile.canRead()) {
+    cmd.add("-v")
+    cmd.add(cachespaceHost + ":" + cachespaceContainer)
+} else {
+    println cachespaceHost + " does not exist or is not readable, access to cache space will be disabled in the container"
+}
 
 if (!isWindows) {
-     // when not on windows, mount and use the current JRE
+    // when not on windows, mount and use the current JRE
     currentJavaHome = System.getProperty("java.home")
-	forkEnvironment.setJavaHome(currentJavaHome)
+    forkEnvironment.setJavaHome(currentJavaHome)
     cmd.add("-v")
     cmd.add(currentJavaHome + ":" + currentJavaHome)
 }
