@@ -1611,7 +1611,7 @@ li.success {
     display: inherit;
 }
 
-.hidden {
+.hidden, #permission-error, #authentication-error{
     display: none;
 }
 
