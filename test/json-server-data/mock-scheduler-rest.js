@@ -71,8 +71,8 @@ server.get('/rest/studio/connected', function (req, res, next) {
 server.get('/rest/common/permissions/portals/studio', function (reqq, ress, nextt) {
     console.log('CHECK FOR PERMISSION');
     ress.status(200);
-    ress.write('true');
     ress.setHeader('content-type', 'application/json');
+    ress.write('true');
     ress.end();
 });
 

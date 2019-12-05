@@ -89,7 +89,7 @@ define(
                             $.ajax({
                                 async: false,
                                 type: "GET",
-                                url: JSON.parse(localStorage['restUrl']) + '/common/permissions/portals/studio',
+                                url: config.restApiUrl.replace("/studio","") + '/common/permissions/portals/studio',
                                 beforeSend: function(xhr) {
                                     xhr.setRequestHeader('sessionid', localStorage['pa.session'],
                                                         'Content-Type', 'application/json')
@@ -163,7 +163,7 @@ define(
                     $.ajax({
                         async: false,
                         type: "GET",
-                        url: JSON.parse(localStorage['restUrl']) + '/common/permissions/portals/studio',
+                        url:  config.restApiUrl.replace("/studio","") + '/common/permissions/portals/studio',
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('sessionid', localStorage['pa.session'],
                                                 'Content-Type', 'application/json')
