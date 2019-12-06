@@ -125,7 +125,7 @@ define(
 
                             }
 
-                            document.getElementById("authentication-error").append(reason);
+                            document.getElementById("authentication-error").innerHTML = "<strong>Unable to login.</strong>  " + reason;
                             document.getElementById("authentication-error").style.display = "block";
                             //that.alert("Cannot connect to ProActive Studio", reason, 'error');
                             console.log("Error", data)
@@ -191,6 +191,7 @@ define(
                                     }
                                 });
                             } else {
+                                document.getElementById("permission-error").style.display = "block";
                                 fail();
                             }
                         },
