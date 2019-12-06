@@ -1,1 +1,1 @@
-conf = { studioVersion: '10.1.0-SNAPSHOT'} 
+conf = { studioVersion: '10.1.0-creos'} 
