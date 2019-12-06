@@ -13,7 +13,6 @@ define(
         PNotify.prototype.options.styling = "bootstrap3";
 
         var cachedScripts;
-
         return {
 
             alert: function(caption, message, type) {
@@ -85,9 +84,29 @@ define(
                     error: function(data) {
                         // even id successful we are here
                         if (data.status == 200) {
-                            that.alert("Connected", "Successfully connected user", 'success');
                             localStorage['pa.session'] = data.responseText;
-                            return onSuccess();
+
+                            $.ajax({
+                                async: false,
+                                type: "GET",
+                                url: config.restApiUrl.replace("/studio","") + '/common/permissions/portals/studio',
+                                beforeSend: function(xhr) {
+                                    xhr.setRequestHeader('sessionid', localStorage['pa.session'],
+                                                        'Content-Type', 'application/json')
+                                },
+                                success: function(response) {
+                                    if(response){
+                                        that.alert("Connected", "Successfully connected user", 'success');
+                                        return onSuccess();
+                                    } else {
+                                        document.getElementById("permission-error").style.display = "block";
+                                    }
+
+                                },
+                                error: function(data) {
+                                    console.error("Unknown User Permission", data);
+                                }
+                            });
                         } else {
                             var reason = data.responseText.length > 0 ? data.responseText : "";
                             try {
@@ -106,7 +125,9 @@ define(
 
                             }
 
-                            that.alert("Cannot connect to ProActive Studio", reason, 'error');
+                            document.getElementById("authentication-error").append(reason);
+                            document.getElementById("authentication-error").style.display = "block";
+                            //that.alert("Cannot connect to ProActive Studio", reason, 'error');
                             console.log("Error", data)
                         }
                     }
@@ -140,25 +161,41 @@ define(
                 var that = this;
                 if (localStorage['pa.session']) {
                     $.ajax({
+                        async: false,
                         type: "GET",
-                        url: config.restApiUrl + "/connected",
+                        url:  config.restApiUrl.replace("/studio","") + '/common/permissions/portals/studio',
                         beforeSend: function(xhr) {
-                            xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                            xhr.setRequestHeader('sessionid', localStorage['pa.session'],
+                                                'Content-Type', 'application/json')
                         },
-                        success: function(data) {
-                            if (data) {
-                                console.log("Connected to the studio", data)
-                                success()
+                        success: function(response) {
+                            if(response){
+                                $.ajax({
+                                    type: "GET",
+                                    url: config.restApiUrl + "/connected",
+                                    beforeSend: function(xhr) {
+                                        xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                                    },
+                                    success: function(data) {
+                                        if (data) {
+                                            success()
+                                        } else {
+                                            localStorage.removeItem('pa.session');
+                                            fail()
+                                        }
+                                    },
+                                    error: function(data) {
+                                        console.log("Not connected to the studio", data)
+                                        localStorage.removeItem('pa.session')
+                                        fail()
+                                    }
+                                });
                             } else {
-                                console.log("Not connected to the studio", data)
-                                localStorage.removeItem('pa.session');
-                                fail()
+                                fail();
                             }
                         },
-                        error: function(data) {
-                            console.log("Not connected to the studio", data)
-                            localStorage.removeItem('pa.session')
-                            fail()
+                        error: function(response) {
+                            console.error("Unknown User Permission", response)
                         }
                     });
                 } else {
@@ -275,7 +312,7 @@ define(
 
             },
 
-            validateWithPopup: function(jobXml, jobModel, automaticValidation) {
+            validateWithPopup: function(jobXml, jobModel, automaticValidation, disableCheckCredential) {
                 if (!localStorage['pa.session']) return false;
 
                 if (automaticValidation) {
@@ -285,8 +322,8 @@ define(
                 }
 
                 var that = this;
-                // during automaticValidation, not pass sessionId to disable checking the validity of PA:CREDENTIALS variables default value
-                var headers = automaticValidation ? {} : {"sessionid": localStorage['pa.session']};
+                // not pass sessionId to disable checking the validity of PA:CREDENTIALS variables default value
+                var headers = disableCheckCredential ? {} : {"sessionid": localStorage['pa.session']};
 
                 return Boolean([that.send_multipart_request(config.restApiUrl + "/validate", jobXml, headers, function(result) {
 

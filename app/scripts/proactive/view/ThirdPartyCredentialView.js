@@ -63,7 +63,7 @@ define(
         thirdPartyCredentialRequest: function(credentialKey, typeRequest, requestData) {
             var that = this;
             $.ajax({
-                url: "/rest/scheduler/credentials/" + credentialKey,
+                url: "/rest/scheduler/credentials/" + encodeURIComponent(credentialKey),
                 type: typeRequest,
                 data: requestData,
                 headers: { "sessionid": localStorage['pa.session'] },

@@ -259,7 +259,7 @@ define(
 
         var that = this;
         this.schema.Variables.subSchema.Model.validators = [
-          function checkVariableValue(value, formValues) {
+          function checkVariableValue(value, formValues, form) {
             if (formValues.Model.length > 0) {
               if (StudioApp.isWorkflowOpen()) {
                 that.updateVariable(formValues);
@@ -270,9 +270,13 @@ define(
                     message: "<br><br>" + validationData.errorMessage
                   };
                   return err;
-                } else {
-                    delete that.attributes.BackupVariables;
+                } else if (formValues.Model === "PA:HIDDEN" && formValues.Value.trim().length > 0) {
+                    formValues.Value = validationData.updatedVariables[formValues.Name];
+                    if (form) {
+                        form.setValue(formValues);
+                    }
                 }
+                delete that.attributes.BackupVariables;
               }
             }
           }
@@ -312,6 +316,9 @@ define(
                   if (documentationValue.indexOf('://') > 0) {
                     $('a[name="Generic Info Documentation"]').attr("href", documentationValue);
                   } else {
+                    if (!documentationValue.startsWith("/")) {
+                       documentationValue = "/" + documentationValue;
+                    }
                     $('a[name="Generic Info Documentation"]').attr("href", config.docUrl + documentationValue);
                   }
 
@@ -640,6 +647,9 @@ define(
           } else if (data.indexOf('://') > 0) {
             url = data;
           } else {
+            if (!data.startsWith("/")) {
+               data = "/" + data;
+            }
             url = config.docUrl + data;
           }
         }

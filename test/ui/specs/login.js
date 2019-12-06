@@ -15,8 +15,7 @@ module.exports = {
             .setValue('#user', 'demo')
             .setValue('#password', 'wrongpassword')
             .click('button[type=submit]')
-            .waitForElementVisible('.ui-pnotify-title')
-            .assert.containsText('.ui-pnotify-title', 'Cannot connect to ProActive Studio')
+            .waitForElementVisible('#authentication-error')
             .end();
     },
 

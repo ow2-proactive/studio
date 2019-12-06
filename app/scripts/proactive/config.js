@@ -12,7 +12,7 @@ define(function () {
         restApiUrl: '/rest/studio',
         schedulerRestApiUrl: '/rest/scheduler',
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
-        docUrl: '/doc/',
+        docUrl: '/doc',
         tasks: {
             'Shell': 'templates/script_shell.xml',
             'Linux Bash': 'templates/script_bash.xml',
@@ -164,7 +164,7 @@ define(function () {
             },
             {
                 'name': 'Machine Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization', 'auto-ml-optimization']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'model-as-a-service']
             },
             {
                 'name': 'Deep Learning',
@@ -178,40 +178,93 @@ define(function () {
         docker_env_script: `
 // This script creates a docker fork environment using java as docker image
 
-// In the Java Home location field, use the value: "/usr" to force using the JRE provided in the docker image below (Recommended).
-// Be aware, that the prefix command is internally split by spaces. So paths with spaces won't work.
+// If used on windows:
+//  - currently, only linux containers are supported
+//  - make sure the drives containing the scheduler installation and TEMP folders are shared with docker containers
+//  - the container used must have java installed by default in the /usr folder. Change the value of the java home parameter to use a different installation path
+// On linux, the java installation used by the ProActive Node will be also used inside the container
+
 // Prepare Docker parameters
+import org.ow2.proactive.utils.OperatingSystem;
+import org.ow2.proactive.utils.OperatingSystemFamily;
+
 containerName = "java"
-dockerRunCommand =  "docker run "
-dockerParameters = "--rm --env HOME=/tmp "
+cmd = []
+cmd.add("docker")
+cmd.add("run")
+cmd.add("--rm")
+cmd.add("--env")
+cmd.add("HOME=/tmp")
+
+String osName = System.getProperty("os.name");
+println "Operating system : " + osName;
+OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
+OperatingSystemFamily family = operatingSystem.getFamily();
+
+switch (family) {
+    case OperatingSystemFamily.WINDOWS:
+        isWindows = true;
+        break;
+    default:
+        isWindows = false;
+}
+forkEnvironment.setDockerWindowsToLinux(isWindows)
+
 // Prepare ProActive home volume
 paHomeHost = variables.get("PA_SCHEDULER_HOME")
-paHomeContainer = variables.get("PA_SCHEDULER_HOME")
-proActiveHomeVolume = "-v " + paHomeHost + ":" + paHomeContainer + " "
+paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(paHomeHost) : paHomeHost)
+cmd.add("-v")
+cmd.add(paHomeHost + ":" + paHomeContainer)
 // Prepare working directory (For Dataspaces and serialized task file)
 workspaceHost = localspace
-workspaceContainer = localspace
-workspaceVolume = "-v " + workspaceHost + ":" + workspaceContainer + " "
-// Prepare container working directory
-containerWorkingDirectory = "-w " + workspaceContainer + " "
+workspaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(workspaceHost) : workspaceHost)
+cmd.add("-v")
+cmd.add(workspaceHost + ":" + workspaceContainer)
 
-sigar = new org.hyperic.sigar.Sigar()
-try {
-    pid = sigar.getPid()
-    creds = sigar.getProcCred(pid)
-    uid = creds.getUid()
-    gid = creds.getGid()
-    userDefinition = "--user=" + uid + ":" + gid + " "
-} catch (Exception e) {
-    println "Cannot retrieve user or group id : " + e.getMessage()
-    userDefinition = "";
-} finally {
-    sigar.close()
+cachespaceHost = cachespace
+cachespaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(cachespaceHost) : cachespaceHost)
+cachespaceHostFile = new File(cachespaceHost)
+if (cachespaceHostFile.exists() && cachespaceHostFile.canRead()) {
+    cmd.add("-v")
+    cmd.add(cachespaceHost + ":" + cachespaceContainer)
+} else {
+    println cachespaceHost + " does not exist or is not readable, access to cache space will be disabled in the container"
 }
 
-// Save pre execution command into magic variable 'preJavaHomeCmd', which is picked up by the node
-preJavaHomeCmd = dockerRunCommand + dockerParameters + proActiveHomeVolume + workspaceVolume + userDefinition + containerWorkingDirectory + containerName
-println "DOCKER_FULL_CMD:    " + preJavaHomeCmd
+if (!isWindows) {
+    // when not on windows, mount and use the current JRE
+    currentJavaHome = System.getProperty("java.home")
+    forkEnvironment.setJavaHome(currentJavaHome)
+    cmd.add("-v")
+    cmd.add(currentJavaHome + ":" + currentJavaHome)
+}
+
+// Prepare container working directory
+cmd.add("-w")
+cmd.add(workspaceContainer)
+
+if (isWindows) {
+    // linux on windows does not allow sharing identities (such as AD identities)
+} else {
+    sigar = new org.hyperic.sigar.Sigar()
+    try {
+        pid = sigar.getPid()
+        creds = sigar.getProcCred(pid)
+        uid = creds.getUid()
+        gid = creds.getGid()
+        cmd.add("--user=" + uid + ":" + gid)
+    } catch (Exception e) {
+        println "Cannot retrieve user or group id : " + e.getMessage()
+    } finally {
+        sigar.close()
+    }
+}
+cmd.add(containerName)
+
+forkEnvironment.setPreJavaCommand(cmd)
+
+// Show the generated command
+println "DOCKER COMMAND : " + forkEnvironment.getPreJavaCommand()
         `
     };
 });

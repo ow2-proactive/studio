@@ -1611,7 +1611,7 @@ li.success {
     display: inherit;
 }
 
-.hidden {
+.hidden, #permission-error, #authentication-error{
     display: none;
 }
 
@@ -1632,6 +1632,11 @@ li.success {
     white-space: nowrap;
     width: 200px;
     max-width:200px;
+}
+
+#add-3rd-party-cred-table td {
+    padding-left:10px;
+    padding-right:10px;
 }
 
 /* Remove default bullets */
