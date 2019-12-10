@@ -75,6 +75,7 @@ define(
             
             this.model.on("change:ScriptExecutable", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
+            this.model.on("change:Description", this.updateTaskDescription, this);
             this.model.on("change:Type", this.updateIcon, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
@@ -139,7 +140,13 @@ define(
             this.element.find(".name").text(newTaskName);
             $("#breadcrumb-task-name").text(newTaskName);
         },
-
+        /*
+            Update the tooltip when the user changes the description.
+        */
+        updateTaskDescription: function(){
+            var newTaskDescription = this.model.get("Description");
+            this.element.find(".task-name").attr('title', newTaskDescription)
+        },
         /**
          * This function is invoked when the task fork mode is changed,
          * The fork environment elements status are configured (enabled/disabled) based on whether fork is enabled
