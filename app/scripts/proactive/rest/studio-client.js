@@ -100,6 +100,7 @@ define(
                                         return onSuccess();
                                     } else {
                                         document.getElementById("permission-error").style.display = "block";
+                                        document.getElementById("authentication-error").style.display = "none";
                                     }
 
                                 },
@@ -127,6 +128,7 @@ define(
 
                             document.getElementById("authentication-error").innerHTML = "<strong>Unable to login.</strong>  " + reason;
                             document.getElementById("authentication-error").style.display = "block";
+                            document.getElementById("permission-error").style.display = "none";
                             //that.alert("Cannot connect to ProActive Studio", reason, 'error');
                             console.log("Error", data)
                         }
@@ -192,6 +194,7 @@ define(
                                 });
                             } else {
                                 document.getElementById("permission-error").style.display = "block";
+                                document.getElementById("authentication-error").style.display = "none";
                                 fail();
                             }
                         },
