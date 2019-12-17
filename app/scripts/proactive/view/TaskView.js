@@ -89,8 +89,8 @@ define(
             this.model.on("invalid", this.setInvalid, this);
             var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
             this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="'
-                + description + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">'
-                + this.model.get("Task Name") + '</div>');
+                + description.replace(/"/g,'&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">'
+                + this.model.get("Task Name") + '</span></a></div>');
 
 
             this.showBlockInTask();
