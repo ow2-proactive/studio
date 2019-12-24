@@ -111,7 +111,7 @@ define(
         },
         internalSelectObject: function (currentObjectRow) {
             this.$('#catalog-get-revisions-table').empty();
-            
+
             if (currentObjectRow){
                 var currentWorkflowName = $(currentObjectRow).data("objectname");
 	            this.highlightSelectedRow('#catalog-get-objects-table', currentObjectRow);
@@ -147,7 +147,10 @@ define(
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
-	        	var rawurl = window.location.origin + '/catalog/' + $(currentRevisionRow).data("rawurl") + '/raw';
+                var splitRawUrl = $(currentRevisionRow).data("rawurl").split('/');
+                var objectName = splitRawUrl[splitRawUrl.length-1];
+                var bucketName = splitRawUrl[1];
+	        	var rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + encodeURIComponent(objectName) + '/raw';
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
@@ -157,7 +160,7 @@ define(
         		
 				var RevisionDescription = _.template(catalogRevisionDescription);
 				$('#catalog-get-description-container').append(RevisionDescription({
-					rawurl: rawurl, 
+					rawurl: rawurl,
 					name: name,
 					commitmessage: commitMessage,
 					username: username,
