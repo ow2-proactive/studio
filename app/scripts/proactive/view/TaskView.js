@@ -97,6 +97,12 @@ define(
 
             // convert model fork value from String to boolean
             this.model.set("Fork", JSON.parse(this.model.get('Fork')));
+
+            //Show the task description on a modal.
+            $(".task-descritption").click(function (event) {
+                $('#task-description-modal').modal();
+                $("#task-description-container").text( $(".selected-task").find(".task-name").attr('title') );
+            })
         },
 
         updateTaskName: function () {
@@ -145,7 +151,7 @@ define(
         */
         updateTaskDescription: function(){
             var newTaskDescription = this.model.get("Description");
-            this.element.find(".task-name").attr('title', newTaskDescription)
+            this.element.find(".task-name").attr('title', newTaskDescription);
         },
         /**
          * This function is invoked when the task fork mode is changed,
