@@ -101,7 +101,9 @@ define(
             //Show the task description on a modal.
             $(".task-descritption").click(function (event) {
                 $('#task-description-modal').modal();
-                $("#task-description-container").text( $(".selected-task").find(".task-name").attr('title') );
+                $("#task-description-container").html($(".selected-task").find(".task-name").attr('title')
+                                                .replace(/</g, "&lt;")
+                                                .replace(/\n/g, "<br/>"));/*Keep line breaks*/
             })
         },
 
