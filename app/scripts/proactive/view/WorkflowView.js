@@ -127,7 +127,12 @@ define(
                     if (connection.connection.scope == 'dependency') {
                         targetModel.addDependency(sourceModel);
                     } else {
-                        sourceModel.setControlFlow(connection.connection.scope, targetModel);
+                        var updatedControlFlowType = connection.connection.scope;
+                        if (updatedControlFlowType === "if") {
+                            // when the control flow "if" is updated, we need to get which connection ("if", "else", or "continuation") is updated
+                            updatedControlFlowType = connection.connection.getOverlays().find(element => element.type === "Label").label;
+                        }
+                        sourceModel.setControlFlow(updatedControlFlowType, targetModel);
                     }
                 }
             });
