@@ -75,6 +75,7 @@ define(
             
             this.model.on("change:ScriptExecutable", this.updateIcon, this);
             this.model.on("change:Task Name", this.updateTaskName, this);
+            this.model.on("change:Description", this.updateTaskDescription, this);
             this.model.on("change:Type", this.updateIcon, this);
             this.model.on("change:Control Flow", this.controlFlowChanged, this);
             this.model.on("change:Block", this.showBlockInTask, this);
@@ -86,15 +87,24 @@ define(
             this.model.on("change:Generic Information", this.updateIcon, this);
 
             this.model.on("invalid", this.setInvalid, this);
-                    
-            this.element = $('<div class="task"><a class="task-name"><img src="'
-                + iconPath + '" width="20px">&nbsp;<span class="name">'
+            var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
+            this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="'
+                + description.replace(/"/g,'&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">'
                 + this.model.get("Task Name") + '</span></a></div>');
+
 
             this.showBlockInTask();
 
             // convert model fork value from String to boolean
             this.model.set("Fork", JSON.parse(this.model.get('Fork')));
+
+            //Show the task description on a modal.
+            $(".task-descritption").click(function (event) {
+                $('#task-description-modal').modal();
+                $("#task-description-container").html($(".selected-task").find(".task-name").attr('title')
+                                                .replace(/</g, "&lt;")
+                                                .replace(/\n/g, "<br/>"));/*Keep line breaks*/
+            })
         },
 
         updateTaskName: function () {
@@ -138,7 +148,13 @@ define(
             this.element.find(".name").text(newTaskName);
             $("#breadcrumb-task-name").text(newTaskName);
         },
-
+        /*
+            Update the tooltip when the user changes the description.
+        */
+        updateTaskDescription: function(){
+            var newTaskDescription = this.model.get("Description");
+            this.element.find(".task-name").attr('title', newTaskDescription);
+        },
         /**
          * This function is invoked when the task fork mode is changed,
          * The fork environment elements status are configured (enabled/disabled) based on whether fork is enabled

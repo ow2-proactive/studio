@@ -4,32 +4,36 @@
 
         <div class="login-header-container">
             <div class="login-header" align="left">
-                    <div style="float:left;width:50%">
-                        Studio <span class="login-font-normal">login</span>
-                    </div>
-                    <div style="cursor:pointer;float:right;width:50%;padding-right:15px;text-align:right">
-                        <div id="login-option-plus">
-                            <img src="images/plus.png"  style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
-                            <span style="cursor:pointer" class="login-font-normal">more options</span>
-                        </div>
-                        <div id="login-option-minus" style="display:none">
-                            <img src="images/minus.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
-                            <span class="login-font-normal">less options</span>
-                        </div>
-                    </div>
+                <div class="pull-left studio-icon">
+                    <img src="images/studio_30.png" alt="studio icon"/>
+                </div>
+                <div style="width:80%;" class="m-b-md pull-right">
+                    <span style="font-size:23px;">Workflow Studio </span><br>
+                    Design your workflows and business processes.
+                </div>
+            </div>
+            <div class="more-options">
+                <div id="login-option-plus">
+                    <img src="images/plus.png"  style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
+                    <span style="cursor:pointer" class="login-font-normal">more options</span>
+                </div>
+                <div id="login-option-minus" style="display:none">
+                    <img src="images/minus.png" style="vertical-align:middle" height="16" border="0" align="absmiddle" width="16">
+                    <span class="login-font-normal">less options</span>
+                </div>
             </div>
             <div class="login-form-container">
                 <form class="form-horizontal" role="presentation" id="login-form" autocomplete="off">
                     <div id="login-options" class="form-group" style="display:none">
                         <label class="control-label">Mode: </label>
-                        <select id="login-mode" name="login-mode" class="controls font-size-11">
+                        <select id="login-mode" name="login-mode" class="controls font-size-11" style="width:170.667px">
                             <option value="basic">Basic</option>
                             <option value="credentials">Credentials</option>
                         </select>
                     </div>
                     <div id="login-basic">
                         <div class="form-group">
-                            <label class="control-label" for="user">User: </label>
+                            <label class="control-label" for="user">Username: </label>
                             <div class="controls">
                                 <input type="text" id="user" name="user" autocomplete="on">
                             </div>
@@ -66,6 +70,11 @@
                     </div>
                 </form>
             </div>
+        </div>
+        <div class="alert alert-danger" id="permission-error">
+            <strong>Unable to login.</strong> You do not have rights to access Studio portal
+        </div>
+        <div class="alert alert-danger" id="authentication-error">
         </div>
     </div>
 </div>

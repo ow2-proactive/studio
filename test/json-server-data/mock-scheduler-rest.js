@@ -68,6 +68,14 @@ server.get('/rest/studio/connected', function (req, res, next) {
     res.end();
 });
 
+server.get('/rest/common/permissions/portals/studio', function (reqq, ress, nextt) {
+    console.log('CHECK FOR PERMISSION');
+    ress.status(200);
+    ress.setHeader('content-type', 'application/json');
+    ress.write('true');
+    ress.end();
+});
+
 server.post('/rest/studio/validate', function (req, res, next) {
     console.log('VALIDATE');
     res.status(200);

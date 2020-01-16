@@ -16,7 +16,7 @@ define(
                 this.callback = options.callback;
             },
             url: function() {
-                return '/catalog/buckets/' + this.bucketname + '/resources/' + this.name + '/revisions';
+                return '/catalog/buckets/' + this.bucketname + '/resources/' + encodeURIComponent(this.name) + '/revisions';
             },
             parse: function(data) {
             	this.callback(data);

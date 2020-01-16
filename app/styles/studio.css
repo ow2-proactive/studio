@@ -1611,8 +1611,13 @@ li.success {
     display: inherit;
 }
 
-.hidden {
+.hidden, #permission-error, #authentication-error{
     display: none;
+}
+
+#permission-error, #authentication-error {
+    margin-bottom: 0px;
+    border: 1px solid red;
 }
 
 #catalog-publish-modal .modal-dialog {
