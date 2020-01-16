@@ -632,16 +632,6 @@ define(
                 }
             },
             setControlFlow: function (controlFlowType, task) {
-                if (controlFlowType == 'if') {
-                    if (this.controlFlow['if'] && this.controlFlow['if'].task) {
-                        if (this.controlFlow['if']['else']) {
-                            controlFlowType = 'continuation';
-                        } else {
-                            controlFlowType = 'else';
-                        }
-                    }
-                }
-
                 if (this['set' + controlFlowType]) this['set' + controlFlowType](task);
             },
             removeControlFlow: function (controlFlowType, task) {
@@ -654,10 +644,9 @@ define(
                 this.set({'Control Flow': 'if'});
                 if (!this.controlFlow['if']) {
                     this.controlFlow = {'if': {}}
+                    this.controlFlow['if'].model = new FlowScript();
                 }
-
                 this.controlFlow['if'].task = task;
-                this.controlFlow['if'].model = new FlowScript();
             },
             setelse: function (task) {
                 if (!task) {
