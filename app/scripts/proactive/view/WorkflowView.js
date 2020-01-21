@@ -636,6 +636,7 @@ define(
                         var loopTarget = task.controlFlow.loop.task;
                         var targetView = newTaskViews[loopTarget.get('Task Name')];
                         taskView.addLoop(targetView)
+                        task.controlFlow.loop.task = newTaskViews[task.controlFlow.loop.task.get("Task Name")].model;
                     }
                 }
             })
