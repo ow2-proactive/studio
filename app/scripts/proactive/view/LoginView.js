@@ -34,12 +34,14 @@ define(
                 var that = this;
                 var form = $(event.target);
                 var loginData = new FormData();//document.getElementById('login-form'));
-                if($('#login-mode').val() === "credentials"){
+                if ($('#login-mode').val() === "credentials") {
                     loginData.append("credential", $("#credential")[0].files[0]);
-                }else{
+                } else {
                     loginData.append("username", $('#user').val());
                     loginData.append("password", $('#password').val());
-                    loginData.append("sshKey", $("#sshKey")[0].files[0]);
+                    if ($("#sshKey")[0].files[0]) {
+                        loginData.append("sshKey", $("#sshKey")[0].files[0]);
+                    }
                 }
 
                 StudioClient.login(loginData, function() {
