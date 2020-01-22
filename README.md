@@ -7,7 +7,7 @@
 You need npm installed (Node.js).
 Selenium-standalone is required for the UI tests (installed locally by npm). If you intend to run the tests locally, you'll need to update your Chrome browser and install the latest version of Selenium-standalone:
 
-Delete package-lock.json file and then run the following command: 
+Delete package-lock.json file and then run the following command:
 ```
 npm install selenium-standalone@latest
 ```
