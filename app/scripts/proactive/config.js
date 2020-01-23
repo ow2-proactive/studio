@@ -31,6 +31,7 @@ define(function () {
             'PHP': 'templates/php_script.xml',
             'PowerShell': 'templates/script_powershell.xml',
             'R': 'templates/script_r.xml',
+            'VBScript': 'templates/script_vbscript.xml',
             'Cron': 'templates/script_cron.xml',
             'LDAP Query': 'templates/script_ldap_query.xml'
         },
@@ -49,16 +50,17 @@ define(function () {
             'ruby': 'ruby',
             'perl': 'perl',
             'powershell': 'powershell',
-            'r': 'text/x-rsrc'
+            'r': 'text/x-rsrc',
+            'vbscript': 'text/vbscript'
         },
         languages_available: {
             'Script/selection': [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
             'Script/environment': [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby"],
-            'Script/pre': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/task': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
-            'Script/post': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"],
+            'Script/pre': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R", "vbscript"],
+            'Script/task': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R", "vbscript"],
+            'Script/post': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "dockerfile", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R", "vbscript"],
             'Script/flow': [" ", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "powershell", "R"],
-            'Script/clean': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R"]
+            'Script/clean': [" ", "bash", "shell", "cmd", "kubernetes", "docker-compose", "scalaw", "groovy", "javascript", "python", "cpython", "ruby", "perl", "powershell", "R", "vbscript"]
         },
         // convert the file extension taken from a script url or the catalog to the name of the language as it appears in the drop-down list
         // R language must be kept uppercase in this structure (as it's the corresponding value appearing in the list)
@@ -78,7 +80,8 @@ define(function () {
             "yaml": "kubernetes",
             "yml": "docker-compose",
             "dockerfile": "dockerfile",
-            "pl": "perl"
+            "pl": "perl",
+            "vbs": "vbscript"
         },
         languages_to_extensions: {
             "scalaw": "scala",
@@ -95,7 +98,8 @@ define(function () {
             "docker-compose": "yml",
             "dockerfile": "dockerfile",
             "perl": "pl",
-            "powershell": "ps"
+            "powershell": "ps",
+            "vbscript": "vbs"
         },
         languages_content_type: {
             "scalaw": "text/x-scala",
@@ -112,7 +116,8 @@ define(function () {
             "docker-compose": "text/x-yaml",
             "dockerfile": "text/x-dockerfile",
             "perl": "text/x-perl",
-            "powershell": "application/x-powershell"
+            "powershell": "application/x-powershell",
+            "vbscript": "text/vbscript"
         },
         keywords: {
             'shell': ['case', 'do', 'done', 'elif', 'else', 'esac', 'fi', 'for', 'function', 'if', 'in', 'select', 'then', 'time', 'until', 'while', 'ls', 'cd', 'mkdir', 'touch', 'cat', 'mv', 'cp', 'rm', 'rmdir', 'chmod', 'ln', 'grep', 'ps', 'curl', 'wget', 'sed', 'awk', 'cut', 'chown', 'echo', 'cat', 'exit', 'kill', 'pwd', 'sudo', 'date', 'df', 'hostname', 'sleep', 'quota', 'uptime', 'zip', 'unzip', 'tar', 'find', 'locate', 'install', 'open', 'bzip2', 'apt-get', 'ftp', 'sftp', 'yum'],
@@ -129,6 +134,7 @@ define(function () {
             'perl': ['print', 'die', 'split', 'while', 'foreach', 'if', 'else', 'elseif', 'open', 'close', 'sleep', 'exit', 'mkdir', 'rename', 'chmod'],
             'powershell': ['Begin', 'Break', 'Catch', 'Class', 'Continue', 'Data', 'Define', 'Do', 'DynamicParam', 'Else', 'Elseif', 'End', 'Enum', 'Exit', 'Filter', 'Finally', 'For', 'ForEach', 'From', 'Function', 'Hidden', 'If', 'In', 'Param', 'Process', 'Return', 'Static', 'Switch', 'Throw', 'Trap', 'Try', 'Until', 'Using', 'Var', 'While', 'ForEach-Object', 'Where-Object', 'Add-Content', 'Add-PSSnapIn', 'Get-Content', 'Set-Location', 'Clear-Content', 'Clear-Host', 'Clear-History', 'Clear-Item', 'Clear-ItemProperty', 'Clear-Variable', 'Connect-PSSession', 'Compare-Object', 'Copy-Item', 'Copy-ItemProperty', 'Invoke-WebRequest', 'Convert-Path', 'Disable-PSBreakpoint', 'Remove-Item', 'Get-ChildItem', 'Disconnect-PSSession', 'Enable-PSBreakpoint', 'Write-Host', 'Write-Output', 'Export-Alias', 'Export-Csv', 'Export-PSSession', 'Enter-PSSession', 'Exit-PSSession', 'Format-Custom', 'Format-List', 'ForEach-Object', 'Format-Table', 'Format-Wide', 'Get-Alias', 'Get-PSBreakpoint', 'Get-Content', 'Get-ChildItem', 'Get-Command', 'Get-PSCallStack', 'Get-PSDrive', 'Get-History', 'Get-Item', 'Get-Job', 'Get-Location', 'Get-Member', 'Get-Module', 'Get-ItemProperty', 'Get-Process', 'Group-Object', 'Get-PSSession', 'Get-PSSnapIn', 'Get-Service', 'Get-Unique', 'Get-Variable', 'Get-WmiObject', 'Get-History', 'Invoke-Command', 'Invoke-Expression', 'Invoke-History', 'Invoke-Item', 'Import-Alias', 'Import-Csv', 'Import-Module', 'Import-PSSession', 'Invoke-History', 'Invoke-RestMethod', 'Invoke-WMIMethod', 'Invoke-WebRequest', 'Stop-Process', 'Out-Printer', 'Get-ChildItem', 'help', 'mkdir', 'Measure-Object', 'Move-Item', 'New-PSDrive', 'Move-ItemProperty', 'New-Alias', 'New-Item', 'New-Module', 'New-PSSessionConfigurationFile', 'New-PSSession', 'New-Variable', 'Out-GridView', 'Out-Host', 'Pop-Location', 'Push-Location', 'Receive-Job', 'Receive-PSSession', 'Remove-Item', 'Remove-PSDrive', 'Remove-Job', 'Remove-Module', 'Remove-ItemProperty', 'Remove-PSBreakpoint', 'Remove-PSSession', 'Remove-PSSnapin', 'Remove-Variable', 'Remove-WMIObject', 'Rename-Item', 'Rename-ItemProperty', 'Resume-Job', 'Resolve-Path', 'Set-Alias', 'Set-PSBreakpoint', 'Set-Content', 'Select-Object', 'Set-Variable', 'Set-Item', 'Show-Command', 'Start-Job', 'Start-Process', 'Start-Service'],
             'R': ['if', 'else', 'repeat', 'while', 'function', 'for', 'in', 'next', 'break', 'TRUE', 'FALSE', 'NULL', 'Inf', 'NaN', 'NA', 'cbind', 'subset', 'beta', 'gamma', 'choose', 'factorial', 'dnorm', 'pnorm', 'qnorm', 'rnorm', 'replace', 'scrub', 'cut', 'round', 'ceiling', 'floor', 'as.integer', 'as.matrix', 'factor', 'transform', 'all', 'any', 'max', 'min', 'mean', 'median', 'sum', 'var', 'table', 'rev', 'print', 'apply', 'colSums', 'rowSums', 'rowsum', 'colMeans', 'rowMeans', 'rnorm'],
+            'vbscript': ['And', 'As', 'Boolean', 'ByRef', 'Byte', 'ByVal', 'Call', 'Case', 'Class', 'Const', 'CreateObject', 'Currency', 'Debug', 'Dim', 'Do', 'Double', 'Each', 'Echo', 'Else', 'ElseIf', 'Empty', 'End', 'EndIf', 'Enum', 'Environment', 'Eqv', 'Event', 'Exit', 'False', 'For', 'Function', 'Get', 'GoTo', 'If', 'Imp', 'Implements', 'In', 'Integer', 'Is', 'Let', 'Like', 'Long', 'Loop', 'LSet', 'Me', 'Mod', 'New', 'Next', 'Not', 'Nothing', 'Null', 'On', 'Option', 'Optional', 'Or', 'ParamArray', 'Preserve', 'Private', 'Public', 'RaiseEvent', 'ReDim', 'Rem', 'Resume', 'RSet', 'Select', 'Set', 'Shared', 'Shell', 'Single', 'Static', 'Stop', 'Sub', 'Then', 'To', 'True', 'Type', 'TypeOf', 'Until', 'Variant', 'Wend', 'While', 'With', 'WScript', 'Xor']
         },
         dictionary: ['variables', 'nodesurl', 'genericInformation', 'localspace', 'cachespace', 'inputspace', 'outputspace',
             'globalspace', 'userspace', 'globalspaceapi', 'userspaceapi', 'forkEnvironment', 'schedulerapi', 'synchronizationapi',

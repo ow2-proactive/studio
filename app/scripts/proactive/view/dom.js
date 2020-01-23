@@ -20,6 +20,7 @@ define(
         'codemirror/mode/powershell/powershell',
         'codemirror/mode/r/r',
         'codemirror/mode/yaml/yaml',
+        'codemirror/mode/vbscript/vbscript',
         'codemirror/addon/mode/simple',
         'codemirror/mode/dockerfile/dockerfile',
         'codemirror/addon/comment/comment',
