@@ -17,6 +17,7 @@ define(
         'codemirror/mode/ruby/ruby',
         'codemirror/mode/python/python',
         'codemirror/mode/perl/perl',
+        'codemirror/mode/php/php',
         'codemirror/mode/powershell/powershell',
         'codemirror/mode/r/r',
         'codemirror/mode/yaml/yaml',

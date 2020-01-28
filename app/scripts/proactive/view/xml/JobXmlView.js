@@ -42,7 +42,43 @@ define(
             // removing multiple \n before closing xml element tag
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');
             // indenting using vkbeautify
-            return vkbeautify.xml(jobRendering.trim(), 2);
+            return this.beautifyAndPreserveCDATA(jobRendering.trim(), 2);
+        },
+        // pretty-print xml and preserve CDATA sections from indentation changes
+        beautifyAndPreserveCDATA: function(text, beautifyDepth) {
+            var that = this;
+            var cdataStartString = '<![CDATA['
+            var cdataEndString = ']]>'
+            // array storing all unmodified cdata sections
+            var cdataSections = []
+            var toParse = text
+            var accumulated = ""
+            var cdataStart = toParse.indexOf(cdataStartString)
+            var cdataEnd = toParse.indexOf(cdataEndString) + cdataEndString.length
+            var cdataIndex = 0;
+
+            // replace all cdata sections with <![CDATA[index]]> store the content extracted inside the cdataSections array
+            while (cdataStart > 0 && cdataEnd > 0) {
+                var begin = toParse.substring(0, cdataStart)
+                var middle = toParse.substring(cdataStart, cdataEnd)
+                var end = toParse.substring(cdataEnd)
+                var replacement = cdataStartString + cdataIndex + cdataEndString
+                accumulated += begin + replacement
+                toParse = end
+                cdataSections.push(middle)
+                var cdataStart = toParse.indexOf(cdataStartString)
+                var cdataEnd = toParse.indexOf(cdataEndString) + cdataEndString.length
+                cdataIndex++
+            }
+            accumulated += toParse
+            // pretty-print using vkbeautify, 'accumulated' variable contains xml with <![CDATA[index]]> patterns
+            var beautifiedXml = vkbeautify.xml(accumulated, beautifyDepth)
+
+            // after pretty-print is done, replace back the original CDATA sections
+            for (var i = 0; i < cdataSections.length; i++) {
+                beautifiedXml = beautifiedXml.replace(cdataStartString + i + cdataEndString, cdataSections[i])
+            }
+            return beautifiedXml
         },
         generateXml: function () {
             var that = this;
@@ -85,7 +121,7 @@ define(
             // indenting using vkbeautify
             this.$el.empty()
             var codeDiv = $('<div class="code" id="workflow-xml">');
-            this.generatedXml = vkbeautify.xml(this.generateXml(), 2)
+            this.generatedXml = this.generateXml()
             this.$el.append(codeDiv);
 
             var highlightedXml = CodeMirror(codeDiv[0], {
