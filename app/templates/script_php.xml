@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.12"
+	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
+	name="script_php" priority="normal" onTaskError="continueJobExecution"
+	maxNumberOfExecution="2">
+	<taskFlow>
+		<task name="PHP_Task">
+			<description>
+                <![CDATA[ Executes a php script.]]>
+			</description>
+			<genericInformation>
+				<info name="content.type"
+					  value="text/html"/>
+				<info name="file.extension"
+					  value=".html"/>
+			</genericInformation>
+			<scriptExecutable>
+				<script>
+					<code language="php">
+                        <![CDATA[
+<html>
+    <head><title>PHP Test</title></head>
+    <body>
+    	<?php
+        // php script engine produces an html result. Its output format is controlled by the generic information content.type=text/html and file.extension=.html
+        // php does not exit automatically in case of error, please use the exit(errorCode) command to generate a task failure
+        echo "<p>Hello World from <b>job ".getenv("variables_PA_JOB_ID")."</b></p>";
+        ?>
+    </body>
+</html>
+]]>
+					</code>
+				</script>
+			</scriptExecutable>
+		</task>
+	</taskFlow>
+</job>
