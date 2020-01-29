@@ -9,18 +9,18 @@
         <h4 class="modal-title"><%- jobName %> </h4>
     </center>
 
-        <span class="font-bold"><b>Description : </b><div class="description"><%- jobDescription %></div></span><br>
-<span class="font-bold"><b>Project name : </b><%- jobProjectName %></span><br>
+    <span class="font-bold"><b>Description : </b><div class="description"><small><%- jobDescription %></small></div></span>
+    <span class="font-bold"><b>Project name : </b><small><%- jobProjectName %></small></span><br>
 <% _.each(jobGenericInfos, function(gi) {
     var label = gi["Property Name"];
     if (label == "bucketName" )  %>
-    	<span class="font-bold"><b>Bucket name : </b><%=gi["Property Value"] %></span><br>
+    <span class="font-bold"><b>Bucket name : </b><small><%=gi["Property Value"] %></small></span><br>
 <% }) %>
 
 <% _.each(jobGenericInfos, function(gi) {
 	var label = gi["Property Name"];
     if (label == "Documentation" )  %>
-		<span class="font-bold"><b> Documentation : </b><a href='<%=gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></span><br>
+    <span class="font-bold"><b> Documentation : </b><small><a href='<%=gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small></span><br>
 <% }) %>
 
 </div>
