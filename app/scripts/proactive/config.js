@@ -14,14 +14,14 @@ define(function () {
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
         docUrl: '/doc',
         tasks: {
-            'OS': {
+            '1. OS Shells': {
                 'Shell': 'templates/script_shell.xml',
                 'Linux Bash': 'templates/script_bash.xml',
                 'Windows Cmd': 'templates/script_cmd.xml',
                 'PowerShell': 'templates/script_powershell.xml'
             },
 
-            'Languages': {
+            '2. Languages': {
                 'Groovy': 'templates/script_groovy.xml',
                 'Python': 'templates/script_cpython.xml',
                 'Jython': 'templates/script_python.xml',
@@ -35,7 +35,7 @@ define(function () {
                 'VBScript': 'templates/script_vbscript.xml'
             },
 
-            'Containers': {
+            '3. Containers': {
                 'Docker_File': 'templates/script_docker_file.xml',
                 'Kubernetes': 'templates/script_kubernetes.xml',
                 'Docker_Compose': 'templates/script_docker_compose.xml'
