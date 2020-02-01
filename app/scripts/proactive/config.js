@@ -14,26 +14,32 @@ define(function () {
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
         docUrl: '/doc',
         tasks: {
-            'Shell': 'templates/script_shell.xml',
-            'Linux Bash': 'templates/script_bash.xml',
-            'Windows Cmd': 'templates/script_cmd.xml',
-            'Docker_Compose': 'templates/script_docker_compose.xml',
-            'Docker_File': 'templates/script_docker_file.xml',
-            'Kubernetes': 'templates/script_kubernetes.xml',
-            'Java': 'templates/java.xml',
-            'Scalaw': 'templates/script_scala.xml',
-            'Javascript': 'templates/script_javascript.xml',
-            'Groovy': 'templates/script_groovy.xml',
-            'Ruby': 'templates/script_ruby.xml',
-            'Jython': 'templates/script_python.xml',
-            'Python': 'templates/script_cpython.xml',
-            'Perl': 'templates/script_perl.xml',
-            'PHP': 'templates/script_php.xml',
-            'PowerShell': 'templates/script_powershell.xml',
-            'R': 'templates/script_r.xml',
-            'VBScript': 'templates/script_vbscript.xml',
-            'Cron': 'templates/script_cron.xml',
-            'LDAP Query': 'templates/script_ldap_query.xml'
+            '1. OS Shells': {
+                'Shell': 'templates/script_shell.xml',
+                'Linux Bash': 'templates/script_bash.xml',
+                'Windows Cmd': 'templates/script_cmd.xml',
+                'PowerShell': 'templates/script_powershell.xml'
+            },
+
+            '2. Languages': {
+                'Groovy': 'templates/script_groovy.xml',
+                'Python': 'templates/script_cpython.xml',
+                'Jython': 'templates/script_python.xml',
+                'Java': 'templates/java.xml',
+                'Javascript': 'templates/script_javascript.xml',
+                'Ruby': 'templates/script_ruby.xml',
+                'Perl': 'templates/script_perl.xml',
+                'PHP': 'templates/script_php.xml',
+                'R': 'templates/script_r.xml',
+                'Scalaw': 'templates/script_scala.xml',
+                'VBScript': 'templates/script_vbscript.xml'
+            },
+
+            '3. Containers': {
+                'Docker_File': 'templates/script_docker_file.xml',
+                'Kubernetes': 'templates/script_kubernetes.xml',
+                'Docker_Compose': 'templates/script_docker_compose.xml'
+            }
         },
         modes: {
             'shell': 'shell',
@@ -148,25 +154,6 @@ define(function () {
             'PA_TASK_SUCCESS', 'PA_SCHEDULER_HOME', 'PA_SCHEDULER_REST_URL', 'PA_TASK_PROGRESS_FILE', 'PA_NODESFILE', 'PA_NODESNUMBER', 'PA_CATALOG_REST_URL', 'PA_USER',
             'PA_NODE_URL', 'PA_NODE_NAME', 'PA_NODE_HOST'
         ],
-        manuals: {
-            'Email_Notification': 'templates/email.xml',
-            'Web_Notification': 'templates/web_notification.xml',
-            'Email_Validation': 'templates/email_validation.xml',
-            'Web_Validation': 'templates/web_validation.xml'
-        },
-        controls: {
-            'If': 'templates/branch.xml',
-            'Loop': 'templates/loop.xml',
-            'Replicate': 'templates/replicate.xml',
-            'Task_Dependencies': 'templates/task_dependencies.xml',
-            'Submit_Job_no_Wait': 'templates/submit_job_no_wait.xml',
-            'Submit_Job_and_Wait': 'templates/submit_job_and_wait.xml',
-            'Wait_for_any': 'templates/wait_for_any.xml',
-            'Wait_for_any_Replicate': 'templates/wait_for_any_replicate.xml',
-            'Submit_and_Wait_for_any': 'templates/submit_and_wait_for_any.xml',
-            'Trigger_PCA_Service': 'templates/trigger_PCA_service.xml',
-            'Execute_Action_PCA_Service': 'templates/execute_action_PCA_service.xml'
-        },
         default_preset: 0,
         palette_presets: [
             {

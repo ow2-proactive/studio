@@ -22,22 +22,22 @@ define(
             //rendering page title
             this.createPresetsMenu();
         },
-        createMenuFromConfig: function (template, menu) {
+        createMenuFromConfig: function (templates, menu) {
             var that = this;
 
-            for (var property in template) {
-                if (template.hasOwnProperty(property)) {
-                    if (typeof template[property] == "object") {
+            for (var property in templates) {
+                if (templates.hasOwnProperty(property)) {
+                    if (typeof templates[property] == "object") {
                         var header = $('<li role="presentation" class="dropdown-header">'+property+'</li>');
                         menu.append(header);
-                        this.createMenuFromConfig(template[property], menu);
+                        this.createMenuFromConfig(templates[property], menu);
                     } else {
                     	var iconName = property.replace(/\s+/g, '');
                         var subMenu = $('<li id="'+property+'" class="sub-menu draggable ui-draggable job-element" data-toggle="tooltip" data-placement="right" title="Drag&nbsp;&&nbsp;drop&nbsp;me"><a class="" href="#" onclick="return false;"><img src="images/'+iconName+'.png"  style="width:20px;height:20px;">&nbsp;&nbsp;'+property+' </a></li>');
                         subMenu.tooltip();
                         menu.append(subMenu);
                         subMenu.data("templateName", property);
-                        subMenu.data("templateUrl", template[property]);
+                        subMenu.data("templateUrl", templates[property]);
                         subMenu.draggable({helper: "clone", scroll: true, appendTo: "#workflow-designer", opacity:0.85, zIndex: 999, containment:"#workflow-designer"});
                         subMenu.bind("drag", function(event, ui) {
                             ui.helper.css("background-color", "white");
