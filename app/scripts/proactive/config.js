@@ -36,7 +36,7 @@ define(function () {
             },
 
             '3. Containers': {
-                'Docker_File': 'templates/script_docker_file.xml',
+                'Dockerfile': 'templates/script_dockerfile.xml',
                 'Kubernetes': 'templates/script_kubernetes.xml',
                 'Docker_Compose': 'templates/script_docker_compose.xml'
             }

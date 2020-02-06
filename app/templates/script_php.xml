@@ -3,10 +3,13 @@
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="script_php" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
+	<description>
+		<![CDATA[ A workflow that executes a php script.]]>
+	</description>
 	<taskFlow>
 		<task name="PHP_Task">
 			<description>
-                <![CDATA[ Executes a php script.]]>
+                <![CDATA[ A task that executes a PHP script.]]>
 			</description>
 			<genericInformation>
 				<info name="content.type"
