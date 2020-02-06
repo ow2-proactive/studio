@@ -3,7 +3,7 @@
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="Java_Job">
 	<description>
-		A workflow that executes Java classes.
+		<![CDATA[ A workflow that executes Java classes.]]>
 	</description>
 	<genericInformation>
 		<info name="Documentation" value="user/ProActiveUserGuide.html#_java_tasks"/>
@@ -11,7 +11,7 @@
 	<taskFlow>
 		<task name="Java_Task" maxNumberOfExecution="4">
 			<description>
-				A task that executes Java classes.
+				<![CDATA[ A task that executes Java classes.]]>
 			</description>
 			<genericInformation>
 				<info name="Documentation" value="user/ProActiveUserGuide.html#_java_tasks"/>

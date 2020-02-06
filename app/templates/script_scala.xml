@@ -8,7 +8,7 @@
 		priority="normal"
 		onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes Scala in JVM.
+		<![CDATA[ A workflow that executes Scala in JVM.]]>
 	</description>
 	<taskFlow>
 		<task name="Scala_Task">

@@ -9,7 +9,7 @@
 	<taskFlow>
 		<task name="PHP_Task">
 			<description>
-                <![CDATA[ A task that executes a php script.]]>
+                <![CDATA[ A task that executes a PHP script.]]>
 			</description>
 			<genericInformation>
 				<info name="content.type"

@@ -3,12 +3,12 @@
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="Script_VBS" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes a Visual Basic Script in the JVM.
+		<![CDATA[ A workflow that executes a Visual Basic Script in the JVM.]]>
 	</description>
 	<taskFlow>
 		<task name="VBS_Task">
 			<description>
-				The simplest task, ran by a VBS engine.
+				<![CDATA[ The simplest task, ran by a VBS engine. ]]>
 			</description>
 			<scriptExecutable>
 				<script>

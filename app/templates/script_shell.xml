@@ -3,14 +3,14 @@
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="Script_Bash" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes Shell script in JVM.
+		<![CDATA[ A workflow that executes Shell script in JVM.]]>
 	</description>
 	<taskFlow>
 		<task name="Shell_Task">
 			<description>
-The simplest Shell task.
+				<![CDATA[ The simplest Shell task.
 Current one ran by a Korn Shell engine.
-But you can use whatever installed interpreter by using shebang notation.
+But you can use whatever installed interpreter by using shebang notation.]]>
 			</description>
 			<scriptExecutable>
 				<script>

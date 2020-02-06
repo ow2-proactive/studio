@@ -3,12 +3,12 @@
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="script_dockerfile" projectName="" priority="normal" onTaskError="continueJobExecution">
 	<description>
-		A workflow that executes a Docker build to create an image.
+		<![CDATA[ A workflow that executes a Docker build to create an image.]]>
 	</description>
 	<taskFlow>
 		<task name="Dockerfile_Task">
 			<description>
-				Simple task running creating an image with Docker build.
+				<![CDATA[ Simple task running creating an image with Docker build.]]>
 			</description>
 			<scriptExecutable>
 				<script>
