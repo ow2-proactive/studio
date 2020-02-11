@@ -696,6 +696,7 @@ define(
                 clickAndOpenEvent.openWorkflow = true;
                 $('.create-workflow-button').trigger(clickAndOpenEvent);
             }
+            save_workflow();
         }
 
         function open_catalog_workflow() {
