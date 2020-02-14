@@ -262,7 +262,7 @@ define(
             var fromFormChange = handler.error; // its defined when form was
                                                 // changed
             var control = this.model.get("Control Flow");
-            if (fromFormChange && control && control != 'none') {
+            if (fromFormChange && control) {
 
                 this.model.controlFlow = {};
                 $.each(jsPlumb.getEndpoints(this.$el), function (i, endPoint) {
@@ -281,8 +281,9 @@ define(
                         }
                     }
                 })
-
-                this.addSourceEndPoint(control)
+                if(control != 'none'){
+                   this.addSourceEndPoint(control)
+                }
                 jsPlumb.repaintEverything();
             }
         },
