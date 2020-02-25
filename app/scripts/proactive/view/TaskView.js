@@ -24,7 +24,7 @@ define(
         icons: {"JavaExecutable": "images/Java.png", "NativeExecutable": "images/command.png", "ScriptExecutable": "images/script.png", "ScriptCode": "images/script.png", "ScriptFile": "images/url.png"},
         iconsPerLanguage: {"java": "images/Java.png", "groovy": "images/Groovy.png", "docker-compose": "images/Docker.png", "dockerfile": "images/Docker.png", "kubernetes": "images/Kubernetes.png",
             "bash": "images/LinuxBash.png", "shell": "images/Shell.png", "scalaw": "images/Scalaw.png", "javascript": "images/Javascript.png", "PHP" : "images/PHP.png", "cmd": "images/WindowsCmd.png", "ruby": "images/Ruby.png",
-                   "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "cron": "images/Cron.png", "LDAP Query": "images/LDAPQuery.png", "perl": "images/Perl.png",
+                   "R": "images/R.png", "python": "images/Jython.png", "cpython": "images/Python.png", "perl": "images/Perl.png",
                    "powershell": "images/PowerShell.png", "vbscript": "images/VBScript.png", "php" : "images/PHP.png"},
         controlFlows: {"dependency": true, "if": false, "replicate": false, "loop": false},
 
@@ -262,7 +262,7 @@ define(
             var fromFormChange = handler.error; // its defined when form was
                                                 // changed
             var control = this.model.get("Control Flow");
-            if (fromFormChange && control && control != 'none') {
+            if (fromFormChange && control) {
 
                 this.model.controlFlow = {};
                 $.each(jsPlumb.getEndpoints(this.$el), function (i, endPoint) {
@@ -281,8 +281,9 @@ define(
                         }
                     }
                 })
-
-                this.addSourceEndPoint(control)
+                if(control != 'none'){
+                   this.addSourceEndPoint(control)
+                }
                 jsPlumb.repaintEverything();
             }
         },

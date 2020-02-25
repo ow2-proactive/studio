@@ -1683,3 +1683,9 @@ ul, #submitFormUL {
 .activeUL {
   display: block;
 }
+
+.description {
+    text-align: justify;
+    white-space: pre-wrap;
+    font-family: inherit;
+}

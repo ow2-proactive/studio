@@ -3,6 +3,9 @@
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="Script_CPython" priority="normal" onTaskError="continueJobExecution"
 	maxNumberOfExecution="2">
+	<description>
+		<![CDATA[ A workflow that executes Python in JVM. It requires an installation of CPython on the target machine as well as the Py4J module.]]>
+	</description>
 	<taskFlow>
 		<task name="Python_Task">
 			<description>

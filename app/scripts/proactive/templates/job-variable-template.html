@@ -1,31 +1,34 @@
-<center>
-<% _.each(jobGenericInfos, function(gi) {
-    		var label = gi["Property Name"];
-    		if (label == "workflow.icon" )  %>
-    			<img src="<%=gi["Property Value"]%>" style="width:100px;height:100px;">
-<% }) %>
+<div>
+    <center>
+        <% _.each(jobGenericInfos, function(gi) {
+                    var label = gi["Property Name"];
+                    if (label == "workflow.icon" )  %>
+                        <img src="<%=gi["Property Value"]%>" style="width:100px;height:100px;">
+        <% }) %>
 
-<h4 class="modal-title"><%- jobName %> </h4>
-<small class="font-bold"><b>Description : </b><%- jobDescription %></small><br>
-<small class="font-bold"><b>Project name : </b><%- jobProjectName %></small><br>
+        <h4 class="modal-title"><%- jobName %> </h4>
+    </center>
+
+    <span class="font-bold"><b>Description : </b><div class="description"><small><%- jobDescription %></small></div></span>
+    <span class="font-bold"><b>Project name : </b><small><%- jobProjectName %></small></span><br>
 <% _.each(jobGenericInfos, function(gi) {
     var label = gi["Property Name"];
     if (label == "bucketName" )  %>
-    	<small class="font-bold"><b>Bucket name : </b><%=gi["Property Value"] %></small><br>
+    <span class="font-bold"><b>Bucket name : </b><small><%=gi["Property Value"] %></small></span><br>
 <% }) %>
 
 <% _.each(jobGenericInfos, function(gi) {
 	var label = gi["Property Name"];
     if (label == "Documentation" )  %>
-		<small class="font-bold"><b> Documentation : </b><a href='<%=gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small><br>
+    <span class="font-bold"><b> Documentation : </b><small><a href='<%=gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small></span><br>
 <% }) %>
 
-</center>
+</div>
 
 
 <br>
 <ul id="submitFormUL">
-    <label for="Job_Variables" class="Name" style="text-align:left" data-toggle="tooltip">Job Variables</label>
+    <span for="Job_Variables" class="Name" style="text-align:left; font-weight: bold" data-toggle="tooltip">Job Variables</span>
     <%
 
       var currentTask = null;
@@ -39,10 +42,10 @@
                     currentTask = splitted[0];
                 %>
     <li class="formLayout">
-    <label for="Tasks_Variables" class="Name caretUL" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left" data-toggle="tooltip">Tasks Variables</label>
+    <span for="Tasks_Variables" class="Name caretUL" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</span>
     <ul class="nestedUL">
     <li class="formLayout">
-    <label for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left" data-toggle="tooltip"><%- splitted[0] %></label>
+    <span for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
     <ul class="nestedUL">
                 <%
                 } else if (currentTask != splitted[0]) {
@@ -51,7 +54,7 @@
     </ul>
     </li>
     <li class="formLayout">
-    <label for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left" data-toggle="tooltip"><%- splitted[0] %></label>
+    <span for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
     <ul class="nestedUL">
         <%
                 }

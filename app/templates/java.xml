@@ -2,12 +2,20 @@
 <job xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:proactive:jobdescriptor:3.12"
 	xsi:schemaLocation="urn:proactive:jobdescriptor:3.12 http://www.activeeon.com/public_content/schemas/proactive/jobdescriptor/3.12/schedulerjob.xsd"
 	name="Java_Job">
+	<description>
+		<![CDATA[ A workflow that executes Java classes.]]>
+	</description>
 	<genericInformation>
-		<info name="var1" value="val1" />
-		<info name="var2" value="val2" />
+		<info name="Documentation" value="user/ProActiveUserGuide.html#_java_tasks"/>
 	</genericInformation>
 	<taskFlow>
 		<task name="Java_Task" maxNumberOfExecution="4">
+			<description>
+				<![CDATA[ A task that executes Java classes.]]>
+			</description>
+			<genericInformation>
+				<info name="Documentation" value="user/ProActiveUserGuide.html#_java_tasks"/>
+			</genericInformation>
 			<javaExecutable class="org.ow2.proactive.scheduler.examples.WaitAndPrint">
 				<parameters>
 					<parameter name="sleepTime" value="20" />
