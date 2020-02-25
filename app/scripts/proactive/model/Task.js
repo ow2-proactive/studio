@@ -374,7 +374,7 @@ define(
                 // handles them. That's why we arrived at this hybrid design.
                 "Fork Execution Environment": {
                     type: "Select",
-                    options: ["User Defined", "Docker"],
+                    options: ["User Defined", "Docker", "Singularity", "Podman"],
                     fieldAttrs: {
                         "data-help":"The environment in which to execute this task. " +
                         "Example: Docker selected will execute this task inside a Docker container."
