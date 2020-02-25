@@ -207,22 +207,37 @@ define(
                 // anything in this case.
                 return;
             }
+            var javaHome = '/usr';
+            var prefixCommandLanguage = 'groovy';
+            var prefixContainerCommandString;
             // So the Fork Execution Environment was changed. Check if it was changed for Docker
-            if (this.model.get('Fork Execution Environment') == "Docker") {
-                // Docker was selected on the dropdown, insert a template script in the language python
-                var javaHome = '/usr';
-                var prefixCommandLanguage = 'groovy';
-                var prefixDockerCommandString = config.docker_env_script;
-                // Set the script and language inside the Browser, this will render it immediately.
-                // We did not find a way to render the model, so the last possibility was to
-                // just set it in the DOM.
-                $('[id*="_Fork Environment_Java Home"]').val(javaHome);
-                $('[id*="_Fork Environment_Environment Script_ScriptCode_Language"]').val(prefixCommandLanguage);
-                $('[id*="_Fork Environment_Environment Script_ScriptCode_Code"]').val( prefixDockerCommandString);
-                // Set the script and language in the model. This persists the changes but does not render
-                // them immediately.
-                this.model.get('Fork Environment')['Java Home'] = javaHome;
-                this.model.get('Fork Environment')['Environment Script'] = {ScriptType : "ScriptCode", ScriptCode: {Code : prefixDockerCommandString, Language : prefixCommandLanguage}};
+            switch (this.model.get('Fork Execution Environment')) {
+                case "Docker":
+                    prefixContainerCommandString = config.docker_env_script;
+                    break;
+                case "Singularity":
+                    prefixContainerCommandString = config.singularity_env_script;
+                    break;
+                case "Podman":
+                    prefixContainerCommandString = config.podman_env_script;
+                    break;
+            }
+            switch (this.model.get('Fork Execution Environment')) {
+                case "Docker":
+                case "Singularity":
+                case "Podman":
+                    // A container was selected on the dropdown list, insert a template script in the language groovy
+                    // Set the script and language inside the Browser, this will render it immediately.
+                    // We did not find a way to render the model, so the last possibility was to
+                    // just set it in the DOM.
+                    $('[id*="_Fork Environment_Java Home"]').val(javaHome);
+                    $('[id*="_Fork Environment_Environment Script_ScriptCode_Language"]').val(prefixCommandLanguage);
+                    $('[id*="_Fork Environment_Environment Script_ScriptCode_Code"]').val( prefixContainerCommandString);
+                    // Set the script and language in the model. This persists the changes but does not render
+                    // them immediately.
+                    this.model.get('Fork Environment')['Java Home'] = javaHome;
+                    this.model.get('Fork Environment')['Environment Script'] = {ScriptType : "ScriptCode", ScriptCode: {Code : prefixContainerCommandString, Language : prefixCommandLanguage}};
+                    break;
             }
             // Function is done. If the Fork Execution Environment was set to something not handled above,
             // then the previous inputs will just be kept.
