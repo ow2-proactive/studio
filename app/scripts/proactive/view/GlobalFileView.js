@@ -13,6 +13,7 @@ define(
 
         model: {
             'files': [],
+            'directories': [],
             'location': "Global DataSpace"
         },
 
@@ -48,7 +49,8 @@ define(
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
-                    that.model['files'] = data.fullListing.sort();
+                    that.model['files'] = data.fileListing.sort();
+                    that.model['directories'] = data.directoryListing.sort();
                     that.$el.html(that.template(that.model));
                 }
             });

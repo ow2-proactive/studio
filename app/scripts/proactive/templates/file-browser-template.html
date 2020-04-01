@@ -7,8 +7,11 @@
         <div id="files-body" class="modal-body">
             <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
                 <ul class="files-ul">
+                    <% for (var index in directories) { %>
+                    <li> <i class="far fa-folder"> </i> <%- directories[index] %> </li>
+                    <% } %>
                     <% for (var index in files) { %>
-                    <li> <%- files[index] %> </li>
+                    <li> <i class="far fa-file"> </i> <%- files[index] %> </li>
                     <% } %>
                 </ul>
             </div>
