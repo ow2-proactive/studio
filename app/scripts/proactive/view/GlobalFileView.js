@@ -14,11 +14,13 @@ define(
         model: {
             'files': [],
             'directories': [],
+            'currentPath': "",
             'location': "Global DataSpace"
         },
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
+            'click .file-browser-dir': 'enterGlobalFilesSubdir'
         },
 
         initialize: function () {
@@ -30,21 +32,27 @@ define(
             });
             // whenever parent modal is hidden, close inside modal
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {
-                that.closeFileBrowser()
+                that.closeFileBrowser();
             });
         },
 
         render: function () {
-            this.refreshGlobalFiles();
+            this.model['currentPath'] = "";
+            this.refreshGlobalFiles("%2E"); // root path "/." encoded as "%2E"
             this.$el.html(this.template(this.model));
             this.$el.modal('show');
             return this;
         },
 
-        refreshGlobalFiles: function() {
+        enterGlobalFilesSubdir: function (event) {
+            this.model['currentPath'] = event.target.getAttribute('value');
+            this.refreshGlobalFiles(this.model['currentPath']);
+        },
+
+        refreshGlobalFiles: function(path) {
             var that = this;
             $.ajax({
-                url: "/rest/data/global/" + encodeURIComponent("%2E"), // root path "." encoded as "%2E"
+                url: "/rest/data/global/" + encodeURIComponent(path),
                 data: { "comp": "list" },
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
