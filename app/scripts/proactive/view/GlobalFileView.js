@@ -20,7 +20,8 @@ define(
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
-            'click .file-browser-dir': 'enterGlobalFilesSubdir'
+            'click .file-browser-dir': 'enterGlobalFilesSubdir',
+            'click .current-sub-path': 'enterGlobalFilesSubdir'
         },
 
         initialize: function () {
@@ -38,7 +39,7 @@ define(
 
         render: function () {
             this.model['currentPath'] = "";
-            this.refreshGlobalFiles("%2E"); // root path "/." encoded as "%2E"
+            this.refreshGlobalFiles();
             this.$el.html(this.template(this.model));
             this.$el.modal('show');
             return this;
@@ -46,13 +47,17 @@ define(
 
         enterGlobalFilesSubdir: function (event) {
             this.model['currentPath'] = event.target.getAttribute('value');
-            this.refreshGlobalFiles(this.model['currentPath']);
+            this.refreshGlobalFiles();
         },
 
-        refreshGlobalFiles: function(path) {
+        refreshGlobalFiles: function() {
             var that = this;
+            var pathname = that.model['currentPath'];
+            if(pathname.length == 0) {
+                pathname = "%2E"; // root path "." need to be encoded as "%2E"
+            }
             $.ajax({
-                url: "/rest/data/global/" + encodeURIComponent(path),
+                url: "/rest/data/global/" + encodeURIComponent(pathname),
                 data: { "comp": "list" },
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
