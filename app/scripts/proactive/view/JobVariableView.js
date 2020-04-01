@@ -2,9 +2,10 @@ define(
     [
         'backbone',
         'text!proactive/templates/job-variable-template.html',
-        'proactive/view/ThirdPartyCredentialView'
+        'proactive/view/ThirdPartyCredentialView',
+        'proactive/view/GlobalFileView'
     ],
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView) {
+    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, GlobalFileView) {
 
     "use strict";
 
@@ -16,6 +17,7 @@ define(
 
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
+            'click #var-globalfile-button': 'showGlobalFileModal'
         },
 
         initialize: function () {
@@ -39,6 +41,10 @@ define(
 
         showThirdPartyCredentialModal: function() {
             new ThirdPartyCredentialView().render();
+        },
+
+        showGlobalFileModal: function() {
+            new GlobalFileView().render();
         }
     })
 })

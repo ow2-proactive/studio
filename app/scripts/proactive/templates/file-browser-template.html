@@ -1,0 +1,21 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
+            <h3><%=location%> Files</h3>
+        </div>
+        <div id="files-body" class="modal-body">
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
+                <ul class="files-ul">
+                    <% for (var index in files) { %>
+                    <li> <%- files[index] %> </li>
+                    <% } %>
+                </ul>
+            </div>
+            <br>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-white file-browser-close" type="button"> Close </button>
+        </div>
+    </div>
+</div>
