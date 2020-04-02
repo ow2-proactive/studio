@@ -22,7 +22,8 @@ define(
             'click .file-browser-close': 'closeFileBrowser',
             'click .file-browser-file,.file-browser-dir': 'switchSelected',
             'dblclick .file-browser-dir': 'enterGlobalFilesSubdir',
-            'click .current-sub-path': 'enterGlobalFilesSubdir'
+            'click .current-sub-path': 'enterGlobalFilesSubdir',
+            'click .file-browser-select-btn': 'selectFile'
         },
 
         initialize: function () {
@@ -82,6 +83,18 @@ define(
                 }
                 // highlight currently selected item
                 $(event.target).addClass("selected");
+                $("#file-browser-error-message").text("");
+            }
+        },
+
+        selectFile: function() {
+            var selectedElement=$("ul.files-ul > li.selected");
+            if (selectedElement.length != 0) {
+                console.log("selected", selectedElement.attr('value'));
+                this.$el.modal('hide');
+            } else {
+                console.log("no selected");
+                $("#file-browser-error-message").text("Cannot find selected path: Please select a file or a directory!");
             }
         },
 
