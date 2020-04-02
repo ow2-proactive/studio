@@ -20,7 +20,8 @@ define(
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
-            'click .file-browser-dir': 'enterGlobalFilesSubdir',
+            'click .file-browser-file,.file-browser-dir': 'switchSelected',
+            'dblclick .file-browser-dir': 'enterGlobalFilesSubdir',
             'click .current-sub-path': 'enterGlobalFilesSubdir'
         },
 
@@ -67,6 +68,21 @@ define(
                     that.$el.html(that.template(that.model));
                 }
             });
+        },
+
+        switchSelected: function(event) {
+            if ($(event.target).hasClass('selected')) {
+                // deselect
+                $(event.target).removeClass("selected");
+            } else {
+                // mark the previous selected item as non-selected, as only one item could be selected at once.
+                var selectedElement=$("ul.files-ul > li.selected");
+                if (selectedElement) {
+                    selectedElement.removeClass("selected");
+                }
+                // highlight currently selected item
+                $(event.target).addClass("selected");
+            }
         },
 
         closeFileBrowser: function () {
