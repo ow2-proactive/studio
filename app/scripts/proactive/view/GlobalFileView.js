@@ -31,9 +31,11 @@ define(
             this.varKey = varInfo.varKey;
             this.$el = $('#file-browser-modal');
             var that = this;
-            // stop inside modal trigger parent modal hidden event
             this.$el.on('hidden.bs.modal', function(event) {
+                // stop inside modal trigger parent modal hidden event
                 event.stopPropagation();
+                // when the modal is closed, remove its events to avoid trigger duplicated events when reopen the modal
+                that.undelegateEvents();
             });
             // whenever parent modal is hidden, close inside modal
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {
@@ -95,7 +97,7 @@ define(
                 var studioApp = require('StudioApp');
                 var currentVar = studioApp.views.jobVariableView.model['jobVariables'];
                 // clone the current variables to avoid changing variable default value
-                var jobVariables =JSON.parse(JSON.stringify(currentVar));
+                var jobVariables = JSON.parse(JSON.stringify(currentVar));
                 // update the variable value to the selected file path
                 jobVariables[this.varKey].Value = selectedElement.attr('value');
                 studioApp.views.jobVariableView.render({'jobVariables': jobVariables});
