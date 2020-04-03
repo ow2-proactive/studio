@@ -13,7 +13,16 @@ define(
 
         template: _.template(jobVariableTemplate),
 
-        model: {'jobVariables': {}, 'jobName':'', 'jobProjectName':'', 'jobDescription':'', 'jobDocumentation':'', 'jobGenericInfos':[], 'errorMessage':'', 'infoMessage' :''},
+        model: {
+            'jobVariables': {},
+            'jobName':'',
+            'jobProjectName':'',
+            'jobDescription':'',
+            'jobDocumentation':'',
+            'jobGenericInfos':[],
+            'errorMessage':'',
+            'infoMessage' :''
+        },
 
         events: {
             'click #third-party-credential-button': 'showThirdPartyCredentialModal',
@@ -43,8 +52,8 @@ define(
             new ThirdPartyCredentialView().render();
         },
 
-        showGlobalFileModal: function() {
-            new GlobalFileView().render();
+        showGlobalFileModal: function(event) {
+            new GlobalFileView({'varKey': event.target.getAttribute('value')}).render();
         }
     })
 })

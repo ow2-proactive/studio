@@ -122,7 +122,7 @@
             <% } else if (model && model.toLowerCase().indexOf('pa:global_file')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
-                <button id="var-globalfile-button" type="button" class="btn fas fa-link" style="background-color:Transparent"></button>
+                <button id="var-globalfile-button" value="<%- variable.Name %>" type="button" class="btn fas fa-link" style="background-color:Transparent"></button>
             <% } else {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
