@@ -94,13 +94,10 @@ define(
         selectFile: function() {
             var selectedElement=$("ul.files-ul > li.selected");
             if (selectedElement.length != 0) {
-                var studioApp = require('StudioApp');
-                var currentVar = studioApp.views.jobVariableView.model['jobVariables'];
-                // clone the current variables to avoid changing variable default value
-                var jobVariables = JSON.parse(JSON.stringify(currentVar));
                 // update the variable value to the selected file path
-                jobVariables[this.varKey].Value = selectedElement.attr('value');
-                studioApp.views.jobVariableView.render({'jobVariables': jobVariables});
+                var studioApp = require('StudioApp');
+                var updatedVar = {[this.varKey]: selectedElement.attr('value')};
+                studioApp.views.jobVariableView.updateVariableValue(updatedVar);
                 this.closeFileBrowser();
             } else {
                 $("#file-browser-error-message").text("Cannot find selected path: Please select a file or a directory!");

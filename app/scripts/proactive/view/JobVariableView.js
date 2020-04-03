@@ -43,9 +43,18 @@ define(
         },
 
         render: function (jobInfos) {
-            this.model = $.extend(this.model, jobInfos);
+            var jobInfosCloned = JSON.parse(JSON.stringify(jobInfos));
+            this.model = $.extend(this.model, jobInfosCloned);
             this.$el.html(this.template(this.model));
             return this;
+        },
+
+        updateVariableValue: function(jobVariables) {
+            for(var key in jobVariables) {
+                this.model.jobVariables[key].Value = jobVariables[key];
+                var updatedVarElement = $(document.getElementById(key));
+                updatedVarElement.text(jobVariables[key]);
+            }
         },
 
         showThirdPartyCredentialModal: function() {
