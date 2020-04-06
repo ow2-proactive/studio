@@ -130,9 +130,15 @@ define(
                         var updatedControlFlowType = connection.connection.scope;
                         if (updatedControlFlowType === "if") {
                             // when the control flow "if" is updated, we need to get which connection ("if", "else", or "continuation") is updated
-                            updatedControlFlowType = connection.connection.getOverlays().find(element => element.type === "Label").label;
+                            var connectionLabel = connection.connection.getOverlays().find(element => element.type === "Label").labelText;
+                            if (connectionLabel != null) {
+                                sourceModel.setControlFlow(connectionLabel, targetModel);
+                            } else {
+                                sourceModel.createif(targetModel);
+                            }
+                        } else {
+                            sourceModel.setControlFlow(updatedControlFlowType, targetModel);
                         }
-                        sourceModel.setControlFlow(updatedControlFlowType, targetModel);
                     }
                 }
             });

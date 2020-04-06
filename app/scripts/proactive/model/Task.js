@@ -634,6 +634,16 @@ define(
             setControlFlow: function (controlFlowType, task) {
                 if (this['set' + controlFlowType]) this['set' + controlFlowType](task);
             },
+            createif: function (task) {
+                if (!this.controlFlow['if']) {
+                    this.setif(task);
+                } else if (!this.controlFlow['if']['else']) {
+                    this.setelse(task);
+                } else if (!this.controlFlow['if']['continuation']) {
+                    this.setcontinuation(task);
+                }
+                console.log("after createif this.controlFlow['if']", this.controlFlow['if'])
+            },
             removeControlFlow: function (controlFlowType, task) {
                 if (this['remove' + controlFlowType]) this['remove' + controlFlowType](task);
             },
