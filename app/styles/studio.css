@@ -1649,6 +1649,11 @@ ul, #files-ul {
     padding-left: 5px;
 }
 
+.current-sub-path {
+    font-size: 12px;
+    padding: 3px;
+}
+
 /* Remove default bullets */
 ul, #submitFormUL {
   list-style-type: none;

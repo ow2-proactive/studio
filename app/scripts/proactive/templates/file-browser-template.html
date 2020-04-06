@@ -9,7 +9,7 @@
                 <button type="button" class="btn current-sub-path" value=""> <%- location%> </button>
                 <% var splitPath = currentPath.split("/").filter(i => i);
                 for (let [index, subPath] of splitPath.entries()) { %>
-                    <button type="button" class="btn current-sub-path" value="<%- splitPath.slice(0, index+1).join('/')%>/"> <%- subPath%> </button>
+                    <button type="button" class="btn current-sub-path" value="<%- splitPath.slice(0, index+1).join('/')%>/"> <%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %> </button>
                 <% } %>
             </div>
             <br>
