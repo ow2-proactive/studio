@@ -635,14 +635,14 @@ define(
                 if (this['set' + controlFlowType]) this['set' + controlFlowType](task);
             },
             createif: function (task) {
-                if (!this.controlFlow['if']) {
+                if (!this.controlFlow['if'] || !this.controlFlow['if'].task) {
                     this.setif(task);
                 } else if (!this.controlFlow['if']['else']) {
                     this.setelse(task);
                 } else if (!this.controlFlow['if']['continuation']) {
                     this.setcontinuation(task);
                 }
-                console.log("after createif this.controlFlow['if']", this.controlFlow['if'])
+                console.log("after createif", this.controlFlow['if'])
             },
             removeControlFlow: function (controlFlowType, task) {
                 if (this['remove' + controlFlowType]) this['remove' + controlFlowType](task);
@@ -656,19 +656,25 @@ define(
                     this.controlFlow = {'if': {}}
                     this.controlFlow['if'].model = new FlowScript();
                 }
+                if(!this.controlFlow['if'].model) {
+                    this.controlFlow['if'].model = new FlowScript();
+                }
                 this.controlFlow['if'].task = task;
+                console.log("after setif", this.controlFlow['if'])
             },
             setelse: function (task) {
                 if (!task) {
                     return;
                 }
                 this.controlFlow['if']['else'] = {task: task};
+                console.log("after setelse", this.controlFlow['if'])
             },
             setcontinuation: function (task) {
                 if (!task) {
                     return;
                 }
                 this.controlFlow['if']['continuation'] = {task: task};
+                console.log("after setcontinuation", this.controlFlow['if'])
             },
             removeif: function (task) {
                 this.set({'Control Flow': 'none'});
@@ -683,7 +689,14 @@ define(
                     console.log('Removing CONTINUATION')
                     delete this.controlFlow['if']['continuation'];
                 }
-                console.log('Removing if branch', this.controlFlow, task)
+                if (this.controlFlow['if'].task || this.controlFlow['if']['else'] && this.controlFlow['if']['else'].task || this.controlFlow['if']['continuation'] && this.controlFlow['if']['continuation'].task) {
+                    // at least one branch is present
+                } else {
+                    console.log('Removing if branch', this.controlFlow, task)
+                    this.set({'Control Flow': 'none'});
+                    delete this.controlFlow['if'];
+                }
+                console.log("after removeif", this.controlFlow['if'])
             },
             setloop: function (task) {
                 console.log('Adding loop')
