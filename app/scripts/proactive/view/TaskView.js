@@ -286,8 +286,7 @@ define(
                             var connectionDetached = false;
                             if (endPoint.connections) {
                                 var initialConnections = endPoint.connections;
-                                var j;
-                                for (j = initialConnections.length - 1; j >= 0; j--) {
+                                for (var j = initialConnections.length - 1; j >= 0; j--) {
                                     jsPlumb.detach(initialConnections[j]);
                                     connectionDetached = true;
                                 }
