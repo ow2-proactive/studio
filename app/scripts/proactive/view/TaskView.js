@@ -355,7 +355,7 @@ define(
                         [ "Label", {
                             label: function () {
                                 var ifModel = that.model.controlFlow['if'];
-                                if (!ifModel || ifModel && !ifModel.model) return 'if'
+                                if (!ifModel || !ifModel.model || !ifModel.task) return 'if'
                                 else if (!ifModel['else']) return 'else'
                                 else if (!ifModel['continuation']) return 'continuation'
                                 else return "";

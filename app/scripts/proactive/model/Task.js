@@ -680,8 +680,7 @@ define(
                 this.set({'Control Flow': 'none'});
                 if (this.controlFlow['if'].task == task) {
                     console.log('Removing IF')
-                    this.controlFlow['if'].model = undefined;
-                    this.controlFlow['if'].task = undefined;
+                    delete this.controlFlow['if'].task;
                 } else if (this.controlFlow['if']['else'] && this.controlFlow['if']['else'].task == task) {
                     console.log('Removing ELSE')
                     delete this.controlFlow['if']['else'];
