@@ -642,7 +642,6 @@ define(
                 } else if (!this.controlFlow['if']['continuation']) {
                     this.setcontinuation(task);
                 }
-                console.log("after createif", this.controlFlow['if'])
             },
             removeControlFlow: function (controlFlowType, task) {
                 if (this['remove' + controlFlowType]) this['remove' + controlFlowType](task);
@@ -660,21 +659,18 @@ define(
                     this.controlFlow['if'].model = new FlowScript();
                 }
                 this.controlFlow['if'].task = task;
-                console.log("after setif", this.controlFlow['if'])
             },
             setelse: function (task) {
                 if (!task) {
                     return;
                 }
                 this.controlFlow['if']['else'] = {task: task};
-                console.log("after setelse", this.controlFlow['if'])
             },
             setcontinuation: function (task) {
                 if (!task) {
                     return;
                 }
                 this.controlFlow['if']['continuation'] = {task: task};
-                console.log("after setcontinuation", this.controlFlow['if'])
             },
             removeif: function (task) {
                 this.set({'Control Flow': 'none'});
@@ -695,7 +691,6 @@ define(
                     this.set({'Control Flow': 'none'});
                     delete this.controlFlow['if'];
                 }
-                console.log("after removeif", this.controlFlow['if'])
             },
             setloop: function (task) {
                 console.log('Adding loop')

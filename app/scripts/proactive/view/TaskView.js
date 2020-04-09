@@ -482,7 +482,6 @@ define(
             jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, overlays: this.overlays()});
         },
         addIf: function (ifFlow, views) {
-            console.log("addIf")
             var endpointIf = this.addSourceEndPoint('if')
 
             if (ifFlow.task) {

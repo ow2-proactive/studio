@@ -131,7 +131,7 @@ define(
                         if (updatedControlFlowType === "if") {
                             // when the control flow "if" is updated, we need to get which connection ("if", "else", or "continuation") is updated
                             var connectionLabel = connection.connection.getOverlay("ifLabel").canvas.textContent;
-                            console.log("updating the connection ", connectionLabel);
+                            console.debug("updating the connection with label: ", connectionLabel);
                             if (connectionLabel) {
                                 sourceModel.setControlFlow(connectionLabel, targetModel);
                             } else {
