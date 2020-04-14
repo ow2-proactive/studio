@@ -24,7 +24,9 @@ define(
             'click .file-browser-file,.file-browser-dir': 'switchSelected',
             'dblclick .file-browser-dir': 'enterGlobalFilesSubdir',
             'click .current-sub-path': 'enterGlobalFilesSubdir',
-            'click .file-browser-select-btn': 'selectFile'
+            'click .file-browser-select-btn': 'selectFile',
+            'click #upload-file-btn': 'chooseUploadFile',
+            'change #selected-upload-file': 'uploadFile',
         },
 
         initialize: function (varInfo) {
@@ -101,6 +103,36 @@ define(
                 this.closeFileBrowser();
             } else {
                 $("#file-browser-error-message").text("Cannot find selected path: Please select a file or a directory!");
+            }
+        },
+
+        chooseUploadFile: function(event) {
+            event.preventDefault();
+            $('#selected-upload-file').click();
+        },
+
+        uploadFile: function(event) {
+            var that = this;
+            var selectedFile = event.target.files[0];
+            if (selectedFile) {
+                var pathname = that.model['currentPath'] + selectedFile.name;
+                $("#upload-file-btn").text("Uploading");
+                $("#upload-file-btn").attr("disabled", true);
+                $.ajax({
+                    type: "PUT",
+                    url: "/rest/data/global/" + encodeURIComponent(pathname),
+                    data: selectedFile,
+                    processData: false,
+                    headers: { "sessionid": localStorage['pa.session'] },
+                    success: function (data){
+                        that.refreshGlobalFiles();
+                        $("#upload-file-btn").text("Upload");
+                        $("#upload-file-btn").attr("disabled", false);
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Failed to upload the file " + selectedFile.name + ": "+ xhr.statusText);
+                    }
+                });
             }
         },
 
