@@ -104,7 +104,7 @@ define(
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
                 this.closeFileBrowser();
             } else {
-                $("#file-browser-error-message").text("Cannot find selected path: Please select a file or a directory!");
+                $("#file-browser-error-message").text("Cannot find any file selected: please select a file !");
             }
         },
 
@@ -118,7 +118,7 @@ define(
             var selectedFile = event.target.files[0];
             if (selectedFile) {
                 var pathname = that.model['currentPath'] + selectedFile.name;
-                $("#upload-file-btn").text("Uploading");
+                $("#upload-file-btn").removeClass('fa-upload').addClass('fa-spinner fa-pulse');
                 $("#upload-file-btn").attr("disabled", true);
                 that.uploadRequest = $.ajax({
                     type: "PUT",
@@ -128,7 +128,7 @@ define(
                     headers: { "sessionid": localStorage['pa.session'] },
                     success: function (data){
                         that.refreshGlobalFiles();
-                        $("#upload-file-btn").text("Upload");
+                        $("#upload-file-btn").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
                         $("#upload-file-btn").attr("disabled", false);
                     },
                     error: function (xhr, status, error) {
