@@ -29,6 +29,8 @@ define(
             'click .file-browser-select-btn': 'selectFile',
             'click #upload-file-btn': 'chooseUploadFile',
             'change #selected-upload-file': 'uploadFile',
+            'click #refresh-file-btn': 'refreshGlobalFiles',
+            'click #new-folder-btn': 'createFolder'
         },
 
         initialize: function (varInfo) {
@@ -85,7 +87,7 @@ define(
                 $(event.target).removeClass("selected");
             } else {
                 // mark the previous selected item as non-selected, as only one item could be selected at once.
-                var selectedElement=$("ul.files-ul > li.selected");
+                var selectedElement=$("ul#files-ul > li.selected");
                 if (selectedElement) {
                     selectedElement.removeClass("selected");
                 }
@@ -96,7 +98,7 @@ define(
         },
 
         selectFile: function() {
-            var selectedElement=$("ul.files-ul > li.selected");
+            var selectedElement=$("ul#files-ul > li.selected");
             if (selectedElement.length != 0) {
                 // update the variable value to the selected file path
                 var studioApp = require('StudioApp');
@@ -136,6 +138,28 @@ define(
                     }
                 });
             }
+        },
+
+        createFolder: function() {
+            var that = this;
+            $("#files-ul").prepend('<li> <i class="far fa-folder"> </i> <input class="new-folder" value="untitled-folder"/> </li>');
+            $(".new-folder").keyup(function(event) {
+                if ($(this).is(":focus") && event.key == "Enter") {
+                    var pathname = that.model['currentPath'] + $(this).val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/rest/data/global/" + encodeURIComponent(pathname),
+                        data: {"mimetype": "application/folder"},
+                        headers: { "sessionid": localStorage['pa.session'] },
+                        success: function (data){
+                            that.refreshGlobalFiles();
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Failed to create the new folder " + pathname + ": "+ xhr.statusText);
+                        }
+                    });
+                }
+            });
         },
 
         closeFileBrowser: function () {

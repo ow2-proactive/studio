@@ -20,7 +20,7 @@
             </div>
             <br>
             <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
-                <ul class="files-ul">
+                <ul id="files-ul">
                     <% for (var index in directories) { %>
                     <li class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </li>
                     <% } %>
@@ -29,6 +29,7 @@
                     <% } %>
                 </ul>
             </div>
+            <br>
             <label id="file-browser-error-message" style="color:red;"></label>
         </div>
         <div class="modal-footer">
