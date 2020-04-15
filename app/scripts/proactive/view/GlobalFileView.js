@@ -10,6 +10,8 @@ define(
     return Backbone.View.extend({
         varKey: "",
 
+        uploadRequest: undefined,
+
         template: _.template(fileBrowserTemplate),
 
         model: {
@@ -118,7 +120,7 @@ define(
                 var pathname = that.model['currentPath'] + selectedFile.name;
                 $("#upload-file-btn").text("Uploading");
                 $("#upload-file-btn").attr("disabled", true);
-                $.ajax({
+                that.uploadRequest = $.ajax({
                     type: "PUT",
                     url: "/rest/data/global/" + encodeURIComponent(pathname),
                     data: selectedFile,
@@ -138,6 +140,9 @@ define(
 
         closeFileBrowser: function () {
             this.$el.modal('hide');
+            if(this.uploadRequest) {
+                this.uploadRequest.abort();
+            }
         }
     })
 })
