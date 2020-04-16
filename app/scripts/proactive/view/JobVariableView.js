@@ -3,9 +3,9 @@ define(
         'backbone',
         'text!proactive/templates/job-variable-template.html',
         'proactive/view/ThirdPartyCredentialView',
-        'proactive/view/GlobalFileView'
+        'proactive/view/FileBrowserView'
     ],
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, GlobalFileView) {
+    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView) {
 
     "use strict";
 
@@ -25,8 +25,9 @@ define(
         },
 
         events: {
-            'click #third-party-credential-button': 'showThirdPartyCredentialModal',
-            'click #var-globalfile-button': 'showGlobalFileModal'
+            'click .third-party-credential-button': 'showThirdPartyCredentialModal',
+            'click .var-globalfile-button': 'showGlobalFileModal',
+            'click .var-userfile-button': 'showUserFileModal'
         },
 
         initialize: function () {
@@ -62,7 +63,11 @@ define(
         },
 
         showGlobalFileModal: function(event) {
-            new GlobalFileView({'varKey': event.target.getAttribute('value')}).render();
+            new FileBrowserView({dataspace: "global", varKey: event.target.getAttribute('value')}).render();
+        },
+
+        showUserFileModal: function(event) {
+            new FileBrowserView({dataspace: "user", varKey: event.target.getAttribute('value')}).render();
         }
     })
 })

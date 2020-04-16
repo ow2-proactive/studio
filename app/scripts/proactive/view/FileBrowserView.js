@@ -8,7 +8,12 @@ define(
     "use strict";
 
     return Backbone.View.extend({
+
+        dataspace: "",
+
         varKey: "",
+
+        dataspaceRestUrl: "/rest/data/",
 
         uploadRequest: undefined,
 
@@ -18,23 +23,27 @@ define(
             'files': [],
             'directories': [],
             'currentPath': "",
-            'location': "Global DataSpace"
+            'locationDescription': ""
         },
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
             'click .file-browser-file,.file-browser-dir': 'switchSelected',
-            'dblclick .file-browser-dir': 'enterGlobalFilesSubdir',
-            'click .current-sub-path': 'enterGlobalFilesSubdir',
+            'dblclick .file-browser-dir': 'enterFilesSubdir',
+            'click .current-sub-path': 'enterFilesSubdir',
             'click .file-browser-select-btn': 'selectFile',
             'click #upload-file-btn': 'chooseUploadFile',
             'change #selected-upload-file': 'uploadFile',
-            'click #refresh-file-btn': 'refreshGlobalFiles',
+            'click #refresh-file-btn': 'refreshFiles',
             'click #new-folder-btn': 'createFolder'
         },
 
-        initialize: function (varInfo) {
-            this.varKey = varInfo.varKey;
+        initialize: function (options) {
+            this.dataspace = options.dataspace;
+            this.varKey = options.varKey;
+            this.dataspaceRestUrl += options.dataspace + "/";
+            this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
+
             this.$el = $('#file-browser-modal');
             var that = this;
             this.$el.on('hidden.bs.modal', function(event) {
@@ -51,25 +60,25 @@ define(
 
         render: function () {
             this.model['currentPath'] = "";
-            this.refreshGlobalFiles();
+            this.refreshFiles();
             this.$el.html(this.template(this.model));
             this.$el.modal('show');
             return this;
         },
 
-        enterGlobalFilesSubdir: function (event) {
+        enterFilesSubdir: function (event) {
             this.model['currentPath'] = event.target.getAttribute('value');
-            this.refreshGlobalFiles();
+            this.refreshFiles();
         },
 
-        refreshGlobalFiles: function() {
+        refreshFiles: function() {
             var that = this;
             var pathname = that.model['currentPath'];
             if(pathname.length == 0) {
                 pathname = "%2E"; // root path "." need to be encoded as "%2E"
             }
             $.ajax({
-                url: "/rest/data/global/" + encodeURIComponent(pathname),
+                url: that.dataspaceRestUrl + encodeURIComponent(pathname),
                 data: { "comp": "list" },
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
@@ -124,12 +133,12 @@ define(
                 $("#upload-file-btn").attr("disabled", true);
                 that.uploadRequest = $.ajax({
                     type: "PUT",
-                    url: "/rest/data/global/" + encodeURIComponent(pathname),
+                    url: that.dataspaceRestUrl + encodeURIComponent(pathname),
                     data: selectedFile,
                     processData: false,
                     headers: { "sessionid": localStorage['pa.session'] },
                     success: function (data){
-                        that.refreshGlobalFiles();
+                        that.refreshFiles();
                         $("#upload-file-btn").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
                         $("#upload-file-btn").attr("disabled", false);
                     },
@@ -148,11 +157,11 @@ define(
                     var pathname = that.model['currentPath'] + $(this).val();
                     $.ajax({
                         type: "POST",
-                        url: "/rest/data/global/" + encodeURIComponent(pathname),
+                        url: that.dataspaceRestUrl + encodeURIComponent(pathname),
                         data: {"mimetype": "application/folder"},
                         headers: { "sessionid": localStorage['pa.session'] },
                         success: function (data){
-                            that.refreshGlobalFiles();
+                            that.refreshFiles();
                         },
                         error: function (xhr, status, error) {
                             alert("Failed to create the new folder " + pathname + ": "+ xhr.statusText);
