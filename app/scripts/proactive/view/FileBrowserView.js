@@ -87,6 +87,9 @@ define(
                     that.model['files'] = data.fileListing.sort();
                     that.model['directories'] = data.directoryListing.sort();
                     that.$el.html(that.template(that.model));
+                    if(that.uploadRequest) {
+                        that.switchToUploadingState();
+                    }
                 }
             });
         },
@@ -135,8 +138,7 @@ define(
             var selectedFile = event.target.files[0];
             if (selectedFile) {
                 var pathname = that.model['currentPath'] + selectedFile.name;
-                $("#upload-file-btn").removeClass('fa-upload').addClass('fa-spinner fa-pulse');
-                $("#upload-file-btn").attr("disabled", true);
+                that.switchToUploadingState();
                 that.uploadRequest = $.ajax({
                     type: "PUT",
                     url: that.dataspaceRestUrl + encodeURIComponent(pathname),
@@ -145,8 +147,8 @@ define(
                     headers: { "sessionid": localStorage['pa.session'] },
                     success: function (data){
                         that.refreshFiles();
-                        $("#upload-file-btn").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
-                        $("#upload-file-btn").attr("disabled", false);
+                        that.switchToNothingUploadingState();
+                        that.uploadRequest = undefined;
                     },
                     error: function (xhr, status, error) {
                         alert("Failed to upload the file " + selectedFile.name + ": "+ xhr.statusText);
@@ -204,6 +206,16 @@ define(
                     }
                 });
             }
+        },
+
+        switchToUploadingState: function() {
+            $("#upload-file-btn").removeClass('fa-upload').addClass('fa-spinner fa-pulse');
+            $("#upload-file-btn").attr("disabled", true);
+        },
+
+        switchToNothingUploadingState: function() {
+            $("#upload-file-btn").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
+            $("#upload-file-btn").attr("disabled", false);
         },
 
         closeFileBrowser: function () {
