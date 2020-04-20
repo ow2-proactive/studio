@@ -28,7 +28,7 @@ define(
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
-            'click .file-browser-file,.file-browser-dir': 'switchSelected',
+            'click .file-browser-file': 'switchSelected',
             'dblclick .file-browser-dir': 'enterFilesSubdir',
             'click .current-sub-path': 'enterFilesSubdir',
             'click .file-browser-select-btn': 'selectFile',
@@ -107,7 +107,7 @@ define(
         },
 
         selectFile: function() {
-            var selectedElement=$("ul#files-ul > li.selected");
+            var selectedElement=$("ul#files-ul > li.selected.file-browser-file");
             if (selectedElement.length != 0) {
                 // update the variable value to the selected file path
                 var studioApp = require('StudioApp');
@@ -115,7 +115,7 @@ define(
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
                 this.closeFileBrowser();
             } else {
-                $("#file-browser-error-message").text("Cannot find any file selected: please select a file !");
+                $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file!");
             }
         },
 
