@@ -28,14 +28,15 @@ define(
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
-            'click .file-browser-file': 'switchSelected',
+            'click .file-browser-file,.file-browser-dir': 'switchSelected',
             'dblclick .file-browser-dir': 'enterFilesSubdir',
             'click .current-sub-path': 'enterFilesSubdir',
             'click .file-browser-select-btn': 'selectFile',
             'click #upload-file-btn': 'chooseUploadFile',
             'change #selected-upload-file': 'uploadFile',
             'click #refresh-file-btn': 'refreshFiles',
-            'click #new-folder-btn': 'createFolder'
+            'click #new-folder-btn': 'createFolder',
+            'click #delete-file-btn': 'deleteFile'
         },
 
         initialize: function (options) {
@@ -107,15 +108,20 @@ define(
         },
 
         selectFile: function() {
-            var selectedElement=$("ul#files-ul > li.selected.file-browser-file");
-            if (selectedElement.length != 0) {
+            var selectedElement=$("ul#files-ul > li.selected");
+            if (selectedElement.length == 0) {
+                $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file !");
+                return;
+            }
+            var selectedFile = selectedElement.filter(".file-browser-file");
+            if (selectedFile.length == 0) {
+                $("#file-browser-error-message").text("Directory is disallowed as the variable value: please select a regular file !");
+            } else {
                 // update the variable value to the selected file path
                 var studioApp = require('StudioApp');
-                var updatedVar = {[this.varKey]: selectedElement.attr('value')};
+                var updatedVar = {[this.varKey]: selectedFile.attr('value')};
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
                 this.closeFileBrowser();
-            } else {
-                $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file!");
             }
         },
 
@@ -169,6 +175,35 @@ define(
                     });
                 }
             });
+        },
+
+        deleteFile: function(event) {
+            var selectedElement=$("ul#files-ul > li.selected");
+            if (selectedElement.length == 0) {
+                alert("No file chosen to be deleted.");
+                return;
+            }
+            var selectedFilePath = selectedElement.attr('value');
+            var result;
+            if(selectedElement.hasClass("file-browser-dir")) {
+                result = confirm(`Are you sure you want to permanently delete the folder "${selectedFilePath}" and all the files in it ?`);
+            } else {
+                result = confirm(`Are you sure you want to permanently delete the file "${selectedFilePath}" ?`);
+            }
+            if (result) {
+                var that = this;
+                $.ajax({
+                    type: "DELETE",
+                    url: that.dataspaceRestUrl + encodeURIComponent(selectedFilePath),
+                    headers: { "sessionid": localStorage['pa.session'] },
+                    success: function (data){
+                        that.refreshFiles();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Failed to delete the file " + selectedFilePath + ": "+ xhr.statusText);
+                    }
+                });
+            }
         },
 
         closeFileBrowser: function () {
