@@ -114,18 +114,18 @@
                 </div>
             <% } else if (model && model.toLowerCase().indexOf('pa:hidden')!=-1) {  %>
                 <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" data-variable-model="<%- model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
-                <label class="Extra" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
+                <label class="Extra" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
             <% } else if (model && model.toLowerCase().indexOf('pa:credential')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
-                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
+                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
                 <button title="Manage third-party credentials" class="third-party-credential-button btn" type="button" style="background-color:Transparent"><img src="images/key.png"></button>
             <% } else if (model && model.toLowerCase().indexOf('pa:global_file')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
-                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
+                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
                 <button title="Browse global space files" value="<%- key %>" class="var-globalfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
             <% } else if (model && model.toLowerCase().indexOf('pa:user_file')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
-                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
+                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
                 <button title="Browse user space files" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
             <% } else {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>

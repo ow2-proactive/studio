@@ -186,13 +186,13 @@ define(
                 return;
             }
             var selectedFilePath = selectedElement.attr('value');
-            var result;
+            var confirmMessage;
             if(selectedElement.hasClass("file-browser-dir")) {
-                result = confirm(`Are you sure you want to permanently delete the folder "${selectedFilePath}" and all the files in it ?`);
+                confirmMessage = `Are you sure you want to permanently delete the folder "${selectedFilePath}" and all the files in it ?`;
             } else {
-                result = confirm(`Are you sure you want to permanently delete the file "${selectedFilePath}" ?`);
+                confirmMessage = `Are you sure you want to permanently delete the file "${selectedFilePath}" ?`;
             }
-            if (result) {
+            if (confirm(confirmMessage)) {
                 var that = this;
                 $.ajax({
                     type: "DELETE",
