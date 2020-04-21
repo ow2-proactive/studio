@@ -1,0 +1,42 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
+            <h3><%=locationDescription%> Files</h3>
+        </div>
+        <div id="files-body" class="modal-body">
+            <div>
+                <button id="refresh-file-btn" title="Refresh" class="btn btn-white fas fa-redo" style="background-color:Transparent"></button>
+                <button id="new-folder-btn" title="New folder" class="btn btn-white fas fa-folder-plus" style="background-color:Transparent"></button>
+                <button id="upload-file-btn" title="Upload" class="btn btn-white fas fa-upload" style="background-color:Transparent"></button>
+                <button id="delete-file-btn" title="Delete" class="btn btn-white fas fa-trash" style="background-color:Transparent"></button>
+            </div>
+            <br>
+            <div id="current-path">
+                <button type="button" class="btn current-sub-path" value=""> <%- locationDescription%> </button>
+                <% var splitPath = currentPath.split("/").filter(i => i);
+                for (let [index, subPath] of splitPath.entries()) { %>
+                    <button type="button" class="btn current-sub-path" value="<%- splitPath.slice(0, index+1).join('/')%>/"> <%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %> </button>
+                <% } %>
+            </div>
+            <br>
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
+                <ul id="files-ul">
+                    <% for (var index in directories) { %>
+                    <li class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </li>
+                    <% } %>
+                    <% for (var index in files) { %>
+                    <li class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="far fa-file"> </i> <%- files[index] %> </li>
+                    <% } %>
+                </ul>
+            </div>
+            <br>
+            <label id="file-browser-error-message" style="color:red;"></label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-white file-browser-select-btn" type="button"> Select </button>
+            <input type="file" id="selected-upload-file" class="hidden"/>
+            <button class="btn btn-white file-browser-close" type="button"> Close </button>
+        </div>
+    </div>
+</div>
