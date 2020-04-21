@@ -279,25 +279,30 @@ define(
             var control = this.model.get("Control Flow");
             if (fromFormChange && control) {
 
-                this.model.controlFlow = {};
-                $.each(jsPlumb.getEndpoints(this.$el), function (i, endPoint) {
-                    if (endPoint.scope != 'dependency') {
-                        var connectionDetached = false;
-                        if (endPoint.connections) {
-                            $.each(endPoint.connections, function(j, connection) {
-                                jsPlumb.detach(connection);
-                                connectionDetached = true;
-                            })
+                var endPoints = jsPlumb.getEndpoints(this.$el);
+                if (endPoints) {
+                    $.each(endPoints, function (i, endPoint) {
+                        if (endPoint.scope != 'dependency') {
+                            var connectionDetached = false;
+                            if (endPoint.connections) {
+                                var initialConnections = endPoint.connections;
+                                for (var j = initialConnections.length - 1; j >= 0; j--) {
+                                    jsPlumb.detach(initialConnections[j]);
+                                    connectionDetached = true;
+                                }
+                            }
+                            if (!connectionDetached) {
+                                // if an endpoint had a connection it will be
+                                // already removed at this point
+                                jsPlumb.deleteEndpoint(endPoint)
+                            }
                         }
-                        if (!connectionDetached) {
-                            // if an endpoint had a connection it will be
-                            // already removed at this point
-                            jsPlumb.deleteEndpoint(endPoint)
-                        }
-                    }
-                })
+                    })
+                }
                 if(control != 'none'){
                    this.addSourceEndPoint(control)
+                } else {
+                    this.model.controlFlow = {};
                 }
                 jsPlumb.repaintEverything();
             }
@@ -349,11 +354,12 @@ define(
                         [ "Label", {
                             label: function () {
                                 var ifModel = that.model.controlFlow['if'];
-                                if (!ifModel || ifModel && !ifModel.model) return 'if'
+                                if (!ifModel || !ifModel.model || !ifModel.task) return 'if'
                                 else if (!ifModel['else']) return 'else'
                                 else if (!ifModel['continuation']) return 'continuation'
                                 else return "";
                             },
+                            id: "ifLabel",
                             cssClass: "l1 component label",
                             events: {'click': function (label, evn) {
                                 that.showControlFlowScript(label, evn)
@@ -483,7 +489,6 @@ define(
                     var endpointTarget = taskTarget.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'if';
                     jsPlumb.connect({source: endpointIf, target: endpointTarget, overlays: this.overlays()});
-                    endpointIf.connectorOverlays[1][1].label = 'else';
                 }
             }
             if (ifFlow.else && ifFlow.else.task) {
@@ -492,7 +497,6 @@ define(
                     var endpointElse = taskElse.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'else';
                     jsPlumb.connect({source: endpointIf, target: endpointElse, overlays: this.overlays()});
-                    endpointIf.connectorOverlays[1][1].label = 'continuation';
                 }
             }
             if (ifFlow.continuation && ifFlow.continuation.task) {
@@ -501,9 +505,15 @@ define(
                     var endpointContinuation = taskContinuation.addTargetEndPoint('if')
                     endpointIf.connectorOverlays[1][1].label = 'continuation';
                     jsPlumb.connect({source: endpointIf, target: endpointContinuation, overlays: this.overlays()});
-                    endpointIf.connectorOverlays[1][1].label = '';
                 }
             }
+            // specify the next connection label based on its model
+            endpointIf.connectorOverlays[1][1].label = function() {
+                if (!ifFlow || !ifFlow.task || !ifFlow.model) return 'if'
+                else if (!ifFlow['else']) return 'else'
+                else if (!ifFlow['continuation']) return 'continuation'
+                else return '';
+            };
         },
         addReplicate: function (view) {
             if (!view) return;
