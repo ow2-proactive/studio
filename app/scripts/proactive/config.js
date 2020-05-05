@@ -174,7 +174,7 @@ define(function () {
             }
         ],
         docker_env_script: `
-// This script creates a docker fork environment using java as docker image
+// This script creates a Docker fork environment using java as docker image
 
 // If used on windows:
 //  - currently, only linux containers are supported
@@ -263,6 +263,212 @@ forkEnvironment.setPreJavaCommand(cmd)
 
 // Show the generated command
 println "DOCKER COMMAND : " + forkEnvironment.getPreJavaCommand()
+        `,
+        singularity_env_script: `
+// This script creates a Singularity fork environment using java as docker image, other images can be used by editing this file
+
+// Singularity is not supported on Windows or Mac OS
+// On linux, the java installation used by the ProActive Node will be also used inside the container
+
+// Prepare Singularity parameters
+import org.ow2.proactive.utils.OperatingSystem;
+import org.ow2.proactive.utils.OperatingSystemFamily;
+import org.codehaus.groovy.runtime.StackTraceUtils;
+
+imageUrl = "docker://java"
+imageName = imageUrl.substring(imageUrl.indexOf("://") + 3).replace("/","_").replace(":","_")
+imageLockFileName = imageName + ".lock"
+userHome = System.getProperty("user.home")
+
+try {
+
+    String osName = System.getProperty("os.name");
+    println "Operating system : " + osName;
+    OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
+    OperatingSystemFamily family = operatingSystem.getFamily();
+
+    switch (family) {
+        case OperatingSystemFamily.WINDOWS:
+        throw new IllegalStateException("Singularity is not supported on Windows operating system")
+        case OperatingSystemFamily.MAC:
+        throw new IllegalStateException("Singularity is not supported on Mac operating system")
+        default:
+            isWindows = false;
+    }
+
+    process = "singularity --version".execute()
+    majorVersion = 0
+    if (process.waitFor() == 0) {
+        version = process.text
+        version = version.replace("singularity version ", "").trim()
+        println "Singularity version: " + version
+        majorVersion = Integer.parseInt(version.substring(0, version.indexOf(".")))
+    } else {
+        throw new IllegalStateException("Cannot find singularity command")
+    }
+
+    if (majorVersion >= 3) {
+        imageFile = imageName + ".sif"
+    } else {
+        imageFile = imageName + ".simg"
+    }
+
+    // synchronization to avoid concurrent NFS conflicts when creating the image
+    imageLockPath = new File(userHome, imageLockFileName);
+    if (!imageLockPath.exists()) {
+        imageLockPath.createNewFile()
+    } else {
+        while (imageLockPath.exists()) {
+            Thread.sleep(1000)
+        }
+    }
+
+    // pull the container inside the synchronization lock
+    if (majorVersion >= 3) {
+        pullCmd = "singularity pull --dir " + userHome + " " + imageFile + " " + imageUrl
+        process = pullCmd.execute()
+    } else {
+        pullCmd = "singularity pull --name " + imageFile + " " + imageUrl
+        def env = System.getenv().collect { k, v -> "$k=$v" }
+        env.push("SINGULARITY_PULLFOLDER=" + userHome)
+        process = pullCmd.execute(env, new File(userHome))
+    }
+
+    process.in.eachLine { line ->
+        println line
+    }
+    process.waitFor()
+
+    (new File(userHome, imageFile)).setReadable(true, false)
+
+    // release lock
+    imageLockPath.delete()
+
+    cmd = []
+    cmd.add("singularity")
+    cmd.add("exec")
+
+    forkEnvironment.setDockerWindowsToLinux(isWindows)
+
+    // Prepare ProActive home volume
+    paHomeHost = variables.get("PA_SCHEDULER_HOME")
+    paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(paHomeHost) : paHomeHost)
+    cmd.add("-B")
+    cmd.add(paHomeHost + ":" + paHomeContainer)
+    // Prepare working directory (For Dataspaces and serialized task file)
+    workspaceHost = localspace
+    workspaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(workspaceHost) : workspaceHost)
+    cmd.add("-B")
+    cmd.add(workspaceHost + ":" + workspaceContainer)
+
+    cachespaceHost = cachespace
+    cachespaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(cachespaceHost) : cachespaceHost)
+    cachespaceHostFile = new File(cachespaceHost)
+    if (cachespaceHostFile.exists() && cachespaceHostFile.canRead()) {
+        cmd.add("-B")
+        cmd.add(cachespaceHost + ":" + cachespaceContainer)
+    } else {
+        println cachespaceHost + " does not exist or is not readable, access to cache space will be disabled in the container"
+    }
+
+    if (!isWindows) {
+        // when not on windows, mount and use the current JRE
+        currentJavaHome = System.getProperty("java.home")
+        forkEnvironment.setJavaHome(currentJavaHome)
+        cmd.add("-B")
+        cmd.add(currentJavaHome + ":" + currentJavaHome)
+    }
+
+    // Prepare container working directory
+    cmd.add("--pwd")
+    cmd.add(workspaceContainer)
+
+    cmd.add((new File(userHome, imageFile)).getAbsolutePath())
+
+    forkEnvironment.setPreJavaCommand(cmd)
+
+    // Show the generated command
+    println "SINGULARITY COMMAND : " + forkEnvironment.getPreJavaCommand()
+} catch (Exception e) {
+    StackTraceUtils.deepSanitize(e)
+    e.stackTrace.head().lineNumber
+    throw e
+} finally {
+    (new File(userHome, imageLockFileName)).delete()
+}
+        `,
+podman_env_script: `
+// This script creates a Podman fork environment using java as docker image
+
+// Podman is not supported on Windows or Mac OS
+// On linux, the java installation used by the ProActive Node will be also used inside the container
+
+// Prepare Docker parameters
+import org.ow2.proactive.utils.OperatingSystem;
+import org.ow2.proactive.utils.OperatingSystemFamily;
+
+containerName = "java"
+cmd = []
+cmd.add("podman")
+cmd.add("run")
+cmd.add("--rm")
+cmd.add("--env")
+cmd.add("HOME=/tmp")
+
+String osName = System.getProperty("os.name");
+println "Operating system : " + osName;
+OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
+OperatingSystemFamily family = operatingSystem.getFamily();
+
+switch (family) {
+    case OperatingSystemFamily.WINDOWS:
+        throw new IllegalStateException("Podman is not supported on Windows operating system")
+    case OperatingSystemFamily.MAC:
+    	throw new IllegalStateException("Podman is not supported on Mac operating system")
+    default:
+        isWindows = false;
+}
+forkEnvironment.setDockerWindowsToLinux(isWindows)
+
+// Prepare ProActive home volume
+paHomeHost = variables.get("PA_SCHEDULER_HOME")
+paHomeContainer = (isWindows ? forkEnvironment.convertToLinuxPath(paHomeHost) : paHomeHost)
+cmd.add("-v")
+cmd.add(paHomeHost + ":" + paHomeContainer)
+// Prepare working directory (For Dataspaces and serialized task file)
+workspaceHost = localspace
+workspaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(workspaceHost) : workspaceHost)
+cmd.add("-v")
+cmd.add(workspaceHost + ":" + workspaceContainer)
+
+cachespaceHost = cachespace
+cachespaceContainer = (isWindows ? forkEnvironment.convertToLinuxPath(cachespaceHost) : cachespaceHost)
+cachespaceHostFile = new File(cachespaceHost)
+if (cachespaceHostFile.exists() && cachespaceHostFile.canRead()) {
+    cmd.add("-v")
+    cmd.add(cachespaceHost + ":" + cachespaceContainer)
+} else {
+    println cachespaceHost + " does not exist or is not readable, access to cache space will be disabled in the container"
+}
+
+if (!isWindows) {
+    // when not on windows, mount and use the current JRE
+    currentJavaHome = System.getProperty("java.home")
+    forkEnvironment.setJavaHome(currentJavaHome)
+    cmd.add("-v")
+    cmd.add(currentJavaHome + ":" + currentJavaHome)
+}
+
+// Prepare container working directory
+cmd.add("-w")
+cmd.add(workspaceContainer)
+
+cmd.add(containerName)
+
+forkEnvironment.setPreJavaCommand(cmd)
+
+// Show the generated command
+println "PODMAN COMMAND : " + forkEnvironment.getPreJavaCommand()
         `
     };
 });

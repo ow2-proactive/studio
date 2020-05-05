@@ -374,7 +374,7 @@ define(
                 // handles them. That's why we arrived at this hybrid design.
                 "Fork Execution Environment": {
                     type: "Select",
-                    options: ["User Defined", "Docker"],
+                    options: ["User Defined", "Docker", "Singularity", "Podman"],
                     fieldAttrs: {
                         "data-help":"The environment in which to execute this task. " +
                         "Example: Docker selected will execute this task inside a Docker container."
@@ -634,6 +634,15 @@ define(
             setControlFlow: function (controlFlowType, task) {
                 if (this['set' + controlFlowType]) this['set' + controlFlowType](task);
             },
+            createif: function (task) {
+                if (!this.controlFlow['if'] || !this.controlFlow['if'].task) {
+                    this.setif(task);
+                } else if (!this.controlFlow['if']['else']) {
+                    this.setelse(task);
+                } else if (!this.controlFlow['if']['continuation']) {
+                    this.setcontinuation(task);
+                }
+            },
             removeControlFlow: function (controlFlowType, task) {
                 if (this['remove' + controlFlowType]) this['remove' + controlFlowType](task);
             },
@@ -644,6 +653,9 @@ define(
                 this.set({'Control Flow': 'if'});
                 if (!this.controlFlow['if']) {
                     this.controlFlow = {'if': {}}
+                    this.controlFlow['if'].model = new FlowScript();
+                }
+                if(!this.controlFlow['if'].model) {
                     this.controlFlow['if'].model = new FlowScript();
                 }
                 this.controlFlow['if'].task = task;
@@ -664,8 +676,7 @@ define(
                 this.set({'Control Flow': 'none'});
                 if (this.controlFlow['if'].task == task) {
                     console.log('Removing IF')
-                    this.controlFlow['if'].model = undefined;
-                    this.controlFlow['if'].task = undefined;
+                    delete this.controlFlow['if'].task;
                 } else if (this.controlFlow['if']['else'] && this.controlFlow['if']['else'].task == task) {
                     console.log('Removing ELSE')
                     delete this.controlFlow['if']['else'];
@@ -673,7 +684,13 @@ define(
                     console.log('Removing CONTINUATION')
                     delete this.controlFlow['if']['continuation'];
                 }
-                console.log('Removing if branch', this.controlFlow, task)
+                if (this.controlFlow['if'].task || this.controlFlow['if']['else'] && this.controlFlow['if']['else'].task || this.controlFlow['if']['continuation'] && this.controlFlow['if']['continuation'].task) {
+                    // at least one branch is present
+                } else {
+                    console.log('Removing if branch', this.controlFlow, task)
+                    this.set({'Control Flow': 'none'});
+                    delete this.controlFlow['if'];
+                }
             },
             setloop: function (task) {
                 console.log('Adding loop')

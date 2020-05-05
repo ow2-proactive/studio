@@ -1644,6 +1644,16 @@ li.success {
     padding-right:10px;
 }
 
+ul, #files-ul {
+    list-style-type: none;
+    padding-left: 5px;
+}
+
+.current-sub-path {
+    font-size: 12px;
+    padding: 3px;
+}
+
 /* Remove default bullets */
 ul, #submitFormUL {
   list-style-type: none;

@@ -705,9 +705,7 @@
                     </div>
                     <div class="col-sm-9">
                         <p>Version: <b id="version"></b></p>
-                        <p>Copyright (C) 1997-
-                        <div id="current-year"></div>
-                        INRIA/University of Nice-Sophia Antipolis/ActiveEon</p>
+                        <p>Copyright (C) 1997-<span id="current-year"></span>, Activeeon, All rights reserved</p>
                         <script>
                             var date = document.getElementById("current-year");
                             date.innerText = (new Date()).getFullYear();
@@ -747,6 +745,9 @@
 
 <!--style="overflow:hidden; outline:none"-->
 <div id="third-party-credential-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true">
+</div>
+
+<div id="file-browser-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true">
 </div>
 
 <div id="plan-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
