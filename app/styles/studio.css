@@ -383,7 +383,8 @@ a:hover {
 }
 
 .selected {
-    color: orange !important;
+    color: black;
+    background-color: #4A90D9;
 }
 
 .catalog-selected-row, .preset-selected-row{
@@ -1234,13 +1235,20 @@ li.success {
     display: grid;
 }
 
-#navbar-fixed a {
+#navbar-fixed a, #files-body a {
     padding-left: 6px;
     padding-right: 6px;
-    text-decoration: none;
     height: fit-content;
 }
 
+#navbar-fixed a {
+    text-decoration: none;
+}
+
+#files-body .breadcrumb  a {
+    padding-right: 0px;
+    padding-left: 0px;
+}
 .navbar-toggle {
     padding: 11px 8px;
     margin-top: 5px;
@@ -1644,14 +1652,9 @@ li.success {
     padding-right:10px;
 }
 
-ul, #files-ul {
-    list-style-type: none;
-    padding-left: 5px;
-}
 
-.current-sub-path {
-    font-size: 12px;
-    padding: 3px;
+#files-tbody td {
+    cursor:default;
 }
 
 /* Remove default bullets */
