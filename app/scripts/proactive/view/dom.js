@@ -279,6 +279,17 @@ define(
             });
         }
 
+        function getWorkflowFromScheduler(url, successCallback) {
+            $.ajax({
+                url: url,
+                type: 'GET'
+            }).success(function (response) {
+                successCallback(response);
+            }).error(function (response) {
+                StudioClient.alert('Error', 'Error importing selected Workflow for the Scheduler: ' + JSON.stringify(response), 'error');
+            });
+        }
+
         $("#catalog-publish-current").click(function (event) {
             $('#publish-current-confirmation-modal').modal();
         });
@@ -1208,6 +1219,7 @@ define(
        return {
            saveWorkflow: save_workflow,
            getWorkflowFromCatalog : getWorkflowFromCatalog,
+           getWorkflowFromScheduler : getWorkflowFromScheduler,
            open_catalog_workflow : open_catalog_workflow
        };
 
