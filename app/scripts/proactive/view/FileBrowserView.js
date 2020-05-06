@@ -100,7 +100,7 @@ define(
                 $(event.target).removeClass("selected");
             } else {
                 // mark the previous selected item as non-selected, as only one item could be selected at once.
-                var selectedElement=$("ul#files-ul > li.selected");
+                var selectedElement=$("#files-tbody  td.selected");
                 if (selectedElement) {
                     selectedElement.removeClass("selected");
                 }
@@ -111,7 +111,7 @@ define(
         },
 
         selectFile: function() {
-            var selectedElement=$("ul#files-ul > li.selected");
+            var selectedElement=$("#files-tbody  td.selected");
             if (selectedElement.length == 0) {
                 $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file !");
                 return;
@@ -159,7 +159,7 @@ define(
 
         createFolder: function() {
             var that = this;
-            $("#files-ul").prepend('<li> <i class="far fa-folder"> </i> <input class="new-folder" value="untitled-folder"/> </li>');
+            $("#files-tbody").prepend('<li> <i class="far fa-folder"> </i> <input class="new-folder" value="untitled-folder"/> </li>');
             $(".new-folder").keyup(function(event) {
                 if ($(this).is(":focus") && event.key == "Enter") {
                     var pathname = that.model['currentPath'] + $(this).val();
@@ -180,7 +180,7 @@ define(
         },
 
         deleteFile: function(event) {
-            var selectedElement=$("ul#files-ul > li.selected");
+            var selectedElement=$("#files-tbody  td.selected");
             if (selectedElement.length == 0) {
                 alert("No file chosen to be deleted.");
                 return;

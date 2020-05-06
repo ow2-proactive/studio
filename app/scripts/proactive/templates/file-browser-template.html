@@ -6,37 +6,49 @@
         </div>
         <div id="files-body" class="modal-body">
             <div>
-                <button id="refresh-file-btn" title="Refresh" class="btn btn-white fas fa-redo" style="background-color:Transparent"></button>
-                <button id="new-folder-btn" title="New folder" class="btn btn-white fas fa-folder-plus" style="background-color:Transparent"></button>
-                <button id="upload-file-btn" title="Upload" class="btn btn-white fas fa-upload" style="background-color:Transparent"></button>
-                <button id="delete-file-btn" title="Delete" class="btn btn-white fas fa-trash" style="background-color:Transparent"></button>
+                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh">
+                    <i class="fas fa-redo"></i>
+                </a>
+                <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
+                    <i class="fas fa-folder-plus"></i>
+                </a>
+                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload">
+                    <i class="fas fa-upload"></i>
+                </a>
+                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </a>
             </div>
             <br>
             <div id="current-path">
-                <button type="button" class="btn current-sub-path" value=""> <%- locationDescription%> </button>
-                <% var splitPath = currentPath.split("/").filter(i => i);
-                for (let [index, subPath] of splitPath.entries()) { %>
-                    <button type="button" class="btn current-sub-path" value="<%- splitPath.slice(0, index+1).join('/')%>/"> <%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %> </button>
-                <% } %>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item current-sub-path"><a href="javascript:void(0)" value="">\Location:</a></li>
+                    <% var splitPath = currentPath.split("/").filter(i => i);
+                    for (var [index, subPath] of splitPath.entries()) { %>
+                    <li class="breadcrumb-item current-sub-path" aria-current="page" ><a href="javascript:void(0)" value="<%- splitPath.slice(0, index+1).join('/')%>/"><%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %></a></li>
+                    <% } %>
+                </ol>
             </div>
             <br>
             <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
-                <ul id="files-ul">
+               <table>
+                   <tbody id="files-tbody">
                     <% for (var index in directories) { %>
-                    <li class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </li>
+                    <tr> <td class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="fas fa-folder"> </i> <%- directories[index] %> </td></tr>
                     <% } %>
                     <% for (var index in files) { %>
-                    <li class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="far fa-file"> </i> <%- files[index] %> </li>
+                    <tr> <td class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="fas fa-file"> </i> <%- files[index] %> </td></tr>
                     <% } %>
-                </ul>
+                   </tbody>
+               </table>
             </div>
             <br>
             <label id="file-browser-error-message" style="color:red;"></label>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-white file-browser-select-btn" type="button"> Select </button>
+            <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
             <input type="file" id="selected-upload-file" class="hidden"/>
-            <button class="btn btn-white file-browser-close" type="button"> Close </button>
+            <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
         </div>
     </div>
 </div>
