@@ -6,7 +6,7 @@
         </div>
         <div id="files-body" class="modal-body">
             <div>
-                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh">
+                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh" style="padding-left: 0px;">
                     <i class="fas fa-redo"></i>
                 </a>
                 <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
@@ -20,12 +20,15 @@
                 </a>
             </div>
             <br>
-            <div id="current-path">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item current-sub-path"><a href="javascript:void(0)" value="">\Location:</a></li>
+            <div id="current-path" style="display:inline-flex">
+                <span class="font-bold">
+                    Location:
+                </span>
+                <span class="current-sub-path"><a href="javascript:void(0)" value="">\</a></span>
+                <ol class="breadcrumb" style="border:none;">
                     <% var splitPath = currentPath.split("/").filter(i => i);
                     for (var [index, subPath] of splitPath.entries()) { %>
-                    <li class="breadcrumb-item current-sub-path" aria-current="page" ><a href="javascript:void(0)" value="<%- splitPath.slice(0, index+1).join('/')%>/"><%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %></a></li>
+                    <li class="breadcrumb-item current-sub-path" ><a href="javascript:void(0)" value="<%- splitPath.slice(0, index+1).join('/')%>/"><%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %></a></li>
                     <% } %>
                 </ol>
             </div>
@@ -34,10 +37,10 @@
                <table>
                    <tbody id="files-tbody">
                     <% for (var index in directories) { %>
-                    <tr> <td class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="fas fa-folder"> </i> <%- directories[index] %> </td></tr>
+                    <tr> <td class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </td></tr>
                     <% } %>
                     <% for (var index in files) { %>
-                    <tr> <td class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="fas fa-file"> </i> <%- files[index] %> </td></tr>
+                    <tr> <td class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="far fa-file"> </i> <%- files[index] %> </td></tr>
                     <% } %>
                    </tbody>
                </table>
