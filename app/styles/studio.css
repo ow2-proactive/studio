@@ -112,6 +112,10 @@ footer {
     border-radius: 0px;
 }
 
+#current-path .breadcrumb {
+    padding: 0px;
+}
+
 #tools-table {
     position: sticky;
     position: -webkit-sticky;
@@ -1248,6 +1252,9 @@ li.success {
 #files-body .breadcrumb  a {
     padding-right: 0px;
     padding-left: 0px;
+}
+#files-body > div a {
+    text-decoration: none;
 }
 .navbar-toggle {
     padding: 11px 8px;
