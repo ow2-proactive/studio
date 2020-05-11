@@ -1,9 +1,10 @@
 define(
     [
         'backbone',
-        'text!proactive/templates/file-browser-template.html'
+        'text!proactive/templates/file-browser-template.html',
+        'proactive/rest/studio-client',
     ],
-    function (Backbone, fileBrowserTemplate) {
+    function (Backbone, fileBrowserTemplate, StudioClient) {
 
     "use strict";
 
@@ -160,7 +161,7 @@ define(
                         that.uploadRequest = undefined;
                     },
                     error: function (xhr, status, error) {
-                        alert("Failed to upload the file " + selectedFile.name + ": "+ xhr.statusText);
+                        StudioClient.alert('Error', "Failed to upload the file " + selectedFile.name + ": " + xhr.statusText, 'error');
                     }
                 });
             }
@@ -181,7 +182,7 @@ define(
                             that.refreshFiles();
                         },
                         error: function (xhr, status, error) {
-                            alert("Failed to create the new folder " + pathname + ": "+ xhr.statusText);
+                            StudioClient.alert('Create New Folder', "Failed to create the new folder " + pathname + ": "+ xhr.statusText , 'error');
                         }
                     });
                 }
@@ -191,7 +192,7 @@ define(
         deleteFile: function(event) {
             var selectedElement=$("#files-tbody  td.selected");
             if (selectedElement.length == 0) {
-                alert("No file chosen to be deleted.");
+                StudioClient.alert('Delete', "No file chosen to be deleted." , 'error');
                 return;
             }
             var selectedFilePath = selectedElement.attr('value');
@@ -211,7 +212,7 @@ define(
                         that.refreshFiles();
                     },
                     error: function (xhr, status, error) {
-                        alert("Failed to delete the file " + selectedFilePath + ": "+ xhr.statusText);
+                        StudioClient.alert('Delete', "Failed to delete the file " + selectedFilePath + ": "+ xhr.statusText, 'error');
                     }
                 });
             }
