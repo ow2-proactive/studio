@@ -286,7 +286,7 @@ define(
             }).success(function (response) {
                 successCallback(response);
             }).error(function (response) {
-                StudioClient.alert('Error', 'Error importing selected Workflow for the Scheduler: ' + JSON.stringify(response), 'error');
+                StudioClient.alert('Error', 'Error importing selected Workflow from the Scheduler: ' + JSON.stringify(response), 'error');
             });
         }
 
