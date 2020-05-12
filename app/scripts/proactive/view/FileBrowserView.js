@@ -1,9 +1,10 @@
 define(
     [
         'backbone',
-        'text!proactive/templates/file-browser-template.html'
+        'text!proactive/templates/file-browser-template.html',
+        'proactive/rest/studio-client',
     ],
-    function (Backbone, fileBrowserTemplate) {
+    function (Backbone, fileBrowserTemplate, StudioClient) {
 
     "use strict";
 
@@ -68,8 +69,10 @@ define(
         },
 
         enterFilesSubdir: function (event) {
-            this.model['currentPath'] = event.target.getAttribute('value');
-            this.refreshFiles();
+            if( event.target.hasAttribute('value') ){
+                this.model['currentPath'] = event.target.getAttribute('value');
+                this.refreshFiles();
+            }
         },
 
         refreshFiles: function() {
@@ -101,11 +104,18 @@ define(
             } else {
                 // mark the previous selected item as non-selected, as only one item could be selected at once.
                 var selectedElement=$("#files-tbody  td.selected");
+                function SelectedElementIcon(){
+                    return $("#files-tbody  td.selected i");
+                }
                 if (selectedElement) {
+                    SelectedElementIcon().removeClass("fas");
+                    SelectedElementIcon().addClass("far");
                     selectedElement.removeClass("selected");
                 }
                 // highlight currently selected item
                 $(event.target).addClass("selected");
+                SelectedElementIcon().removeClass("far");
+                SelectedElementIcon().addClass("fas");
                 $("#file-browser-error-message").text("");
             }
         },
@@ -151,7 +161,7 @@ define(
                         that.uploadRequest = undefined;
                     },
                     error: function (xhr, status, error) {
-                        alert("Failed to upload the file " + selectedFile.name + ": "+ xhr.statusText);
+                        StudioClient.alert('Error', "Failed to upload the file " + selectedFile.name + ": " + xhr.statusText, 'error');
                     }
                 });
             }
@@ -159,7 +169,7 @@ define(
 
         createFolder: function() {
             var that = this;
-            $("#files-tbody").prepend('<li> <i class="far fa-folder"> </i> <input class="new-folder" value="untitled-folder"/> </li>');
+            $("#files-tbody").prepend('<tr><td> <i class="far fa-folder"> </i> <input class="new-folder" value="untitled-folder"/> </td></tr>');
             $(".new-folder").keyup(function(event) {
                 if ($(this).is(":focus") && event.key == "Enter") {
                     var pathname = that.model['currentPath'] + $(this).val();
@@ -172,7 +182,7 @@ define(
                             that.refreshFiles();
                         },
                         error: function (xhr, status, error) {
-                            alert("Failed to create the new folder " + pathname + ": "+ xhr.statusText);
+                            StudioClient.alert('Create New Folder', "Failed to create the new folder " + pathname + ": "+ xhr.statusText , 'error');
                         }
                     });
                 }
@@ -182,7 +192,7 @@ define(
         deleteFile: function(event) {
             var selectedElement=$("#files-tbody  td.selected");
             if (selectedElement.length == 0) {
-                alert("No file chosen to be deleted.");
+                StudioClient.alert('Delete', "No file chosen to be deleted." , 'error');
                 return;
             }
             var selectedFilePath = selectedElement.attr('value');
@@ -202,19 +212,19 @@ define(
                         that.refreshFiles();
                     },
                     error: function (xhr, status, error) {
-                        alert("Failed to delete the file " + selectedFilePath + ": "+ xhr.statusText);
+                        StudioClient.alert('Delete', "Failed to delete the file " + selectedFilePath + ": "+ xhr.statusText, 'error');
                     }
                 });
             }
         },
 
         switchToUploadingState: function() {
-            $("#upload-file-btn").removeClass('fa-upload').addClass('fa-spinner fa-pulse');
+            $("#upload-file-btn > i").removeClass('fa-upload').addClass('fa-spinner fa-pulse');
             $("#upload-file-btn").attr("disabled", true);
         },
 
         switchToNothingUploadingState: function() {
-            $("#upload-file-btn").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
+            $("#upload-file-btn > i").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
             $("#upload-file-btn").attr("disabled", false);
         },
 
