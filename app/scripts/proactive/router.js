@@ -20,6 +20,7 @@ define(
                 'workflows/:id/presets/' : 'openWorkflow',
                 'presets/:presetIndex' : 'listWorkflowsWithTemplates',
                 'workflowcatalog/:bucketName/workflow/:workflowName' : 'openCatalogWorkflow',
+                'workflowcatalog/:bucketName/workflow/:workflowName/revision/:revisionId' : 'openCatalogWorkflow',
                 'workflowscheduler/:jobId' : 'openSchedulerWorkflow',
                 '*others' : 'gotoWorkflows'
             },
@@ -50,10 +51,10 @@ define(
                 this.app.views.propertiesView.listWorkflows();
                 this.app.views.paletteView.render(presetIndex, true);
             },
-            openCatalogWorkflow : function(bucketName, workflowName) {
+            openCatalogWorkflow : function(bucketName, workflowName, revisionId) {
                 this.app.views.propertiesView.listWorkflows();
                 this.app.views.paletteView.render();
-                this.app.openWorkflowFromCatalog(bucketName, workflowName);
+                this.app.openWorkflowFromCatalog(bucketName, workflowName, revisionId);
             },
             openSchedulerWorkflow : function(jobId) {
                 this.app.views.propertiesView.listWorkflows();
