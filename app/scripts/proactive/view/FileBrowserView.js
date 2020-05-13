@@ -170,6 +170,12 @@ define(
         createFolder: function() {
             var that = this;
             $("#files-tbody").prepend('<tr><td> <i class="far fa-folder"> </i> <input class="new-folder" value="untitled-folder"/> </td></tr>');
+            // workaround to focus the cursor at the end of the input
+            var input = $(".new-folder");
+            var value = input.val();
+            input.focus().val("").blur().focus().val(value);
+
+            // Create the new folder in server side
             $(".new-folder").keyup(function(event) {
                 if ($(this).is(":focus") && event.key == "Enter") {
                     var pathname = that.model['currentPath'] + $(this).val();
