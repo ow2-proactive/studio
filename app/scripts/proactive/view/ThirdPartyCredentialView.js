@@ -22,9 +22,11 @@ define(
         initialize: function () {
             this.$el = $('#third-party-credential-modal');
             var that = this;
-            // stop inside modal trigger parent modal hidden event
             this.$el.on('hidden.bs.modal', function(event) {
+                // stop inside modal trigger parent modal hidden event
                 event.stopPropagation();
+                // when the modal is closed, remove its events to avoid trigger duplicated events when reopen the modal
+                that.undelegateEvents();
             });
             // whenever parent modal is hidden, close inside modal
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {

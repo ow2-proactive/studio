@@ -2,9 +2,10 @@ define(
     [
         'backbone',
         'text!proactive/templates/job-variable-template.html',
-        'proactive/view/ThirdPartyCredentialView'
+        'proactive/view/ThirdPartyCredentialView',
+        'proactive/view/FileBrowserView'
     ],
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView) {
+    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView) {
 
     "use strict";
 
@@ -12,10 +13,21 @@ define(
 
         template: _.template(jobVariableTemplate),
 
-        model: {'jobVariables': {}, 'jobName':'', 'jobProjectName':'', 'jobDescription':'', 'jobDocumentation':'', 'jobGenericInfos':[], 'errorMessage':'', 'infoMessage' :''},
+        model: {
+            'jobVariables': {},
+            'jobName':'',
+            'jobProjectName':'',
+            'jobDescription':'',
+            'jobDocumentation':'',
+            'jobGenericInfos':[],
+            'errorMessage':'',
+            'infoMessage' :''
+        },
 
         events: {
-            'click #third-party-credential-button': 'showThirdPartyCredentialModal',
+            'click .third-party-credential-button': 'showThirdPartyCredentialModal',
+            'click .var-globalfile-button': 'showGlobalFileModal',
+            'click .var-userfile-button': 'showUserFileModal'
         },
 
         initialize: function () {
@@ -32,13 +44,30 @@ define(
         },
 
         render: function (jobInfos) {
-            this.model = $.extend(this.model, jobInfos);
+            var jobInfosCloned = JSON.parse(JSON.stringify(jobInfos));
+            this.model = $.extend(this.model, jobInfosCloned);
             this.$el.html(this.template(this.model));
             return this;
         },
 
+        updateVariableValue: function(jobVariables) {
+            for(var key in jobVariables) {
+                this.model.jobVariables[key].Value = jobVariables[key];
+                var updatedVarElement = $(document.getElementById(key));
+                updatedVarElement.text(jobVariables[key]);
+            }
+        },
+
         showThirdPartyCredentialModal: function() {
             new ThirdPartyCredentialView().render();
+        },
+
+        showGlobalFileModal: function(event) {
+            new FileBrowserView({dataspace: "global", varKey: event.target.getAttribute('value')}).render();
+        },
+
+        showUserFileModal: function(event) {
+            new FileBrowserView({dataspace: "user", varKey: event.target.getAttribute('value')}).render();
         }
     })
 })

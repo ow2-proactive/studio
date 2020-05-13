@@ -29,7 +29,7 @@ define(
         'proactive/jsplumb',
         'jquery.ui.touch-punch',
         '../studio-conf'
-        
+
     ],
 
     function ($, jsPlumb, PNotify, ui, Config, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, SetPresetView, WorkflowListView, JobVariableView, xml2json, StudioRouter, dom, version) {
@@ -202,6 +202,16 @@ define(
             var that = this;
             var url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
             dom.getWorkflowFromCatalog(url, function (response) {
+                that.xmlToImport = new XMLSerializer().serializeToString(response);
+                dom.open_catalog_workflow();
+            });
+        },
+        openWorkflowFromScheduler : function(jobId) {
+            var that = this;
+            var sessionId = localStorage['pa.session'];
+
+            var url = '/scheduler/portal/downloadjobxml?jobId='+jobId+'&sessionId='+sessionId;
+            dom.getWorkflowFromScheduler(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
                 dom.open_catalog_workflow();
             });

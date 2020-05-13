@@ -1,0 +1,57 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
+            <h3><%=locationDescription%> Files</h3>
+        </div>
+        <div id="files-body" class="modal-body">
+            <div>
+                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh" style="padding-left: 0px;">
+                    <i class="fas fa-redo"></i>
+                </a>
+                <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
+                    <i class="fas fa-folder-plus"></i>
+                </a>
+                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload">
+                    <i class="fas fa-upload"></i>
+                </a>
+                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+            <br>
+            <div id="current-path" style="display:inline-flex">
+                <span class="font-bold">
+                    Location:
+                </span>
+                <span class="current-sub-path"><a href="javascript:void(0)" value="">\</a></span>
+                <ol class="breadcrumb" style="border:none;">
+                    <% var splitPath = currentPath.split("/").filter(i => i);
+                    for (var [index, subPath] of splitPath.entries()) { %>
+                    <li class="breadcrumb-item current-sub-path" ><a href="javascript:void(0)" value="<%- splitPath.slice(0, index+1).join('/')%>/"><%- (subPath.length > 100) ? subPath.substring(0, 100) + " ..." : subPath %></a></li>
+                    <% } %>
+                </ol>
+            </div>
+            <br>
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
+               <table>
+                   <tbody id="files-tbody">
+                    <% for (var index in directories) { %>
+                    <tr> <td class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </td></tr>
+                    <% } %>
+                    <% for (var index in files) { %>
+                    <tr> <td class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="far fa-file"> </i> <%- files[index] %> </td></tr>
+                    <% } %>
+                   </tbody>
+               </table>
+            </div>
+            <br>
+            <label id="file-browser-error-message" style="color:red;"></label>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
+            <input type="file" id="selected-upload-file" class="hidden"/>
+            <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
+        </div>
+    </div>
+</div>
