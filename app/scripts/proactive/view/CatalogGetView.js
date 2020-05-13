@@ -148,9 +148,18 @@ define(
             
             if (currentRevisionRow){
                 var splitRawUrl = $(currentRevisionRow).data("rawurl").split('/');
-                var objectName = splitRawUrl[splitRawUrl.length-1];
+                var objectName = splitRawUrl[3];
                 var bucketName = splitRawUrl[1];
-	        	var rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + encodeURIComponent(objectName) + '/raw';
+                var revisionId;
+                if (splitRawUrl.length > 4) {
+                    revisionId = splitRawUrl[5];
+                }
+	        	var rawurl;
+	        	if (revisionId) {
+	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + encodeURIComponent(objectName) + '/revisions/' + encodeURIComponent(revisionId) +'/raw';
+	        	} else {
+	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + encodeURIComponent(objectName) + '/raw';
+	        	}
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
