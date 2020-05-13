@@ -198,9 +198,14 @@ define(
         isWorkflowOpen: function() {
             return this.views.xmlView != null;
         },
-        openWorkflowFromCatalog : function(bucketName, workflowName) {
+        openWorkflowFromCatalog : function(bucketName, workflowName, revision) {
             var that = this;
-            var url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
+            var url;
+             if (revision) {
+                url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/revisions/'+revision+'/raw';
+             } else {
+                url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
+             }
             dom.getWorkflowFromCatalog(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
                 dom.open_catalog_workflow();
