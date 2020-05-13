@@ -270,7 +270,7 @@ define(
                     message: "<br><br>" + validationData.errorMessage
                   };
                   return err;
-                } else if (formValues.Model === "PA:HIDDEN" && formValues.Value.trim().length > 0) {
+                } else if (formValues.Model && formValues.Model.toUpperCase() === "PA:HIDDEN" && formValues.Value.trim().length > 0) {
                     formValues.Value = validationData.updatedVariables[formValues.Name];
                     if (form) {
                         form.setValue(formValues);
