@@ -147,6 +147,10 @@ define(
             var that = this;
             var selectedFile = event.target.files[0];
             if (selectedFile) {
+                if (selectedFile.name.includes(':')) {
+                    StudioClient.alert('Error', 'Uploading failed: the uploaded file name "' + selectedFile.name + '" should not contain colon.', 'error');
+                    return;
+                }
                 var pathname = that.model['currentPath'] + selectedFile.name;
                 that.switchToUploadingState();
                 that.uploadRequest = $.ajax({
@@ -161,7 +165,13 @@ define(
                         that.uploadRequest = undefined;
                     },
                     error: function (xhr, status, error) {
-                        StudioClient.alert('Error', "Failed to upload the file " + selectedFile.name + ": " + xhr.statusText, 'error');
+                        var errorMessage = "";
+                        if(xhr) {
+                            errorMessage = ": "+ xhr.errorMessage;
+                        }
+                        StudioClient.alert('Error', "Failed to upload the file " + selectedFile.name + errorMessage, 'error');
+                        that.switchToNothingUploadingState();
+                        that.uploadRequest = undefined;
                     }
                 });
             }
@@ -179,6 +189,10 @@ define(
             $(".new-folder").keyup(function(event) {
                 if ($(this).is(":focus") && event.key == "Enter") {
                     var pathname = that.model['currentPath'] + $(this).val();
+                    if (pathname.includes(':')) {
+                        StudioClient.alert('Create New Folder', 'Failed to create the new folder "' + pathname + '": it should not contain colon.', 'error');
+                        return;
+                    }
                     $.ajax({
                         type: "POST",
                         url: that.dataspaceRestUrl + encodeURIComponent(pathname),
