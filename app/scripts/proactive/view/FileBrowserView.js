@@ -183,7 +183,7 @@ define(
             // workaround to focus the cursor at the end of the input
             var input = $(".new-folder");
             var value = input.val();
-            input.focus().val("").blur().focus().val(value);
+            input.focus().val("").blur().focus().val(value).select();
 
             // Create the new folder in server side
             $(".new-folder").keyup(function(event) {
