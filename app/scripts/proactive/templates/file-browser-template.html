@@ -2,20 +2,21 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
-            <h3><%=locationDescription%> Files</h3>
+            <h3><%=locationDescription%> File Browser</h3>
+            <h5>Browse, Upload files in <%=locationDescription%>, Select one file as the variable value</h5>
         </div>
         <div id="files-body" class="modal-body">
             <div>
-                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh" style="padding-left: 0px;">
+                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh files" style="padding-left: 0px;">
                     <i class="fas fa-redo"></i>
                 </a>
                 <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
                     <i class="fas fa-folder-plus"></i>
                 </a>
-                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload">
+                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload a file into the <%=locationDescription%>">
                     <i class="fas fa-upload"></i>
                 </a>
-                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete">
+                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete the selected file or folder">
                     <i class="fas fa-trash"></i>
                 </a>
             </div>
