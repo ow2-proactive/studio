@@ -87,14 +87,57 @@ define(
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
-                    that.model['files'] = data.fileListing.sort();
-                    that.model['directories'] = data.directoryListing.sort();
+                    that.model['files'] = that.getFilesMetadata(data.fileListing.sort());
+                    that.model['directories'] = that.getFilesMetadata(data.directoryListing.sort());
                     that.$el.html(that.template(that.model));
                     if(that.uploadRequest) {
                         that.switchToUploadingState();
                     }
                 }
             });
+        },
+
+        getFilesMetadata: function(fileNames) {
+            var that = this;
+            var filesMetadata = [];
+            for (let i = 0; i < fileNames.length; i++) {
+                var filePath = that.model['currentPath'] + fileNames[i];
+                $.ajax({
+                    url: that.dataspaceRestUrl + encodeURIComponent(filePath),
+                    type: "HEAD",
+                    headers: { "sessionid": localStorage['pa.session'] },
+                    async: false,
+                    success: function (response, status, xhr){
+                        filesMetadata[i] = {
+                            name: fileNames[i],
+                            type: xhr.getResponseHeader('x-proactive-ds-type'),
+                            modified: that.toDateInClientFormat(xhr.getResponseHeader('Last-Modified'))
+                        };
+                        if(filesMetadata[i].type == 'FILE') {
+                            filesMetadata[i].type = xhr.getResponseHeader('Content-Type');
+                            filesMetadata[i].size = that.toReadableFileSize(xhr.getResponseHeader('Content-Length'));
+                        }
+                    }
+                });
+            }
+            return filesMetadata;
+        },
+
+        toReadableFileSize: function(size) {
+            if (typeof bytes !== 'number') {
+                size = parseInt(size);
+            }
+            var units = [' B', ' KB', ' MB', ' GB', ' TB']
+            let unitIndex = 0;
+            while(size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024 ;
+                unitIndex++;
+            }
+            return size.toFixed(1) + units[unitIndex];
+        },
+
+        toDateInClientFormat: function(serverDate) {
+            return new Date(serverDate).toLocaleString(undefined, { hour12: false });
         },
 
         switchSelected: function(event) {

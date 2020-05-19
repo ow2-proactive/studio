@@ -34,14 +34,30 @@
                 </ol>
             </div>
             <br>
-            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
-               <table>
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px; overflow-wrap: break-word;">
+               <table style="width: 100%; table-layout:fixed;">
+                   <thead>
+                        <th width="35%">Name</th>
+                        <th width="15%">Size</th>
+                        <th width="20%">Type</th>
+                        <th width="30%">Modified</th>
+                   </thead>
                    <tbody id="files-tbody">
                     <% for (var index in directories) { %>
-                    <tr> <td class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </td></tr>
+                    <tr>
+                        <td class="file-browser-dir" value="<%- currentPath %><%- directories[index].name %>/"> <i class="far fa-folder"> </i> <%- directories[index].name %> </td>
+                        <td> </td>
+                        <td> Folder </td>
+                        <td> <%- directories[index].modified %> </td>
+                    </tr>
                     <% } %>
                     <% for (var index in files) { %>
-                    <tr> <td class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="far fa-file"> </i> <%- files[index] %> </td></tr>
+                    <tr>
+                        <td class="file-browser-file" value="<%- currentPath %><%- files[index].name %>"> <i class="far fa-file"> </i> <%- files[index].name %> </td>
+                        <td> <%- files[index].size %> </td>
+                        <td> <%- files[index].type %> </td>
+                        <td> <%- files[index].modified %> </td>
+                    </tr>
                     <% } %>
                    </tbody>
                </table>
