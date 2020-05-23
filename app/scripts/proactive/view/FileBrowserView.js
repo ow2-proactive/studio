@@ -29,9 +29,9 @@ define(
 
         events: {
             'click .file-browser-close': 'closeFileBrowser',
-            'click .file-browser-file,.file-browser-dir': 'switchSelected',
-            'dblclick .file-browser-dir': 'enterFilesSubdir',
-            'click .current-sub-path': 'enterFilesSubdir',
+            'click .file-browser-file-tr,.file-browser-dir-tr': 'switchSelected',
+            'dblclick .file-browser-dir-tr': 'enterFilesSubdir',
+            'click .current-sub-path': 'enterDir',
             'click .file-browser-select-btn': 'selectFile',
             'click #upload-file-btn': 'chooseUploadFile',
             'change #selected-upload-file': 'uploadFile',
@@ -68,9 +68,18 @@ define(
             return this;
         },
 
-        enterFilesSubdir: function (event) {
+        enterDir: function (event) {
             if( event.target.hasAttribute('value') ){
                 this.model['currentPath'] = event.target.getAttribute('value');
+                this.refreshFiles();
+            }
+        },
+
+        enterFilesSubdir: function (event) {
+            var clickedRow = $(event.target.parentElement)
+            var clickedDir = clickedRow.children(".file-browser-dir");
+            if( clickedDir ){
+                this.model['currentPath'] = clickedDir.attr('value');
                 this.refreshFiles();
             }
         },
@@ -141,22 +150,25 @@ define(
         },
 
         switchSelected: function(event) {
-            if ($(event.target).hasClass('selected')) {
+            function SelectedElementIcon(){
+                return $("#files-tbody  tr.selected i");
+            }
+            var targetRow = $(event.target.parentElement)
+            if (targetRow.hasClass('selected')) {
                 // deselect
-                $(event.target).removeClass("selected");
+                SelectedElementIcon().removeClass("fas");
+                SelectedElementIcon().addClass("far");
+                targetRow.removeClass("selected");
             } else {
                 // mark the previous selected item as non-selected, as only one item could be selected at once.
-                var selectedElement=$("#files-tbody  td.selected");
-                function SelectedElementIcon(){
-                    return $("#files-tbody  td.selected i");
-                }
+                var selectedElement=$("#files-tbody  tr.selected");
                 if (selectedElement) {
                     SelectedElementIcon().removeClass("fas");
                     SelectedElementIcon().addClass("far");
                     selectedElement.removeClass("selected");
                 }
                 // highlight currently selected item
-                $(event.target).addClass("selected");
+                targetRow.addClass("selected");
                 SelectedElementIcon().removeClass("far");
                 SelectedElementIcon().addClass("fas");
                 $("#file-browser-error-message").text("");
@@ -164,12 +176,12 @@ define(
         },
 
         selectFile: function() {
-            var selectedElement=$("#files-tbody  td.selected");
+            var selectedElement=$("#files-tbody  tr.selected");
             if (selectedElement.length == 0) {
                 $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file !");
                 return;
             }
-            var selectedFile = selectedElement.filter(".file-browser-file");
+            var selectedFile = selectedElement.children(".file-browser-file");
             if (selectedFile.length == 0) {
                 $("#file-browser-error-message").text("Directory is disallowed as the variable value: please select a regular file !");
             } else {
@@ -253,7 +265,7 @@ define(
         },
 
         deleteFile: function(event) {
-            var selectedElement=$("#files-tbody  td.selected");
+            var selectedElement=$("#files-tbody  tr.selected").children().first();
             if (selectedElement.length == 0) {
                 StudioClient.alert('Delete', "No file chosen to be deleted." , 'error');
                 return;
