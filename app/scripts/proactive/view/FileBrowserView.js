@@ -162,7 +162,7 @@ define(
             } else {
                 // mark the previous selected item as non-selected, as only one item could be selected at once.
                 var selectedElement=$("#files-tbody  tr.selected");
-                if (selectedElement) {
+                if (selectedElement && selectedElement.length != 0) {
                     SelectedElementIcon().removeClass("fas");
                     SelectedElementIcon().addClass("far");
                     selectedElement.removeClass("selected");
