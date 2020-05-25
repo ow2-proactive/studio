@@ -34,17 +34,17 @@
                 </ol>
             </div>
             <br>
-            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 40vh; overflow-wrap: break-word;">
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; max-height: 40vh; overflow-wrap: break-word;">
                <table style="width: 100%; table-layout:fixed;">
                    <thead>
-                        <th width="35%">Name</th>
-                        <th width="15%">Size</th>
-                        <th width="20%">Type</th>
-                        <th width="30%">Modified</th>
+                        <th>Name</th>
+                        <th width="80em">Size</th>
+                        <th width="120em">Type</th>
+                        <th width="140em">Modified</th>
                    </thead>
                    <tbody id="files-tbody">
                     <% for (var index in directories) { %>
-                    <tr>
+                    <tr class="file-browser-dir-tr">
                         <td class="file-browser-dir" value="<%- currentPath %><%- directories[index].name %>/"> <i class="far fa-folder"> </i> <%- directories[index].name %> </td>
                         <td> </td>
                         <td> Folder </td>
@@ -52,7 +52,7 @@
                     </tr>
                     <% } %>
                     <% for (var index in files) { %>
-                    <tr>
+                    <tr class="file-browser-file-tr">
                         <td class="file-browser-file" value="<%- currentPath %><%- files[index].name %>"> <i class="far fa-file"> </i> <%- files[index].name %> </td>
                         <td> <%- files[index].size %> </td>
                         <td> <%- files[index].type %> </td>
