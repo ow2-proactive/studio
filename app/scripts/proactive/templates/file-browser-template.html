@@ -66,7 +66,9 @@
             <label id="file-browser-error-message" style="color:red;"></label>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
+            <% if(varKey){ %>
+                <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
+            <% } %>
             <input type="file" id="selected-upload-file" class="hidden"/>
             <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
         </div>
