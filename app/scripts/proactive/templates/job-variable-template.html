@@ -122,11 +122,11 @@
             <% } else if (model && model.toLowerCase().indexOf('pa:global_file')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
-                <button title="Browse global space files" value="<%- key %>" class="var-globalfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                <button title="Browse Global Space files, Upload, and Select one" value="<%- key %>" class="var-globalfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
             <% } else if (model && model.toLowerCase().indexOf('pa:user_file')!=-1) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
-                <button title="Browse user space files" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                <button title="Browse User Space files, Upload, and Select one" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
             <% } else {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="Extra" data-toggle="tooltip" title="<%- model %>"><%- model ? ((model.length >= 20) ? model.substring(0, 20) + " ..." : model):""  %></label>
