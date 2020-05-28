@@ -12,8 +12,6 @@ define(
 
         dataspace: "",
 
-        varKey: "",
-
         dataspaceRestUrl: "/rest/data/",
 
         uploadRequest: undefined,
@@ -42,7 +40,7 @@ define(
 
         initialize: function (options) {
             this.dataspace = options.dataspace;
-            this.varKey = options.varKey;
+            this.model['varKey'] = options.varKey;
             this.dataspaceRestUrl += options.dataspace + "/";
             this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
 
@@ -187,7 +185,7 @@ define(
             } else {
                 // update the variable value to the selected file path
                 var studioApp = require('StudioApp');
-                var updatedVar = {[this.varKey]: selectedFile.attr('value')};
+                var updatedVar = {[this.model['varKey']]: selectedFile.attr('value')};
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
                 this.closeFileBrowser();
             }
