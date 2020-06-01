@@ -43,6 +43,16 @@ define(
             this.model['varKey'] = options.varKey;
             this.dataspaceRestUrl += options.dataspace + "/";
             this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
+            switch (options.dataspace.toUpperCase()) {
+                case "GLOBAL":
+                    this.model['spaceDescription']="Global DataSpace is a Directory where anyone can read/write files."
+                    break;
+                case "USER":
+                    this.model['spaceDescription']="User DataSpace is a Directory where only the User can read/write files."
+                    break;
+                default:
+                    this.model['spaceDescription']="";
+            }
 
             this.$el = $('#file-browser-modal');
             var that = this;
