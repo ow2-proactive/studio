@@ -45,7 +45,7 @@ define(
             this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
             switch (options.dataspace.toUpperCase()) {
                 case "GLOBAL":
-                    this.model['spaceDescription']="Global DataSpace is a storage on the server host where anyone can read/write files."
+                    this.model['spaceDescription']="Global DataSpace is a shared storage on the server host where anyone can read/write files."
                     break;
                 case "USER":
                     this.model['spaceDescription']="User DataSpace is a personal user data storage on the server host."
