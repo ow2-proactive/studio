@@ -155,18 +155,26 @@
                             <i class="glyphicon glyphicon-export"></i> Export
                         </a>
                     </li>
-
+                    <!-- Browse Global Files -->
                     <li>
                         <a id="global-files-button" href="#" class="pointer"
-                           title="Export current workflow as .xml file">
-                            <i class="fas fa-folder-open"></i> Browse and Upload Global Space Files
+                           title="Browse and Upload Global Space Files">
+                            <span class="fa-stack fa-xxs" aria-hidden="true">
+                                <i class="fa fa-folder fa-stack-2x"></i>
+                                <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                            </span>
+                            Manage Global Files
                         </a>
                     </li>
-
+                    <!-- Browse User Files -->
                     <li>
                         <a id="user-files-button" href="#" class="pointer"
-                           title="Export current workflow as .xml file">
-                            <i class="far fa-folder-open"></i> Browse and Upload User Space Files
+                           title="Browse and Upload User Space Files">
+                            <span class="fa-stack fa-xxs" aria-hidden="true">
+                                <i class="fa fa-folder fa-stack-2x"></i>
+                                <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+                            </span>
+                            Manage User Files
                         </a>
                     </li>
 
@@ -311,11 +319,17 @@
             <div class="btn-group pa-tools">
                 <!-- Global space file browser -->
                 <a id="global-files-button-tool" href="#" class="pointer pa-tool-btn" title="Browse and Upload Global Space Files">
-                    <i class="fas fa-folder-open"></i>
+                    <span class="fa-stack fa-sm" aria-hidden="true">
+                        <i class="fa fa-folder fa-stack-2x"></i>
+                        <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                    </span>
                 </a>
                 <!-- User space file browser -->
                 <a id="user-files-button-tool" href="#" class="pointer pa-tool-btn" title="Browse and Upload User Space Files">
-                    <i class="far fa-folder-open"></i>
+                    <span class="fa-stack fa-sm" aria-hidden="true">
+                        <i class="fa fa-folder fa-stack-2x"></i>
+                        <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+                    </span>
                 </a>
             </div>
         </div> <!-- END TOOLBAR -->

@@ -1709,3 +1709,16 @@ ul, #submitFormUL {
     white-space: pre-wrap;
     font-family: inherit;
 }
+
+.btn-group .fa-stack {
+    top: -2px;
+}
+
+.fa-xxs{
+    font-size: 0.475em;
+}
+
+.fa-stack-1x {
+    top: 0.1em;
+    font-size: 0.8em;
+}

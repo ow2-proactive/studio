@@ -3,7 +3,12 @@
         <div class="modal-header">
             <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
             <h3><%=locationDescription%> File Browser</h3>
-            <h5>Browse, Upload files in <%=locationDescription%>, Select one file as the variable value</h5>
+            <h5>
+                Browse, Upload files in <%=locationDescription%><% if(varKey){ %>, Select one file as the variable value<% } %>
+                <br/>
+                <br/>
+                <%- spaceDescription %>
+            </h5>
         </div>
         <div id="files-body" class="modal-body">
             <div>
@@ -13,6 +18,7 @@
                 <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
                     <i class="fas fa-folder-plus"></i>
                 </a>
+                <input type="file" id="selected-upload-file" class="hidden"/>
                 <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload a file into the <%=locationDescription%>">
                     <i class="fas fa-upload"></i>
                 </a>
@@ -34,7 +40,7 @@
                 </ol>
             </div>
             <br>
-            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; max-height: 40vh; overflow-wrap: break-word;">
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; max-height: 48vh; overflow-wrap: break-word;">
                <table style="width: 100%; table-layout:fixed;">
                    <thead>
                         <th>Name</th>
@@ -68,9 +74,10 @@
         <div class="modal-footer">
             <% if(varKey){ %>
                 <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
+                <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
+            <% } else { %>
+                <button class="btn btn-white file-browser-close" type="button"> Close </button>
             <% } %>
-            <input type="file" id="selected-upload-file" class="hidden"/>
-            <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
         </div>
     </div>
 </div>
