@@ -3,8 +3,11 @@
         <div class="modal-header">
             <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
             <h3><%=locationDescription%> File Browser</h3>
-            <h5>Browse, Upload files in <%=locationDescription%><% if(varKey){ %>, Select one file as the variable value<% } %>
-                <p> <%- spaceDescription %> </p>
+            <h5>
+                Browse, Upload files in <%=locationDescription%><% if(varKey){ %>, Select one file as the variable value<% } %>
+                <br/>
+                <br/>
+                <%- spaceDescription %>
             </h5>
         </div>
         <div id="files-body" class="modal-body">
@@ -37,7 +40,7 @@
                 </ol>
             </div>
             <br>
-            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; max-height: 40vh; overflow-wrap: break-word;">
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; max-height: 48vh; overflow-wrap: break-word;">
                <table style="width: 100%; table-layout:fixed;">
                    <thead>
                         <th>Name</th>
