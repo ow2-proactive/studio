@@ -21,6 +21,9 @@ define(
             this.options.app.models.templates = {};
             //rendering page title
             this.createPresetsMenu();
+
+            // aux variable that will allow us to store the all buckets list return from the server
+            this.listOfAllCatalogBuckets = [];
         },
         createMenuFromConfig: function (templates, menu) {
             var that = this;
@@ -133,25 +136,37 @@ define(
             }
         },
         checkAndGetBucketByName : function(bucketName, onPageLoad, callback){
-            $.ajax({
-                type: "GET",
-                headers : { 'sessionID': localStorage['pa.session'] },
-                async: false,
-                url: '/catalog/buckets/?kind=workflow',
-                success: function (data) {
-                    var foundBucket = data.find(function(bucket){
-                        return bucket.name.toLowerCase() == bucketName.toLowerCase();
-                    });
-                    callback(foundBucket);
-                },
-                error: function () {
-                    if (!onPageLoad)
-                        StudioClient.alert('Bucket not found!', 'The bucket "' + bucketName + '" couldn\'t be found.', 'error');
-                    else
-                        console.log('The bucket "'+ bucketName + '" couldn\'t be found.');
-                    return;
-                }
-            });
+
+            if(this.listOfAllCatalogBuckets.length > 0){
+                var foundBucket = this.listOfAllCatalogBuckets.find(function(bucket){
+                    return bucket.name.toLowerCase() == bucketName.toLowerCase();
+                });
+                callback(foundBucket);
+            } else {
+                console.log("checkAndGetBucketByName")
+                var that = this;
+                $.ajax({
+                    type: "GET",
+                    headers : { 'sessionID': localStorage['pa.session'] },
+                    async: false,
+                    url: '/catalog/buckets/?kind=workflow',
+                    success: function (data) {
+                        var foundBucket = false;
+                        that.listOfAllCatalogBuckets = data;
+                        var foundBucket = data.find(function(bucket){
+                                            return bucket.name.toLowerCase() == bucketName.toLowerCase();
+                                        });
+                        callback(foundBucket);
+                    },
+                    error: function () {
+                        if (!onPageLoad)
+                            StudioClient.alert('Bucket not found!', 'The bucket "' + bucketName + '" couldn\'t be found.', 'error');
+                        else
+                            console.log('The bucket "'+ bucketName + '" couldn\'t be found.');
+                        return;
+                    }
+                });
+            }
         },
         beautifyBucketName: function(bucketName){
             if (bucketName.length > 30) {

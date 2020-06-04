@@ -87,7 +87,7 @@ define(
             this.models.workflows = new WorkflowCollection();
             this.models.catalogBuckets = new CatalogBucketCollection({kind:'workflow'});
 
-            this.models.catalogBuckets.fetch();
+            //this.models.catalogBuckets.fetch();
 
             this.views.propertiesView = new WorkflowListView({workflowView: this.views.workflowView, paletteView:this.views.paletteView, workflows: this.models.workflows, templates: this.models.templates, app: this});
             this.views.paletteView = new PaletteView({templatesBucketName: this.models.templatesBucketName, app: this});
