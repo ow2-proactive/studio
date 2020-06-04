@@ -134,6 +134,8 @@ define(
                     that.addPaletteBucketMenu(secondaryBucketName, true);
                 });
             }
+            // Clear the existing array by setting its length to 0
+            this.listOfAllCatalogBuckets.length = 0;
         },
         checkAndGetBucketByName : function(bucketName, onPageLoad, callback){
 
@@ -143,7 +145,6 @@ define(
                 });
                 callback(foundBucket);
             } else {
-                console.log("checkAndGetBucketByName")
                 var that = this;
                 $.ajax({
                     type: "GET",
