@@ -35,6 +35,7 @@ define(
             'change #selected-upload-file': 'uploadFile',
             'click #refresh-file-btn': 'refreshFiles',
             'click #new-folder-btn': 'createFolder',
+            'click #download-file-btn': 'downloadFile',
             'click #delete-file-btn': 'deleteFile'
         },
 
@@ -272,7 +273,40 @@ define(
             });
         },
 
-        deleteFile: function(event) {
+        downloadFile: function() {
+            var selectedElement=$("#files-tbody  tr.selected").children().first();
+            if (selectedElement.length == 0) {
+                StudioClient.alert('Download', "No file chosen to be downloaded." , 'error');
+                return;
+            }
+            var selectedFilePath = selectedElement.attr('value');
+            var filename = selectedFilePath.match(/([^\/]*)\/*$/)[1];
+            if (selectedElement.hasClass("file-browser-dir")) {
+                filename += ".zip";
+            }
+            // when the element to download is a folder, use zip encoding; if it's a file, use identity encoding to avoid decompress
+            var encoding = selectedElement.hasClass("file-browser-dir") ? "zip" : "identity";
+            var url = this.dataspaceRestUrl + encodeURIComponent(selectedFilePath) + "?encoding=" + encoding;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.setRequestHeader("sessionid", localStorage['pa.session']);
+            xhr.responseType = 'arraybuffer';
+            xhr.onload = function (e) {
+                if (xhr.status == 200) {
+                    var blob = new Blob([this.response]);
+                    var a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = filename;
+                    a.click();
+                } else {
+                    StudioClient.alert('Download', "Failed to download the file " + selectedFilePath + ": "+ xhr.statusText, 'error');
+                }
+            };
+            xhr.send();
+        },
+
+        deleteFile: function() {
             var selectedElement=$("#files-tbody  tr.selected").children().first();
             if (selectedElement.length == 0) {
                 StudioClient.alert('Delete', "No file chosen to be deleted." , 'error');
