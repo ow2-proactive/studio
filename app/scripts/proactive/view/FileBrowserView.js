@@ -282,8 +282,13 @@ define(
             var selectedFilePath = selectedElement.attr('value');
             var filename = selectedFilePath.match(/([^\/]*)\/*$/)[1];
             if (selectedElement.hasClass("file-browser-dir")) {
+                var confirmMessage = 'You are about to download the folder "' + filename + '" as a zip archive "' + filename + '.zip", proceed ?'
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
                 filename += ".zip";
             }
+
             // when the element to download is a folder, use zip encoding; if it's a file, use identity encoding to avoid decompress
             var encoding = selectedElement.hasClass("file-browser-dir") ? "zip" : "identity";
             var url = this.dataspaceRestUrl + encodeURIComponent(selectedFilePath) + "?encoding=" + encoding;
