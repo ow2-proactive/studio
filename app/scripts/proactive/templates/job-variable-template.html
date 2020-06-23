@@ -66,7 +66,7 @@
                var model = null;
                if (variable.hasOwnProperty("Model")) {
                    model = variable.Model;
-                   if (model.toLowerCase().indexOf('pa:model_from_url') != -1) {
+                   if (model && model.toLowerCase().indexOf('pa:model_from_url') != -1) {
                         // fetch the specified urls and replace the current model by the result
                         var indexBegin = model.indexOf('(');
                         var indexEnd = model.lastIndexOf(')');
@@ -106,7 +106,7 @@
                 </select>
             <% } else if (model && model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
                 <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- model %>">
-                <% if (variable.Value.toLowerCase() === 'true' || variable.Value == 1) %>
+                <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || variable.Value == 1)) %>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
                 <% else %>
