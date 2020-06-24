@@ -66,7 +66,7 @@
                var model = null;
                if (variable.hasOwnProperty("Model")) {
                    model = variable.Model;
-                   if (model.toLowerCase().indexOf('pa:model_from_url') != -1) {
+                   if (model && model.toLowerCase().indexOf('pa:model_from_url') != -1) {
                         // fetch the specified urls and replace the current model by the result
                         var indexBegin = model.indexOf('(');
                         var indexEnd = model.lastIndexOf(')');
@@ -106,7 +106,7 @@
                 </select>
             <% } else if (model && model.toLowerCase().indexOf('pa:boolean')!=-1) {  %>
                 <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- model %>">
-                <% if (variable.Value.toLowerCase() === 'true' || variable.Value == 1) %>
+                <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || variable.Value == 1)) %>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
                 <% else %>
@@ -120,11 +120,11 @@
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
                 <button title="Manage third-party credentials" class="third-party-credential-button btn" type="button" style="background-color:Transparent"><img src="images/key.png"></button>
-            <% } else if (model && ['pa:global_file', 'pa:optional_global_file'].indexOf(model.toLowerCase()) != -1 ) {  %>
+            <% } else if (model && model.toLowerCase().indexOf('pa:global_file') != -1 ) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- shortenModel %></label>
                 <button title="Browse Global Space files, Upload, and Select one" value="<%- key %>" class="var-globalfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
-            <% } else if (model && ['pa:user_file', 'pa:optional_user_file'].indexOf(model.toLowerCase()) != -1 ) {  %>
+            <% } else if (model && model.toLowerCase().indexOf('pa:user_file') != -1 ) {  %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- shortenModel %></label>
                 <button title="Browse User Space files, Upload, and Select one" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
