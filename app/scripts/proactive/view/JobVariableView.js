@@ -27,7 +27,9 @@ define(
         events: {
             'click .third-party-credential-button': 'showThirdPartyCredentialModal',
             'click .var-globalfile-button': 'showGlobalFileModal',
-            'click .var-userfile-button': 'showUserFileModal'
+            'click .var-userfile-button': 'showUserFileModal',
+            'click .var-globalfolder-button': 'showGlobalFolderModal',
+            'click .var-userfolder-button': 'showUserFolderModal'
         },
 
         initialize: function () {
@@ -63,11 +65,19 @@ define(
         },
 
         showGlobalFileModal: function(event) {
-            new FileBrowserView({dataspace: "global", varKey: event.target.getAttribute('value')}).render();
+            new FileBrowserView({dataspace: "global", varKey: event.target.getAttribute('value'), selectFolder: false}).render();
         },
 
         showUserFileModal: function(event) {
-            new FileBrowserView({dataspace: "user", varKey: event.target.getAttribute('value')}).render();
+            new FileBrowserView({dataspace: "user", varKey: event.target.getAttribute('value'), selectFolder: false}).render();
+        },
+
+        showGlobalFolderModal: function(event) {
+            new FileBrowserView({dataspace: "global", varKey: event.target.getAttribute('value'), selectFolder: true}).render();
+        },
+
+        showUserFolderModal: function(event) {
+            new FileBrowserView({dataspace: "user", varKey: event.target.getAttribute('value'), selectFolder: true}).render();
         }
     })
 })

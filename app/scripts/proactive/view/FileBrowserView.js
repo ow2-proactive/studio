@@ -10,7 +10,7 @@ define(
 
     return Backbone.View.extend({
 
-        dataspace: "",
+        dataspace: "", // the concerned data space, its value could be "user" or "global".
 
         dataspaceRestUrl: "/rest/data/",
 
@@ -22,6 +22,7 @@ define(
             'files': [],
             'directories': [],
             'currentPath': "",
+            'selectFolder': false, // identify the selected variable value should be a folder (true) or a regular file (false).
             'locationDescription': ""
         },
 
@@ -42,6 +43,7 @@ define(
         initialize: function (options) {
             this.dataspace = options.dataspace;
             this.model['varKey'] = options.varKey;
+            this.model['selectFolder'] = options.selectFolder;
             this.dataspaceRestUrl += options.dataspace + "/";
             this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
             switch (options.dataspace.toUpperCase()) {
@@ -187,16 +189,34 @@ define(
         selectFile: function() {
             var selectedElement=$("#files-tbody  tr.selected");
             if (selectedElement.length == 0) {
-                $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file !");
+                if (this.model['selectFolder']) {
+                    $("#file-browser-error-message").text("Cannot find any folder selected: please select a folder !");
+                } else {
+                    $("#file-browser-error-message").text("Cannot find any file selected: please select a regular file !");
+                }
                 return;
             }
-            var selectedFile = selectedElement.children(".file-browser-file");
+
+            var selectedFile;
+            var selectErrorMessage = "";
+            if (this.model['selectFolder']) {
+                selectedFile = selectedElement.children(".file-browser-dir");
+                selectErrorMessage = "The regular file is disallowed to be the variable value: please select a directory !";
+            } else {
+                selectedFile = selectedElement.children(".file-browser-file");
+                selectErrorMessage = "The directory is disallowed to be the variable value: please select a regular file !";
+            }
             if (selectedFile.length == 0) {
-                $("#file-browser-error-message").text("Directory is disallowed as the variable value: please select a regular file !");
+                $("#file-browser-error-message").text(selectErrorMessage);
             } else {
                 // update the variable value to the selected file path
+                var selectedFilePath = selectedFile.attr('value');
+                // remove the trailing '/' in the path.
+                if(selectedFilePath.endsWith('/')) {
+                    selectedFilePath = selectedFilePath.slice(0, -1);
+                }
                 var studioApp = require('StudioApp');
-                var updatedVar = {[this.model['varKey']]: selectedFile.attr('value')};
+                var updatedVar = {[this.model['varKey']]: selectedFilePath};
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
                 this.closeFileBrowser();
             }

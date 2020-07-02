@@ -196,11 +196,11 @@ define(
         });
 
         $("#global-files-button, #global-files-button-tool").click(function (){
-            new FileBrowserView({dataspace: "global", varKey: undefined}).render();
+            new FileBrowserView({dataspace: "global", varKey: undefined, selectFolder: false}).render();
         });
 
         $("#user-files-button, #user-files-button-tool").click(function (){
-            new FileBrowserView({dataspace: "user", varKey: undefined}).render();
+            new FileBrowserView({dataspace: "user", varKey: undefined, selectFolder: false}).render();
         });
 
         $("#get-from-catalog-button, #get-from-catalog-button-tool").click(function (event) {
