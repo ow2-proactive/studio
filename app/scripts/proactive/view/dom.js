@@ -4,6 +4,7 @@ define(
         'backbone',
         'proactive/config',
         'proactive/view/utils/undo',
+        'proactive/view/FileBrowserView',
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
@@ -52,7 +53,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
+    function ($, Backbone, config, undoManager, FileBrowserView, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -192,7 +193,15 @@ define(
             closeCollapsedMenu();
             studioApp.views.xmlView.render();
             $('#xml-view-modal').modal();
-        })
+        });
+
+        $("#global-files-button, #global-files-button-tool").click(function (){
+            new FileBrowserView({dataspace: "global", varKey: undefined, selectFolder: false}).render();
+        });
+
+        $("#user-files-button, #user-files-button-tool").click(function (){
+            new FileBrowserView({dataspace: "user", varKey: undefined, selectFolder: false}).render();
+        });
 
         $("#get-from-catalog-button, #get-from-catalog-button-tool").click(function (event) {
             event.preventDefault();

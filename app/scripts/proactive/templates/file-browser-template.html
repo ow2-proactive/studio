@@ -1,21 +1,31 @@
-<div class="modal-dialog">
+<div class="modal-dialog" style="width:60vw">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close file-browser-close" aria-hidden="true">×</button>
-            <h3><%=locationDescription%> Files</h3>
+            <h3><%=locationDescription%> File Browser</h3>
+            <h5>
+                Browse, Upload/Download files in <%=locationDescription%><% if(varKey){ %>, Select one <% if(selectFolder){ %> folder <% } else { %> file <% } %> as the variable value<% } %>
+                <br/>
+                <br/>
+                <%- spaceDescription %>
+            </h5>
         </div>
         <div id="files-body" class="modal-body">
             <div>
-                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh" style="padding-left: 0px;">
+                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh files" style="padding-left: 0px;">
                     <i class="fas fa-redo"></i>
                 </a>
                 <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
                     <i class="fas fa-folder-plus"></i>
                 </a>
-                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload">
+                <input type="file" id="selected-upload-file" class="hidden"/>
+                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload a file into the <%=locationDescription%>">
                     <i class="fas fa-upload"></i>
                 </a>
-                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete">
+                <a id="download-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Download the selected file or folder">
+                    <i class="fas fa-download"></i>
+                </a>
+                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete the selected file or folder">
                     <i class="fas fa-trash"></i>
                 </a>
             </div>
@@ -24,7 +34,7 @@
                 <span class="font-bold">
                     Location:
                 </span>
-                <span class="current-sub-path"><a href="javascript:void(0)" value="">\</a></span>
+                <span class="current-sub-path"><a href="javascript:void(0)" value="">/</a></span>
                 <ol class="breadcrumb" style="border:none;">
                     <% var splitPath = currentPath.split("/").filter(i => i);
                     for (var [index, subPath] of splitPath.entries()) { %>
@@ -33,14 +43,30 @@
                 </ol>
             </div>
             <br>
-            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; height: 270px;">
-               <table>
+            <div id="files-container" style="overflow-x: hidden; overflow-y: scroll; max-height: 48vh; overflow-wrap: break-word;">
+               <table style="width: 100%; table-layout:fixed;">
+                   <thead>
+                        <th>Name</th>
+                        <th width="80em">Size</th>
+                        <th width="120em">Type</th>
+                        <th width="160em">Modified</th>
+                   </thead>
                    <tbody id="files-tbody">
                     <% for (var index in directories) { %>
-                    <tr> <td class="file-browser-dir" value="<%- currentPath %><%- directories[index] %>/"> <i class="far fa-folder"> </i> <%- directories[index] %> </td></tr>
+                    <tr class="file-browser-dir-tr">
+                        <td class="file-browser-dir" value="<%- currentPath %><%- directories[index].name %>/"> <i class="far fa-folder"> </i> <%- directories[index].name %> </td>
+                        <td> </td>
+                        <td> Folder </td>
+                        <td> <%- directories[index].modified %> </td>
+                    </tr>
                     <% } %>
                     <% for (var index in files) { %>
-                    <tr> <td class="file-browser-file" value="<%- currentPath %><%- files[index] %>"> <i class="far fa-file"> </i> <%- files[index] %> </td></tr>
+                    <tr class="file-browser-file-tr">
+                        <td class="file-browser-file" value="<%- currentPath %><%- files[index].name %>"> <i class="far fa-file"> </i> <%- files[index].name %> </td>
+                        <td> <%- files[index].size %> </td>
+                        <td> <%- files[index].type %> </td>
+                        <td> <%- files[index].modified %> </td>
+                    </tr>
                     <% } %>
                    </tbody>
                </table>
@@ -49,9 +75,12 @@
             <label id="file-browser-error-message" style="color:red;"></label>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
-            <input type="file" id="selected-upload-file" class="hidden"/>
-            <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
+            <% if(varKey){ %>
+                <button class="btn btn-primary file-browser-select-btn" type="button"> Select </button>
+                <button class="btn btn-white file-browser-close" type="button"> Cancel </button>
+            <% } else { %>
+                <button class="btn btn-white file-browser-close" type="button"> Close </button>
+            <% } %>
         </div>
     </div>
 </div>
