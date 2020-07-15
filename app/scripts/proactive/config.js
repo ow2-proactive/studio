@@ -326,9 +326,13 @@ try {
     // pull the container inside the synchronization lock
     if (majorVersion >= 3) {
         pullCmd = "singularity pull --dir " + userHome + " " + imageFile + " " + imageUrl
-        process = pullCmd.execute()
+        println pullCmd
+        def env = System.getenv().collect { k, v -> "$k=$v" }
+        env.push('XDG_RUNTIME_DIR=/run/user/$UID')
+        process = pullCmd.execute(env, new File(userHome))
     } else {
         pullCmd = "singularity pull --name " + imageFile + " " + imageUrl
+        println pullCmd
         def env = System.getenv().collect { k, v -> "$k=$v" }
         env.push("SINGULARITY_PULLFOLDER=" + userHome)
         process = pullCmd.execute(env, new File(userHome))
@@ -386,6 +390,7 @@ try {
     cmd.add((new File(userHome, imageFile)).getAbsolutePath())
 
     forkEnvironment.setPreJavaCommand(cmd)
+    forkEnvironment.addSystemEnvironmentVariable("XDG_RUNTIME_DIR",'/run/user/$UID')
 
     // Show the generated command
     println "SINGULARITY COMMAND : " + forkEnvironment.getPreJavaCommand()
