@@ -522,10 +522,22 @@ define(
             if (validationData.hasOwnProperty('updatedVariables')) {
                 var updatedVariables = validationData.updatedVariables;
                 if (updatedVariables != null) {
+                    var extractVariableName = function (key) { return (key.split(":").length == 2 ? key.split(":")[1] : key) };
                     for (var key in inputVariables) {
                         if (inputVariables.hasOwnProperty(key)) {
                             var variable = inputVariables[key];
-                            variable.Value = updatedVariables[key];
+                            var containsPattern = false;
+                            if (variable.Value) {
+                                for (var variablePatternCheck in inputVariables) {
+                                    if (variable.Value.indexOf("$" + extractVariableName(variablePatternCheck)) >= 0 ||
+                                    variable.Value.indexOf("${" + extractVariableName(variablePatternCheck) + "}") >= 0) {
+                                        containsPattern = true;
+                                    }
+                                }
+                            }
+                            if (!containsPattern) {
+                                variable.Value = updatedVariables[key];
+                            }
                         }
                     }
                 }
