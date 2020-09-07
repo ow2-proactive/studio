@@ -86,7 +86,8 @@ define(
                     subSchema: {
                         "Property Name": {
                             validators: ['required'],
-                            fieldAttrs: {'placeholder': '@attributes->name'}
+                            fieldAttrs: {'placeholder': '@attributes->name'},
+                            title: '<br><a target="_blank" href="' + config.docUrl + '/user/ProActiveUserGuide.html#_generic_information">Documentation</a><br><br>Property Name'
                         },
                         "Property Value": {
                             type: 'TextArea',
