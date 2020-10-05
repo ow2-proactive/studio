@@ -428,6 +428,11 @@ define(
                 return;
             }
 
+            for( var key in jobVariables){
+                if(jobVariables[key].Model.indexOf('$') !== -1){
+                    jobVariables[key].referenceType = jobVariables[jobVariables[key].Model.split('$')[1]].Value;
+                }
+            }
             studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
 
@@ -538,6 +543,15 @@ define(
                             if (!containsPattern) {
                                 variable.Value = updatedVariables[key];
                             }
+                        }
+                        if(inputVariables[key].Model.indexOf('$') !== -1){
+                            inputVariables[key].referenceType = inputVariables[inputVariables[key].Model.split('$')[1]].Value;
+                        }
+                    }
+                } else {
+                    for (var key in inputVariables) {
+                        if(inputVariables[key].Model.indexOf('$') !== -1){
+                            inputVariables[key].referenceType = inputVariables[inputVariables[key].Model.split('$')[1]].Value;
                         }
                     }
                 }
