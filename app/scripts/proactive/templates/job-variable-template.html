@@ -64,10 +64,10 @@
             <label for="<%- key %>" class="Name" title="<%- key %>" data-toggle="tooltip"><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label>
             <%
                var model = null;
-               var referenceType = null;
+               var resolvedModel = null;
                if (variable.hasOwnProperty("Model")) {
                    model = variable.Model;
-                   referenceType = variable.referenceType;
+                   resolvedModel = variable.resolvedModel;
                    if (model && model.toLowerCase().indexOf('pa:model_from_url') != -1) {
                         // fetch the specified urls and replace the current model by the result
                         var indexBegin = model.indexOf('(');
@@ -106,7 +106,7 @@
                                 <option><%- option %></option>
                     <% } %>
                 </select>
-            <% } else if ((model && model.toLowerCase().indexOf('pa:boolean')!=-1) || (referenceType  && referenceType.toLowerCase().indexOf('pa:boolean')!=-1) ) {  %>
+            <% } else if ((model && model.toLowerCase().indexOf('pa:boolean')!=-1) || (resolvedModel  && resolvedModel.toLowerCase().indexOf('pa:boolean')!=-1) ) {  %>
                 <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" data-variable-model="<%- model %>">
                 <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) %>
                     <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
@@ -139,10 +139,26 @@
                 <label class="short" data-toggle="tooltip" title="<%- model %>"><%- shortenModel %></label>
                 <button title="Browse, Upload User Space files, and Select one folder" value="<%- key %>" class="var-userfolder-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
             <% } else { %>
+                <% if(resolvedModel && ( (resolvedModel.toLowerCase().indexOf('pa:hidden') == -1) ) ) { %>
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" data-variable-model="<%- model %>" id="<%- key %>" ><%- variable.Value %></textarea>
-                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- referenceType %></label>
-                <% if( referenceType === "PA:GLOBAL_FILE" ) { %>
+                <% } else  { %>
+                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" data-variable-model="<%- model %>" id="<%- key %>" value="<%- variable.Value %>" autocomplete="new-password" />
+                <% } %>
+                <label class="short" data-toggle="tooltip" title="<%- model %>"><%- resolvedModel %></label>
+                <% if( resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_file') != -1 ) { %>
                 <button title="Browse Global Space files, Upload, and Select one file" value="<%- key %>" class="var-globalfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                <% } %>
+                <% if(resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_file') != -1 ) { %>
+                <button title="Browse User Space files, Upload, and Select one file" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                <% } %>
+                <% if( resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_folder') != -1 ) { %>
+                <button title="Browse, Upload Global Space files, and Select one folder" value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                <% } %>
+                <% if( resolvedModel && (resolvedModel.toLowerCase().indexOf('pa:user_folder') != -1) ) { %>
+                <button title="Browse User Space files, Upload, and Select one file" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                <% } %>
+                <% if( resolvedModel &&  (resolvedModel.toLowerCase().indexOf('pa:credential') != -1)  ) { %>
+                <button title="Manage third-party credentials" class="third-party-credential-button btn" type="button" style="background-color:Transparent"><img src="images/key.png"></button>
                 <% } %>
             <% } %>
         </li>

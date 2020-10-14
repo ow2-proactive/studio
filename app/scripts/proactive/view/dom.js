@@ -428,12 +428,25 @@ define(
                 return;
             }
 
-            for( var key in jobVariables){
-                if(jobVariables[key].Model.indexOf('$') !== -1){
-                    jobVariables[key].referenceType = jobVariables[jobVariables[key].Model.split('$')[1]].Value;
+            var validationData = validate();
+            if (validationData.valid) {
+                for( var key in jobVariables){
+                    jobVariables[key].resolvedModel = validationData.updatedModels[key];
                 }
+                studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+            } else {
+                // Handle the case where we have variables substitution
+                var map = new Map();
+                for( var key in jobVariables){
+                    map.set('$' + key, jobVariables[key])
+                }
+                for( var key in jobVariables){
+                    if(map.has(jobVariables[key].Model)){
+                        jobVariables[key].resolvedModel = jobVariables[jobVariables[key].Model.split('$')[1]].Value;
+                    }
+                }
+                studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             }
-            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
 
             initializeSubmitFormForTaskVariables();
@@ -544,16 +557,20 @@ define(
                                 variable.Value = updatedVariables[key];
                             }
                         }
-                        if(inputVariables[key].Model.indexOf('$') !== -1){
-                            inputVariables[key].referenceType = inputVariables[inputVariables[key].Model.split('$')[1]].Value;
-                        }
+                        inputVariables[key].resolvedModel = validationData.updatedModels[key];
                     }
                 } else {
-                    for (var key in inputVariables) {
-                        if(inputVariables[key].Model.indexOf('$') !== -1){
-                            inputVariables[key].referenceType = inputVariables[inputVariables[key].Model.split('$')[1]].Value;
+                    // Handle the case where we have variables substitution
+                    var map = new Map();
+                    for( var key in inputVariables){
+                        map.set('$'+key, inputVariables[key])
+                    }
+                    for( var key in inputVariables){
+                        if(map.has(inputVariables[key].Model)){
+                            inputVariables[key].resolvedModel = inputVariables[inputVariables[key].Model.split('$')[1]].Value;
                         }
                     }
+
                 }
             }
             return inputVariables;
