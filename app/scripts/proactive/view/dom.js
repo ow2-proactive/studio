@@ -429,7 +429,7 @@ define(
             }
 
             var validationData = validate();
-            if (validationData.valid) {
+            if (validationData.updatedModels != null) {
                 for( var key in jobVariables){
                     jobVariables[key].resolvedModel = validationData.updatedModels[key];
                 }
