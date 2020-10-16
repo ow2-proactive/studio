@@ -433,20 +433,8 @@ define(
                 for( var key in jobVariables){
                     jobVariables[key].resolvedModel = validationData.updatedModels[key];
                 }
-                studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
-            } else {
-                // Handle the case where we have variables substitution
-                var map = new Map();
-                for( var key in jobVariables){
-                    map.set('$' + key, jobVariables[key])
-                }
-                for( var key in jobVariables){
-                    if(map.has(jobVariables[key].Model)){
-                        jobVariables[key].resolvedModel = jobVariables[jobVariables[key].Model.split('$')[1]].Value;
-                    }
-                }
-                studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             }
+            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
 
             initializeSubmitFormForTaskVariables();
@@ -518,7 +506,8 @@ define(
                 var validationData = validate();
 
                 if (!validationData.valid) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    var jobVariables = extractUpdatedVariables(inputVariables, validationData);
+                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
                 } else if (check) {
                     studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                 } else {
@@ -537,6 +526,7 @@ define(
         }
 
         function extractUpdatedVariables(inputVariables, validationData) {
+            var studioApp = require('StudioApp');
             if (validationData.hasOwnProperty('updatedVariables')) {
                 var updatedVariables = validationData.updatedVariables;
                 if (updatedVariables != null) {
@@ -558,16 +548,11 @@ define(
                             }
                         }
                         inputVariables[key].resolvedModel = validationData.updatedModels[key];
-                    }
-                } else {
-                    // Handle the case where we have variables substitution
-                    var map = new Map();
-                    for( var key in inputVariables){
-                        map.set('$'+key, inputVariables[key])
-                    }
-                    for( var key in inputVariables){
-                        if(map.has(inputVariables[key].Model)){
-                            inputVariables[key].resolvedModel = inputVariables[inputVariables[key].Model.split('$')[1]].Value;
+                        //Variables substitution:: When one changes the reference model we should initialize the Value and not show error message
+                        var jobVariables = studioApp.views.jobVariableView.model.jobVariables;
+                        if(jobVariables[key].resolvedModel !== inputVariables[key].resolvedModel ){// compare old resolvedModel with the new resolvedModel
+                            inputVariables[key]['Value'] = "";
+                            validationData.errorMessage = "";
                         }
                     }
 
