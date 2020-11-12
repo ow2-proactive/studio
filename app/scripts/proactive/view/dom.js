@@ -428,6 +428,12 @@ define(
                 return;
             }
 
+            var validationData = validate();
+            if (validationData.updatedModels != null) {
+                for( var key in jobVariables){
+                    jobVariables[key].resolvedModel = validationData.updatedModels[key];
+                }
+            }
             studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
 
@@ -500,7 +506,8 @@ define(
                 var validationData = validate();
 
                 if (!validationData.valid) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    var jobVariables = extractUpdatedVariables(inputVariables, validationData);
+                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
                 } else if (check) {
                     studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
                 } else {
@@ -519,6 +526,7 @@ define(
         }
 
         function extractUpdatedVariables(inputVariables, validationData) {
+            var studioApp = require('StudioApp');
             if (validationData.hasOwnProperty('updatedVariables')) {
                 var updatedVariables = validationData.updatedVariables;
                 if (updatedVariables != null) {
@@ -539,7 +547,15 @@ define(
                                 variable.Value = updatedVariables[key];
                             }
                         }
+                        inputVariables[key].resolvedModel = validationData.updatedModels[key];
+                        //Variables substitution:: When one changes the reference model we should initialize the Value and not show error message
+                        var jobVariables = studioApp.views.jobVariableView.model.jobVariables;
+                        if(jobVariables[key].resolvedModel !== inputVariables[key].resolvedModel ){// compare old resolvedModel with the new resolvedModel
+                            inputVariables[key]['Value'] = "";
+                            validationData.errorMessage = "";
+                        }
                     }
+
                 }
             }
             return inputVariables;
