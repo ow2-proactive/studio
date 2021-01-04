@@ -550,13 +550,10 @@ define(
                         inputVariables[key].resolvedModel = validationData.updatedModels[key];
                         //Variables substitution:: When one changes the reference model we should initialize the Value and not show error message
                         var jobVariables = studioApp.views.jobVariableView.model.jobVariables;
-                        if(jobVariables[key].resolvedModel){
-                            if(jobVariables[key].resolvedModel !== inputVariables[key].resolvedModel ){// compare old resolvedModel with the new resolvedModel
-                                inputVariables[key]['Value'] = "";
-                                validationData.errorMessage = "";
-                            }
+                        if( jobVariables[key].resolvedModel && jobVariables[key].resolvedModel !== inputVariables[key].resolvedModel ){// compare old resolvedModel with the new resolvedModel
+                            inputVariables[key]['Value'] = "";
+                            validationData.errorMessage = "";
                         }
-
                     }
 
                 }
