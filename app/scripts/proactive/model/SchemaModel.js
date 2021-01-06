@@ -90,15 +90,15 @@ define(
                                     newElements.push(listElemValue)
                                 }
                             })
-                            // In the case where we have Duplicated Variables, we delete the previous variable
 
+                            // In the case where we have duplicated variables, we privilege the previous variables and delete the new variables
                             if(placeholder === "variables->variable"){
                                 if(value && currentElements.length && newElements.length){
                                     var dupElementIndex = -1;
-                                    newElements.forEach(function(variable){
-                                        dupElementIndex = currentElements.findIndex(function(vr){return variable.name === vr.name});
+                                    currentElements.forEach(function(variable){
+                                        dupElementIndex = newElements.findIndex(function(vr){return variable.name === vr.name});
                                         if(  dupElementIndex !== -1){
-                                            currentElements.splice(dupElementIndex, 1);
+                                            newElements.splice(dupElementIndex, 1);
                                         }
                                     })
                                 }
