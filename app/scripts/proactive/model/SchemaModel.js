@@ -91,6 +91,19 @@ define(
                                 }
                             })
 
+                            // In the case where we have duplicated variables, we privilege the previous variables and delete the new variables
+                            if(placeholder === "variables->variable"){
+                                if(value && currentElements.length && newElements.length){
+                                    var dupElementIndex = -1;
+                                    currentElements.forEach(function(variable){
+                                        dupElementIndex = newElements.findIndex(function(vr){return variable.name === vr.name});
+                                        if(  dupElementIndex !== -1){
+                                            newElements.splice(dupElementIndex, 1);
+                                        }
+                                    })
+                                }
+                            }
+
                             this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
                         }
                     } else if (this.schema[prop].type && this.schema[prop].type == 'TaskTypeRadioEditor') {
