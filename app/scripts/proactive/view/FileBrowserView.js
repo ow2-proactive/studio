@@ -37,7 +37,8 @@ define(
             'click #refresh-file-btn': 'refreshFiles',
             'click #new-folder-btn': 'createFolder',
             'click #download-file-btn': 'downloadFile',
-            'click #delete-file-btn': 'deleteFile'
+            'click #delete-file-btn': 'deleteFile',
+            'change #show-hidden-files' : 'showHiddenChange'
         },
 
         initialize: function (options) {
@@ -46,6 +47,7 @@ define(
             this.model['selectFolder'] = options.selectFolder;
             this.dataspaceRestUrl += options.dataspace + "/";
             this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
+            this.showHidden = false;
             switch (options.dataspace.toUpperCase()) {
                 case "GLOBAL":
                     this.model['spaceDescription']="Global DataSpace is a shared storage on the server host where anyone can read/write files."
@@ -86,6 +88,14 @@ define(
             }
         },
 
+        showHiddenChange: function (event) {
+            var checkbox = document.getElementById('show-hidden-files');
+            if (checkbox.checked != this.showHidden) {
+                this.showHidden = checkbox.checked;
+                this.refreshFiles();
+            }
+        },
+
         enterFilesSubdir: function (event) {
             var clickedRow = $(event.target.parentElement)
             var clickedDir = clickedRow.children(".file-browser-dir");
@@ -109,10 +119,18 @@ define(
                 success: function (data){
                     that.model['files'] = that.getFilesMetadata(data.fileListing.sort());
                     that.model['directories'] = that.getFilesMetadata(data.directoryListing.sort());
+                    that.model['showHidden'] = that.showHidden;
                     that.$el.html(that.template(that.model));
                     if(that.uploadRequest) {
                         that.switchToUploadingState();
                     }
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = "";
+                    if(xhr) {
+                        errorMessage = ": " + (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
+                    }
+                    StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
                 }
             });
         },
@@ -131,6 +149,7 @@ define(
                         filesMetadata[i] = {
                             name: fileNames[i],
                             type: xhr.getResponseHeader('x-proactive-ds-type'),
+                            rights: xhr.getResponseHeader('x-proactive-ds-permissions'),
                             modified: that.toDateInClientFormat(xhr.getResponseHeader('Last-Modified'))
                         };
                         if(filesMetadata[i].type == 'FILE') {
@@ -251,7 +270,7 @@ define(
                     error: function (xhr, status, error) {
                         var errorMessage = "";
                         if(xhr) {
-                            errorMessage = ": "+ xhr.errorMessage;
+                            errorMessage = ": "+ (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
                         }
                         StudioClient.alert('Error', "Failed to upload the file " + selectedFile.name + errorMessage, 'error');
                         that.switchToNothingUploadingState();
@@ -286,7 +305,7 @@ define(
                             that.refreshFiles();
                         },
                         error: function (xhr, status, error) {
-                            StudioClient.alert('Create New Folder', "Failed to create the new folder " + pathname + ": "+ xhr.statusText , 'error');
+                            StudioClient.alert('Create New Folder', "Failed to create the new folder " + pathname + ": " + xhr.statusText , 'error');
                         }
                     });
                 }
