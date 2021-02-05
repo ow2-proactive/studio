@@ -28,6 +28,9 @@
                 <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete the selected file or folder">
                     <i class="fas fa-trash"></i>
                 </a>
+                <div class="pull-right" id="pull-right-hidden-files-checkbox">
+                    <label class="checkbox-inline"><input id="show-hidden-files" type="checkbox" <%- showHidden ? "checked" : ""  %> >Show Hidden</label>
+                </div>
             </div>
             <br>
             <div id="current-path" style="display:inline-flex">
@@ -47,27 +50,36 @@
                <table style="width: 100%; table-layout:fixed;">
                    <thead>
                         <th>Name</th>
+                        <th width="80em">Rights</th>
                         <th width="80em">Size</th>
                         <th width="120em">Type</th>
                         <th width="160em">Modified</th>
                    </thead>
                    <tbody id="files-tbody">
-                    <% for (var index in directories) { %>
+                    <% for (var index in directories) {
+                        if (directories[index].name.indexOf('.') != 0 || showHidden) {
+                    %>
                     <tr class="file-browser-dir-tr">
                         <td class="file-browser-dir" value="<%- currentPath %><%- directories[index].name %>/"> <i class="far fa-folder"> </i> <%- directories[index].name %> </td>
+                        <td> <%- directories[index].rights %> </td>
                         <td> </td>
                         <td> Folder </td>
                         <td> <%- directories[index].modified %> </td>
                     </tr>
-                    <% } %>
-                    <% for (var index in files) { %>
+                    <%   }
+                       }
+                       for (var index in files) {
+                         if (files[index].name.indexOf('.') != 0 || showHidden) {
+                    %>
                     <tr class="file-browser-file-tr">
                         <td class="file-browser-file" value="<%- currentPath %><%- files[index].name %>"> <i class="far fa-file"> </i> <%- files[index].name %> </td>
+                        <td> <%- files[index].rights %> </td>
                         <td> <%- files[index].size %> </td>
                         <td> <%- files[index].type %> </td>
                         <td> <%- files[index].modified %> </td>
                     </tr>
-                    <% } %>
+                    <%   }
+                       } %>
                    </tbody>
                </table>
             </div>
