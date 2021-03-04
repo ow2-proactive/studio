@@ -64,6 +64,7 @@ define(
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     var studioApp = require('StudioApp');
                     var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
+                    var currentProjectName = studioApp.models.currentWorkflow.getProject();
                     var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
                         _.each(
@@ -74,18 +75,19 @@ define(
                             if (obj.name == currentWorkflowName)
                                 currentWorkflowExists = true;
                         });
-                    })
+                    });
                     if (currentWorkflowExists){
-                        this.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName);
+                        this.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
                     }else{
                       var objectDescription = _.template(publishDescriptionFirst);
-                      this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel}));
+                      this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
                     }
                 } else {
                     //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
                     var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
                     var selectedIndex = 0;
                     var index = 0;
+                    var projectName = "";
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
                         _.each(
                         catalogObjects,
@@ -99,13 +101,13 @@ define(
                     })
                     var name = scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
-                    this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel}));
+                    this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel, projectname: projectName}));
                     this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
             }
 
         },
-        addWorkflowRevisionDescription: function(bucketName, workflowName) {
+        addWorkflowRevisionDescription: function(bucketName, workflowName, projectName) {
             var that = this;
             var revisionsModel = new CatalogObjectLastRevisionDescription(
                 {
@@ -113,7 +115,7 @@ define(
                     name: workflowName,
                     callback: function (revision) {
                         var objectDescription = _.template(publishDescription);
-                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel}));
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: projectName}));
                     }
                 });
             revisionsModel.fetch();
@@ -194,6 +196,7 @@ define(
             payload.append('name', objectName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('kind', $("#catalog-publish-kind").val());
+            payload.append('projectName', $("#catalog-publish-project-name").val());
             payload.append('objectContentType', contentTypeToPublish );
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
@@ -224,6 +227,8 @@ define(
                     data: payload
             };
 
+            //synchronize project name values
+            studioApp.models.jobModel.set("Project", $("#catalog-publish-project-name").val());
             var that = this;
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
@@ -299,7 +304,6 @@ define(
                 $('#publish-current-confirmation-modal .modal-body').html("Do you want to publish your object in the Catalog?");
             }
             $("#catalog-publish-objects-title").text(this.kindLabel +"s");
-            console.log($("#catalog-publish-objects-title").length);
             return this;
         },
     })
