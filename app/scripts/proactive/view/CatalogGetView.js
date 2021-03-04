@@ -100,18 +100,9 @@ define(
         	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
         	 $('#catalog-get-append-button').prop('disabled', enableAppend);       
         },
-        getRevisionProjectName: function(revision){
-            for (var i = 0 ; i < revision.object_key_values.length ; i++){
-                var keyValue = revision.object_key_values[i];
-                if (keyValue.key == "project_name" && keyValue.label == "job_information"){
-                    return keyValue.value;
-                }
-            }
-            return "";
-        },
+
         internalSelectObject: function (currentObjectRow) {
             this.$('#catalog-get-revisions-table').empty();
-
             if (currentObjectRow){
                 var currentWorkflowName = $(currentObjectRow).data("objectname");
 	            this.highlightSelectedRow('#catalog-get-objects-table', currentObjectRow);
@@ -125,13 +116,13 @@ define(
 		            	callback: function (revisions) {
                             var latestRevision = JSON.parse(JSON.stringify(revisions[0]));//Copy of the fist revision: the latest one
                             latestRevision.links[1].href = 'buckets/'+latestRevision.bucket_name+'/resources/'+latestRevision.name;
-                            var latestRevisionProjectName = that.getRevisionProjectName(latestRevision);
+                            var latestRevisionProjectName = latestRevision.project_name;
                             var RevisionList = _.template(catalogRevision);
                             $('#catalog-get-revisions-table').append(RevisionList({revision: latestRevision, projectname: latestRevisionProjectName, isLatest : true}));
 		            		_.each(
 		            			revisions, 
 		            			function (revision) {
-		            				var projectName = that.getRevisionProjectName(revision);
+		            				var projectName = revision.project_name;
 		            				var RevisionList = _.template(catalogRevision);
 		            				$('#catalog-get-revisions-table').append(RevisionList({revision: revision, projectname: projectName, isLatest : false}));
 		            			}
@@ -164,7 +155,7 @@ define(
 	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
         		var username = $(currentRevisionRow).data("username");
-        		
+
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
         		
 				var RevisionDescription = _.template(catalogRevisionDescription);
