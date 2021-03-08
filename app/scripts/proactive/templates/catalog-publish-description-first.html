@@ -20,9 +20,9 @@
 		<tr>
 			<td>Project name:</td>
 			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
-			<td><input type="text" value="<%= projectname %>" disabled style="background-color: #F1F1F1; cursor: not-allowed"></td>
+			<td><input type="text" id="workflow-publish-project-name" value="<%= projectname %>" disabled style="background-color: #F1F1F1; cursor: not-allowed"></td>
 			<% } else { %>
-			<td><input type="text" id="catalog-publish-project-name" value="<%= projectname %>"></td>
+			<td><input type="text" id="script-publish-project-name" value="<%= projectname %>"></td>
 			<% } %>
 		</tr>
 		<tr>
