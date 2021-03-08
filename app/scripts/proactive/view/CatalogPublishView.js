@@ -164,10 +164,13 @@ define(
             var studioApp = require('StudioApp');
             var objectName;
             var fileName;
+            var projectName;
             if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 objectName = studioApp.models.currentWorkflow.attributes.name;
                 fileName = objectName + ".xml";
+                projectName = $("#workflow-publish-project-name").val();
             } else {
+                projectName = $("#script-publish-project-name").val();
                 objectName = $("#catalog-publish-name").val();
                 fileName = objectName+ ".txt";
             }
@@ -176,7 +179,6 @@ define(
                 //saving script name and bucket for next commits
                 document.getElementById(this.relatedInputId).dataset.scriptName = objectName;
                 document.getElementById(this.relatedInputId).dataset.bucketName = bucketName;
-
                 contentTypeToPublish = 'text/plain';
                 try {
                     var extension = config.languages_to_extensions[this.scriptLanguage];
@@ -196,7 +198,7 @@ define(
             payload.append('name', objectName);
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('kind', $("#catalog-publish-kind").val());
-            payload.append('projectName', $("#catalog-publish-project-name").val());
+            payload.append('projectName', projectName);
             payload.append('objectContentType', contentTypeToPublish );
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
@@ -228,7 +230,7 @@ define(
             };
 
             //synchronize project name values
-            studioApp.models.jobModel.set("Project", $("#catalog-publish-project-name").val());
+            studioApp.models.jobModel.set("Project", projectName);
             var that = this;
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
