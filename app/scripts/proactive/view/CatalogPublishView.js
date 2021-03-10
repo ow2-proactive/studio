@@ -169,6 +169,8 @@ define(
                 objectName = studioApp.models.currentWorkflow.attributes.name;
                 fileName = objectName + ".xml";
                 projectName = $("#workflow-publish-project-name").val();
+                //synchronize project name values
+                studioApp.models.jobModel.set("Project", $("#workflow-publish-project-name").val());
             } else {
                 projectName = $("#script-publish-project-name").val();
                 objectName = $("#catalog-publish-name").val();
@@ -229,8 +231,6 @@ define(
                     data: payload
             };
 
-            //synchronize project name values
-            studioApp.models.jobModel.set("Project", projectName);
             var that = this;
             $.ajax(postData).success(function (response) {
                 StudioClient.alert('Publish successful', 'The ' + that.kindLabel + ' has been successfully published to the Catalog', 'success');
