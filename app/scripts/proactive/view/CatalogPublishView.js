@@ -305,7 +305,7 @@ define(
             } else {
                 $('#publish-current-confirmation-modal .modal-body').html("Do you want to publish your object in the Catalog?");
             }
-            $("#catalog-publish-objects-title").text(this.kindLabel +"s");
+            $("#catalog-publish-objects-title").text(this.kindLabel +"s and Projects");
             return this;
         },
     })

@@ -288,7 +288,7 @@ define(
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)
-            this.$('#catalog-objects-legend').text(this.kindLabel+'s');
+            this.$('#catalog-objects-legend').text(this.kindLabel+'s and Projects');
             return this;
         },
     })
