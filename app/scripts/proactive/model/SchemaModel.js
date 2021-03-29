@@ -96,9 +96,9 @@ define(
                                 if(value && currentElements.length && newElements.length){
                                     var dupElementIndex = -1;
                                     currentElements.forEach(function(variable){
-                                        dupElementIndex = newElements.findIndex(function(vr){return variable.name === vr.name});
+                                        dupElementIndex = newElements.findIndex(function(vr){return variable.Name === vr.Name});
                                         if(  dupElementIndex !== -1){
-                                            newElements.splice(dupElementIndex, 1);
+                                            //newElements.splice(dupElementIndex, 1);
                                         }
                                     })
                                 }
