@@ -18,8 +18,16 @@
 			<td><input type="text" id="catalog-publish-kind" value="<%= kind %>" ></td>
 		</tr>
 		<tr>
+			<td>Project name:</td>
+			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
+			<td><input type="text" id="workflow-publish-project-name" value="<%= projectname %>" disabled style="background-color: #F1F1F1; cursor: not-allowed"></td>
+			<% } else { %>
+			<td><input type="text" id="script-publish-project-name" value="<%= projectname %>"></td>
+			<% } %>
+		</tr>
+		<tr>
 			<td>Commit message:</td>
-			<td colspan="2"><input type="text" id="catalog-publish-commit-message" style="width: 100%"></td>
+			<td colspan="2"><input type="text" id="catalog-publish-commit-message"></td>
 		</tr>
 
 	</table>
