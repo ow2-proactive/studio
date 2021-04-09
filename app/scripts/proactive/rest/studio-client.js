@@ -278,7 +278,7 @@ define(
                 var toastrConfig = {escapeHtml:false, closeButton: true, tapToDismiss: false, progressBar: false, timeOut: 0, extendedTimeOut: 0};
                 var uploadToast = toastr.info("Uploading the file "+ uploadFile.name + "\n<div class='toast-progress'></div>", "File Uploading", toastrConfig)
 
-                var uploadRequest = $.ajax({
+                $.ajax({
                     xhr: function() {
                         var xhr = new window.XMLHttpRequest();
                         xhr.upload.addEventListener("progress", function(evt) {
@@ -302,6 +302,7 @@ define(
                         uploadToast.addClass('toast-success');
                     },
                     error: function (xhr, status, error) {
+                        errorCallback();
                         var errorMessage = "";
                         if(xhr) {
                             errorMessage = ": "+ (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
