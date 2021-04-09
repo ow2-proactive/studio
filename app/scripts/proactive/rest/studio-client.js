@@ -2,11 +2,12 @@ define(
     [
         'jquery',
         'proactive/config',
+        'toastr',
         'pnotify',
         'pnotify.buttons'
     ],
 
-    function($, config, PNotify) {
+    function($, config, toastr, PNotify) {
 
         "use strict";
 
@@ -268,6 +269,47 @@ define(
                             that.alert("Cannot upload a file", reason, 'error');
                             error();
                         }
+                    }
+                });
+            },
+
+            uploadDataspaceFile: function(url, uploadFile, successCallback, errorCallback) {
+                var that = this;
+                var toastrConfig = {escapeHtml:false, closeButton: true, tapToDismiss: false, progressBar: false, timeOut: 0, extendedTimeOut: 0};
+                var uploadToast = toastr.info("Uploading the file "+ uploadFile.name + "\n<div class='toast-progress'></div>", "File Uploading", toastrConfig)
+
+                var uploadRequest = $.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function(evt) {
+                            if (evt.lengthComputable) {
+                                var uploadRemainingPercent = (1 - evt.loaded / evt.total) * 100;
+                                uploadToast.find('.toast-progress').css('width', uploadRemainingPercent + '%');
+                            }
+                       }, false);
+                       return xhr;
+                    },
+                    type: "PUT",
+                    url: url,
+                    data: uploadFile,
+                    processData: false,
+                    headers: { "sessionid": localStorage['pa.session'] },
+                    success: function() {
+                        successCallback();
+                        uploadToast.children('.toast-title').html("File Uploaded");
+                        uploadToast.children('.toast-message').html("Your file " + uploadFile.name + " has been successfully uploaded.");
+                        uploadToast.removeClass('toast-info');
+                        uploadToast.addClass('toast-success');
+                    },
+                    error: function (xhr, status, error) {
+                        var errorMessage = "";
+                        if(xhr) {
+                            errorMessage = ": "+ (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
+                        }
+                        uploadToast.children('.toast-title').html("Error");
+                        uploadToast.children('.toast-message').html("Failed to upload the file " + uploadFile.name + errorMessage);
+                        uploadToast.removeClass('toast-info');
+                        uploadToast.addClass('toast-error');
                     }
                 });
             },
