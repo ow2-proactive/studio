@@ -91,6 +91,7 @@ require.config({
         text: '../libs/requirejs-text/text',
         'pnotify': '../libs/pnotify/dist/pnotify',
         'pnotify.buttons': '../libs/pnotify/dist/pnotify.buttons',
+        toastr: '../libs/toastr/toastr',
         fileSaver: '../libs/FileSaver/FileSaver',
         jsplumb: '../libs/jsplumb/dist/js/jquery.jsPlumb-1.7.2-min',
         filesaver: '../libs/FileSaver/FileSaver',
