@@ -74,9 +74,14 @@ define(
             // pretty-print using vkbeautify, 'accumulated' variable contains xml with <![CDATA[index]]> patterns
             var beautifiedXml = vkbeautify.xml(accumulated, beautifyDepth)
 
+            // function used instead of replace to avoid special patterns in replacement strings
+            function replaceSplitJoin(string, search, replace) {
+                return string.split(search).join(replace);
+            }
+
             // after pretty-print is done, replace back the original CDATA sections
             for (var i = 0; i < cdataSections.length; i++) {
-                beautifiedXml = beautifiedXml.replace(cdataStartString + i + cdataEndString, cdataSections[i])
+                beautifiedXml = replaceSplitJoin(beautifiedXml, cdataStartString + i + cdataEndString, cdataSections[i])
             }
             return beautifiedXml
         },
