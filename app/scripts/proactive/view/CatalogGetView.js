@@ -139,6 +139,8 @@ define(
             
             if (currentRevisionRow){
                 var splitRawUrl = $(currentRevisionRow).data("rawurl").split('/');
+
+                //when you select an object revision from the Import modal, its objectName is already encoded.
                 var objectName = splitRawUrl[3];
                 var bucketName = splitRawUrl[1];
                 var revisionId;
@@ -147,10 +149,11 @@ define(
                 }
 	        	var rawurl;
 	        	if (revisionId) {
-	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + encodeURIComponent(objectName) + '/revisions/' + encodeURIComponent(revisionId) +'/raw';
+	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/' + revisionId +'/raw';
 	        	} else {
-	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + encodeURIComponent(objectName) + '/raw';
+	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/raw';
 	        	}
+
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
