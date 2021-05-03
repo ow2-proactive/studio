@@ -139,6 +139,8 @@ define(
             
             if (currentRevisionRow){
                 var splitRawUrl = $(currentRevisionRow).data("rawurl").split('/');
+
+                //when you select an object revision from the Import modal, the objectName is already encoded
                 var objectName = splitRawUrl[3];
                 var bucketName = splitRawUrl[1];
                 var revisionId;
