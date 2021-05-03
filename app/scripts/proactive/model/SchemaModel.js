@@ -88,6 +88,8 @@ define(
                                 var listElemValue = that.getListElementValue(that.schema[prop], v)
                                 if (listElemValue) {
                                     newElements.push(listElemValue)
+                                } else if (placeholder === "arguments->argument" || placeholder === "file->arguments->argument") {
+                                    newElements.push(listElemValue)
                                 }
                             })
 
@@ -104,7 +106,11 @@ define(
                                 }
                             }
 
-                            this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
+                            if (placeholder === "arguments->argument" || placeholder === "file->arguments->argument") {
+                                this.set(prop, currentElements.concat(newElements));
+                            } else {
+                                this.set(prop, this._mergeListsRemovingDuplicates(currentElements, newElements));
+                            }
                         }
                     } else if (this.schema[prop].type && this.schema[prop].type == 'TaskTypeRadioEditor') {
                         // the radio editor model specifies a ordered choice placeholder separated by |
