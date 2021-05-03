@@ -66,7 +66,9 @@
 
       //If no existing items create an empty one, unless the editor specifies otherwise
       else {
-        if (!this.Editor.isAsync) this.addItem();
+
+        // ProActive Studio, do not automatically add an item if the list is empty
+        //if (!this.Editor.isAsync) this.addItem();
       }
 
       this.setElement($el);
@@ -178,16 +180,24 @@
         this.trigger('change', this);
       }
 
-      if (!this.items.length && !this.Editor.isAsync) this.addItem();
+      // ProActive Studio, do not automatically add an item if the list is empty
+      // if (!this.items.length && !this.Editor.isAsync) this.addItem();
     },
 
     getValue: function() {
-      var values = _.map(this.items, function(item) {
-        return item.getValue();
-      });
+
+      // ProActive Studio, replaced the following code:
+      //var values = _.map(this.items, function(item) {
+      //  return item.getValue();
+      //});
 
       //Filter empty items
-      return _.without(values, undefined, '');
+      //return _.without(values, undefined, '');
+      var values = _.map(this.items, function(item) {
+        return item.getValue() === undefined ? "" : item.getValue();
+      });
+
+      return values;
     },
 
     setValue: function(value) {
