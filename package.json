@@ -40,7 +40,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-lib-phantomjs": "^1.1.0",
     "grunt-mocha": "^1.0.1",
-    "grunt-modernizr": "^1.0.2",
+    "grunt-modernizr": "^2.1.1",
     "grunt-newer": "^1.2.0",
     "grunt-nightwatch-report": "^0.1.6",
     "grunt-rev": "^0.1.0",
