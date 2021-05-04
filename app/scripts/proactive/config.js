@@ -237,6 +237,8 @@ switch (family) {
     case OperatingSystemFamily.WINDOWS:
         isWindows = true;
         break;
+    case OperatingSystemFamily.MAC:
+        isMac = true;
     default:
         isWindows = false;
 }
@@ -277,7 +279,7 @@ if (cachespaceHostFile.exists() && cachespaceHostFile.canRead()) {
     println cachespaceHost + " does not exist or is not readable, access to cache space will be disabled in the container"
 }
 
-if (!isWindows) {
+if (!isWindows && !isMac) {
     // when not on windows, mount and use the current JRE
     currentJavaHome = System.getProperty("java.home")
     forkEnvironment.setJavaHome(currentJavaHome)
