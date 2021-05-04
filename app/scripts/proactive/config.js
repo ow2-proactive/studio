@@ -241,7 +241,7 @@ switch (family) {
         break;
     case OperatingSystemFamily.MAC:
         isMac = true;
-         break;
+        break;
 }
 forkEnvironment.setDockerWindowsToLinux(isWindows)
 
