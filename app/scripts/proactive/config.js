@@ -199,7 +199,7 @@ define(function () {
             },
             {
                 'name': 'Deep Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'deep-learning', 'deep-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'azure-cognitive-services']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'deep-learning', 'deep-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'model-as-a-service', 'azure-cognitive-services']
             },
             {
                 'name': 'Big Data',
@@ -233,14 +233,15 @@ println "Operating system : " + osName;
 OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
 OperatingSystemFamily family = operatingSystem.getFamily();
 
+isWindows = false
+isMac = false
 switch (family) {
     case OperatingSystemFamily.WINDOWS:
         isWindows = true;
         break;
     case OperatingSystemFamily.MAC:
         isMac = true;
-    default:
-        isWindows = false;
+        break;
 }
 forkEnvironment.setDockerWindowsToLinux(isWindows)
 
