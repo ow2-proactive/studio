@@ -233,6 +233,8 @@ println "Operating system : " + osName;
 OperatingSystem operatingSystem = OperatingSystem.resolveOrError(osName);
 OperatingSystemFamily family = operatingSystem.getFamily();
 
+isWindows = false
+isMac = false
 switch (family) {
     case OperatingSystemFamily.WINDOWS:
         isWindows = true;
@@ -240,9 +242,6 @@ switch (family) {
     case OperatingSystemFamily.MAC:
         isMac = true;
          break;
-    default:
-        isWindows = false;
-        isMac = false;
 }
 forkEnvironment.setDockerWindowsToLinux(isWindows)
 
