@@ -20,7 +20,7 @@
 <% _.each(jobGenericInfos, function(gi) {
 	var label = gi["Property Name"];
     if (label == "Documentation" )  %>
-    <span class="font-bold"><b> Documentation : </b><small><a href='<%=gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small></span><br>
+    <span class="font-bold"><b> Documentation : </b><small><a href='<%="/doc/"+gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small></span><br>
 <% }) %>
 
 </div>
