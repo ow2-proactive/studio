@@ -565,6 +565,13 @@ define(
                 $(".active-task").removeClass("active-task");
                 that.$el.addClass("active-task");
 
+                //Show task Implementation of the selected Task after double click
+                that.$el.dblclick(function(){
+                   //Hide the current panel
+                   $('.panel-body.in').collapse('hide')
+                   //Show task implementation
+                   $('#accordion-properties > div:nth-child(4)').children().last().collapse('show')
+               })
                 e.stopPropagation();
 
             })
