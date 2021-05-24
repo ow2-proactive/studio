@@ -50,6 +50,8 @@ define(function (require) {
             obj = res.replace("]]>", "");
         } else if (xml.nodeType == 3) { // text
             obj = xml.nodeValue;
+        } else if (xml.nodeName == "#comment" && xml.nodeType == 8) { // comment
+            obj = xml.textContent;
         }
 
         // do children
