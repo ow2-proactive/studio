@@ -55,6 +55,10 @@ define(
           }
         },
 
+        "Copyright": {
+          type: "Hidden"
+        },
+
         "Generic Info Documentation": {
           type: "Link",
           fieldAttrs: {

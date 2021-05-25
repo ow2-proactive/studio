@@ -114,6 +114,19 @@ define(
             });
             this.views.loginView = new LoginView({app:this});
         },
+        setCopyright: function(json, currentJobIsEmpty) {
+            // copyright is set if the importing workflow has copyright and the current workflow is empty
+            var importedJobHasCopyright = (json["#comment"] && json["#comment"].indexOf("Copyright") != 0);
+            if (importedJobHasCopyright && currentJobIsEmpty) {
+                this.models.jobModel.set({
+                    "Copyright": json["#comment"]
+                });
+            } else {
+                this.models.jobModel.set({
+                    "Copyright": null
+                });
+            }
+        },
         import: function(workflow) {
 
             this.closeWorkflow();
@@ -123,6 +136,8 @@ define(
             var json = xml2json.xmlToJson(xml2json.parseXml(jobXml));
             this.models.jobModel = new Job();
             this.models.jobModel.populate(json.job);
+            this.setCopyright(json, true);
+
             this.models.currentWorkflow = workflow;
 
             this.views.workflowView = new WorkflowView({model: this.models.jobModel, app: this});
@@ -138,6 +153,7 @@ define(
             console.log('Replacing the model');
             this.models.jobModel = new Job();
             this.models.jobModel.populate(json.job);
+            this.setCopyright(json, true);
 
             this.views.workflowView.model = this.models.jobModel;
             this.views.xmlView.model = this.models.jobModel;
@@ -147,12 +163,16 @@ define(
             this.views.workflowView.importNoReset();
         },
         merge: function(json, elem) {
+            var currentJobIsEmpty = !(this.models.jobModel && this.models.jobModel.tasks && this.models.jobModel.tasks.length > 0);
             this.models.jobModel.populate(json.job, true, false);
+            this.setCopyright(json, currentJobIsEmpty);
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
         mergeTemplate: function(json, elem) {
+            var currentJobIsEmpty = !(this.models.jobModel && this.models.jobModel.tasks && this.models.jobModel.tasks.length > 0);
             this.models.jobModel.populate(json.job, true, true);
+            this.setCopyright(json, currentJobIsEmpty);
             this.views.workflowView.layoutNewElements(elem);
             this.views.workflowView.importNoReset();
         },
