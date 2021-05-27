@@ -34,6 +34,13 @@ define(
                 this.model = new Task();
                 this.model.set("Type", "ScriptExecutable");
                 this.model.set("ScriptExecutable", { "ScriptType": "ScriptCode", "ScriptCode": {"Code" : "println variables.get(\"PA_TASK_NAME\")", "Language" : "groovy" }});
+                // remove copyright on parent job
+                var StudioApp = require('StudioApp');
+                if (StudioApp.models.jobModel) {
+                    StudioApp.models.jobModel.set({
+                        "Copyright": null
+                    });
+                }
             }
 
             var base_studio_url = "/studio" ;
