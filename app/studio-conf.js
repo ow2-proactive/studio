@@ -1,1 +1,1 @@
-conf = { studioVersion: '11.2.0-SNAPSHOT'} 
+conf = { studioVersion: '12.0.0-SNAPSHOT'} 
