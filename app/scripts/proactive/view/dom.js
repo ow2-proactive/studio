@@ -422,17 +422,37 @@ define(
             var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
 
 
-            var jobVariables = readOrStoreVariablesInModel();
-            if (jobVariables == null || $.isEmptyObject(jobVariables)) {
-                executeIfConnected(submit);
-                return;
-            }
+            var jobVariablesOriginal = readOrStoreVariablesInModel();
+
+            var jobVariables = {};
 
             var validationData = validate();
-            if (validationData.updatedModels != null) {
-                for( var key in jobVariables){
-                    jobVariables[key].resolvedModel = validationData.updatedModels[key];
+            if (validationData.updatedModels && validationData.updatedVariables) {
+                for (var key of Object.keys(jobVariablesOriginal)) {
+                    // first, add only job variables defined in the workflow
+                    if (key.indexOf(":") < 0) {
+                        jobVariables[key] = jobVariablesOriginal[key];
+                        jobVariables[key].resolvedModel = validationData.updatedModels[key];
+                    }
                 }
+                for (var key of Object.keys(validationData.updatedVariables)) {
+                    // then, add global variables not defined in the workflow
+                    if (key.indexOf(":") < 0 && !jobVariables.hasOwnProperty(key)) {
+                        jobVariables[key] = { 'Name': key, 'Value': validationData.updatedVariables[key], 'Model': validationData.updatedModels[key], 'resolvedModel': validationData.updatedModels[key] }
+                    }
+                }
+                for (var key of Object.keys(jobVariablesOriginal)) {
+                    // finally, add task variables
+                    if (key.indexOf(":") >= 0) {
+                        jobVariables[key] = jobVariablesOriginal[key];
+                        jobVariables[key].resolvedModel = validationData.updatedModels[key];
+                    }
+                }
+
+            }
+            if ($.isEmptyObject(jobVariables)) {
+                executeIfConnected(submit);
+                return;
             }
             studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
             $('#execute-workflow-modal').modal();
@@ -564,18 +584,45 @@ define(
         function readOrStoreVariablesInModel(updatedVariables) {
             var studioApp = require('StudioApp');
             var jobVariables = {};
-            if (studioApp.models.jobModel.has('Variables')) {
-                var variables = studioApp.models.jobModel.get('Variables');
+            if (!studioApp.models.jobModel.has('Variables')) {
+                studioApp.models.jobModel.set('Variables', [])
+            }
+            var variables = studioApp.models.jobModel.get('Variables');
 
+            if (!(!updatedVariables || updatedVariables == null)) {
+                var i;
+                var jobOnlyUpdatedVariables = {}
+                // filter only job variables in the provided map
+                for (i = 0; i < Object.keys(updatedVariables).length; i++) {
+                    var key = Object.keys(updatedVariables)[i];
+                    if (key.indexOf(":") < 0) {
+                       jobOnlyUpdatedVariables[key] = updatedVariables[key];
+                    }
+                }
+                // the goal is to replace the contents of studioApp.models.jobModel.get('Variables') with jobOnlyUpdatedVariables
+                // unfortunately, one is an array and the other is an object
+                for (i = 0; i < Object.keys(jobOnlyUpdatedVariables).length; i++) {
+                    if (i < variables.length) {
+                         var variable = variables[i];
+                         variables[i] = jobOnlyUpdatedVariables[variable.Name];
+                         jobVariables[variable.Name] = variable;
+                    } else {
+                        // if there are more elements in jobOnlyUpdatedVariables, add them to variables
+                        var variable = jobOnlyUpdatedVariables[Object.keys(jobOnlyUpdatedVariables)[i]];
+                        variables.push(variable)
+                        jobVariables[variable.Name] = variable;
+                    }
+                }
+                while (i < variables.length) {
+                    // if there are less elements in jobOnlyUpdatedVariables, delete the extra elements from variables
+                    variables.pop();
+                }
+            } else {
                 for (var i = 0; i < variables.length; i++) {
                     var variable = variables[i];
-                    if (!(!updatedVariables || updatedVariables == null)) {
-                        variables[i] = updatedVariables[variable.Name];
-                    }
                     jobVariables[variable.Name] = variable;
                 }
             }
-            // task variables are for now disabled in the job execution form
             readOrStoreTaskVariablesInModel(studioApp, updatedVariables, jobVariables);
             return jobVariables;
         }
