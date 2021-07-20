@@ -9,6 +9,7 @@
     "backbone.bootstrap-modal": "https://github.com/powmedia/backbone.bootstrap-modal/archive/972b0a71eae6f378ea89f4a5203423b7d07e76e2.zip",
     "FileSaver": "*",
     "pnotify": "^3.0.0",
+    "toastr": "^2.1.3",
     "vkbeautify.0.99.00.beta": "./app/scripts/thirdparties/vkbeautify.0.99.00.beta.js",
     "dagre": "./app/scripts/thirdparties/dagre.min.js",
     "codemirror": "~5.38.0",

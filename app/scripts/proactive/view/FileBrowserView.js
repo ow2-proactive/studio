@@ -14,8 +14,6 @@ define(
 
         dataspaceRestUrl: "/rest/data/",
 
-        uploadRequest: undefined,
-
         template: _.template(fileBrowserTemplate),
 
         model: {
@@ -121,9 +119,6 @@ define(
                     that.model['directories'] = that.getFilesMetadata(data.directoryListing.sort());
                     that.model['showHidden'] = that.showHidden;
                     that.$el.html(that.template(that.model));
-                    if(that.uploadRequest) {
-                        that.switchToUploadingState();
-                    }
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = "";
@@ -255,28 +250,9 @@ define(
                     return;
                 }
                 var pathname = that.model['currentPath'] + selectedFile.name;
-                that.switchToUploadingState();
-                that.uploadRequest = $.ajax({
-                    type: "PUT",
-                    url: that.dataspaceRestUrl + encodeURIComponent(pathname),
-                    data: selectedFile,
-                    processData: false,
-                    headers: { "sessionid": localStorage['pa.session'] },
-                    success: function (data){
+                StudioClient.uploadDataspaceFile(that.dataspaceRestUrl + encodeURIComponent(pathname), selectedFile, function(){
                         that.refreshFiles();
-                        that.switchToNothingUploadingState();
-                        that.uploadRequest = undefined;
-                    },
-                    error: function (xhr, status, error) {
-                        var errorMessage = "";
-                        if(xhr) {
-                            errorMessage = ": "+ (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
-                        }
-                        StudioClient.alert('Error', "Failed to upload the file " + selectedFile.name + errorMessage, 'error');
-                        that.switchToNothingUploadingState();
-                        that.uploadRequest = undefined;
-                    }
-                });
+                    }, function(){});
             }
         },
 
@@ -379,21 +355,8 @@ define(
             }
         },
 
-        switchToUploadingState: function() {
-            $("#upload-file-btn > i").removeClass('fa-upload').addClass('fa-spinner fa-pulse');
-            $("#upload-file-btn").attr("disabled", true);
-        },
-
-        switchToNothingUploadingState: function() {
-            $("#upload-file-btn > i").removeClass('fa-spinner fa-pulse').addClass('fa-upload');
-            $("#upload-file-btn").attr("disabled", false);
-        },
-
         closeFileBrowser: function () {
             this.$el.modal('hide');
-            if(this.uploadRequest) {
-                this.uploadRequest.abort();
-            }
         }
     })
 })
