@@ -225,6 +225,11 @@ define(
         },
         updateJobName: function () {
             var jobNameInputField = $("input[id='" + this.model.cid + "_Name']");
+            // To avoid executing HTML code, we replace < and > by empty string
+            var isHTML = RegExp.prototype.test.bind(/(<([^>]+)>)/i);
+            if(isHTML(this.model.get("Name"))){
+              this.model.set("Name", this.model.get("Name").replace(/<|>/g, ""));
+            }
             //$("#breadcrumb-project-name").text(this.model.get("Project Name"))
             // Prevent having empty Workflow names. Nameless workflows do not affect the scheduler but cannot be removed from studio unless they get a name.
             if (!this.model.get("Name") || this.model.get("Name").trim() === "") {
