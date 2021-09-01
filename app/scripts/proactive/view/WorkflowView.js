@@ -31,7 +31,7 @@ define(
                 that.createTask({offset: {top: event.clientY, left: event.clientX}});
             })
             this.model.on("change:Name", this.updateJobName, this);
-
+            this.model.on("change:Project", this.updateJobProject, this);
             this.$el.droppable({
                 accept: ".job-element",
                 drop: function (event, ui) {
@@ -223,11 +223,13 @@ define(
 
             return view;
         },
+        isHTML: function (){
+            return RegExp.prototype.test.bind(/(<([^>]+)>)/i);
+        },
         updateJobName: function () {
             var jobNameInputField = $("input[id='" + this.model.cid + "_Name']");
             // To avoid executing HTML code, we replace < and > by empty string
-            var isHTML = RegExp.prototype.test.bind(/(<([^>]+)>)/i);
-            if(isHTML(this.model.get("Name"))){
+            if(this.isHTML(this.model.get("Name"))){
               this.model.set("Name", this.model.get("Name").replace(/<|>/g, ""));
             }
             //$("#breadcrumb-project-name").text(this.model.get("Project Name"))
@@ -238,6 +240,12 @@ define(
                 jobNameInputField.css({ "border": "1px solid #D2322D"});
             }
             $("#breadcrumb-selected-job").text(this.model.get("Name"))
+        },
+        updateJobProject: function(){
+            // To avoid executing HTML code, we replace < and > by empty string
+            if(this.model.get("Project") && this.isHTML(this.model.get("Project"))){
+              this.model.set("Project", this.model.get("Project").replace(/<|>/g, ""));
+            }
         },
         clean: function () {
             this.workFlowDesigner.empty();
