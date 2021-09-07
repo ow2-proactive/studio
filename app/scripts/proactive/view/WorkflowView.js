@@ -223,13 +223,10 @@ define(
 
             return view;
         },
-        isHTML: function (){
-            return RegExp.prototype.test.bind(/(<([^>]+)>)/i);
-        },
         updateJobName: function () {
             var jobNameInputField = $("input[id='" + this.model.cid + "_Name']");
             // To avoid executing HTML code, we replace < and > by empty string
-            if(this.isHTML(this.model.get("Name"))){
+            if(undoManager.isHTML(this.model.get("Name"))){
               this.model.set("Name", this.model.get("Name").replace(/<|>/g, ""));
             }
             //$("#breadcrumb-project-name").text(this.model.get("Project Name"))
@@ -243,7 +240,7 @@ define(
         },
         updateJobProject: function(){
             // To avoid executing HTML code, we replace < and > by empty string
-            if(this.model.get("Project") && this.isHTML(this.model.get("Project"))){
+            if(this.model.get("Project") && undoManager.isHTML(this.model.get("Project"))){
               this.model.set("Project", this.model.get("Project").replace(/<|>/g, ""));
             }
         },
