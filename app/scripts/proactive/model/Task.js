@@ -469,6 +469,51 @@ define(
                         }
                     }
                 ];
+                this.schema["Input Files"].subSchema.Excludes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
+                this.schema["Input Files"].subSchema.Includes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
+
+                this.schema["Output Files"].subSchema.Excludes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
+                this.schema["Output Files"].subSchema.Includes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
 
 
                 this.controlFlow = {};
@@ -476,25 +521,6 @@ define(
                 this.on("change", function(eventName, error) {
                   if (eventName) {
                     if (eventName._changing) {
-                        // Data Management: Avoid to execute HTML code within input field
-                        if(eventName.changed.hasOwnProperty('Input Files')){
-                            var inputFilesList = eventName.changed['Input Files'];
-                            var obj = {};
-                            for(var key in inputFilesList[inputFilesList.length - 1]){
-                                obj[key] = !inputFilesList[inputFilesList.length - 1][key] ? inputFilesList[inputFilesList.length - 1][key] : inputFilesList[inputFilesList.length - 1][key].replace(/<|>/g, "");
-                            }
-                            inputFilesList.splice(inputFilesList.length - 1, 1, obj)
-                            this.set("Input Files", inputFilesList )
-                        }
-                        if(eventName.changed.hasOwnProperty('Output Files')){
-                            var outputFilesList = eventName.changed['Output Files'];
-                            var obj = {};
-                            for(var key in outputFilesList[outputFilesList.length - 1]){
-                                obj[key] = !outputFilesList[outputFilesList.length - 1][key] ? outputFilesList[outputFilesList.length - 1][key] : outputFilesList[outputFilesList.length - 1][key].replace(/<|>/g, "");
-                            }
-                            outputFilesList.splice(outputFilesList.length - 1, 1, obj)
-                            this.set("Input Files", outputFilesList )
-                        }
                       // Check if Generic Info doc has been changed and generate new link if needed
                       if (eventName.changed.hasOwnProperty('Generic Info') && eventName.changed["Generic Info"]["Property Value"] != "") {
                         // retrieve GI from updated data
@@ -559,7 +585,15 @@ define(
                   }
                 });
             },
-
+            checkInputFileData: function(value, formValues, form) {
+                    if(undoManager.isHTML(value)){
+                        var err = {
+                            type: 'Validation',
+                            message: "<br><br> HTML code is not allowed"
+                          };
+                          return err;
+                }
+            },
 
             // documentation GI:  value will be displayed as link
             generateDocumentUrl: function(genericInformation) {

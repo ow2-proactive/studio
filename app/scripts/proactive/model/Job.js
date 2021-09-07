@@ -281,15 +281,15 @@ define(
                         form.setValue(formValues);
                     }
                 }
+                if(undoManager.isHTML(formValues.Name)){
+                    var err = {
+                        type: 'Validation',
+                        message: "<br><br> HTML code is not allowed"
+                      };
+                      return err;
+                }
                 delete that.attributes.BackupVariables;
               }
-            }
-            if(undoManager.isHTML(formValues.Name)){
-                var err = {
-                    type: 'Validation',
-                    message: "<br><br> HTML code is not allowed"
-                  };
-                  return err;
             }
           }
         ]
