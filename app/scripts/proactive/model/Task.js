@@ -585,15 +585,6 @@ define(
                   }
                 });
             },
-            checkInputFileData: function(value, formValues, form) {
-                    if(undoManager.isHTML(value)){
-                        var err = {
-                            type: 'Validation',
-                            message: "<br><br> HTML code is not allowed"
-                          };
-                          return err;
-                }
-            },
 
             // documentation GI:  value will be displayed as link
             generateDocumentUrl: function(genericInformation) {
