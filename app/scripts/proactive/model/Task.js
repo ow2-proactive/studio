@@ -469,6 +469,51 @@ define(
                         }
                     }
                 ];
+                this.schema["Input Files"].subSchema.Excludes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
+                this.schema["Input Files"].subSchema.Includes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
+
+                this.schema["Output Files"].subSchema.Excludes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
+                this.schema["Output Files"].subSchema.Includes.validators = [
+                    function checkInputFileData(value, formValues, form) {
+                        if(undoManager.isHTML(value)){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
+                    }
+                ]
 
 
                 this.controlFlow = {};
@@ -540,7 +585,6 @@ define(
                   }
                 });
             },
-
 
             // documentation GI:  value will be displayed as link
             generateDocumentUrl: function(genericInformation) {

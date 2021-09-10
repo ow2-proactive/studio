@@ -121,6 +121,9 @@ define(
         },
         _enable: function () {
             enabled = true;
-        }
+        },
+        isHTML: function (text){
+            return RegExp.prototype.test.bind(/(<([^>]+)>)/i)(text);
+        },
     }
 })
