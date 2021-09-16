@@ -467,11 +467,18 @@ define(
                                 delete that.attributes.BackupVariables;
                             }
                         }
+                        if(undoManager.isHTML(formValues["Name"])){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br><br> HTML code is not allowed"
+                              };
+                              return err;
+                        }
                     }
                 ];
-                this.schema["Input Files"].subSchema.Excludes.validators = [
-                    function checkInputFileData(value, formValues, form) {
-                        if(undoManager.isHTML(value)){
+                this.schema["Generic Info"].subSchema["Property Value"].validators = [
+                    function checkInputGenericINfo(value, formValues, form){
+                        if(undoManager.isHTML(formValues["Property Name"])){
                             var err = {
                                 type: 'Validation',
                                 message: "<br><br> HTML code is not allowed"
@@ -480,9 +487,9 @@ define(
                         }
                     }
                 ]
-                this.schema["Input Files"].subSchema.Includes.validators = [
+                this.schema["Input Files"].subSchema["Access Mode"].validators = [
                     function checkInputFileData(value, formValues, form) {
-                        if(undoManager.isHTML(value)){
+                        if(undoManager.isHTML(formValues["Excludes"]) || undoManager.isHTML(formValues["Includes"])){
                             var err = {
                                 type: 'Validation',
                                 message: "<br><br> HTML code is not allowed"
@@ -490,11 +497,10 @@ define(
                               return err;
                         }
                     }
-                ]
-
-                this.schema["Output Files"].subSchema.Excludes.validators = [
+                ];
+                this.schema["Output Files"].subSchema["Access Mode"].validators = [
                     function checkInputFileData(value, formValues, form) {
-                        if(undoManager.isHTML(value)){
+                        if(undoManager.isHTML(formValues["Excludes"]) || undoManager.isHTML(formValues["Includes"])){
                             var err = {
                                 type: 'Validation',
                                 message: "<br><br> HTML code is not allowed"
@@ -502,20 +508,7 @@ define(
                               return err;
                         }
                     }
-                ]
-                this.schema["Output Files"].subSchema.Includes.validators = [
-                    function checkInputFileData(value, formValues, form) {
-                        if(undoManager.isHTML(value)){
-                            var err = {
-                                type: 'Validation',
-                                message: "<br><br> HTML code is not allowed"
-                              };
-                              return err;
-                        }
-                    }
-                ]
-
-
+                ];
                 this.controlFlow = {};
 
                 this.on("change", function(eventName, error) {

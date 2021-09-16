@@ -12,10 +12,11 @@ define(
         'proactive/view/ViewWithProperties',
         'proactive/model/NativeExecutable',
         'proactive/model/JavaExecutable',
-        'proactive/model/ScriptExecutable'
+        'proactive/model/ScriptExecutable',
+        'proactive/view/utils/undo'
     ],
 
-    function ($, Backbone, config, PNotify, StudioClient, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable) {
+    function ($, Backbone, config, PNotify, StudioClient, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable, undoManager) {
 
     "use strict";
 
@@ -115,6 +116,10 @@ define(
         },
 
         updateTaskName: function () {
+            // To avoid executing HTML code, we replace < and > by empty string
+            if(undoManager.isHTML(this.model.get("Task Name"))){
+              this.model.set("Task Name", this.model.get("Task Name").replace(/<|>/g, ""));
+            }
             var newTaskName = this.model.get("Task Name");
             var existingTasks = $('.task-name .name');
             var that = this;
