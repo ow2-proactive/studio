@@ -180,7 +180,11 @@ define(
                                 }
                                 else {
                                     value = value.trim()
-                                    that.set(prop, value)
+                                    if (this.schema[prop].type && this.schema[prop].type == "Checkbox") {
+                                        that.set(prop, value === true || value === "true")
+                                    } else {
+                                        that.set(prop, value)
+                                    }
                                 }
                             }
                         }

@@ -49,7 +49,16 @@ define(
                     next.remove();
                 }
 
-                addHelpAfter.after(help);
+                if (el.attr("data-help-self") === "") {
+                    if (el.attr("data-help").length > 0) {
+                        el.attr("data-placement", "right")
+                        el.attr("data-toggle", "tooltip")
+                        el.attr("title", el.attr("data-help"))
+                        el.tooltip({html: true});
+                    }
+                } else {
+                    addHelpAfter.after(help);
+                }
 
             },
             /**

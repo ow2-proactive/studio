@@ -19,7 +19,7 @@
     <% if (task["Variables"] && task["Variables"].length>0) { %>
     <variables>
     <% _.each(task["Variables"], function(variable) { %>
-            <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable.hasOwnProperty("Value")?variable["Value"]:"")%>" inherited="<%=variable["Inherited"]%>" <% if (variable.hasOwnProperty("Model") && variable["Model"].length > 0) { %>model="<%=escapeHtml(variable["Model"])%>"<% }%>/>
+            <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable.hasOwnProperty("Value")?variable["Value"]:"")%>" inherited="<%=variable["Inherited"]%>" <% if (variable.hasOwnProperty("Model") && variable["Model"].length > 0) { %>model="<%=escapeHtml(variable["Model"])%>"<% }%> <% if (variable.hasOwnProperty("Description")) { %>description="<%=escapeHtml(variable["Description"])%>"<% }%> <% if (variable.hasOwnProperty("Group")) { %>group="<%=escapeHtml(variable["Group"])%>"<% }%> <% if (variable.hasOwnProperty("Advanced")) { %>advanced="<%=escapeHtml(variable["Advanced"])%>"<% }%> <% if (variable.hasOwnProperty("Hidden")) { %>hidden="<%=escapeHtml(variable["Hidden"])%>"<% }%>/>
     <% }) %>
     </variables>
     <% } %>
