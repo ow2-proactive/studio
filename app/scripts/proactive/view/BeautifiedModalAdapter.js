@@ -18,6 +18,7 @@ define(
 
             beautifyForm: function(container) {
                 container.find("input").addClass("form-control");
+                container.find(":radio").removeClass("form-control");
                 container.find("select").addClass("form-control");
                 container.find("textarea").addClass("form-control");
                 container.find("button").addClass("btn").addClass("btn-default");

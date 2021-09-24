@@ -497,7 +497,7 @@ define(
                 executeIfConnected(submit);
                 return;
             }
-            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
+            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false});
             $('#execute-workflow-modal').modal();
 
             initializeSubmitFormForTaskVariables();
@@ -532,6 +532,7 @@ define(
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
                 var inputReceived = $('#job-variables .variableValue');
+                var showAdvanced = $('#advanced-checkbox').is(":checked");
 
                 var extractVariableName = function (key) { return (key.split(":").length == 2 ? key.split(":")[1] : key) };
                 var isTaskVariable = function (key) { return (key.split(":").length == 2) };
@@ -571,9 +572,9 @@ define(
 
                 if (!validationData.valid) {
                     var jobVariables = extractUpdatedVariables(inputVariables, validationData);
-                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced});
                 } else if (check) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
+                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced});
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
