@@ -26,33 +26,41 @@
 </div>
 <style>
     .hidden-var {display: none !important;}
-    .advanced-var {display: none;}
+    .advanced-var {display: <%= showAdvanced ? 'inherit' : 'none' %>;}
+    ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
+    ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
 </style>
-<script type="text/javascript">
-    function handleAdvancedClick(cb) {
-        var elements = document.getElementsByClassName('advanced-var');
-        if (cb.checked) {
-            elements.forEach(element => element.style.display = 'inherit');
-        } else {
-            elements.forEach(element => element.style.display = 'none');
-        }
-    }
-</script>
 <br>
 <ul id="submitFormUL">
     <div style="display: table; width: 100%">
         <span for="Job_Variables" class="Name" style="text-align:left; font-weight: bold; display: table-cell; width: 90%" data-toggle="tooltip">Job Variables</span>
         <label for="Advanced" style="text-align: left; display: table-cell; width: 10%; vertical-align: middle;" data-toggle="tooltip">Advanced
-            <input class="Name" id="advanced-checkbox" type="checkbox" onclick='handleAdvancedClick(this);' style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <%
+                if (showAdvanced) {
+                    %>
+            <input class="Name" id="advanced-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+                    <%
+                } else {
+                    %>
+            <input class="Name" id="advanced-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+                    <%
+                }
+            %>
         </label>
         <script type="text/javascript">
         //<![CDATA[
 jQuery(document).ready(function($){
 	$('#advanced-checkbox').on('change', function() {
         if ($(this).is(':checked')) {
+            // show the advanced variables
             $('.advanced-var').css('display', 'inherit')
+            // hide group labels of visible variables if necessary (see below)
+            $('.advanced-to-hide').css('display', 'none')
         } else {
+            // hide the advanced variables
             $('.advanced-var').css('display', 'none')
+            // show group labels of visible variables if necessary (see below)
+            $('.advanced-to-hide').css('display', 'inherit')
         }
     })
 })
@@ -61,9 +69,36 @@ jQuery(document).ready(function($){
     </div>
     <%
 
+        // contains the current workflow task
         var currentTask = null;
+        // contains the current group of variables
         var currentGroup = null;
-        var currentGroupShown = false;
+
+        // The following algorithm handles the complicated group display, which must appear on top of a set of variables, where some may be hidden or advanced.
+        // handling of advanced variables is especially difficult where they appear in the list before visible variables
+        // in that case, we must add two group labels in the list, one visible and one invisible, which will be toggled on/off when the advanced checkbox changes.
+        var groupDisplayStack = [];
+        function displayGroupStrategy(stack) {
+            var advancedVariables = 0;
+            var visibleVariables = 0;
+            for (var i = 0; i < stack.length; i++) {
+                if (stack[i] === 'advanced') {
+                    advancedVariables++;
+                    if (advancedVariables == 1 && visibleVariables == 0 && i == stack.length - 1) {
+                        return 'display';
+                    }
+                }
+                else if (stack[i] === 'visible') {
+                    visibleVariables++;
+                    if (visibleVariables == 1 && i == stack.length - 1) {
+                        // display-with-class means that the group label will be visible or not, depending on the advanced checkbox status
+                        return advancedVariables == 0 ? 'display' : 'display-with-class';
+                    }
+                }
+            }
+            return 'none';
+        }
+
         for (var key in jobVariables) {
             var variable;
             var hidden = false;
@@ -95,7 +130,7 @@ jQuery(document).ready(function($){
                     if (currentTask == null) {
                         currentTask = splitted[0];
                         currentGroup = null;
-                        currentGroupShown = false;
+                        groupDisplayStack = [];
                 %>
     <li class="formLayout">
     <span for="Tasks_Variables" class="Name caretUL" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</span>
@@ -107,7 +142,7 @@ jQuery(document).ready(function($){
                     } else if (currentTask != splitted[0]) {
                         currentTask = splitted[0];
                         currentGroup = null;
-                        currentGroupShown = false;
+                        groupDisplayStack = [];
         %>
     </ul>
     </li>
@@ -122,18 +157,28 @@ jQuery(document).ready(function($){
             <%
                 if (group && group !== "") {
                     if (group !== currentGroup) {
+                        // a new group to handle
                         currentGroup = group;
-                        currentGroupShown = !resolvedHidden;
+                        groupDisplayStack = [];
+                    }
+                    if (resolvedHidden) {
+                        groupDisplayStack.push('hidden');
+                    } else if (advanced) {
+                        groupDisplayStack.push('advanced');
+                    } else {
+                        groupDisplayStack.push('visible');
+                    }
+                    var strategy = displayGroupStrategy(groupDisplayStack);
+                    if (strategy === 'display') {
                         %>
             <label class="Name" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group %></label>
             <br/>
 
                         <%
-                    } else if (!currentGroupShown && !resolvedHidden) {
-                        currentGroupShown = true;
+                    } else if (strategy === 'display-with-class') {
                         %>
-            <label class="Name" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group %></label>
-            <br/>
+            <label class="Name advanced-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group %></label>
+            <br class="advanced-to-hide"/>
 
                         <%
                     }

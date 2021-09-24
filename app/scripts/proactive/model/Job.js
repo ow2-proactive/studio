@@ -124,7 +124,8 @@ define(
             },
             "Description": {
               fieldAttrs: {
-                'placeholder': '@attributes->description'
+                'placeholder': '@attributes->description',
+                'title': "Html Description of the variable. It can contain html tags such as <br> or <u>."
               },
               type: 'TextArea',
               editorClass: 'popup-input-text-field textareavalues',
@@ -135,9 +136,8 @@ define(
                 'placeholder': '@attributes->group',
                 'title': 'The variable can be assigned to a group. Variables of the same group will appear together in the workflow submission form.'
               },
-              type: 'TextArea',
-              editorClass: 'popup-input-text-field textareavalues',
-              editorAttrs: {'rows': '1'}
+              type: 'Text',
+              editorClass: 'popup-input-text-field'
             },
             "Advanced": {
               fieldAttrs: {
