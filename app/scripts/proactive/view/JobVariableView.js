@@ -3,9 +3,10 @@ define(
         'backbone',
         'text!proactive/templates/job-variable-template.html',
         'proactive/view/ThirdPartyCredentialView',
-        'proactive/view/FileBrowserView'
+        'proactive/view/FileBrowserView',
+        'proactive/view/BeautifiedModalAdapter'
     ],
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView) {
+    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter) {
 
     "use strict";
 
@@ -49,6 +50,7 @@ define(
             var jobInfosCloned = JSON.parse(JSON.stringify(jobInfos));
             this.model = $.extend(this.model, jobInfosCloned);
             this.$el.html(this.template(this.model));
+            new BeautifiedModalAdapter().beautifyForm(this.$el);
             return this;
         },
 

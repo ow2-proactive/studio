@@ -68,10 +68,14 @@ define(
                         "data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li><li><b>Inherited</b>: Job Variable&#39;s value will be used</li>"},
                     itemToString: Utils.inlineNameValueInherited, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
-                    "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name'}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
+                    "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name', 'title': "Name of the variable. It must start with a letter and it can contain only alphanumeric and '-' , '_' or '.' characters."}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
                     "Value": { fieldAttrs: {'placeholder': '@attributes->value'}, title: 'Value', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} },
                     "Inherited": { fieldAttrs: {'placeholder': '@attributes->inherited'}, title: 'Inherited: job value will be used', type: 'Checkbox' },
-                    "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} }
+                    "Model": { fieldAttrs: {'placeholder': '@attributes->model'}, title: '<br>Model or Data Type (PA:Integer, PA:Boolean, ...)<br>see <a target="_blank" href="' + config.docUrl +'/user/ProActiveUserGuide.html#_variable_model">documentation</a>.', type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} },
+                    "Description": { fieldAttrs: {'placeholder': '@attributes->description', 'title': "Html Description of the variable. It can contain html tags such as <br> or <u>."}, type: 'TextArea', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} },
+                    "Group": { fieldAttrs: { 'placeholder': '@attributes->group', 'title': 'The variable can be assigned to a group. Variables of the same group will appear together in the workflow submission form.' }, type: 'Text', editorClass: 'popup-input-text-field'},
+                    "Advanced": { fieldAttrs: { 'placeholder': '@attributes->advanced',  'title': 'An advanced variable is not shown by default in the submission form, but can be displayed if needed.' }, type: 'Checkbox', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} },
+                    "Hidden": { fieldAttrs: { 'placeholder': '@attributes->hidden', 'title': 'A hidden variable is not never shown in the submission form, but the hidden status can be modified using a model SPEL expression. This can be used to produce dynamic forms.' }, type: 'Checkbox', editorClass: 'popup-input-text-field textareavalues', editorAttrs: {'rows': '1'} }
                     },
                     confirmDelete: 'You are about to remove a variable.'
                 },

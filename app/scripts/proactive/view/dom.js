@@ -428,33 +428,76 @@ define(
 
             var validationData = validate();
             if (validationData.updatedModels && validationData.updatedVariables) {
-                for (var key of Object.keys(jobVariablesOriginal)) {
-                    // first, add only job variables defined in the workflow
-                    if (key.indexOf(":") < 0) {
-                        jobVariables[key] = jobVariablesOriginal[key];
-                        jobVariables[key].resolvedModel = validationData.updatedModels[key];
+
+               function addVariableToGroup(key, variableToAdd, groupsAndVariables) {
+                    var group = "NOGROUP";
+                    if (variableToAdd.Group && variableToAdd.Group !== "") {
+                       group = variableToAdd.Group;
                     }
-                }
-                for (var key of Object.keys(validationData.updatedVariables)) {
-                    // then, add global variables not defined in the workflow
-                    if (key.indexOf(":") < 0 && !jobVariables.hasOwnProperty(key)) {
-                        jobVariables[key] = { 'Name': key, 'Value': validationData.updatedVariables[key], 'Model': validationData.updatedModels[key], 'resolvedModel': validationData.updatedModels[key] }
+                    if (!groupsAndVariables.has(group)) {
+                        groupsAndVariables.set(group, new Map());
                     }
-                }
-                for (var key of Object.keys(jobVariablesOriginal)) {
-                    // finally, add task variables
-                    if (key.indexOf(":") >= 0) {
-                        jobVariables[key] = jobVariablesOriginal[key];
-                        jobVariables[key].resolvedModel = validationData.updatedModels[key];
-                    }
+                    groupsAndVariables.get(group).set(key, variableToAdd);
                 }
 
+                function addVariablesInGroupOrder(groupsAndVariables, variablesJob) {
+                     for (var group of groupsAndVariables.keys()) {
+                        var groupVarsMap =  groupsAndVariables.get(group);
+                        for (var key of groupVarsMap.keys()) {
+                            variablesJob[key] = groupVarsMap.get(key);
+                        }
+                     }
+                }
+
+                var jobVariablesByGroup = new Map();
+                jobVariablesByGroup.set("NOGROUP", new Map());
+                // first, add only job variables defined in the workflow
+                for (var key of Object.keys(jobVariablesOriginal)) {
+                    if (key.indexOf(":") < 0) {
+                        var originalVar = jobVariablesOriginal[key];
+                        var variable = { 'Name': originalVar.Name, 'Value': originalVar.Value, 'Model': originalVar.Model, 'Description': originalVar.Description, 'Group': originalVar.Group, 'Advanced': originalVar.Advanced, 'Hidden': originalVar.Hidden, 'resolvedModel': validationData.updatedModels[key], 'resolvedHidden': validationData.updatedHidden[key] }
+                        addVariableToGroup(key, variable, jobVariablesByGroup);
+                    }
+                }
+                // then, add global variables not defined in the workflow
+                for (var key of Object.keys(validationData.updatedVariables)) {
+                    if (key.indexOf(":") < 0 && !jobVariables.hasOwnProperty(key)) {
+                        var variable = { 'Name': key, 'Value': validationData.updatedVariables[key], 'Model': validationData.updatedModels[key], 'Description': validationData.updatedDescriptions[key], 'Group': validationData.updatedGroups[key], 'Advanced': validationData.updatedAdvanced[key], 'Hidden': validationData.updatedHidden[key], 'resolvedModel': validationData.updatedModels[key], 'resolvedHidden': validationData.updatedHidden[key] }
+                        addVariableToGroup(key, variable, jobVariablesByGroup);
+                    }
+                }
+                // Add all grouped variables to the final structure
+                addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
+
+                // finally, add task variables
+                var lastTaskName = null;
+                for (var key of Object.keys(jobVariablesOriginal)) {
+                    if (key.indexOf(":") >= 0) {
+                        var splitted = key.split(":");
+                        var currentTaskName = splitted[0];
+                        if (lastTaskName == null) {
+                            lastTaskName = currentTaskName;
+                            jobVariablesByGroup = new Map();
+                            jobVariablesByGroup.set("NOGROUP", new Map());
+                        } else if (lastTaskName !== currentTaskName) {
+                            // new task found, add all collected variables
+                            addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
+                            jobVariablesByGroup = new Map();
+                            jobVariablesByGroup.set("NOGROUP", new Map());
+                            lastTaskName = currentTaskName;
+                        }
+                        var originalVar = jobVariablesOriginal[key];
+                        var variable = { 'Name': originalVar.Name, 'Value': originalVar.Value, 'Model': originalVar.Model, 'Description': originalVar.Description, 'Group': originalVar.Group, 'Advanced': originalVar.Advanced, 'Hidden': originalVar.Hidden, 'resolvedModel': validationData.updatedModels[key], 'resolvedHidden': validationData.updatedHidden[key] }
+                        addVariableToGroup(key, variable, jobVariablesByGroup);
+                    }
+                }
+                addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
             }
             if ($.isEmptyObject(jobVariables)) {
                 executeIfConnected(submit);
                 return;
             }
-            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :''});
+            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false});
             $('#execute-workflow-modal').modal();
 
             initializeSubmitFormForTaskVariables();
@@ -489,9 +532,11 @@ define(
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
                 var inputReceived = $('#job-variables .variableValue');
+                var showAdvanced = $('#advanced-checkbox').is(":checked");
 
                 var extractVariableName = function (key) { return (key.split(":").length == 2 ? key.split(":")[1] : key) };
-                var isTaskVariable = function (key) { return (key.split(":").length == 2) }
+                var isTaskVariable = function (key) { return (key.split(":").length == 2) };
+                var checkBoolean = function (value) { return "true" === value || true === value };
                 function setInheritedField(key) {
                   if (isTaskVariable(key)) {
                     inputVariables[key].Inherited = false;
@@ -500,19 +545,19 @@ define(
                 for (var i = 0; i < inputReceived.length; i++) {
                     var input = inputReceived[i];
                     if ($(input).prop("tagName")==='SELECT') {
-                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model")};
+                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value':  $(input).find(':selected').text(), 'Model': $(input).data("variable-model"), 'Description': $(input).data("variable-description"), 'Group': $(input).data("variable-group"), 'Advanced': checkBoolean($(input).data("variable-advanced")), 'Hidden': checkBoolean($(input).data("variable-hidden"))};
                         setInheritedField(input.id);
-                    } else if ($(input).prop("tagName")==='INPUT'){
-                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model")};
+                    } else if ($(input).prop("tagName")==='INPUT') {
+                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model"), 'Description': $(input).data("variable-description"), 'Group': $(input).data("variable-group"), 'Advanced': checkBoolean($(input).data("variable-advanced")), 'Hidden': checkBoolean($(input).data("variable-hidden"))};
                         setInheritedField(input.id);
-                    } else if ($(input).prop("tagName")==='DIV'){
+                    } else if ($(input).prop("tagName")==='DIV') {
                         var checkedRadio = $(input).find("input[type='radio']:checked");
                         var checkRadioValue = $(checkedRadio).val();
                         var inputName = $(checkedRadio).attr('name');
-                        inputVariables[input.id] = {'Name': extractVariableName(inputName), 'Value': checkRadioValue, 'Model': $(input).data("variable-model")};
+                        inputVariables[input.id] = {'Name': extractVariableName(inputName), 'Value': checkRadioValue, 'Model': $(input).data("variable-model"), 'Description': $(input).data("variable-description"), 'Group': $(input).data("variable-group"), 'Advanced': checkBoolean($(input).data("variable-advanced")), 'Hidden': checkBoolean($(input).data("variable-hidden"))};
                         setInheritedField(input.id);
                     } else if ($(input).prop("tagName")==='TEXTAREA') {
-                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model")};
+                        inputVariables[input.id] = {'Name': extractVariableName(input.name), 'Value': input.value, 'Model': $(input).data("variable-model"), 'Description': $(input).data("variable-description"), 'Group': $(input).data("variable-group"), 'Advanced': checkBoolean($(input).data("variable-advanced")), 'Hidden': checkBoolean($(input).data("variable-hidden"))};
                         setInheritedField(input.id);
                     }
                 }
@@ -527,9 +572,9 @@ define(
 
                 if (!validationData.valid) {
                     var jobVariables = extractUpdatedVariables(inputVariables, validationData);
-                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : ''});
+                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced});
                 } else if (check) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.'});
+                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced});
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
@@ -568,6 +613,7 @@ define(
                             }
                         }
                         inputVariables[key].resolvedModel = validationData.updatedModels[key];
+                        inputVariables[key].resolvedHidden = validationData.updatedHidden[key];
                         //Variables substitution:: When one changes the reference model we should initialize the Value and not show error message
                         var jobVariables = studioApp.views.jobVariableView.model.jobVariables;
                         if( jobVariables[key].resolvedModel && jobVariables[key].resolvedModel !== inputVariables[key].resolvedModel ){// compare old resolvedModel with the new resolvedModel
@@ -589,6 +635,29 @@ define(
             }
             var variables = studioApp.models.jobModel.get('Variables');
 
+            function findAndReplaceVariableOrAppend(key, variablesArray, sourceVariablesMap, variablesBackup) {
+                for (var i = 0; i < variablesArray.length; i++) {
+                    if (variablesArray[i].Name == key) {
+                        variablesBackup[key] = variablesArray[i];
+                        variablesArray[i] = sourceVariablesMap[key];
+                        return;
+                    }
+                }
+                // appending new variable
+                var variable = sourceVariablesMap[key];
+                variablesArray.push(variable);
+                variablesBackup[key] = variable;
+            }
+
+            function removeVariablesNotPresent(variablesArray, sourceVariablesMap) {
+                for (var i = variablesArray.length - 1; i >= 0; i--) {
+                    var key = variablesArray[i].Name;
+                    if (!sourceVariablesMap.hasOwnProperty(key)) {
+                        variablesArray.splice(i, 1);
+                    }
+                }
+            }
+
             if (!(!updatedVariables || updatedVariables == null)) {
                 var i;
                 var jobOnlyUpdatedVariables = {}
@@ -601,22 +670,10 @@ define(
                 }
                 // the goal is to replace the contents of studioApp.models.jobModel.get('Variables') with jobOnlyUpdatedVariables
                 // unfortunately, one is an array and the other is an object
-                for (i = 0; i < Object.keys(jobOnlyUpdatedVariables).length; i++) {
-                    if (i < variables.length) {
-                         var variable = variables[i];
-                         variables[i] = jobOnlyUpdatedVariables[variable.Name];
-                         jobVariables[variable.Name] = variable;
-                    } else {
-                        // if there are more elements in jobOnlyUpdatedVariables, add them to variables
-                        var variable = jobOnlyUpdatedVariables[Object.keys(jobOnlyUpdatedVariables)[i]];
-                        variables.push(variable)
-                        jobVariables[variable.Name] = variable;
-                    }
+                for (var key of Object.keys(jobOnlyUpdatedVariables)) {
+                    findAndReplaceVariableOrAppend(key, variables, jobOnlyUpdatedVariables, jobVariables);
                 }
-                while (i < variables.length) {
-                    // if there are less elements in jobOnlyUpdatedVariables, delete the extra elements from variables
-                    variables.pop();
-                }
+                removeVariablesNotPresent(variables, jobOnlyUpdatedVariables);
             } else {
                 for (var i = 0; i < variables.length; i++) {
                     var variable = variables[i];
