@@ -681,13 +681,6 @@ define(
 
             event.preventDefault();
 
-
-            jQuery.get('file.txt', function(data) {
-                   //process text file line by line
-                   $('#div').html(data.replace('n',''));
-            });
-
-
             var url = window.location.href;
             var arr = url.split("/");
             var result = arr[0] + "//" + arr[2] + "/rest";
