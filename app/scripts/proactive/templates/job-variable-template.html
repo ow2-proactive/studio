@@ -31,9 +31,32 @@
     ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
 </style>
 <br>
+<%
+var totalNumberOfadvancedVariables = 0;
+for (var key in jobVariables) {
+    var variable;
+    var hidden = false;
+    var resolvedHidden = false;
+    if (jobVariables.hasOwnProperty(key)) {
+        variable = jobVariables[key];
+        if (variable.hasOwnProperty("Hidden")) {
+            hidden = variable.Hidden;
+        }
+        if (variable.hasOwnProperty("resolvedHidden")) {
+            hidden = variable.resolvedHidden;
+        }
+        if (!hidden && variable.hasOwnProperty("Advanced") && variable.Advanced) {
+            totalNumberOfadvancedVariables++;
+        }
+    }
+}
+%>
 <ul id="submitFormUL">
     <div style="display: table; width: 100%">
         <span for="Job_Variables" class="Name" style="text-align:left; font-weight: bold; display: table-cell; width: 90%" data-toggle="tooltip">Job Variables</span>
+        <%
+        if (totalNumberOfadvancedVariables > 0) {
+        %>
         <label for="Advanced" style="text-align: left; display: table-cell; width: 10%; vertical-align: middle;" data-toggle="tooltip">Advanced
             <%
                 if (showAdvanced) {
@@ -66,6 +89,9 @@ jQuery(document).ready(function($){
 })
         //]]>
         </script>
+        <%
+        }
+        %>
     </div>
     <%
 
