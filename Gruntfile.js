@@ -284,7 +284,7 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['<%= yeoman.app %>/libs/bootstrap/dist/fonts/*.*'],
+                        src: ['<%= yeoman.app %>/libs/bootstrap/fonts/*.*'],
                         dest: '<%= yeoman.dist %>/fonts/'
                     }
                 ]
