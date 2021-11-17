@@ -100,14 +100,15 @@ define(
               validators: ['required'],
               fieldAttrs: {
                 'placeholder': '@attributes->name',
-                'title': "Name of the variable. It must start with a letter and it can contain only alphanumeric and '-' , '_' or '.' characters."
+                'data-help': "Name of the variable. It must start with a letter and it can contain only alphanumeric and -, _ or . characters."
               },
               type: 'Text',
               editorClass: 'popup-input-text-field'
             },
             "Value": {
               fieldAttrs: {
-                'placeholder': '@attributes->value'
+                'placeholder': '@attributes->value',
+                'data-help': 'Value of the variable.'
               },
               type: 'TextArea',
               editorClass: 'popup-input-text-field textareavalues',
@@ -125,7 +126,7 @@ define(
             "Description": {
               fieldAttrs: {
                 'placeholder': '@attributes->description',
-                'title': "Html Description of the variable. It can contain html tags such as <br> or <u>."
+                'data-help': "Html Description of the variable. It can contain html tags."
               },
               type: 'TextArea',
               editorClass: 'popup-input-text-field textareavalues',
@@ -134,7 +135,7 @@ define(
             "Group": {
               fieldAttrs: {
                 'placeholder': '@attributes->group',
-                'title': 'The variable can be assigned to a group. Variables of the same group will appear together in the workflow submission form.'
+                'data-help': 'The variable can be assigned to a group. Variables of the same group will appear together in the workflow submission form.'
               },
               type: 'Text',
               editorClass: 'popup-input-text-field'
@@ -142,7 +143,7 @@ define(
             "Advanced": {
               fieldAttrs: {
                 'placeholder': '@attributes->advanced',
-                'title': 'An advanced variable is not shown by default in the submission form, but can be displayed if needed.'
+                'data-help': 'An advanced variable is not shown by default in the submission form, but can be displayed if needed.'
               },
               type: 'Checkbox',
               editorClass: 'popup-input-text-field textareavalues',
@@ -151,7 +152,7 @@ define(
             "Hidden": {
               fieldAttrs: {
                 'placeholder': '@attributes->hidden',
-                'title': 'A hidden variable is not never shown in the submission form, but the hidden status can be modified using a model SPEL expression. This can be used to produce dynamic forms.'
+                'data-help': 'A hidden variable is never shown in the submission form, but the hidden status can be modified using a model SpEL expression. This can be used to produce dynamic forms.'
               },
               type: 'Checkbox',
               editorClass: 'popup-input-text-field textareavalues',

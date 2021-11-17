@@ -85,7 +85,7 @@ require.config({
         list: '../libs/backbone-forms/distribution.amd/editors/list',
         backboneFormsAdapter: '../libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
         underscore: '../libs/underscore/underscore',
-        bootstrap: '../libs/bootstrap/dist/js/bootstrap',
+        bootstrap: '../libs/bootstrap/js/bootstrap',
         vkbeautify: '../libs/vkbeautify.0.99.00.beta/index',
         dagre: '../libs/dagre/index',
         text: '../libs/requirejs-text/text',
