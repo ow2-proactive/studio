@@ -34,11 +34,18 @@ define(
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
             this.kindLabel = newKindLabel;
-            //if it's not a workflow, we hide workflow import buttons and display generic import
-            if (this.kind.toLowerCase().indexOf('workflow') != 0) {
+            if (this.kind.toLowerCase() === 'all') {
+                $("#catalog-get-as-new-button").hide();
+                $("#catalog-get-append-button").hide();
+                $("#catalog-get-import-button").hide();
+                $("#catalog-get-select-button").show();
+                $("#get-modal-title").text("Select a Workflow from the Catalog");
+            } else if (this.kind.toLowerCase().indexOf('workflow') != 0) {
+                //if it's not a workflow, we hide workflow import buttons and display generic import
                 $("#catalog-get-as-new-button").hide();
                 $("#catalog-get-append-button").hide();
                 $("#catalog-get-import-button").show();
+                $("#catalog-get-select-button").hide();
                 if (this.kind.toLowerCase().indexOf('script') == 0) {
                     if (this.inputToImportId.indexOf('_Code') > -1) {
                         $("#get-modal-title").text("Import a Script by copy from the Catalog");
@@ -55,9 +62,17 @@ define(
                 $("#catalog-get-as-new-button").show();
                 $("#catalog-get-append-button").show();
                 $("#catalog-get-import-button").hide();
+                $("#catalog-get-select-button").hide();
                 $("#get-modal-title").text("Import a Workflow from the Catalog");
             }
         },
+        setVarKey: function(varKey) {
+            this.varKey = varKey;
+        },
+        setPreviousZIndex: function(previousZIndex) {
+            this.previousZIndex = previousZIndex;
+        },
+
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-get-objects-table').empty();
             this.$('#catalog-get-description-container').empty();
@@ -69,9 +84,12 @@ define(
 	            var that = this;
                 var bucketName = that.getSelectedBucketName();
                 var filterKind = this.kind;
+
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     filterKind = "workflow";
+                } else if (this.kind.toLowerCase() === 'all') {
+                    filterKind = null;
                 }
                 var objectsModel = new CatalogObjectCollection(
                 {
@@ -286,12 +304,18 @@ define(
             //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
             if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 bucketKind = "workflow";
+            } else if (this.kind.toLowerCase() === 'all') {
+                bucketKind = null;
             }
             this.buckets.setKind(bucketKind);
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)
-            this.$('#catalog-objects-legend').text(this.kindLabel+'s and Projects');
+            if (this.kind.toLowerCase() === 'all') {
+                this.$('#catalog-objects-legend').text('Catalog Objects');
+            } else {
+                this.$('#catalog-objects-legend').text(this.kindLabel+'s and Projects');
+            }
             return this;
         },
     })

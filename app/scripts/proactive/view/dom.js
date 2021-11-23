@@ -264,6 +264,39 @@ define(
             $('#import-catalog-object-confirmation-modal').modal();
         });
 
+        $("#catalog-get-select-button").click(function (event) {
+            var splitRawUrl = ($(($("#catalog-get-revisions-table .catalog-selected-row"))[0])).data("rawurl").split('/');
+
+            //when you select an object revision from the Import modal, its objectName is already encoded.
+            var bucketName = splitRawUrl[1];
+            var objectName = splitRawUrl[3];
+            var revisionId;
+            if (splitRawUrl.length > 4) {
+                revisionId = splitRawUrl[5];
+            }
+            var selectedObjectValue;
+            if (revisionId) {
+                selectedObjectValue = `${bucketName}/${objectName}/${revisionId}`;
+            } else {
+                selectedObjectValue = `${bucketName}/${objectName}`;
+            }
+
+            var studioApp = require('StudioApp');
+            var updatedVarKey = studioApp.views.catalogGetView.varKey;
+            var updatedVar = {[updatedVarKey]: selectedObjectValue};
+            studioApp.views.jobVariableView.updateVariableValue(updatedVar);
+
+            $('#catalog-get-modal').modal('hide');
+        });
+
+        $('#catalog-get-modal').on('hidden.bs.modal', function() {
+            var studioApp = require('StudioApp');
+            var previousZIndex = studioApp.views.catalogGetView.previousZIndex;
+            if (previousZIndex) {
+                $("#catalog-get-modal").css("z-index", previousZIndex);
+            }
+        });
+
         function workflowImport(e, modalSelector) {
             var studioApp = require('StudioApp');
             var url = $("#catalog-get-revision-description").data("selectedrawurl");
