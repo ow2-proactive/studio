@@ -17,7 +17,10 @@ define(
                     this.callback = options.callback;
                 },
                 url: function() {
-                    return '/catalog/buckets/' + this.bucketname + '/resources/?kind='+this.kind;
+                    if (this.kind && this.kind != null)
+                        return '/catalog/buckets/' + this.bucketname + '/resources/?kind=' + this.kind;
+                    else
+                        return '/catalog/buckets/' + this.bucketname + '/resources/';
                 },
                 parse: function(data) {
                     if (this.callback)

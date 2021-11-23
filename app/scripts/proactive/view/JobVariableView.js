@@ -30,7 +30,8 @@ define(
             'click .var-globalfile-button': 'showGlobalFileModal',
             'click .var-userfile-button': 'showUserFileModal',
             'click .var-globalfolder-button': 'showGlobalFolderModal',
-            'click .var-userfolder-button': 'showUserFolderModal'
+            'click .var-userfolder-button': 'showUserFolderModal',
+            'click .var-catalogobject-button': 'showCatalogModal'
         },
 
         initialize: function () {
@@ -80,6 +81,20 @@ define(
 
         showUserFolderModal: function(event) {
             new FileBrowserView({dataspace: "user", varKey: event.target.getAttribute('value'), selectFolder: true}).render();
-        }
+        },
+
+        showCatalogModal: function(event) {
+            event.preventDefault();
+            var studioApp = require('StudioApp');
+            studioApp.views.catalogGetView.setKind("all", "Object");
+            studioApp.views.catalogGetView.setVarKey(event.target.getAttribute('value'));
+            studioApp.views.catalogGetView.render();
+
+            var previousZIndex = $("#catalog-get-modal").css("z-index");
+            studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
+            var zIndexModal = parseInt($("#catalog-get-modal").parents().find(".modal").css("z-index")); // #execute-workflow-modal
+            $("#catalog-get-modal").css("z-index", (zIndexModal+1).toString());
+            $('#catalog-get-modal').modal();
+        },
     })
 })
