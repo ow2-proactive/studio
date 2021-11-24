@@ -758,6 +758,15 @@ input[type="number"] {
     padding-bottom: 0px;
 }
 
+.radio, .checkbox {
+    padding-left: 20px;
+}
+.radio input[type="radio"], .radio-inline input[type="radio"],
+.checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+    position: static;
+    float:left;
+}
+
 .checkbox {
     padding-top: 3px;
     padding-bottom: 3px;
