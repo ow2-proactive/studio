@@ -278,7 +278,7 @@ define(
                     }
                 }
             }
-            this.$el.find("img").attr('src', iconPath);
+            this.$el.find("img").attr('src', "/studio/" + iconPath);
         },
 
         setInvalid: function () {
