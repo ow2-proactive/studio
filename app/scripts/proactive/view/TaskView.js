@@ -277,8 +277,10 @@ define(
                         iconPath = genericInformation[i]["Property Value"];
                     }
                 }
+            } else {
+                iconPath = "/studio/" + iconPath;
             }
-            this.$el.find("img").attr('src', "/studio/" + iconPath);
+            this.$el.find("img").attr('src', iconPath);
         },
 
         setInvalid: function () {
