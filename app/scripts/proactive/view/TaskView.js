@@ -277,8 +277,11 @@ define(
                         iconPath = genericInformation[i]["Property Value"];
                     }
                 }
+            } else {
+                // Add "/studio/" only for tasks stored in Studio project : with no generic info
+                iconPath = "/studio/" + iconPath;
             }
-            this.$el.find("img").attr('src', "/studio/" + iconPath);
+            this.$el.find("img").attr('src', iconPath);
         },
 
         setInvalid: function () {
