@@ -21,7 +21,6 @@ define(
                     var kindFilter = (this.kind && this.kind.toLowerCase() != 'all') ? 'kind=' + this.kind : '';
                     var contentFilter = (this.contentType && this.contentType.toLowerCase() != 'all') ? 'contentType=' + this.contentType : '';
                     var params = [kindFilter, contentFilter].join('&');
-                    console.log("url params: " + params);
                     return '/catalog/buckets/' + this.bucketname + '/resources/' + "?" + params;
                 },
                 parse: function(data) {
