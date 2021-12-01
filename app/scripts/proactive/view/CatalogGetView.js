@@ -39,7 +39,7 @@ define(
                 $("#catalog-get-append-button").hide();
                 $("#catalog-get-import-button").hide();
                 $("#catalog-get-select-button").show();
-                $("#get-modal-title").text("Select a Workflow from the Catalog");
+                $("#get-modal-title").text("Select an Object from the Catalog");
             } else if (this.kind.toLowerCase().indexOf('workflow') != 0) {
                 //if it's not a workflow, we hide workflow import buttons and display generic import
                 $("#catalog-get-as-new-button").hide();
@@ -66,6 +66,14 @@ define(
                 $("#get-modal-title").text("Import a Workflow from the Catalog");
             }
         },
+        setFilter: function(filterKind, filterContentType) {
+            this.filterKind = filterKind;
+            this.filterContentType = filterContentType;
+        },
+        clearFilter: function(filterKind, filterContentType) {
+            this.filterKind = undefined;
+            this.filterContentType = undefined;
+        },
         setVarKey: function(varKey) {
             this.varKey = varKey;
         },
@@ -88,13 +96,16 @@ define(
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     filterKind = "workflow";
-                } else if (this.kind.toLowerCase() === 'all') {
-                    filterKind = null;
                 }
+                if (this.filterKind) {
+                    filterKind = this.filterKind;
+                }
+
                 var objectsModel = new CatalogObjectCollection(
                 {
                     bucketname: bucketName,
                     kind: filterKind,
+                    contentType: this.filterContentType,
                     callback: function (catalogObjects) {
                         if (catalogObjects.length === 0)
                             $('#catalog-get-import-button').prop('disabled', true);
@@ -283,6 +294,9 @@ define(
                 if (kind.toLowerCase().indexOf('workflow') == 0) {
                     filterKind = "workflow";
                 }
+                if (this.filterKind) {
+                    filterKind = this.filterKind;
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
@@ -306,6 +320,9 @@ define(
                 bucketKind = "workflow";
             } else if (this.kind.toLowerCase() === 'all') {
                 bucketKind = null;
+            }
+            if (this.filterKind) {
+                bucketKind = this.filterKind;
             }
             this.buckets.setKind(bucketKind);
             this.buckets.fetch({reset: true, async: false});
