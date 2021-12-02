@@ -12,15 +12,19 @@ define(
             model: RestBucket,
             initialize: function(options) {
                 this.kind = options.kind;
+                this.contentType = options.contentType;
             },
             setKind: function(newKind) {
                 this.kind= newKind;
             },
+            setContentType: function(newContentType) {
+                this.contentType = newContentType;
+            },
             url: function() {
-                if (this.kind && this.kind != null)
-                    return '/catalog/buckets/?kind='+this.kind;
-                else
-                    return '/catalog/buckets/';
+                var kindFilter = (this.kind && this.kind.toLowerCase() != 'all') ? 'kind=' + this.kind : '';
+                var contentFilter = (this.contentType && this.contentType.toLowerCase() != 'all') ? 'contentType=' + this.contentType : '';
+                var params = [kindFilter, contentFilter].join('&');
+                return '/catalog/buckets/?' + params;
             },
             parse: function(data) {
                 return data;
