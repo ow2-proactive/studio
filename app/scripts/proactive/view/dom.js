@@ -495,7 +495,7 @@ define(
                 }
                 // then, add global variables not defined in the workflow
                 for (var key of Object.keys(validationData.updatedVariables)) {
-                    if (key.indexOf(":") < 0 && !jobVariables.hasOwnProperty(key)) {
+                    if (key.indexOf(":") < 0 && !jobVariablesOriginal.hasOwnProperty(key)) {
                         var variable = { 'Name': key, 'Value': validationData.updatedVariables[key], 'Model': validationData.updatedModels[key], 'Description': validationData.updatedDescriptions[key], 'Group': validationData.updatedGroups[key], 'Advanced': validationData.updatedAdvanced[key], 'Hidden': validationData.updatedHidden[key], 'resolvedModel': validationData.updatedModels[key], 'resolvedHidden': validationData.updatedHidden[key] }
                         addVariableToGroup(key, variable, jobVariablesByGroup);
                     }
