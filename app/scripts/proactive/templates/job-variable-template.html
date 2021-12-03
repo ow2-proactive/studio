@@ -246,7 +246,7 @@ jQuery(document).ready(function($){
                         // failure to fetch implies no change in the model
                     }
                 }
-                var shortenModel = resolvedModel ? ((resolvedModel.length > 17) ? resolvedModel.substring(0, 17) + " ..." : resolvedModel) : "";
+                var shortenModel = resolvedModel ? ((resolvedModel.length > 14) ? resolvedModel.substring(0, 14) + " ..." : resolvedModel) : "";
                 if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:list')==0) {  %>
                     <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" onchange="$('#check-button').click()" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
                         <% var indexBegin = resolvedModel.indexOf('(');
