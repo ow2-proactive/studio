@@ -271,7 +271,7 @@ define(
                 }
             }
             var genericInformation = this.model.get("Generic Info");
-            if (genericInformation){
+            if (genericInformation.length){
                 for (var i in genericInformation) {
                     if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
                         iconPath = genericInformation[i]["Property Value"];
