@@ -160,13 +160,16 @@ define(
 		            	}
 	            	});
 	            revisionsModel.fetch();
-            }  
+            } else {
+                $("#catalog-get-select-button").prop('disabled', true);
+            }
         },
         internalSelectRevision: function (currentRevisionRow) {
             var studioApp = require('StudioApp');
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
+                $("#catalog-get-select-button").prop('disabled', false);
                 var splitRawUrl = $(currentRevisionRow).data("rawurl").split('/');
 
                 //when you select an object revision from the Import modal, its objectName is already encoded.
@@ -288,6 +291,7 @@ define(
         },
         showAllChanged : function(kind) {
             var filterKind = undefined;
+            var filterContentType = undefined;
             if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
@@ -297,10 +301,13 @@ define(
                 if (this.filterKind) {
                     filterKind = this.filterKind;
                 }
+                if (this.filterContentType) {
+                    filterContentType = this.filterContentType;
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
-            studioApp.models.catalogBuckets.setContentType(this.filterContentType);
+            studioApp.models.catalogBuckets.setContentType(filterContentType);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
         updateBuckets : function() {
