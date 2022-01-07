@@ -87,9 +87,9 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             studioApp.views.catalogGetView.setKind("all", "Object");
-            studioApp.views.catalogGetView.setVarKey(event.target.getAttribute('value'));
+            studioApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
             // retrieve the filter of kind and contentType from variable model definition
-            var model = event.target.previousElementSibling.getAttribute('title');
+            var model = event.currentTarget.previousElementSibling.getAttribute('title');
             var matches = model.match(/\((.*)\)/); //matches[1] contains the value between the parentheses
             if (matches && matches.length > 1) {
                 var params = matches[1].split(',');
