@@ -16,7 +16,8 @@ define(
         events: {
             'click .third-party-credential-close': 'closeThirdPartyCredential',
             'click #add-third-party-credential-button': 'addThirdPartyCredential',
-            'click .remove-third-party-credential': 'removeThirdPartyCredential'
+            'click .remove-third-party-credential': 'removeThirdPartyCredential',
+            'change #multiline-cred': 'changeMultilineCredential'
         },
 
         initialize: function () {
@@ -55,7 +56,8 @@ define(
         },
 
         addThirdPartyCredential: function(event) {
-            this.thirdPartyCredentialRequest($('#new-cred-key').val(), "POST", { value: $('#new-cred-value').val() });
+            var credValue = $('#multiline-cred').prop('checked') ? $('#new-cred-value-multiline').val() : $('#new-cred-value').val();
+            this.thirdPartyCredentialRequest($('#new-cred-key').val(), "POST", { value: credValue });
         },
 
         removeThirdPartyCredential: function(event) {
@@ -76,6 +78,16 @@ define(
                     alert('Failed to edit the third-party credential.' + xhr.status + ': ' + xhr.statusText);
                 }
             });
+        },
+
+        changeMultilineCredential: function(event) {
+            if (event.target.checked) {
+                $('#new-cred-value').hide();
+                $('#new-cred-value-multiline').show();
+            } else {
+                $('#new-cred-value').show();
+                $('#new-cred-value-multiline').hide();
+            }
         },
 
         closeThirdPartyCredential: function () {
