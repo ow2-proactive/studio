@@ -63,8 +63,10 @@ define(
             }
         },
 
-        showThirdPartyCredentialModal: function() {
-            new ThirdPartyCredentialView().render();
+        showThirdPartyCredentialModal: function(event) {
+            var varKey = event.currentTarget.getAttribute('value');
+            var varValue = event.currentTarget.parentElement.querySelector('.variableValue').value;
+            new ThirdPartyCredentialView({varKey: varKey, credKey: varValue}).render();
         },
 
         showGlobalFileModal: function(event) {

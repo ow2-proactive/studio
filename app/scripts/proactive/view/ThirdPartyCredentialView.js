@@ -9,6 +9,10 @@ define(
 
     return Backbone.View.extend({
 
+        credKey: "",
+
+        varKey: "",
+
         template: _.template(credentialTemplate),
 
         model: {'credentialKeys': []},
@@ -21,7 +25,9 @@ define(
             'change #multiline-cred': 'changeMultilineCredential'
         },
 
-        initialize: function () {
+        initialize: function (options) {
+            this.credKey = options.credKey;
+            this.varKey = options.varKey;
             this.$el = $('#third-party-credential-modal');
             var that = this;
             this.$el.on('hidden.bs.modal', function(event) {
@@ -37,14 +43,12 @@ define(
         },
 
         render: function () {
-            this.refreshThirdPartyCredential();
-            this.$el.html(this.template(this.model));
+            this.refreshThirdPartyCredential(this);
             this.$el.modal('show');
             return this;
         },
 
-        refreshThirdPartyCredential: function() {
-            var that = this;
+        refreshThirdPartyCredential: function(that) {
             $.ajax({
                 url: "/rest/scheduler/credentials/",
                 headers: { "sessionid": localStorage['pa.session'] },
@@ -52,20 +56,33 @@ define(
                 success: function (data){
                     that.model['credentialKeys'] = data.sort();
                     that.$el.html(that.template(that.model));
+                    if (that.credKey) {
+                        $("#new-cred-key").val(that.credKey);
+                        if (that.model['credentialKeys'].includes(that.credKey)) {
+                            $('#add-third-party-credential-button').html('Edit');
+                        } else {
+                            $('#add-third-party-credential-button').html('Add');
+                        }
+                        $("#new-cred-key").prop('readonly', true);
+                        $("#new-cred-key").prop('title', that.credKey);
+                    } else {
+                        $("#new-cred-key").prop('readonly', false);
+                        $("#new-cred-key").prop('title', 'The credential key should not contain only white spaces.');
+                    }
                 }
             });
         },
 
         addThirdPartyCredential: function(event) {
             var credValue = $('#multiline-cred').prop('checked') ? $('#new-cred-value-multiline').val() : $('#new-cred-value').val();
-            this.thirdPartyCredentialRequest($('#new-cred-key').val(), "POST", { value: credValue });
+            this.thirdPartyCredentialRequest($('#new-cred-key').val(), "POST", { value: credValue }, this.closeThirdPartyCredential);
         },
 
         removeThirdPartyCredential: function(event) {
-            this.thirdPartyCredentialRequest(event.target.id, "DELETE", {});
+            this.thirdPartyCredentialRequest(event.target.id, "DELETE", {}, this.refreshThirdPartyCredential);
         },
 
-        thirdPartyCredentialRequest: function(credentialKey, typeRequest, requestData) {
+        thirdPartyCredentialRequest: function(credentialKey, typeRequest, requestData, successHandler) {
             var that = this;
             $.ajax({
                 url: "/rest/scheduler/credentials/" + encodeURIComponent(credentialKey),
@@ -73,7 +90,7 @@ define(
                 data: requestData,
                 headers: { "sessionid": localStorage['pa.session'] },
                 success: function (data) {
-                    that.refreshThirdPartyCredential();
+                    successHandler(that);
                 },
                 error: function (xhr, status, error) {
                     alert('Failed to edit the third-party credential.' + xhr.status + ': ' + xhr.statusText);
@@ -112,7 +129,7 @@ define(
         },
 
         closeThirdPartyCredential: function () {
-            this.$el.modal('hide');
+            $('#third-party-credential-modal').modal('hide');
         }
     })
 })
