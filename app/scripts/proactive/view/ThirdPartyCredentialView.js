@@ -17,6 +17,7 @@ define(
             'click .third-party-credential-close': 'closeThirdPartyCredential',
             'click #add-third-party-credential-button': 'addThirdPartyCredential',
             'click .remove-third-party-credential': 'removeThirdPartyCredential',
+            'input #new-cred-value': 'changeCredValue',
             'change #multiline-cred': 'changeMultilineCredential'
         },
 
@@ -82,11 +83,31 @@ define(
 
         changeMultilineCredential: function(event) {
             if (event.target.checked) {
+                // switch to multi-lines credential
+                // previous single-line credential value will be copied into multi-line cred
+                var credValue = $('#new-cred-value').val();
+                $('#new-cred-value-multiline').val(credValue);
                 $('#new-cred-value').hide();
                 $('#new-cred-value-multiline').show();
             } else {
-                $('#new-cred-value').show();
+                // switch to single-line credential
+                // if the user has entered multi-lines credential, it will be erased when switching to single-line credential mode
+                var credValue = $('#new-cred-value-multiline').val();
+                if (credValue.includes('\n')) {
+                    $('#new-cred-value').val("");
+                    $("#add-cred-error-message").text("Switching to single-line credentials has deleted the multiline credential value, please re-enter your credential.");
+                } else {
+                    $('#new-cred-value').val(credValue);
+                    $("#add-cred-error-message").text("");
+                }
                 $('#new-cred-value-multiline').hide();
+                $('#new-cred-value').show();
+            }
+        },
+
+        changeCredValue: function() {
+            if ($('#new-cred-value').val()) {
+                $("#add-cred-error-message").text("");
             }
         },
 
