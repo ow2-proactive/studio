@@ -11,8 +11,6 @@ define(
 
         credKey: "",
 
-        varKey: "",
-
         template: _.template(credentialTemplate),
 
         model: {'credentialKeys': []},
@@ -27,7 +25,6 @@ define(
 
         initialize: function (options) {
             this.credKey = options.credKey;
-            this.varKey = options.varKey;
             this.$el = $('#third-party-credential-modal');
             var that = this;
             this.$el.on('hidden.bs.modal', function(event) {

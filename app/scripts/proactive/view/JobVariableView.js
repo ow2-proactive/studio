@@ -26,7 +26,6 @@ define(
         },
 
         events: {
-            'click .third-party-credential-button': 'showThirdPartyCredentialModal',
             'click .var-globalfile-button': 'showGlobalFileModal',
             'click .var-userfile-button': 'showUserFileModal',
             'click .var-globalfolder-button': 'showGlobalFolderModal',
@@ -61,12 +60,6 @@ define(
                 var updatedVarElement = $(document.getElementById(key));
                 updatedVarElement.text(jobVariables[key]);
             }
-        },
-
-        showThirdPartyCredentialModal: function(event) {
-            var varKey = event.currentTarget.getAttribute('value');
-            var varValue = event.currentTarget.parentElement.querySelector('.variableValue').value;
-            new ThirdPartyCredentialView({varKey: varKey, credKey: varValue}).render();
         },
 
         showGlobalFileModal: function(event) {
