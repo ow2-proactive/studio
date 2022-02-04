@@ -5,6 +5,7 @@ define(
         'proactive/config',
         'proactive/view/utils/undo',
         'proactive/view/FileBrowserView',
+        'proactive/view/ThirdPartyCredentialView',
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
@@ -53,7 +54,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, FileBrowserView, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
+    function ($, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -572,7 +573,20 @@ define(
             executeOrCheck(event, true, false)
         });
 
-        function executeOrCheck(event, check, plan) {
+        // show ThirdPartyCredential modal with updated value of the corresponding variable
+        $(document).on("click", '.third-party-credential-button', function (event) {
+            var varKey = event.currentTarget.getAttribute('value');
+            var varValue = event.currentTarget.parentElement.querySelector('.variableValue').value;
+
+            executeOrCheck(event, true, false, function(response) {
+                if (response && response.updatedVariables && varKey in response.updatedVariables) {
+                    varValue = response.updatedVariables[varKey];
+                }
+                new ThirdPartyCredentialView({credKey: varValue}).render();
+            });
+        });
+
+        function executeOrCheck(event, check, plan, handler) {
             var studioApp = require('StudioApp');
             executeIfConnected(function () {
                 var oldVariables = readOrStoreVariablesInModel();
@@ -629,11 +643,14 @@ define(
                     }else{
                         $("#plan-workflow-modal").modal();
                     }
-
                 }
                 readOrStoreVariablesInModel(oldVariables);
 
                 initializeSubmitFormForTaskVariables();
+                
+                if (handler) {
+                    handler(validationData);
+                }
             })
         }
 
