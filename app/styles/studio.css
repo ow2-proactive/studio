@@ -1652,6 +1652,10 @@ li.success {
     width: 1300px;
 }
 
+.modal {
+  overflow-y:auto;
+}
+
 #catalog-publish-buckets-table td, #catalog-get-buckets-table td,
 #catalog-publish-objects-table td, #catalog-get-objects-table td,
 #catalog-publish-revisions-table td, #catalog-get-revisions-table {
