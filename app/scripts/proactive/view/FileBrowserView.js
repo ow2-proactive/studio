@@ -18,6 +18,8 @@ define(
 
         template: _.template(fileBrowserTemplate),
 
+        filterValue:"*",
+
         model: {
             'files': [],
             'directories': [],
@@ -39,6 +41,7 @@ define(
             'click #download-file-btn': 'downloadFile',
             'click #delete-file-btn': 'deleteFile',
             'change #show-hidden-files' : 'showHiddenChange'
+            'keyup #filter-files': 'filterFiles',
         },
 
         initialize: function (options) {
@@ -71,6 +74,13 @@ define(
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {
                 that.closeFileBrowser();
             });
+        },
+
+        filterFiles: function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                this.filterValue = document.getElementById("filter-files").value;
+                this.refreshFiles();
+            }
         },
 
         render: function () {
@@ -113,7 +123,7 @@ define(
             }
             $.ajax({
                 url: that.dataspaceRestUrl + encodeURIComponent(pathname),
-                data: { "comp": "list" },
+                data: { "comp": "list", "includes": '*' + this.filterValue + '*'},
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
@@ -133,6 +143,7 @@ define(
                     StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
                 }
             });
+             document.getElementById("filter-files").value = this.filterValue;
         },
 
         getFilesMetadata: function(fileNames) {
