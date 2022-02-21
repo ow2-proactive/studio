@@ -40,8 +40,8 @@ define(
             'click #new-folder-btn': 'createFolder',
             'click #download-file-btn': 'downloadFile',
             'click #delete-file-btn': 'deleteFile',
-            'change #show-hidden-files' : 'showHiddenChange'
-            'keyup #filter-files': 'filterFiles',
+            'change #show-hidden-files' : 'showHiddenChange',
+            'keyup #filter-files': 'filterFiles'
         },
 
         initialize: function (options) {
@@ -123,7 +123,7 @@ define(
             }
             $.ajax({
                 url: that.dataspaceRestUrl + encodeURIComponent(pathname),
-                data: { "comp": "list", "includes": '*' + this.filterValue + '*'},
+                data: { "comp": "list", "includes": this.filterValue },
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
@@ -143,7 +143,7 @@ define(
                     StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
                 }
             });
-             document.getElementById("filter-files").value = this.filterValue;
+            document.getElementById("filter-files").value = this.filterValue;
         },
 
         getFilesMetadata: function(fileNames) {
