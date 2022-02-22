@@ -156,7 +156,7 @@ define(
                     }
                 }
             });
-
+            this.updateIcon();
             this.element.find(".name").text(newTaskName);
             $("#breadcrumb-task-name").text(newTaskName);
         },
