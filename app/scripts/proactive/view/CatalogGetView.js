@@ -29,7 +29,8 @@ define(
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-objects-table tr': 'selectObject',
             'click #catalog-get-revisions-table tr': 'selectRevision',
-            'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
+            'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);},
+            'submit #get-object-by-name': 'filterByObjectsByName'
         },
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
@@ -105,6 +106,7 @@ define(
                 {
                     bucketname: bucketName,
                     kind: filterKind,
+                    objectName: this.getPreferenceObjectName(),
                     contentType: this.filterContentType,
                     callback: function (catalogObjects) {
                         if (catalogObjects.length === 0)
@@ -228,6 +230,9 @@ define(
         	var row = $(e.currentTarget);
             this.internalSelectObject(row);
         },
+        getPreferenceObjectName: function(){
+            return $('#get-object-by-name input').val();
+        },
         selectRevision: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectRevision(row);
@@ -303,6 +308,13 @@ define(
             studioApp.models.catalogBuckets.setContentType(this.filterContentType);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
+        filterByObjectsByName : function (event){
+            event.preventDefault();
+            const objectName = $('#get-object-by-name input').val();
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.setObjectName(objectName);
+            studioApp.models.catalogBuckets.fetch({reset: true});
+        },
         updateBuckets : function() {
             this.$('#catalog-get-buckets-table').empty();
             var BucketList = _.template(catalogList);
@@ -327,6 +339,7 @@ define(
             }
             this.buckets.setKind(bucketKind);
             this.buckets.setContentType(this.filterContentType);
+            this.buckets.setObjectName("");
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)

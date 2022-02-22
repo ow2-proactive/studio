@@ -28,7 +28,8 @@ define(
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
             'click #catalog-publish-objects-table tr': 'selectObject',
-            'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
+            'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);},
+            'submit #publish-object-by-name': 'filterByObjectsByName'
         },
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
@@ -45,6 +46,7 @@ define(
             {
                 bucketname: bucketName,
                 kind: filterKind,
+                objectName: this.getPreferenceObjectName(),
                 callback: callbackFunction
             });
             catalogObjectsModel.fetch({async:false});
@@ -136,6 +138,9 @@ define(
         		$(selected[0]).removeClass(selectedClassName);
         	}
         	$(row).addClass(selectedClassName);
+        },
+        getPreferenceObjectName: function(){
+            return $('#publish-object-by-name input').val();
         },
         selectBucket: function(e){
         	var row = $(e.currentTarget);
@@ -270,6 +275,13 @@ define(
             studioApp.models.catalogBuckets.setKind(filterKind);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
+        filterByObjectsByName : function (event){
+            event.preventDefault();
+            const objectName = $('#publish-object-by-name input').val();
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.setObjectName(objectName);
+            studioApp.models.catalogBuckets.fetch({reset: true});
+        },
         updateBuckets : function() {
             this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
@@ -299,6 +311,7 @@ define(
                 bucketKind = "workflow";
             }
             this.buckets.setKind(bucketKind);
+            this.buckets.setObjectName("");
             this.buckets.fetch({reset: true, async: false});
             if (this.kind.toLowerCase().indexOf('script') == 0) {
                 $('#publish-current-confirmation-modal .modal-body').html("Publishing this script will impact all workflows using it. Do you confirm publication?");
