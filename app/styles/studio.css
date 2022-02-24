@@ -622,7 +622,7 @@ input {
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-#get-object-by-name, #push-object-by-name {
+#get-object-by-name, #publish-object-by-name {
     margin-bottom: 20px;
 }
 .w-100 {
