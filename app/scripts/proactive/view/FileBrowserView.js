@@ -3,8 +3,9 @@ define(
         'backbone',
         'text!proactive/templates/file-browser-template.html',
         'proactive/rest/studio-client',
+        'proactive/view/BeautifiedModalAdapter'
     ],
-    function (Backbone, fileBrowserTemplate, StudioClient) {
+    function (Backbone, fileBrowserTemplate, StudioClient, BeautifiedModalAdapter) {
 
     "use strict";
 
@@ -87,6 +88,7 @@ define(
             this.model['currentPath'] = "";
             this.refreshFiles();
             this.$el.html(this.template(this.model));
+            new BeautifiedModalAdapter().beautifyForm(this.$el);
             this.$el.modal('show');
             return this;
         },
@@ -144,6 +146,7 @@ define(
                 }
             });
             document.getElementById("filter-files").value = this.filterValue;
+            new BeautifiedModalAdapter().beautifyForm(this.$el);
         },
 
         getFilesMetadata: function(fileNames) {

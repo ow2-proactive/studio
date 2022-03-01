@@ -12,25 +12,26 @@
         </div>
         <div id="files-body" class="modal-body">
             <div>
-                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Refresh files" style="padding-left: 0px;">
+                <a id="refresh-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" data-help-self data-help="Refresh files" style="padding-left: 0px;">
                     <i class="fas fa-redo"></i>
                 </a>
-                <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="New folder">
+                <a id="new-folder-btn" href="javascript:void(0)" class="pointer pa-tool-btn" data-help-self data-help="New folder">
                     <i class="fas fa-folder-plus"></i>
                 </a>
                 <input type="file" id="selected-upload-file" class="hidden"/>
-                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Upload a file into the <%=locationDescription%>">
+                <a id="upload-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" data-help-self data-help="Upload a file into the <%=locationDescription%>">
                     <i class="fas fa-upload"></i>
                 </a>
-                <a id="download-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Download the selected file or folder">
+                <a id="download-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" data-help-self data-help="Download the selected file or folder">
                     <i class="fas fa-download"></i>
                 </a>
-                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" title="Delete the selected file or folder">
+                <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" data-help-self data-help="Delete the selected file or folder">
                     <i class="fas fa-trash"></i>
                 </a>
-                <label title="Filter files according to a glob pattern" style="padding-left: 140px">Filter: <input type="text" value="*" placeholder="You can apply the * pattern before and/or after any text" id="filter-files" style="width:330px"/> </label>
+                <label style="margin-left:160px;" data-help-self data-help="Filter files according to a glob pattern, e.g. '*.xml', 'image*'">Filter:</label>
+                <input type="text" id="filter-files" value="*" style="width:160px; position:relative; display:inline-block;"/>
                 <div class="pull-right" id="pull-right-hidden-files-checkbox">
-                    <label class="checkbox-inline"><input id="show-hidden-files" type="checkbox" <%- showHidden ? "checked" : ""  %> >Show Hidden</label>
+                    <label class="checkbox-inline"><input id="show-hidden-files" type="checkbox"<%- showHidden ? "checked" : ""  %> >Show Hidden</label>
                 </div>
             </div>
             <br>
