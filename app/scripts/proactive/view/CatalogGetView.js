@@ -71,9 +71,10 @@ define(
             this.filterKind = filterKind;
             this.filterContentType = filterContentType;
         },
-        clearFilter: function(filterKind, filterContentType) {
+        clearFilterAndVarKey: function(filterKind, filterContentType) {
             this.filterKind = undefined;
             this.filterContentType = undefined;
+            this.varKey = undefined;
         },
         setVarKey: function(varKey) {
             this.varKey = varKey;
@@ -354,6 +355,10 @@ define(
                 this.$('#catalog-objects-legend').text('Catalog Objects');
             } else {
                 this.$('#catalog-objects-legend').text(this.kindLabel+'s and Projects');
+            }
+            // when this catalog get view is attached to a specific variable, we should not show the checkbox "Show All".
+            if (this.varKey) {
+                $('#get-show-all-checkbox').hide();
             }
             return this;
         },

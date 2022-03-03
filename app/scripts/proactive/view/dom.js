@@ -292,7 +292,7 @@ define(
 
         $('#catalog-get-modal').on('hidden.bs.modal', function() {
             var studioApp = require('StudioApp');
-            studioApp.views.catalogGetView.clearFilter();
+            studioApp.views.catalogGetView.clearFilterAndVarKey();
             var previousZIndex = studioApp.views.catalogGetView.previousZIndex;
             if (previousZIndex) {
                 $("#catalog-get-modal").css("z-index", previousZIndex);
