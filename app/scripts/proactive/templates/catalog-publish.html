@@ -6,37 +6,40 @@
 		</button>
 	</div>
 </form>
-<table>
-	<tr>
-		<td style="width: 250px;">
-			<fieldset>
-				<legend class="row">
-					<div class="pull-left" style="font-weight: bold;padding-left: 15px;">Buckets</div>
-					<div class="pull-right" id="publish-show-all-checkbox">
-						<label class="checkbox-inline"><input type="checkbox">Show alll</label>
+<div id="catalog-view">
+	<table>
+		<tr>
+			<td style="width: 250px;">
+				<fieldset>
+					<legend class="row">
+						<div class="pull-left" style="font-weight: bold;padding-left: 15px;">Buckets</div>
+						<div class="pull-right" id="publish-show-all-checkbox">
+							<label class="checkbox-inline"><input type="checkbox">Show alll</label>
+						</div>
+					</legend>
+					<div style="height: 270px; overflow: auto;">
+						<table id="catalog-publish-buckets-table" style="width: 100%;"></table>
 					</div>
-				</legend>
-				<div style="height: 270px; overflow: auto;">
-					<table id="catalog-publish-buckets-table" style="width: 100%;"></table>
-				</div>
-			</fieldset>
-		</td>
-		<td style="width: 500px;">
-			<fieldset>
-				<legend class="row">
-					<div class="pull-left" id="catalog-publish-objects-title" style="font-weight: bold;padding-left: 15px;">Objects</div>
-				</legend>
-				<div style="height: 270px; overflow: auto;">
-					<table id="catalog-publish-objects-table" style="width: 100%;"></table>
-				</div>
-			</fieldset>
-		</td>
-		<td style="width: 350px;">
-			<fieldset>
-				<legend style="font-weight: bold;">Description</legend>
-				<div id="catalog-publish-description-container" style="height: 270px; overflow: auto;"></div>
-			</fieldset>
-		</td>
-	</tr>
-</table>
+				</fieldset>
+			</td>
+			<td style="width: 500px;">
+				<fieldset>
+					<legend class="row">
+						<div class="pull-left" id="catalog-publish-objects-title" style="font-weight: bold;padding-left: 15px;">Objects</div>
+					</legend>
+					<div style="height: 270px; overflow: auto;">
+						<table id="catalog-publish-objects-table" style="width: 100%;"></table>
+					</div>
+				</fieldset>
+			</td>
+			<td style="width: 350px;">
+				<fieldset>
+					<legend style="font-weight: bold;">Description</legend>
+					<div id="catalog-publish-description-container" style="height: 270px; overflow: auto;"></div>
+				</fieldset>
+			</td>
+		</tr>
+	</table>
+	<p></p>
+</div>
 

@@ -293,15 +293,24 @@ define(
                     var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
                 }
             }
-            _(this.buckets.models).each(function(bucket) {
-                var bucketName = bucket.get("name");
-                this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
-                if (!isWorkflow && bucketName == alreadyPublishedBucketName)
-                    selectIndex = i;
-                i++;
-            }, this);
-            // to open the browser on the right bucket (1st one if the object has never been commit)
-            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
+            const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
+            if(!countNotEmptyBuckets) {
+                $("#catalog-view table").hide()
+                var obj = $("#catalog-view p").text("No results fo \"" + this.getPreferenceObjectName() + "\".\n Try checking your spelling or use more general terms.")
+                obj.html(obj.html().replace(/\n/g,'<br/>'));
+            } else {
+                $("#catalog-view table").show();
+                $("#catalog-view p").text('');
+                _(this.buckets.models).each(function(bucket) {
+                    var bucketName = bucket.get("name");
+                    this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                    if (!isWorkflow && bucketName == alreadyPublishedBucketName)
+                        selectIndex = i;
+                    i++;
+                }, this);
+                // to open the browser on the right bucket (1st one if the object has never been commit)
+                this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
+            }
         },
         render: function () {
             this.$el.html(this.template());

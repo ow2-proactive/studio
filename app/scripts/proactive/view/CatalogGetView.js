@@ -29,7 +29,6 @@ define(
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-objects-table tr': 'selectObject',
             'click #catalog-get-revisions-table tr': 'selectRevision',
-            'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);},
             'submit #get-object-by-name': 'filterByObjectsByName'
         },
         setKind : function(newKind, newKindLabel) {
@@ -325,12 +324,23 @@ define(
         updateBuckets : function() {
             this.$('#catalog-get-buckets-table').empty();
             var BucketList = _.template(catalogList);
-            _(this.buckets.models).each(function(bucket) {
-                var bucketName = bucket.get("name");
-                this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
-            }, this);
-            // to open the browser on the first bucket
-            this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+            const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
+            if(!countNotEmptyBuckets) {
+                $("#catalog-view table").hide()
+                var obj = $("#catalog-view p").text("No results fo \"" + this.getPreferenceObjectName() + "\".\n Try checking your spelling or use more general terms.")
+                obj.html(obj.html().replace(/\n/g,'<br/>'));
+            } else {
+                $("#catalog-view table").show();
+                $("#catalog-view p").text('');
+                _(this.buckets.models).each(function(bucket) {
+                    var bucketName = bucket.get("name");
+                    if( bucket.get('objectCount') ){
+                        this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                    }
+                }, this);
+                // to open the browser on the first bucket
+                this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+            }
         },
         render: function () {
             this.$el.html(this.template());
