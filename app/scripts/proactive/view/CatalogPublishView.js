@@ -296,7 +296,7 @@ define(
             const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
             if(!countNotEmptyBuckets) {
                 $("#catalog-view table").hide()
-                var obj = $("#catalog-view p").text("No results fo \"" + this.getPreferenceObjectName() + "\".\n Try checking your spelling or use more general terms.")
+                var obj = $("#catalog-view p").text("No results for \"" + this.getPreferenceObjectName() + "\".\n Try checking your spelling or use more general terms.")
                 obj.html(obj.html().replace(/\n/g,'<br/>'));
             } else {
                 $("#catalog-view table").show();
