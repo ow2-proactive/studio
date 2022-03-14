@@ -1233,8 +1233,8 @@ define(
 
                 //Fixing modals overlay bug
                 var zIndexModal = parseInt($("#full-edit-modal-script-content").parents().find(".modal").css("z-index"));
-                $("#catalog-publish-modal").css("z-index", (zIndexModal+1).toString());
-                $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+2).toString());
+                $("#catalog-publish-modal").css("z-index", (zIndexModal+2).toString());
+                $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+3).toString());
 
                 var studioApp = require('StudioApp');
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");

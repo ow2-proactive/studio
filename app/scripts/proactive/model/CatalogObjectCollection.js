@@ -26,13 +26,13 @@ define(
                     return '/catalog/buckets/' + this.bucketname + '/resources/' + "?" + params;
                 },
                 parse: function(data) {
-                    data.sort(function(obj1, obj2) {
-                      if(obj1.project_name !== obj2.project_name){
-                          return obj1.project_name.localeCompare(obj2.project_name);
-                      } else {
-                          return obj1.name.localeCompare(obj2.name);
-                      }
-                    });
+                    _.sortBy(data, function(obj1, obj2) {
+                     if(obj1.project_name !== obj2.project_name){
+                         return obj1.project_name.localeCompare(obj2.project_name);
+                     } else {
+                         return obj1.name.localeCompare(obj2.name);
+                     }
+                   })
                     if (this.callback)
                         this.callback(data);
                     return data;
