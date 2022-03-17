@@ -49,11 +49,14 @@ define(
                 objectName: this.getPreferenceObjectName(),
                 callback: callbackFunction
             });
-            catalogObjectsModel.fetch({async:false});
+            setTimeout(function(){
+              catalogObjectsModel.fetch({async:false});
+            }, 10)
         },
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
+            this.$('#catalog-publish-objects-table').html("<th>Loading ....</th>");
 
             var publishCurrentButton = $('#catalog-publish-current');
             publishCurrentButton.prop('disabled', !currentBucketRow);
@@ -69,6 +72,7 @@ define(
                     var currentProjectName = studioApp.models.currentWorkflow.getProject();
                     var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                        that.$('#catalog-publish-objects-table').empty();
                         _.each(
                         catalogObjects,
                         function (obj) {
@@ -91,6 +95,7 @@ define(
                     var index = 0;
                     var projectName = "";
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
+                        that.$('#catalog-publish-objects-table').empty();
                         _.each(
                         catalogObjects,
                         function (obj) {
@@ -283,6 +288,7 @@ define(
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
         updateBuckets : function() {
+            const that = this;
             this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
             var i = 0;
@@ -295,12 +301,14 @@ define(
             }
             const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
             if(!countNotEmptyBuckets) {
-                $("#catalog-view table").hide()
-                var obj = $("#catalog-view p").text("No results for \"" + this.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.")
-                obj.html(obj.html().replace(/\n/g,'<br/>'));
+                $("#publish-catalog-view table").hide()
+                if($("#publish-catalog-view p").length){
+                    var obj = $("#publish-catalog-view p").text("No results for \"" + that.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.")
+                    obj.html(obj.html().replace(/\n/g,'<br/>'));
+                }
             } else {
-                $("#catalog-view table").show();
-                $("#catalog-view p").text('');
+                $("#publish-catalog-view table").show();
+                $("#publish-catalog-view p").text('');
                 _(this.buckets.models).each(function(bucket) {
                     var bucketName = bucket.get("name");
                     this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
