@@ -26,7 +26,7 @@ define(
                     return '/catalog/buckets/' + this.bucketname + '/resources/' + "?" + params;
                 },
                 parse: function(data) {
-                    _.sortBy(data, function(obj1, obj2) {
+                    data.sort(function(obj1, obj2) {
                      if(obj1.project_name !== obj2.project_name){
                          return obj1.project_name.localeCompare(obj2.project_name);
                      } else {

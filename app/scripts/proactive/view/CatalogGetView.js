@@ -83,6 +83,7 @@ define(
 
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-get-objects-table').empty();
+            this.$('#catalog-get-objects-table').html("<th>Loading ....</th>");
             this.$('#catalog-get-description-container').empty();
             this.disableActionButtons(true, true);
             
@@ -108,6 +109,7 @@ define(
                     objectName: this.getPreferenceObjectName(),
                     contentType: this.filterContentType,
                     callback: function (catalogObjects) {
+                        that.$('#catalog-get-objects-table').empty();
                         if (catalogObjects.length === 0)
                             $('#catalog-get-import-button').prop('disabled', true);
                         else {
@@ -121,10 +123,11 @@ define(
                         }
                     }
                 });
-                objectsModel.fetch({async:false});
+                setTimeout(function(){
+                  objectsModel.fetch({async:false});
+                  that.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
+                }, 10)
             }
-            this.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
-            
         },
         disableActionButtons: function (enableGetAsNew, enableAppend){
         	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
@@ -233,7 +236,7 @@ define(
             this.internalSelectObject(row);
         },
         getPreferenceObjectName: function(){
-            return $('#get-object-by-name input').val();
+            return this.$('#get-object-by-name input').val();
         },
         selectRevision: function(e){
         	var row = $(e.currentTarget);
@@ -317,21 +320,25 @@ define(
         filterByObjectsByName : function (event){
             event.preventDefault();
             const objectName = $('#get-object-by-name input').val();
+            this.objectName = objectName;
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setObjectName(objectName);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
         updateBuckets : function() {
+            const that = this;
             this.$('#catalog-get-buckets-table').empty();
             var BucketList = _.template(catalogList);
             const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
             if(!countNotEmptyBuckets) {
-                $("#catalog-view table").hide()
-                var obj = $("#catalog-view p").text("No results for \"" + this.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.")
-                obj.html(obj.html().replace(/\n/g,'<br/>'));
+                $("#get-catalog-view table").hide()
+                if($("#get-catalog-view p").length){
+                    const obj = $("#get-catalog-view p").text("No results for \"" + that.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.")
+                    obj.html(obj.html().replace(/\n/g,'<br/>'));
+                }
             } else {
-                $("#catalog-view table").show();
-                $("#catalog-view p").text('');
+                $("#get-catalog-view table").show();
+                $("#get-catalog-view p").text('');
                 _(this.buckets.models).each(function(bucket) {
                     var bucketName = bucket.get("name");
                     if( bucket.get('objectCount') ){
