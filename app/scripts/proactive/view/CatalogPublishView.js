@@ -81,13 +81,13 @@ define(
                             if (obj.name == currentWorkflowName)
                                 currentWorkflowExists = true;
                         });
+                        if (currentWorkflowExists){
+                            that.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
+                        } else {
+                          var objectDescription = _.template(publishDescriptionFirst);
+                          that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
+                        }
                     });
-                    if (currentWorkflowExists){
-                        this.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
-                    }else{
-                      var objectDescription = _.template(publishDescriptionFirst);
-                      this.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
-                    }
                 } else {
                     //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
                     var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
