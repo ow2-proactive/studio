@@ -920,10 +920,22 @@ define(
                 // create a new workflow, open it and import the xml into it
                 var clickAndOpenEvent = jQuery.Event( "click" );
                 clickAndOpenEvent.openWorkflow = true;
-                if(!$('.create-workflow-button').length){// When we do open the studio the first time, we should reload the page
-                    location.reload();
+                if(!$('.create-workflow-button').length){
+                    // we set an observation in order to wait for the render of create-workflow-button
+                    let observer = new MutationObserver((mutations) => {
+                      if(mutations.length && $('.create-workflow-button').length){
+                        $('.create-workflow-button').trigger(clickAndOpenEvent);
+                        // stop watching
+                        observer.disconnect()
+                      }
+                    })
+                    observer.observe($('#properties-container')[0], {
+                        childList: true,
+                        subtree: true
+                    })
+                } else {
+                    $('.create-workflow-button').trigger(clickAndOpenEvent);
                 }
-                $('.create-workflow-button').trigger(clickAndOpenEvent);
             }
         }
 
