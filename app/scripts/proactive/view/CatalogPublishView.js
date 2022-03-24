@@ -60,17 +60,21 @@ define(
 
             var publishCurrentButton = $('#catalog-publish-current');
             publishCurrentButton.prop('disabled', !currentBucketRow);
+            publishCurrentButton.prop('title', "");
 
             if (currentBucketRow){
                 var currentBucketName= $(currentBucketRow).data("bucketname");
                 this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
-                var that = this;
 
+                var that = this;
+                var currentObjectName;
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                     var studioApp = require('StudioApp');
                     var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
+                    currentObjectName = currentWorkflowName;
                     var currentProjectName = studioApp.models.currentWorkflow.getProject();
                     var currentWorkflowExists = false;//current workflow exists in selected bucketfilterKind = "workflow";
+                    var matchedObject; // the catalog object which match to the workflow who is about to be published.
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
                         that.$('#catalog-publish-objects-table').empty();
                         _.each(
@@ -78,14 +82,32 @@ define(
                         function (obj) {
                             var ObjectList = _.template(catalogObject);
                             that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
-                            if (obj.name == currentWorkflowName)
+                            if (obj.name == currentWorkflowName) {
                                 currentWorkflowExists = true;
+                                matchedObject = obj;
+                            }
                         });
                         if (currentWorkflowExists){
                             that.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
+                            if (matchedObject && matchedObject.rights && ['write', 'admin'].indexOf(matchedObject.rights) >= 0) {
+                                publishCurrentButton.prop('disabled', false);
+                                publishCurrentButton.prop('title', "");
+                            } else {
+                                publishCurrentButton.prop('disabled', true);
+                                publishCurrentButton.prop('title', "You don't have the write permission to the workflow " + currentWorkflowName + " in the selected bucket.");
+                            }
                         } else {
-                          var objectDescription = _.template(publishDescriptionFirst);
-                          that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
+                            var objectDescription = _.template(publishDescriptionFirst);
+                            that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
+                            var currentBucket = that.buckets.models.find(function(bucket){ return bucket.get('name') == currentBucketName})
+
+                            if (currentBucket && currentBucket.get('rights') && ['write', 'admin'].indexOf(currentBucket.get('rights')) >= 0) {
+                                publishCurrentButton.prop('disabled', false);
+                                publishCurrentButton.prop('title', "");
+                            } else {
+                                publishCurrentButton.prop('disabled', true);
+                                publishCurrentButton.prop('title', "You don't have the write permission to the selected bucket.");
+                            }
                         }
                     });
                 } else {
@@ -111,6 +133,7 @@ define(
                     this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel, projectname: projectName}));
                     this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
+
             }
 
         },
@@ -291,6 +314,12 @@ define(
             const that = this;
             this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
+
+            this.buckets.models.forEach(function(bucket) {
+                var owner = (bucket.get('owner') === 'GROUP:public-objects') ? 'public' : bucket.get('owner').replace('GROUP:', '');
+                bucket.tooltip = bucket.get('name') + '\nowner:' + owner + '\nrights:' + bucket.get('rights');
+            });
+
             var i = 0;
             var selectIndex = 0;
             if (this.kind) {
