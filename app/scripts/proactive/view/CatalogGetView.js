@@ -229,6 +229,7 @@ define(
         },
         selectBucket: function(e){
         	var row = $(e.currentTarget);
+        	localStorage.setItem("selectBucket", row[0].getAttribute("data-bucketname"));
             this.internalSelectBucket(row);
         },
         selectObject: function(e){
@@ -345,8 +346,18 @@ define(
                         this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
                     }
                 }, this);
-                // to open the browser on the first bucket
-                this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+                // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
+                if(localStorage.selectBucket && that.$('#catalog-get-buckets-table tr')[0]){
+                    const indexOfSelectedBucket = (new Array(that.$('#catalog-get-buckets-table tr').length)).findIndex(function(elem, index){
+                        return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
+                    })
+                    this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0]);
+                } else {
+                    if(that.$('#catalog-get-buckets-table tr').length){
+                        localStorage.setItem("selectBucket", that.$('#catalog-get-buckets-table tr')[0].getAttribute("data-bucketname"));
+                        this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+                    }
+                }
             }
         },
         render: function () {

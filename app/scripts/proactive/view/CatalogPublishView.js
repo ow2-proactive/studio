@@ -149,6 +149,7 @@ define(
         },
         selectBucket: function(e){
         	var row = $(e.currentTarget);
+        	localStorage.setItem("selectBucket", row[0].getAttribute("data-bucketname"));
             this.internalSelectBucket(row);
         },
         selectObject: function(e){
@@ -292,7 +293,7 @@ define(
             this.$('#catalog-publish-buckets-table').empty();
             var BucketList = _.template(catalogList);
             var i = 0;
-            var selectIndex = 0;
+            var selectIndex;
             if (this.kind) {
                 var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
                 if (!isWorkflow) {
@@ -316,8 +317,24 @@ define(
                         selectIndex = i;
                     i++;
                 }, this);
-                // to open the browser on the right bucket (1st one if the object has never been commit)
-                this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
+
+                if(typeof selectIndex !== "undefined"){
+                    // to open the browser on the right bucket
+                    this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
+                } else {
+                    // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
+                    if(localStorage.selectBucket && that.$('#catalog-publish-buckets-table tr')[0]){
+                        const indexOfSelectedBucket = (new Array(that.$('#catalog-publish-buckets-table tr').length)).findIndex(function(elem, index){
+                            return that.$('#catalog-publish-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
+                        })
+                        this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0]);
+                    } else {
+                        if(that.$('#catalog-publish-buckets-table tr').length){
+                            localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[0].getAttribute("data-bucketname"));
+                            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0]);
+                        }
+                    }
+                }
             }
         },
         render: function () {
