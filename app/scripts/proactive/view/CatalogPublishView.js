@@ -28,6 +28,7 @@ define(
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
             'click #catalog-publish-objects-table tr': 'selectObject',
+            'change #new-script-name': 'addNewScript',
             'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);},
             'submit #publish-object-by-name': 'filterByObjectsByName'
         },
@@ -69,6 +70,7 @@ define(
                 var that = this;
                 var currentObjectName;
                 if (this.kind.toLowerCase().indexOf('workflow') == 0) {
+                    $('#new-script-name').hide();
                     var studioApp = require('StudioApp');
                     var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
                     currentObjectName = currentWorkflowName;
@@ -111,6 +113,7 @@ define(
                         }
                     });
                 } else {
+                    $('#new-script-name').show();
                     //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
                     var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
                     var selectedIndex = 0;
@@ -157,14 +160,22 @@ define(
                 var selectedObjectName = $(currentObjectRow).data("objectname");
                 $("#catalog-publish-name").val(selectedObjectName);//copy object name in name input field
                 this.highlightSelectedRow('#catalog-publish-objects-table', currentObjectRow);
+                var selectedProjectName = $(currentObjectRow).data("projectname");
+                $("#script-publish-project-name").val(selectedProjectName);
+                $("#script-publish-project-name").prop('disabled', true);
+                $("#script-publish-project-name").addClass("disabled-input");
             }
         },
+        deselectSelectedRow: function(tableId) {
+            var selectedClassName = 'catalog-selected-row';
+            var selected = $(tableId + " ." + selectedClassName);
+            if (selected[0]) {
+                $(selected[0]).removeClass(selectedClassName);
+            }
+        }
+
         highlightSelectedRow: function(tableId, row){
-        	var selectedClassName = 'catalog-selected-row';
-        	var selected = $(tableId + " ." + selectedClassName);
-        	if (selected[0]) {
-        		$(selected[0]).removeClass(selectedClassName);
-        	}
+        	deselectSelectedRow(tableId);
         	$(row).addClass(selectedClassName);
         },
         getPreferenceObjectName: function(){
@@ -189,6 +200,14 @@ define(
         setRelatedInputId: function(inputId, isUrl){
             this.relatedInputId = inputId;
             this.isRelatedInputUrl = isUrl;
+        },
+        addNewScript: function() {
+            deselectSelectedRow('#catalog-publish-objects-table');
+            var selectedObjectName = $("#new-script-name").val();
+            $("#catalog-publish-name").val(selectedObjectName);
+            $("#script-publish-project-name").prop('disabled', false);
+            $("#script-publish-project-name").removeClass("disabled-input");
+            $("#script-publish-project-name").val('');
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };

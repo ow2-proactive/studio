@@ -1735,6 +1735,10 @@ ul, #submitFormUL {
     top: -2px;
 }
 
+.disabled-input {
+    background-color: #F1F1F1; cursor: not-allowed
+}
+
 .fa-xxs{
     font-size: 0.475em;
 }
