@@ -6,7 +6,13 @@
 		</tr>
 		<% } else { %>
 		<tr>
-			<td colspan="2" style="padding-bottom: 5em">You are about to publish the <%= kindLabel %> to this bucket. If it already exists, a new revision will be created.</td>
+			<td colspan="2" style="padding-bottom: 5em">
+				<% if (publishNewObject) { %>
+				You are about to publish a new <%= kindLabel %> to this bucket.
+				<% } else { %>
+				You are about to add a new version <%= kindLabel %> of the existing <%= name %> <%= kindLabel %> to this bucket.
+				<% } %>
+			</td>
 		</tr>
 		<tr>
 			<td>Name:</td>

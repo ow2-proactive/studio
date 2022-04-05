@@ -24,6 +24,7 @@ define(
             $("#catalog-publish-body").append(this.$el);
             this.buckets = options.buckets;
             this.buckets.on('reset', this.updateBuckets, this);
+//            this.publishNewObject = true; // TODO
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
@@ -90,6 +91,7 @@ define(
                             }
                         });
                         if (currentWorkflowExists){
+                            // publishing a new version of an existing catalog object
                             that.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
                             if (matchedObject && matchedObject.rights && ['write', 'admin'].indexOf(matchedObject.rights) >= 0) {
                                 publishCurrentButton.prop('disabled', false);
@@ -99,8 +101,9 @@ define(
                                 publishCurrentButton.prop('title', "You don't have the write permission to the workflow " + currentWorkflowName + " in the selected bucket.");
                             }
                         } else {
+                            // publish a new catalog object
                             var objectDescription = _.template(publishDescriptionFirst);
-                            that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
+                            that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName, publishNewObject: true}));
                             var currentBucket = that.buckets.models.find(function(bucket){ return bucket.get('name') == currentBucketName})
 
                             if (currentBucket && currentBucket.get('rights') && ['write', 'admin'].indexOf(currentBucket.get('rights')) >= 0) {
@@ -113,8 +116,9 @@ define(
                         }
                     });
                 } else {
+                    // when publishing a script, allow the user to either to create a new object in the bucket, or select an existing object to publish its new version
                     $('#new-script-name').show();
-                    //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
+                    // when a script has been imported or already been published, we want to select it again. Its name is saved in the data
                     var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
                     var selectedIndex = 0;
                     var index = 0;
@@ -131,9 +135,12 @@ define(
                             index++;
                         });
                     })
+
                     var name = scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
-                    this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel, projectname: projectName}));
+                    var publishNewObject = scriptName ? false : true;
+                    this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel, projectname: projectName, publishNewObject: publishNewObject}));
+
                     this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
 
@@ -148,7 +155,7 @@ define(
                     name: workflowName,
                     callback: function (revision) {
                         var objectDescription = _.template(publishDescription);
-                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: projectName}));
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: projectName, publishNewObject: false}));
                     }
                 });
             revisionsModel.fetch();
@@ -164,6 +171,9 @@ define(
                 $("#script-publish-project-name").val(selectedProjectName);
                 $("#script-publish-project-name").prop('disabled', true);
                 $("#script-publish-project-name").addClass("disabled-input");
+//                this.publishNewObject = false; // publishing a new version of the selected object
+
+
             }
         },
         deselectSelectedRow: function(tableId) {
@@ -172,11 +182,12 @@ define(
             if (selected[0]) {
                 $(selected[0]).removeClass(selectedClassName);
             }
-        }
+        },
 
         highlightSelectedRow: function(tableId, row){
-        	deselectSelectedRow(tableId);
-        	$(row).addClass(selectedClassName);
+            var selectedClassName = 'catalog-selected-row';
+            this.deselectSelectedRow(tableId);
+            $(row).addClass(selectedClassName);
         },
         getPreferenceObjectName: function(){
             return $('#publish-object-by-name input').val();
@@ -202,12 +213,13 @@ define(
             this.isRelatedInputUrl = isUrl;
         },
         addNewScript: function() {
-            deselectSelectedRow('#catalog-publish-objects-table');
+            this.deselectSelectedRow('#catalog-publish-objects-table');
             var selectedObjectName = $("#new-script-name").val();
             $("#catalog-publish-name").val(selectedObjectName);
             $("#script-publish-project-name").prop('disabled', false);
             $("#script-publish-project-name").removeClass("disabled-input");
             $("#script-publish-project-name").val('');
+//            TODO this.publishNewObject = true;
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
