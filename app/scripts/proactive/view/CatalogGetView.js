@@ -81,7 +81,7 @@ define(
             this.previousZIndex = previousZIndex;
         },
 
-        internalSelectBucket: function (currentBucketRow) {
+        internalSelectBucket: function (currentBucketRow, shouldScrollToTheSelectedBucket) {
             this.$('#catalog-get-objects-table').empty();
             this.$('#catalog-get-objects-table').html("<th>Loading ....</th>");
             this.$('#catalog-get-description-container').empty();
@@ -121,6 +121,11 @@ define(
                                 that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
                             });
                         }
+                        setTimeout(function(){
+                            if(shouldScrollToTheSelectedBucket){
+                              that.getScrollToBucket();
+                            }
+                        }, 500)
                     }
                 });
                 setTimeout(function(){
@@ -230,7 +235,7 @@ define(
         selectBucket: function(e){
         	var row = $(e.currentTarget);
         	localStorage.setItem("selectBucket", row[0].getAttribute("data-bucketname"));
-            this.internalSelectBucket(row);
+            this.internalSelectBucket(row, false);
         },
         selectObject: function(e){
         	var row = $(e.currentTarget);
@@ -332,9 +337,9 @@ define(
             var BucketList = _.template(catalogList);
             const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
             if(!countNotEmptyBuckets) {
-                $("#get-catalog-view table").hide()
+                $("#get-catalog-view table").hide();
                 if($("#get-catalog-view p").length){
-                    const obj = $("#get-catalog-view p").text("No results for \"" + that.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.")
+                    const obj = $("#get-catalog-view p").text("No results for \"" + that.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.");
                     obj.html(obj.html().replace(/\n/g,'<br/>'));
                 }
             } else {
@@ -351,13 +356,19 @@ define(
                     const indexOfSelectedBucket = (new Array(that.$('#catalog-get-buckets-table tr').length)).findIndex(function(elem, index){
                         return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
                     })
-                    this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0]);
+                    this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
                 } else {
                     if(that.$('#catalog-get-buckets-table tr').length){
                         localStorage.setItem("selectBucket", that.$('#catalog-get-buckets-table tr')[0].getAttribute("data-bucketname"));
-                        this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+                        this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0], true);
                     }
                 }
+            }
+        },
+        getScrollToBucket: function() {
+            if($("#catalog-get-modal").css("display") !== "none"){
+                var scrollToVal = $('#catalog-get-modal .catalog-selected-row').position().top - 300;
+                $('#catalog-get-buckets-table').parent().scrollTop(scrollToVal);
             }
         },
         render: function () {

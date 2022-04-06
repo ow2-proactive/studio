@@ -38,6 +38,7 @@ define(
         },
         getBucketCatalogObjects : function(bucketName, callbackFunction) {
             var filterKind = this.kind;
+            const that = this
             //for workflows, we don't want subkind filters (ie we want to check if there is a revision, no matter which subkind)
             if (this.kind.toLowerCase().indexOf('workflow') == 0){
                 filterKind = "workflow";
@@ -53,7 +54,7 @@ define(
               catalogObjectsModel.fetch({async:false});
             }, 10)
         },
-        internalSelectBucket: function (currentBucketRow) {
+        internalSelectBucket: function (currentBucketRow, shouldScrollToTheSelectedBucket) {
             this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
             this.$('#catalog-publish-objects-table').html("<th>Loading ....</th>");
@@ -87,6 +88,11 @@ define(
                           var objectDescription = _.template(publishDescriptionFirst);
                           that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
                         }
+                        setTimeout(function(){
+                            if(shouldScrollToTheSelectedBucket){
+                              that.PublishScrollToBucket();
+                            }
+                        }, 500)
                     });
                 } else {
                     //when a script has been imported or already been published, we want to select it again. Its name is saved in the data
@@ -105,6 +111,11 @@ define(
                                 selectedIndex = index;
                             index++;
                         });
+                        setTimeout(function(){
+                            if(shouldScrollToTheSelectedBucket){
+                              that.PublishScrollToBucket();
+                            }
+                        }, 500)
                     })
                     var name = scriptName || 'Untitled '+ this.kindLabel;
                     var objectDescription = _.template(publishDescriptionFirst);
@@ -150,7 +161,7 @@ define(
         selectBucket: function(e){
         	var row = $(e.currentTarget);
         	localStorage.setItem("selectBucket", row[0].getAttribute("data-bucketname"));
-            this.internalSelectBucket(row);
+            this.internalSelectBucket(row, false);
         },
         selectObject: function(e){
             if (this.kind.toLowerCase().indexOf('workflow') != 0) {
@@ -294,12 +305,18 @@ define(
             var BucketList = _.template(catalogList);
             var i = 0;
             var selectIndex;
-            if (this.kind) {
-                var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
-                if (!isWorkflow) {
-                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
-                }
+
+            var isWorkflow = this.kind ? this.kind.toLowerCase().indexOf('workflow') == 0 : false;
+            if (!isWorkflow) {
+                var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
+            } else {
+                var studioApp = require('StudioApp');
+                const bucketNameObject = studioApp.models.jobModel.get("Generic Info").filter(function(item){
+                                            return item["Property Name"] === "bucketName";
+                                        })
+                var alreadyPublishedBucketName = bucketNameObject.length ? bucketNameObject[0]["Property Value"] : "";
             }
+
             const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
             if(!countNotEmptyBuckets) {
                 $("#publish-catalog-view table").hide()
@@ -313,29 +330,35 @@ define(
                 _(this.buckets.models).each(function(bucket) {
                     var bucketName = bucket.get("name");
                     this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
-                    if (!isWorkflow && bucketName == alreadyPublishedBucketName)
+                    if ( bucketName == alreadyPublishedBucketName ){
                         selectIndex = i;
+                    }
                     i++;
                 }, this);
 
                 if(typeof selectIndex !== "undefined"){
                     // to open the browser on the right bucket
-                    this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex]);
+                    localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[selectIndex].getAttribute("data-bucketname"));
+                    this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex], true);
                 } else {
                     // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
                     if(localStorage.selectBucket && that.$('#catalog-publish-buckets-table tr')[0]){
                         const indexOfSelectedBucket = (new Array(that.$('#catalog-publish-buckets-table tr').length)).findIndex(function(elem, index){
                             return that.$('#catalog-publish-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
                         })
-                        this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0]);
+                        this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
                     } else {
                         if(that.$('#catalog-publish-buckets-table tr').length){
                             localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[0].getAttribute("data-bucketname"));
-                            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0]);
+                            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0], true);
                         }
                     }
                 }
             }
+        },
+        PublishScrollToBucket: function() {
+            var scrollToVal = $('#catalog-publish-modal .catalog-selected-row').position().top - 300;
+            $('#catalog-publish-buckets-table').parent().scrollTop(scrollToVal);
         },
         render: function () {
             this.$el.html(this.template());
