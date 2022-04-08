@@ -305,17 +305,21 @@ define(
             var BucketList = _.template(catalogList);
             var i = 0;
             var selectIndex;
+            if (this.kind) {
+                var isWorkflow = this.kind.toLowerCase().indexOf('workflow') == 0;
+                if (!isWorkflow) {
+                    var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
+                }
+            }
 
-            var isWorkflow = this.kind ? this.kind.toLowerCase().indexOf('workflow') == 0 : false;
-            if (!isWorkflow) {
-                var alreadyPublishedBucketName = document.getElementById(this.relatedInputId).dataset.bucketName;
-            } else {
+            if( typeof alreadyPublishedBucketName === "undefined"){
                 var studioApp = require('StudioApp');
                 const bucketNameObject = studioApp.models.jobModel.get("Generic Info").filter(function(item){
                                             return item["Property Name"] === "bucketName";
                                         })
-                var alreadyPublishedBucketName = bucketNameObject.length ? bucketNameObject[0]["Property Value"] : "";
+                alreadyPublishedBucketName = bucketNameObject.length ? bucketNameObject[0]["Property Value"] : "";
             }
+
 
             const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
             if(!countNotEmptyBuckets) {
@@ -357,7 +361,7 @@ define(
             }
         },
         PublishScrollToBucket: function() {
-            var scrollToVal = $('#catalog-publish-modal .catalog-selected-row').offset().top - $('#catalog-publish-buckets-table').offset().top + $('#catalog-publish-buckets-table').scrollTop()
+            var scrollToVal = $('#catalog-publish-modal .catalog-selected-row').offset().top - $('#catalog-publish-buckets-table').parent().offset().top + $('#catalog-publish-buckets-table').parent().scrollTop()
             $('#catalog-publish-buckets-table').parent().scrollTop(scrollToVal);
         },
         render: function () {
