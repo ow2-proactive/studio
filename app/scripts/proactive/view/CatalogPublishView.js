@@ -357,7 +357,7 @@ define(
             }
         },
         PublishScrollToBucket: function() {
-            var scrollToVal = $('#catalog-publish-modal .catalog-selected-row').position().top - 300;
+            var scrollToVal = $('#catalog-publish-modal .catalog-selected-row').offset().top - $('#catalog-publish-buckets-table').offset().top + $('#catalog-publish-buckets-table').scrollTop()
             $('#catalog-publish-buckets-table').parent().scrollTop(scrollToVal);
         },
         render: function () {

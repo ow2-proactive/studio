@@ -367,7 +367,7 @@ define(
         },
         getScrollToBucket: function() {
             if($("#catalog-get-modal").css("display") !== "none"){
-                var scrollToVal = $('#catalog-get-modal .catalog-selected-row').position().top - 300;
+                var scrollToVal = $('#catalog-get-modal .catalog-selected-row').offset().top - $('#catalog-get-buckets-table').offset().top + $('#catalog-get-buckets-table').scrollTop()
                 $('#catalog-get-buckets-table').parent().scrollTop(scrollToVal);
             }
         },
