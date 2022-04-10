@@ -24,7 +24,6 @@ define(
             $("#catalog-publish-body").append(this.$el);
             this.buckets = options.buckets;
             this.buckets.on('reset', this.updateBuckets, this);
-//            this.publishNewObject = true; // TODO
         },
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
@@ -56,7 +55,6 @@ define(
             }, 10)
         },
         internalSelectBucket: function (currentBucketRow) {
-            this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
             this.$('#catalog-publish-objects-table').html("<th>Loading ....</th>");
 
@@ -92,7 +90,7 @@ define(
                         });
                         if (currentWorkflowExists){
                             // publishing a new version of an existing catalog object
-                            that.addWorkflowRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
+                            that.addRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
                             if (matchedObject && matchedObject.rights && ['write', 'admin'].indexOf(matchedObject.rights) >= 0) {
                                 publishCurrentButton.prop('disabled', false);
                                 publishCurrentButton.prop('title', "");
@@ -102,8 +100,9 @@ define(
                             }
                         } else {
                             // publish a new catalog object
+                            that.$('#catalog-publish-description-container').empty();
                             var objectDescription = _.template(publishDescriptionFirst);
-                            that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName, publishNewObject: true}));
+                            that.$('#catalog-publish-description-container').append(objectDescription({name: currentWorkflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: currentProjectName}));
                             var currentBucket = that.buckets.models.find(function(bucket){ return bucket.get('name') == currentBucketName})
 
                             if (currentBucket && currentBucket.get('rights') && ['write', 'admin'].indexOf(currentBucket.get('rights')) >= 0) {
@@ -135,27 +134,24 @@ define(
                             index++;
                         });
                     })
-
-                    var name = scriptName || 'Untitled '+ this.kindLabel;
-                    var objectDescription = _.template(publishDescriptionFirst);
-                    var publishNewObject = scriptName ? false : true;
-                    this.$('#catalog-publish-description-container').append(objectDescription({name: name, kind: this.kind, kindLabel: this.kindLabel, projectname: projectName, publishNewObject: publishNewObject}));
-
+                    publishCurrentButton.prop('disabled', true);
+                    publishCurrentButton.prop('title', "Please create a new catalog object or select an existing catalog object first.");
                     this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
 
             }
 
         },
-        addWorkflowRevisionDescription: function(bucketName, workflowName, projectName) {
+        addRevisionDescription: function(bucketName, objectName, projectName) {
             var that = this;
             var revisionsModel = new CatalogObjectLastRevisionDescription(
                 {
                     bucketname: bucketName,
-                    name: workflowName,
+                    name: objectName,
                     callback: function (revision) {
+                        $('#catalog-publish-description-container').empty();
                         var objectDescription = _.template(publishDescription);
-                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: workflowName, kind: that.kind, kindLabel: that.kindLabel, projectname: projectName, publishNewObject: false}));
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: objectName, kind: that.kind, kindLabel: that.kindLabel, projectname: projectName}));
                     }
                 });
             revisionsModel.fetch();
@@ -173,7 +169,10 @@ define(
                 $("#script-publish-project-name").addClass("disabled-input");
 //                this.publishNewObject = false; // publishing a new version of the selected object
 
-
+                var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
+                this.addRevisionDescription(bucketName, selectedObjectName, selectedProjectName);
+                $('#catalog-publish-current').prop('disabled', false);
+                $('#catalog-publish-current').prop('title', "");
             }
         },
         deselectSelectedRow: function(tableId) {
@@ -215,12 +214,17 @@ define(
         },
         addNewScript: function() {
             this.deselectSelectedRow('#catalog-publish-objects-table');
-            var selectedObjectName = $("#new-script-name").val();
-            $("#catalog-publish-name").val(selectedObjectName);
+            var objectName = $("#new-script-name").val();
+            $("#catalog-publish-name").val(objectName);
             $("#script-publish-project-name").prop('disabled', false);
             $("#script-publish-project-name").removeClass("disabled-input");
             $("#script-publish-project-name").val('');
-//            TODO this.publishNewObject = true;
+
+            this.$('#catalog-publish-description-container').empty();
+            var objectDescription = _.template(publishDescriptionFirst);
+            this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: this.kind, kindLabel: this.kindLabel, projectname: ''}));
+            $('#catalog-publish-current').prop('disabled', false);
+            $('#catalog-publish-current').prop('title', "");
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
@@ -239,6 +243,10 @@ define(
             } else {
                 projectName = $("#script-publish-project-name").val();
                 objectName = $("#catalog-publish-name").val();
+                if (!objectName) {
+                    // in case of publishing a new revision of script, the objectname is the selected object row
+                    objectName = ($(($("#catalog-publish-objects-table .catalog-selected-row"))[0])).data("objectname");
+                }
                 fileName = objectName+ ".txt";
             }
             var contentTypeToPublish = 'application/xml';
@@ -282,6 +290,8 @@ define(
                     });
                 });
             }
+            //TODO fix: should be put in success callback
+            console.log("isRevision", isRevision, isWorkflowRevision);
             if (isRevision){
                 url += "/" + objectName + "/revisions";
             }

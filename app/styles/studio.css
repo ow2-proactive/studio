@@ -1736,7 +1736,8 @@ ul, #submitFormUL {
 }
 
 .disabled-input {
-    background-color: #F1F1F1; cursor: not-allowed
+    background-color: #F1F1F1;
+    cursor: not-allowed;
 }
 
 .fa-xxs{
