@@ -57,6 +57,8 @@ define(
         internalSelectBucket: function (currentBucketRow) {
             this.$('#catalog-publish-objects-table').empty();
             this.$('#catalog-publish-objects-table').html("<th>Loading ....</th>");
+            this.$('#catalog-publish-description-container').empty();
+            this.$('#new-script-name').val('');
 
             var publishCurrentButton = $('#catalog-publish-current');
             publishCurrentButton.prop('disabled', !currentBucketRow);
@@ -165,8 +167,14 @@ define(
                 var selectedObjectName = $(currentObjectRow).data("objectname");
                 var selectedProjectName = $(currentObjectRow).data("projectname");
                 this.addRevisionDescription(bucketName, selectedObjectName, selectedProjectName);
-                $('#catalog-publish-current').prop('disabled', false);
-                $('#catalog-publish-current').prop('title', "");
+                var objectRights = $(currentObjectRow).data("objectrights");
+                if (['write', 'admin'].indexOf(objectRights) >= 0) {
+                    $('#catalog-publish-current').prop('disabled', false);
+                    $('#catalog-publish-current').prop('title', "");
+                } else {
+                    $('#catalog-publish-current').prop('disabled', true);
+                    $('#catalog-publish-current').prop('title', "You don't have the write permission to the script " + selectedObjectName + " in the selected bucket.");
+                }
             }
         },
         deselectSelectedRow: function(tableId) {
@@ -213,9 +221,15 @@ define(
             this.$('#catalog-publish-description-container').empty();
             var objectDescription = _.template(publishDescriptionFirst);
             this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: this.kind, kindLabel: this.kindLabel, projectname: ''}));
-
-            $('#catalog-publish-current').prop('disabled', false);
-            $('#catalog-publish-current').prop('title', "");
+            var currentBucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
+            var currentBucket = this.buckets.models.find(function(bucket){ return bucket.get('name') == currentBucketName})
+            if (currentBucket && currentBucket.get('rights') && ['write', 'admin'].indexOf(currentBucket.get('rights')) >= 0) {
+                $('#catalog-publish-current').prop('disabled', false);
+                $('#catalog-publish-current').prop('title', "");
+            } else {
+                $('#catalog-publish-current').prop('disabled', true);
+                $('#catalog-publish-current').prop('title', "You don't have the write permission to the selected bucket.");
+            }
         },
         publishToCatalog: function() {
             var headers = { 'sessionID': localStorage['pa.session'] };
