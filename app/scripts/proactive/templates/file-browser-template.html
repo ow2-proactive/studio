@@ -29,7 +29,8 @@
                     <i class="fas fa-trash"></i>
                 </a>
                 <label style="margin-left:160px;" data-help-self data-help="Filter files according to a glob pattern, e.g. '*.xml', 'image*'">Filter:</label>
-                <input type="text" id="filter-files" value="*" style="width:160px; position:relative; display:inline-block;"/>
+                <input type="text" id="filter-files-input" value="*" style="width:160px; position:relative; display:inline-block;"/>
+                <button id="filter-files-button" class="btn btn-primary" aria-hidden="true">Search</button>
                 <div class="pull-right" id="pull-right-hidden-files-checkbox">
                     <label class="checkbox-inline"><input id="show-hidden-files" type="checkbox"<%- showHidden ? "checked" : ""  %> >Show Hidden</label>
                 </div>
