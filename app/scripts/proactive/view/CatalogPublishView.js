@@ -121,7 +121,6 @@ define(
                     var scriptName = document.getElementById(this.relatedInputId).dataset.scriptName;
                     var selectedIndex = 0;
                     var index = 0;
-                    var projectName = "";
                     this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
                         that.$('#catalog-publish-objects-table').empty();
                         _.each(
@@ -129,14 +128,15 @@ define(
                         function (obj) {
                             var ObjectList = _.template(catalogObject);
                             that.$('#catalog-publish-objects-table').append(ObjectList({catalogObject: obj}));
-                            if (obj.name == scriptName)
+                            if (obj.name == scriptName) {
                                 selectedIndex = index;
+                                that.internalSelectObject(that.$('#catalog-publish-objects-table tr')[selectedIndex]);
+                            }
                             index++;
                         });
                     })
                     publishCurrentButton.prop('disabled', true);
                     publishCurrentButton.prop('title', "Please create a new catalog object or select an existing catalog object first.");
-                    this.internalSelectObject(this.$('#catalog-publish-objects-table tr')[selectedIndex]);
                 }
 
             }
@@ -160,16 +160,10 @@ define(
             this.$('#catalog-get-revisions-table').empty();
 
             if (currentObjectRow){
-                var selectedObjectName = $(currentObjectRow).data("objectname");
-                $("#catalog-publish-name").val(selectedObjectName);//copy object name in name input field
                 this.highlightSelectedRow('#catalog-publish-objects-table', currentObjectRow);
-                var selectedProjectName = $(currentObjectRow).data("projectname");
-                $("#script-publish-project-name").val(selectedProjectName);
-                $("#script-publish-project-name").prop('disabled', true);
-                $("#script-publish-project-name").addClass("disabled-input");
-//                this.publishNewObject = false; // publishing a new version of the selected object
-
                 var bucketName = ($(($("#catalog-publish-buckets-table .catalog-selected-row"))[0])).data("bucketname");
+                var selectedObjectName = $(currentObjectRow).data("objectname");
+                var selectedProjectName = $(currentObjectRow).data("projectname");
                 this.addRevisionDescription(bucketName, selectedObjectName, selectedProjectName);
                 $('#catalog-publish-current').prop('disabled', false);
                 $('#catalog-publish-current').prop('title', "");
@@ -215,14 +209,11 @@ define(
         addNewScript: function() {
             this.deselectSelectedRow('#catalog-publish-objects-table');
             var objectName = $("#new-script-name").val();
-            $("#catalog-publish-name").val(objectName);
-            $("#script-publish-project-name").prop('disabled', false);
-            $("#script-publish-project-name").removeClass("disabled-input");
-            $("#script-publish-project-name").val('');
 
             this.$('#catalog-publish-description-container').empty();
             var objectDescription = _.template(publishDescriptionFirst);
             this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: this.kind, kindLabel: this.kindLabel, projectname: ''}));
+
             $('#catalog-publish-current').prop('disabled', false);
             $('#catalog-publish-current').prop('title', "");
         },
@@ -277,21 +268,7 @@ define(
             payload.append('objectContentType', contentTypeToPublish );
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
-            var isWorkflowRevision = ($("#catalog-publish-description").data("first") != true)
-            var isRevision = isWorkflowRevision;
-            if (!isWorkflowRevision) {
-                this.getBucketCatalogObjects(bucketName, function(catalogObjects){
-                    _.each(
-                    catalogObjects,
-                    function (catalogObject) {
-                        if (catalogObject.name == objectName){
-                            isRevision = true;
-                        }
-                    });
-                });
-            }
-            //TODO fix: should be put in success callback
-            console.log("isRevision", isRevision, isWorkflowRevision);
+            var isRevision = ($("#catalog-publish-description").data("first") != true)
             if (isRevision){
                 url += "/" + objectName + "/revisions";
             }
