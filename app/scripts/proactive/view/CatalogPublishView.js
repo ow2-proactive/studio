@@ -28,8 +28,7 @@ define(
         events: {
             'click #catalog-publish-buckets-table tr': 'selectBucket',
             'click #catalog-publish-objects-table tr': 'selectObject',
-            'change #new-script-name': 'addNewScript',
-            'click #add-new-script': 'addNewScript',
+            'submit #new-script-form': 'addNewScript',
             'change #publish-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);},
             'submit #publish-object-by-name': 'filterByObjectsByName'
         },
@@ -60,7 +59,7 @@ define(
             this.$('#catalog-publish-description-container').empty();
             this.$('#catalog-publish-objects-table').empty();
             this.$('#catalog-publish-objects-table').html("<th>Loading ....</th>");
-            this.$('#new-script-name').val('');
+            this.$('#new-script-form input').val('');
             this.disablePublishButton(!currentBucketRow, '');
 
             if (!currentBucketRow){
@@ -70,11 +69,11 @@ define(
             this.highlightSelectedRow('#catalog-publish-buckets-table', currentBucketRow);
 
             if (this.kind.toLowerCase().indexOf('workflow') == 0) {
-                $('#new-script-group').hide();
+                $('#new-script-form').hide();
                 this.retrieveWorkflowsInBucket(currentBucketName, shouldScrollToTheSelectedBucket);
             } else {
                 // when publishing a script, allow the user to either to create a new object in the bucket, or select an existing object to publish its new version
-                $('#new-script-group').show();
+                $('#new-script-form').show();
                 // when the user has neither selected a script nor create a new one, the publish button is disabled.
                 this.disablePublishButton(true, "Please create a new catalog object or select an existing catalog object first.");
                 this.retrieveScriptsInBucket(currentBucketName, shouldScrollToTheSelectedBucket);
@@ -222,9 +221,10 @@ define(
             this.relatedInputId = inputId;
             this.isRelatedInputUrl = isUrl;
         },
-        addNewScript: function() {
+        addNewScript: function(event) {
+            event.preventDefault();
             this.deselectSelectedRow('#catalog-publish-objects-table');
-            var objectName = $("#new-script-name").val();
+            var objectName = $("#new-script-form input").val() || 'Untitled '+ this.kindLabel;
             this.addObjectDescription(objectName, '')
 
             var currentBucketName = this.getSelectedBucketRow().data("bucketname");
@@ -389,7 +389,6 @@ define(
                     }
                     i++;
                 }, this);
-
                 if(typeof selectIndex !== "undefined"){
                     // to open the browser on the right bucket
                     localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[selectIndex].getAttribute("data-bucketname"));
