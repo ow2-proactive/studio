@@ -42,8 +42,7 @@ define(
             'click #download-file-btn': 'downloadFile',
             'click #delete-file-btn': 'deleteFile',
             'change #show-hidden-files' : 'showHiddenChange',
-            'keyup #filter-files-input': 'enterFilterFiles',
-            'click #filter-files-button': 'filterFiles'
+            'submit #filter-files': 'filterFiles'
         },
 
         initialize: function (options) {
@@ -76,12 +75,6 @@ define(
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {
                 that.closeFileBrowser();
             });
-        },
-
-        enterFilterFiles: function (e) {
-            if (e.key === 'Enter' || e.keyCode === 13) {
-                this.filterFiles();
-            }
         },
 
         filterFiles: function () {
