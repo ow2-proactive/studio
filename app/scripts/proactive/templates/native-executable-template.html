@@ -1,11 +1,11 @@
 <nativeExecutable>
 
 <% if (model["Command"] && model["Command"].length>0 || !script) { %>
-<staticCommand value="<%-model["Command"]%>">
+<staticCommand value="<%-_.escape(model["Command"])%>">
     <% if (model["Arguments"] && model["Arguments"].length>0) { %>
     <arguments>
     <% _.each(model["Arguments"], function(arg) { %>
-        <argument value="<%-arg%>"/>
+        <argument value="<%-_.escape(arg)%>"/>
     <% }) %>
     </arguments>
     <% } %>
