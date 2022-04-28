@@ -16,7 +16,7 @@
         <% if (model["Arguments"] && model["Arguments"].length>0) { %>
         <arguments>
         <% _.each(model["Arguments"], function(arg) { %>
-            <argument value="<%=arg%>"/>
+            <argument value="<%=_.escape(arg)%>"/>
         <% }) %>
         </arguments>
         <% }%>

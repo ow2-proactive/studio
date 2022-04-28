@@ -19,7 +19,7 @@
     <% if (task["Variables"] && task["Variables"].length>0) { %>
     <variables>
     <% _.each(task["Variables"], function(variable) { %>
-            <variable name="<%=variable["Name"]%>" value="<%=escapeHtml(variable.hasOwnProperty("Value")?variable["Value"]:"")%>" inherited="<%=variable["Inherited"]%>" <% if (variable.hasOwnProperty("Model") && variable["Model"].length > 0) { %>model="<%=escapeHtml(variable["Model"])%>"<% }%> <% if (variable.hasOwnProperty("Description")) { %>description="<%=escapeHtml(variable["Description"])%>"<% }%> <% if (variable.hasOwnProperty("Group")) { %>group="<%=escapeHtml(variable["Group"])%>"<% }%> <% if (variable.hasOwnProperty("Advanced")) { %>advanced="<%=escapeHtml(variable["Advanced"])%>"<% }%> <% if (variable.hasOwnProperty("Hidden")) { %>hidden="<%=escapeHtml(variable["Hidden"])%>"<% }%>/>
+            <variable name="<%=variable["Name"]%>" value="<%=_.escape(variable.hasOwnProperty("Value")?variable["Value"]:"")%>" inherited="<%=variable["Inherited"]%>" <% if (variable.hasOwnProperty("Model") && variable["Model"].length > 0) { %>model="<%=escapeHtml(variable["Model"])%>"<% }%> <% if (variable.hasOwnProperty("Description")) { %>description="<%=escapeHtml(variable["Description"])%>"<% }%> <% if (variable.hasOwnProperty("Group")) { %>group="<%=escapeHtml(variable["Group"])%>"<% }%> <% if (variable.hasOwnProperty("Advanced")) { %>advanced="<%=escapeHtml(variable["Advanced"])%>"<% }%> <% if (variable.hasOwnProperty("Hidden")) { %>hidden="<%=escapeHtml(variable["Hidden"])%>"<% }%>/>
     <% }) %>
     </variables>
     <% } %>
@@ -27,7 +27,7 @@
     <% if (task["Generic Info"] && task["Generic Info"].length>0) { %>
     <genericInformation>
     <% _.each(task["Generic Info"], function(gi) { %>
-            <info name="<%=gi["Property Name"]%>" value="<%=gi["Property Value"]%>"/>
+            <info name="<%=gi["Property Name"]%>" value="<%=_.escape(gi["Property Value"])%>"/>
     <% }) %>
     </genericInformation>
     <% } %>
