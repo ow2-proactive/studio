@@ -29,7 +29,7 @@ define(
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-objects-table tr': 'selectObject',
             'click #catalog-get-revisions-table tr': 'selectRevision',
-            'change #get-show-all-checkbox input:checkbox':  function(){this.showAllChanged(this.kind);}
+            'submit #get-object-by-name': 'filterByObjectsByName'
         },
         setKind : function(newKind, newKindLabel) {
             this.kind = newKind;
@@ -81,8 +81,9 @@ define(
             this.previousZIndex = previousZIndex;
         },
 
-        internalSelectBucket: function (currentBucketRow) {
+        internalSelectBucket: function (currentBucketRow, shouldScrollToTheSelectedBucket) {
             this.$('#catalog-get-objects-table').empty();
+            this.$('#catalog-get-objects-table').html("<th>Loading ....</th>");
             this.$('#catalog-get-description-container').empty();
             this.disableActionButtons(true, true);
             
@@ -105,8 +106,10 @@ define(
                 {
                     bucketname: bucketName,
                     kind: filterKind,
+                    objectName: this.getPreferenceObjectName(),
                     contentType: this.filterContentType,
                     callback: function (catalogObjects) {
+                        that.$('#catalog-get-objects-table').empty();
                         if (catalogObjects.length === 0)
                             $('#catalog-get-import-button').prop('disabled', true);
                         else {
@@ -118,12 +121,18 @@ define(
                                 that.$('#catalog-get-objects-table').append(ObjectList({catalogObject: obj}));
                             });
                         }
+                        setTimeout(function(){
+                            if(shouldScrollToTheSelectedBucket){
+                              that.getScrollToBucket();
+                            }
+                        }, 500)
                     }
                 });
-                objectsModel.fetch({async:false});
+                setTimeout(function(){
+                  objectsModel.fetch({async:false});
+                  that.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
+                }, 10)
             }
-            this.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
-            
         },
         disableActionButtons: function (enableGetAsNew, enableAppend){
         	 $('#catalog-get-as-new-button').prop('disabled', enableGetAsNew);
@@ -160,13 +169,16 @@ define(
 		            	}
 	            	});
 	            revisionsModel.fetch();
-            }  
+            } else {
+                $("#catalog-get-select-button").prop('disabled', true);
+            }
         },
         internalSelectRevision: function (currentRevisionRow) {
             var studioApp = require('StudioApp');
             this.$('#catalog-get-description-container').empty();
             
             if (currentRevisionRow){
+                $("#catalog-get-select-button").prop('disabled', false);
                 var splitRawUrl = $(currentRevisionRow).data("rawurl").split('/');
 
                 //when you select an object revision from the Import modal, its objectName is already encoded.
@@ -222,11 +234,15 @@ define(
         },
         selectBucket: function(e){
         	var row = $(e.currentTarget);
-            this.internalSelectBucket(row);
+        	localStorage.setItem("selectBucket", row[0].getAttribute("data-bucketname"));
+            this.internalSelectBucket(row, false);
         },
         selectObject: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectObject(row);
+        },
+        getPreferenceObjectName: function(){
+            return this.$('#get-object-by-name input').val();
         },
         selectRevision: function(e){
         	var row = $(e.currentTarget);
@@ -288,6 +304,7 @@ define(
         },
         showAllChanged : function(kind) {
             var filterKind = undefined;
+            var filterContentType = undefined;
             if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
@@ -297,21 +314,62 @@ define(
                 if (this.filterKind) {
                     filterKind = this.filterKind;
                 }
+                if (this.filterContentType) {
+                    filterContentType = this.filterContentType;
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
-            studioApp.models.catalogBuckets.setContentType(this.filterContentType);
+            studioApp.models.catalogBuckets.setContentType(filterContentType);
+            studioApp.models.catalogBuckets.fetch({reset: true});
+        },
+        filterByObjectsByName : function (event){
+            event.preventDefault();
+            const objectName = $('#get-object-by-name input').val();
+            this.objectName = objectName;
+            var studioApp = require('StudioApp');
+            studioApp.models.catalogBuckets.setObjectName(objectName);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
         updateBuckets : function() {
+            const that = this;
             this.$('#catalog-get-buckets-table').empty();
             var BucketList = _.template(catalogList);
-            _(this.buckets.models).each(function(bucket) {
-                var bucketName = bucket.get("name");
-                this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
-            }, this);
-            // to open the browser on the first bucket
-            this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0]);
+            const countNotEmptyBuckets = this.buckets.models.filter(function(bucket){ return bucket.get('objectCount') > 0}).length;
+            if(!countNotEmptyBuckets) {
+                $("#get-catalog-view table").hide();
+                if($("#get-catalog-view p").length){
+                    const obj = $("#get-catalog-view p").text("No results for \"" + that.getPreferenceObjectName() + "\".\n Check your spelling or use more general terms.");
+                    obj.html(obj.html().replace(/\n/g,'<br/>'));
+                }
+            } else {
+                $("#get-catalog-view table").show();
+                $("#get-catalog-view p").text('');
+                _(this.buckets.models).each(function(bucket) {
+                    var bucketName = bucket.get("name");
+                    if( bucket.get('objectCount') ){
+                        this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                    }
+                }, this);
+                // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
+                if(localStorage.selectBucket && that.$('#catalog-get-buckets-table tr')[0]){
+                    const indexOfSelectedBucket = (new Array(that.$('#catalog-get-buckets-table tr').length)).findIndex(function(elem, index){
+                        return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
+                    })
+                    this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
+                } else {
+                    if(that.$('#catalog-get-buckets-table tr').length){
+                        localStorage.setItem("selectBucket", that.$('#catalog-get-buckets-table tr')[0].getAttribute("data-bucketname"));
+                        this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0], true);
+                    }
+                }
+            }
+        },
+        getScrollToBucket: function() {
+            if($("#catalog-get-modal").css("display") !== "none"){
+                var scrollToVal = $('#catalog-get-modal .catalog-selected-row').offset().top - $('#catalog-get-buckets-table').parent().offset().top + $('#catalog-get-buckets-table').parent().scrollTop()
+                $('#catalog-get-buckets-table').parent().scrollTop(scrollToVal);
+            }
         },
         render: function () {
             this.$el.html(this.template());
@@ -327,6 +385,7 @@ define(
             }
             this.buckets.setKind(bucketKind);
             this.buckets.setContentType(this.filterContentType);
+            this.buckets.setObjectName("");
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)

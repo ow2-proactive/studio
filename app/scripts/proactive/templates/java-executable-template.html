@@ -2,7 +2,7 @@
     <% if (model["Application Parameters"] && model["Application Parameters"].length>0) { %>
     <parameters>
     <% _.each(model["Application Parameters"], function(par) { %>
-        <parameter name="<%=par["Name"]%>" value="<%=par["Value"]%>"/>
+        <parameter name="<%=par["Name"]%>" value="<%=_.escape(par["Value"])%>"/>
     <% }) %>
     </parameters>
     <% } %>

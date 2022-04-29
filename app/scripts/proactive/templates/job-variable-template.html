@@ -159,11 +159,11 @@ jQuery(document).ready(function($){
                         groupDisplayStack = [];
                 %>
     <li class="formLayout">
-    <span for="Tasks_Variables" class="Name caretUL" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</span>
-    <ul class="nestedUL">
+    <span for="Tasks_Variables" class="Name caretUL<%- toggledTasks.length > 0 ? ' caretUL-down' : '' %>" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</span>
+    <ul class="nestedUL<%- toggledTasks.length > 0 ? ' activeUL' : '' %>">
     <li class="formLayout">
-    <span for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
-    <ul class="nestedUL">
+    <span for="<%- splitted[0] %>" class="Name caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
+    <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
                 <%
                     } else if (currentTask != splitted[0]) {
                         currentTask = splitted[0];
@@ -173,41 +173,39 @@ jQuery(document).ready(function($){
     </ul>
     </li>
     <li class="formLayout">
-    <span for="<%- splitted[0] %>" class="Name caretUL" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
-    <ul class="nestedUL">
+    <span for="<%- splitted[0] %>" class="Name caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
+    <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
         <%
                     }
                 }
     %>
         <li class="formLayout<%- resolvedHidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
             <%
-                if (group && group !== "") {
-                    if (group !== currentGroup) {
-                        // a new group to handle
-                        currentGroup = group;
-                        groupDisplayStack = [];
-                    }
-                    if (resolvedHidden) {
-                        groupDisplayStack.push('hidden');
-                    } else if (advanced) {
-                        groupDisplayStack.push('advanced');
-                    } else {
-                        groupDisplayStack.push('visible');
-                    }
-                    var strategy = displayGroupStrategy(groupDisplayStack);
-                    if (strategy === 'display') {
+                if (group !== currentGroup) {
+                    // a new group to handle
+                    currentGroup = group;
+                    groupDisplayStack = [];
+                }
+                if (resolvedHidden) {
+                    groupDisplayStack.push('hidden');
+                } else if (advanced) {
+                    groupDisplayStack.push('advanced');
+                } else {
+                    groupDisplayStack.push('visible');
+                }
+                var strategy = displayGroupStrategy(groupDisplayStack);
+                if (strategy === 'display') {
                         %>
-            <label class="Name" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group %></label>
+            <label class="Name" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
             <br/>
 
-                        <%
-                    } else if (strategy === 'display-with-class') {
-                        %>
-            <label class="Name advanced-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group %></label>
+                    <%
+                } else if (strategy === 'display-with-class') {
+                    %>
+            <label class="Name advanced-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
             <br class="advanced-to-hide"/>
 
-                        <%
-                    }
+                    <%
                 }
             %>
             <div style="display:inline-flex; justify-content: right; width:30%"><label for="<%- key %>" class="Name" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label></div>
@@ -275,7 +273,7 @@ jQuery(document).ready(function($){
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:credential')==0) {  %>
                             <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                             <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
-                            <button title="Manage third-party credentials" class="third-party-credential-button btn" type="button" style="background-color:Transparent"><img src="images/key.png"></button>
+                            <button title="Manage third-party credentials" class="third-party-credential-button btn" value="<%- key %>" type="button" style="background-color:Transparent"><img src="images/key.png"></button>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_file') ==0 ) {  %>
                             <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                             <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
@@ -295,7 +293,9 @@ jQuery(document).ready(function($){
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:catalog_object') ==0 ) {  %>
                             <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                             <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
-                            <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                            <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn" type="button" style="background-color:Transparent">
+                                <img src="images/catalog-portal.png" height="20">
+                            </button>
                 <% } else { %>
                             <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                             <label class="Extra" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>

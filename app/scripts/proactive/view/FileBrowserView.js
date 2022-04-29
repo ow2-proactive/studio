@@ -3,8 +3,9 @@ define(
         'backbone',
         'text!proactive/templates/file-browser-template.html',
         'proactive/rest/studio-client',
+        'proactive/view/BeautifiedModalAdapter'
     ],
-    function (Backbone, fileBrowserTemplate, StudioClient) {
+    function (Backbone, fileBrowserTemplate, StudioClient, BeautifiedModalAdapter) {
 
     "use strict";
 
@@ -17,6 +18,8 @@ define(
         uploadRequest: undefined,
 
         template: _.template(fileBrowserTemplate),
+
+        filterValue:"*",
 
         model: {
             'files': [],
@@ -38,7 +41,8 @@ define(
             'click #new-folder-btn': 'createFolder',
             'click #download-file-btn': 'downloadFile',
             'click #delete-file-btn': 'deleteFile',
-            'change #show-hidden-files' : 'showHiddenChange'
+            'change #show-hidden-files' : 'showHiddenChange',
+            'submit #filter-files': 'filterFiles'
         },
 
         initialize: function (options) {
@@ -73,10 +77,19 @@ define(
             });
         },
 
+        filterFiles: function () {
+            this.filterValue = document.getElementById("filter-files-input").value;
+            if (this.filterValue === "") {
+                this.filterValue = "*";
+            }
+            this.refreshFiles();
+        },
+
         render: function () {
             this.model['currentPath'] = "";
             this.refreshFiles();
             this.$el.html(this.template(this.model));
+            new BeautifiedModalAdapter().beautifyForm(this.$el);
             this.$el.modal('show');
             return this;
         },
@@ -113,7 +126,7 @@ define(
             }
             $.ajax({
                 url: that.dataspaceRestUrl + encodeURIComponent(pathname),
-                data: { "comp": "list" },
+                data: { "comp": "list", "includes": this.filterValue },
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
@@ -133,6 +146,8 @@ define(
                     StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
                 }
             });
+            document.getElementById("filter-files-input").value = this.filterValue;
+            new BeautifiedModalAdapter().beautifyForm(this.$el);
         },
 
         getFilesMetadata: function(fileNames) {

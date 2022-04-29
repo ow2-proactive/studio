@@ -607,7 +607,6 @@ input {
     line-height: 23px !important;
     height: 30px !important;
     resize: none !important;
-
     height: 34px;
     font-size: 14px;
     line-height: 1.428571429;
@@ -623,6 +622,15 @@ input {
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
+#get-object-by-name, #publish-object-by-name {
+    margin-bottom: 20px;
+}
+.w-100 {
+    width: 100%
+}
+.w-100 input, .w-100 button {
+    height: 34px ! important;
+}
 #accordion-properties {
     padding-bottom: 20px;
 }
@@ -1652,6 +1660,10 @@ li.success {
     width: 1300px;
 }
 
+.modal {
+  overflow-y:auto;
+}
+
 #catalog-publish-buckets-table td, #catalog-get-buckets-table td,
 #catalog-publish-objects-table td, #catalog-get-objects-table td,
 #catalog-publish-revisions-table td, #catalog-get-revisions-table {
@@ -1721,6 +1733,11 @@ ul, #submitFormUL {
 
 .btn-group .fa-stack {
     top: -2px;
+}
+
+.disabled-input {
+    background-color: #F1F1F1;
+    cursor: not-allowed;
 }
 
 .fa-xxs{

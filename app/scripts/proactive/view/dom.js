@@ -5,6 +5,7 @@ define(
         'proactive/config',
         'proactive/view/utils/undo',
         'proactive/view/FileBrowserView',
+        'proactive/view/ThirdPartyCredentialView',
         'proactive/rest/studio-client',
         'xml2json',
         'codemirror',
@@ -53,7 +54,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, FileBrowserView, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
+    function ($, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -437,6 +438,18 @@ define(
             }
         }
 
+        function getToggledTasks() {
+            var toggler = document.getElementsByClassName("caretUL");
+            var toggledTasks = [];
+            for (let i = 0; i < toggler.length; i++) {
+                if (toggler[i].classList.contains("caretUL-down")) {
+                    var elementName = toggler[i].getAttribute("for");
+                    toggledTasks.push(elementName);
+                }
+            }
+            return toggledTasks;
+        }
+
         $("#submit-button").click(function (event) {
             event.preventDefault();
 
@@ -531,7 +544,7 @@ define(
                 executeIfConnected(submit);
                 return;
             }
-            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false});
+            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false, 'toggledTasks' : []});
             $('#execute-workflow-modal').modal();
 
             initializeSubmitFormForTaskVariables();
@@ -560,13 +573,27 @@ define(
             executeOrCheck(event, true, false)
         });
 
-        function executeOrCheck(event, check, plan) {
+        // show ThirdPartyCredential modal with updated value of the corresponding variable
+        $(document).on("click", '.third-party-credential-button', function (event) {
+            var varKey = event.currentTarget.getAttribute('value');
+            var varValue = event.currentTarget.parentElement.querySelector('.variableValue').value;
+
+            executeOrCheck(event, true, false, function(response) {
+                if (response && response.updatedVariables && varKey in response.updatedVariables) {
+                    varValue = response.updatedVariables[varKey];
+                }
+                new ThirdPartyCredentialView({credKey: varValue}).render();
+            });
+        });
+
+        function executeOrCheck(event, check, plan, handler) {
             var studioApp = require('StudioApp');
             executeIfConnected(function () {
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
                 var inputReceived = $('#job-variables .variableValue');
                 var showAdvanced = $('#advanced-checkbox').is(":checked");
+                var toggledTasks = getToggledTasks();
 
                 var extractVariableName = function (key) { return (key.split(":").length == 2 ? key.split(":")[1] : key) };
                 var isTaskVariable = function (key) { return (key.split(":").length == 2) };
@@ -606,9 +633,9 @@ define(
 
                 if (!validationData.valid) {
                     var jobVariables = extractUpdatedVariables(inputVariables, validationData);
-                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced});
+                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
                 } else if (check) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced});
+                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){
@@ -616,11 +643,14 @@ define(
                     }else{
                         $("#plan-workflow-modal").modal();
                     }
-
                 }
                 readOrStoreVariablesInModel(oldVariables);
 
                 initializeSubmitFormForTaskVariables();
+                
+                if (handler) {
+                    handler(validationData);
+                }
             })
         }
 
@@ -890,10 +920,22 @@ define(
                 // create a new workflow, open it and import the xml into it
                 var clickAndOpenEvent = jQuery.Event( "click" );
                 clickAndOpenEvent.openWorkflow = true;
-                if(!$('.create-workflow-button').length){// When we do open the studio the first time, we should reload the page
-                    location.reload();
+                if(!$('.create-workflow-button').length){
+                    // we set an observation in order to wait for the render of create-workflow-button
+                    let observer = new MutationObserver((mutations) => {
+                      if(mutations.length && $('.create-workflow-button').length){
+                        $('.create-workflow-button').trigger(clickAndOpenEvent);
+                        // stop watching
+                        observer.disconnect()
+                      }
+                    })
+                    observer.observe($('#properties-container')[0], {
+                        childList: true,
+                        subtree: true
+                    })
+                } else {
+                    $('.create-workflow-button').trigger(clickAndOpenEvent);
                 }
-                $('.create-workflow-button').trigger(clickAndOpenEvent);
             }
         }
 
@@ -1203,8 +1245,8 @@ define(
 
                 //Fixing modals overlay bug
                 var zIndexModal = parseInt($("#full-edit-modal-script-content").parents().find(".modal").css("z-index"));
-                $("#catalog-publish-modal").css("z-index", (zIndexModal+1).toString());
-                $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+2).toString());
+                $("#catalog-publish-modal").css("z-index", (zIndexModal+2).toString());
+                $("#publish-current-confirmation-modal").css("z-index", (zIndexModal+3).toString());
 
                 var studioApp = require('StudioApp');
                 studioApp.views.catalogPublishView.setKind(catalogKind, "Script");

@@ -1,4 +1,12 @@
-<div>
+<form class="container-flex w-100" id="publish-object-by-name">
+	<div class="input-group w-100">
+		<input type="text" placeholder="Workflow name" class="form-control">
+		<button class="btn btn-default" type="submit">
+			<i class="fa fa-search"></i>
+		</button>
+	</div>
+</form>
+<div id="publish-catalog-view">
 	<table>
 		<tr>
 			<td style="width: 250px;">
@@ -6,7 +14,7 @@
 					<legend class="row">
 						<div class="pull-left" style="font-weight: bold;padding-left: 15px;">Buckets</div>
 						<div class="pull-right" id="publish-show-all-checkbox">
-							<label class="checkbox-inline"><input type="checkbox">Show all</label>
+							<label class="checkbox-inline"><input type="checkbox">Show alll</label>
 						</div>
 					</legend>
 					<div style="height: 270px; overflow: auto;">
@@ -20,6 +28,12 @@
 						<div class="pull-left" id="catalog-publish-objects-title" style="font-weight: bold;padding-left: 15px;">Objects</div>
 					</legend>
 					<div style="height: 270px; overflow: auto;">
+						<form class="container-flex w-100" id="new-script-form">
+							<div class="input-group w-100">
+								<input type="text" placeholder="new script name" class="form-control" style="display: table-cell">
+								<button type="submit" class="btn btn-default"><i class="fa fa fa-plus"></i></button>
+							</div>
+						</form>
 						<table id="catalog-publish-objects-table" style="width: 100%;"></table>
 					</div>
 				</fieldset>
@@ -32,5 +46,6 @@
 			</td>
 		</tr>
 	</table>
+	<p></p>
 </div>
 
