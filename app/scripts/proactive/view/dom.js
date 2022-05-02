@@ -1257,7 +1257,6 @@ define(
                 $('#catalog-publish-modal').modal();
             })
 
-
             $(document).on("click", '.get-script-from-catalog', function (event) {
                 event.preventDefault();
                 var relatedInputId = $(this).attr('data-related-input');
