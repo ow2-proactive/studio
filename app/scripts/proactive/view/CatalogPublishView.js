@@ -352,7 +352,7 @@ define(
                 var owner = (bucket.get('owner') === 'GROUP:public-objects') ? 'public' : bucket.get('owner').replace('GROUP:', '');
                 bucket.tooltip = bucket.get('name') + '\nowner:' + owner + '\nrights:' + bucket.get('rights');
             });
-
+            const test = that.$('#catalog-publish-buckets-table tr');
             var i = 0;
             var selectIndex;
             if (this.kind) {
@@ -389,21 +389,23 @@ define(
                     }
                     i++;
                 }, this);
-                if(typeof selectIndex !== "undefined"){
-                    // to open the browser on the right bucket
-                    localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[selectIndex].getAttribute("data-bucketname"));
-                    this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex], true);
-                } else {
-                    // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
-                    if(localStorage.selectBucket && that.$('#catalog-publish-buckets-table tr')[0]){
-                        const indexOfSelectedBucket = (new Array(that.$('#catalog-publish-buckets-table tr').length)).findIndex(function(elem, index){
-                            return that.$('#catalog-publish-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
-                        })
-                        this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
+                if(that.$('#catalog-publish-buckets-table tr').length) {
+                    if(typeof selectIndex !== "undefined"){
+                        // to open the browser on the right bucket
+                        localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[selectIndex].getAttribute("data-bucketname"));
+                        this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex], true);
                     } else {
-                        if(that.$('#catalog-publish-buckets-table tr').length){
-                            localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[0].getAttribute("data-bucketname"));
-                            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0], true);
+                        // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
+                        if(localStorage.selectBucket && that.$('#catalog-publish-buckets-table tr')[0].length){
+                            const indexOfSelectedBucket = (new Array(that.$('#catalog-publish-buckets-table tr').length)).findIndex(function(elem, index){
+                                return that.$('#catalog-publish-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
+                            })
+                            this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
+                        } else {
+                            if(that.$('#catalog-publish-buckets-table tr').length){
+                                localStorage.setItem("selectBucket", that.$('#catalog-publish-buckets-table tr')[0].getAttribute("data-bucketname"));
+                                this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[0], true);
+                            }
                         }
                     }
                 }
