@@ -352,7 +352,6 @@ define(
                 var owner = (bucket.get('owner') === 'GROUP:public-objects') ? 'public' : bucket.get('owner').replace('GROUP:', '');
                 bucket.tooltip = bucket.get('name') + '\nowner:' + owner + '\nrights:' + bucket.get('rights');
             });
-            const test = that.$('#catalog-publish-buckets-table tr');
             var i = 0;
             var selectIndex;
             if (this.kind) {
@@ -396,7 +395,7 @@ define(
                         this.internalSelectBucket(this.$('#catalog-publish-buckets-table tr')[selectIndex], true);
                     } else {
                         // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
-                        if(localStorage.selectBucket && that.$('#catalog-publish-buckets-table tr')[0].length){
+                        if(localStorage.selectBucket){
                             const indexOfSelectedBucket = (new Array(that.$('#catalog-publish-buckets-table tr').length)).findIndex(function(elem, index){
                                 return that.$('#catalog-publish-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
                             })
