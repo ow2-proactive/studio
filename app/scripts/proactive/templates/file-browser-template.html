@@ -28,8 +28,11 @@
                 <a id="delete-file-btn" href="javascript:void(0)" class="pointer pa-tool-btn" data-help-self data-help="Delete the selected file or folder">
                     <i class="fas fa-trash"></i>
                 </a>
-                <label style="margin-left:160px;" data-help-self data-help="Filter files according to a glob pattern, e.g. '*.xml', 'image*'">Filter:</label>
-                <input type="text" id="filter-files" value="*" style="width:160px; position:relative; display:inline-block;"/>
+                <form id="filter-files" style="display: inline-block">
+                    <label style="margin-left:80px;" data-help-self data-help="Filter files according to a glob pattern, e.g. '*.xml', 'image*', '**/*.xml'">Filter:</label>
+                    <input type="text" id="filter-files-input" value="*" style="width:350px; position:relative; display:inline-block;"/>
+                    <button type="submit" class="btn btn-primary" aria-hidden="true" style="height:30px; font-size: 0.9em;">Search</button>
+                </form>
                 <div class="pull-right" id="pull-right-hidden-files-checkbox">
                     <label class="checkbox-inline"><input id="show-hidden-files" type="checkbox"<%- showHidden ? "checked" : ""  %> >Show Hidden</label>
                 </div>

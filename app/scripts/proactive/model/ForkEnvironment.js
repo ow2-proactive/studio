@@ -27,6 +27,7 @@ define(
                         'itemplaceholder': '@attributes->value',
                         "data-help": 'JVM properties e.g:<br/>-Xmx2G<br/>-Dprop.name=value'
                     },
+                    itemToString: Utils.inlineNameValue,
                     itemTemplate: Utils.bigCrossTemplate
                 },
                 "Working Folder": {
@@ -44,6 +45,7 @@ define(
                         'itemplaceholder': '@attributes->path',
                         "data-help": 'The list of \"pathElement\" representing the classpath to be added when starting the new JVM.'
                     },
+                    itemToString: Utils.inlineNameValue,
                     itemTemplate: Utils.bigCrossTemplate
                 },
                 "Environment Variables": {
@@ -57,6 +59,7 @@ define(
                         "Name": {type: "Text", fieldAttrs: {'placeholder': '@attributes->name'}},
                         "Value": {type: "Text", fieldAttrs: {'placeholder': '@attributes->value'}},
                     },
+                    itemToString: Utils.inlineNameValue,
                     itemTemplate: Utils.bigCrossTemplate
                 },
                 "Environment Script": {

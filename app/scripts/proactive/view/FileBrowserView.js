@@ -42,7 +42,7 @@ define(
             'click #download-file-btn': 'downloadFile',
             'click #delete-file-btn': 'deleteFile',
             'change #show-hidden-files' : 'showHiddenChange',
-            'keyup #filter-files': 'filterFiles'
+            'submit #filter-files': 'filterFiles'
         },
 
         initialize: function (options) {
@@ -77,11 +77,12 @@ define(
             });
         },
 
-        filterFiles: function (e) {
-            if (e.key === 'Enter' || e.keyCode === 13) {
-                this.filterValue = document.getElementById("filter-files").value;
-                this.refreshFiles();
+        filterFiles: function () {
+            this.filterValue = document.getElementById("filter-files-input").value;
+            if (this.filterValue === "") {
+                this.filterValue = "*";
             }
+            this.refreshFiles();
         },
 
         render: function () {
@@ -145,7 +146,7 @@ define(
                     StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
                 }
             });
-            document.getElementById("filter-files").value = this.filterValue;
+            document.getElementById("filter-files-input").value = this.filterValue;
             new BeautifiedModalAdapter().beautifyForm(this.$el);
         },
 

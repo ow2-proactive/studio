@@ -1,26 +1,20 @@
 <div id="catalog-publish-description" data-first="true">
 	<table>
-		<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
 		<tr>
 			<td colspan="2" style="padding-bottom: 5em">You are about to publish a <b>new <%= kindLabel %></b> named &quot;<%= name %>&quot; to this bucket.</td>
 		</tr>
-		<% } else { %>
-		<tr>
-			<td colspan="2" style="padding-bottom: 5em">You are about to publish the <%= kindLabel %> to this bucket. If it already exists, a new revision will be created.</td>
-		</tr>
 		<tr>
 			<td>Name:</td>
-			<td><input type="text" id="catalog-publish-name" value="<%= name %>"></td>
+			<td><input type="text" id="catalog-publish-name" value="<%= name %>" disabled class="disabled-input"></td>
 		</tr>
-		<% } %>
 		<tr>
 			<td>Kind:</td>
-			<td><input type="text" id="catalog-publish-kind" value="<%= kind %>" ></td>
+			<td><input type="text" id="catalog-publish-kind" value="<%= kind %>" disabled class="disabled-input"></td>
 		</tr>
 		<tr>
 			<td>Project name:</td>
 			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
-			<td><input type="text" id="workflow-publish-project-name" value="<%= projectname %>" disabled style="background-color: #F1F1F1; cursor: not-allowed"></td>
+			<td><input type="text" id="workflow-publish-project-name" value="<%= projectname %>" disabled class="disabled-input"></td>
 			<% } else { %>
 			<td><input type="text" id="script-publish-project-name" value="<%= projectname %>"></td>
 			<% } %>
