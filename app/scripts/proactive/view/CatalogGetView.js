@@ -351,14 +351,15 @@ define(
                         this.$('#catalog-get-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
                     }
                 }, this);
-                // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
-                if(localStorage.selectBucket && that.$('#catalog-get-buckets-table tr')[0]){
-                    const indexOfSelectedBucket = (new Array(that.$('#catalog-get-buckets-table tr').length)).findIndex(function(elem, index){
-                        return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
-                    })
-                    this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
-                } else {
-                    if(that.$('#catalog-get-buckets-table tr').length){
+                //
+                if(that.$('#catalog-get-buckets-table tr').length) {
+                    // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
+                    if(localStorage.selectBucket){
+                        const indexOfSelectedBucket = (new Array(that.$('#catalog-get-buckets-table tr').length)).findIndex(function(elem, index){
+                            return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
+                        })
+                        this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
+                    } else {
                         localStorage.setItem("selectBucket", that.$('#catalog-get-buckets-table tr')[0].getAttribute("data-bucketname"));
                         this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[0], true);
                     }
