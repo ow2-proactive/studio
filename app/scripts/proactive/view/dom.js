@@ -1421,7 +1421,7 @@ define(
             $('input').addClass("form-control");
         })
 
-        $("#direct-object-url button").on("click", function(){
+        $("#direct-object-url-button").on("click", function(){
             console.log("copy to clipboard")
         })
         // saving job xml every min to local store
