@@ -1660,6 +1660,21 @@ li.success {
     width: 80%;
 }
 
+#direct-object-url button, #direct-object-url input {
+    background-color: #F3F4F6;
+}
+
+#direct-object-url input {
+    border-radius: 10px 0 0 10px;
+}
+
+#direct-object-url button{
+    border-radius: 0 10px 10px 0;
+}
+
+#direct-object-url-button {
+    height:30px;
+}
 .modal {
   overflow-y:auto;
 }

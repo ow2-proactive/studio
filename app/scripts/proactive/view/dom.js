@@ -1421,9 +1421,6 @@ define(
             $('input').addClass("form-control");
         })
 
-        $("#direct-object-url-button").on("click", function(){
-            console.log("copy to clipboard")
-        })
         // saving job xml every min to local store
         setInterval(save_workflow, 10000);
         // validating job periodically

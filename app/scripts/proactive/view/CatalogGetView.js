@@ -28,6 +28,7 @@ define(
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-objects-table tr': 'selectObject',
+            'click #direct-object-url-button': 'copyClipBoard',
             'click #catalog-get-revisions-table tr': 'selectRevision',
             'submit #get-object-by-name': 'filterByObjectsByName'
         },
@@ -247,6 +248,11 @@ define(
         selectRevision: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectRevision(row);
+        },
+        copyClipBoard: function(){
+            var inputCopy = $("#direct-object-url-input");
+            inputCopy.select();
+            document.execCommand("copy");
         },
         setInputToImportId: function(inputToImportId) {
             //setting the text area where we will import the object
