@@ -20,7 +20,12 @@
 		</tr>
 		<tr>
 			<th>Direct URL</th>
-			<td><a href="javascript:void(0)" id="direct-url"><%= rawurl.substring(0,30)+"..." %></a></td>
+			<td>
+				<div class="input-group" style="display:inline-flex;" id="direct-object-url">
+					<input type="text" class="form-control" id="direct-object-url-input" ng-disable="true" value="<%= rawurl %>">
+					<button class="btn btn-default" data-toggle="tooltip" title="Copy to clipboard" id="direct-object-url-button"> <i class="fa fa-clone"></i> </button>
+				</div>
+			</td>
 		</tr>
 	</table>	
 </div>
