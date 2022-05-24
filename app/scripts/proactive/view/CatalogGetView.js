@@ -28,6 +28,7 @@ define(
         events: {
             'click #catalog-get-buckets-table tr': 'selectBucket',
             'click #catalog-get-objects-table tr': 'selectObject',
+            'click #direct-object-url-button': 'copyClipBoard',
             'click #catalog-get-revisions-table tr': 'selectRevision',
             'submit #get-object-by-name': 'filterByObjectsByName'
         },
@@ -240,6 +241,11 @@ define(
         selectObject: function(e){
         	var row = $(e.currentTarget);
             this.internalSelectObject(row);
+        },
+        copyClipBoard: function(){
+            var inputCopy = $("#direct-object-url-input");
+            inputCopy.select();
+            document.execCommand("copy");
         },
         getPreferenceObjectName: function(){
             return this.$('#get-object-by-name input').val();
