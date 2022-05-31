@@ -1257,13 +1257,6 @@ define(
                 $('#catalog-publish-modal').modal();
             })
 
-            $(document).on("click", '#direct-url', function (event){
-                document.cookie = "sessionid=" + localStorage['pa.session'];
-                var parsedUrl = new URL($( this ).text());
-                //open the targeted url
-                window.open(parsedUrl.href, $( this ).text());
-            })
-
             $(document).on("click", '.get-script-from-catalog', function (event) {
                 event.preventDefault();
                 var relatedInputId = $(this).attr('data-related-input');

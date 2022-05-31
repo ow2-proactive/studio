@@ -281,7 +281,7 @@ define(
                     }
                 }
             }
-
+            // Add "/studio/" only for tasks stored in Studio project : when generic info doesn't include task.icon
             if(!hasAlreadyIconInGenericInfo){
                 iconPath = "/studio/" + iconPath;
             }
