@@ -259,6 +259,8 @@ define(
         updateIcon: function (changed) {
             var executableTypeStr = this.model.get("Type");
             var iconPath = this.icons[executableTypeStr];
+
+            var hasAlreadyIconInGenericInfo = false
             if (executableTypeStr == "ScriptExecutable") {
                 var language;
                 if (this.model.get("ScriptExecutable").ScriptType === "ScriptCode" ) {
@@ -275,10 +277,12 @@ define(
                 for (var i in genericInformation) {
                     if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon'){
                         iconPath = genericInformation[i]["Property Value"];
+                        hasAlreadyIconInGenericInfo = true;
                     }
                 }
-            } else {
-                // Add "/studio/" only for tasks stored in Studio project : with no generic info
+            }
+            // Add "/studio/" only for tasks stored in Studio project : when generic info doesn't include task.icon
+            if(!hasAlreadyIconInGenericInfo){
                 iconPath = "/studio/" + iconPath;
             }
             this.$el.find("img").attr('src', iconPath);
