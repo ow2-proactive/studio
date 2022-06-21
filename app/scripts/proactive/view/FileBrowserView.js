@@ -130,8 +130,8 @@ define(
                 headers: { "sessionid": localStorage['pa.session'] },
                 async: false,
                 success: function (data){
-                    that.model['files'] = that.getFilesMetadata(data.fileListing.sort());
-                    that.model['directories'] = that.getFilesMetadata(data.directoryListing.sort());
+                    that.model['files'] = that.getFilesMetadata(data.fileListing);
+                    that.model['directories'] = that.getFilesMetadata(data.directoryListing);
                     that.model['showHidden'] = that.showHidden;
                     that.$el.html(that.template(that.model));
                     if(that.uploadRequest) {
