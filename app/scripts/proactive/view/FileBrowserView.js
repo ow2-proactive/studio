@@ -139,8 +139,7 @@ define(
                     if(that.uploadRequest) {
                         that.switchToUploadingState();
                     }
-                    document.getElementById("filter-files-input").value = that.filterValue;
-                    new BeautifiedModalAdapter().beautifyForm(that.$el);
+                    that.updateSearchBar();
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = "";
@@ -148,8 +147,7 @@ define(
                         errorMessage = ": " + (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
                     }
                     StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
-                    document.getElementById("filter-files-input").value = that.filterValue;
-                    new BeautifiedModalAdapter().beautifyForm(that.$el);
+                    that.updateSearchBar();
                 }
             });
 
@@ -170,6 +168,11 @@ define(
                 }
             }
             return filesMetadata;
+        },
+
+        updateSearchBar: function() {
+            document.getElementById("filter-files-input").value = this.filterValue;
+            new BeautifiedModalAdapter().beautifyForm(this.$el);
         },
 
         toReadableFileSize: function(size) {
