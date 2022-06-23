@@ -52,6 +52,9 @@ define(
             this.dataspaceRestUrl += options.dataspace + "/";
             this.model['locationDescription'] = options.dataspace.toUpperCase() + " DataSpace";
             this.showHidden = false;
+            this.model['files'] = [];
+            this.model['directories'] = [];
+            this.model['showHidden'] = this.showHidden;
             switch (options.dataspace.toUpperCase()) {
                 case "GLOBAL":
                     this.model['spaceDescription']="Global DataSpace is a shared storage on the server host where anyone can read/write files."
@@ -126,17 +129,18 @@ define(
             }
             $.ajax({
                 url: that.dataspaceRestUrl + encodeURIComponent(pathname),
-                data: { "comp": "list", "includes": this.filterValue },
+                data: { "comp": "list-metadata", "includes": this.filterValue },
                 headers: { "sessionid": localStorage['pa.session'] },
-                async: false,
                 success: function (data){
-                    that.model['files'] = that.getFilesMetadata(data.fileListing);
-                    that.model['directories'] = that.getFilesMetadata(data.directoryListing);
+                    that.model['files'] = that.getFilesMetadata(data.fileListing, data);
+                    that.model['directories'] = that.getFilesMetadata(data.directoryListing, data);
                     that.model['showHidden'] = that.showHidden;
                     that.$el.html(that.template(that.model));
                     if(that.uploadRequest) {
                         that.switchToUploadingState();
                     }
+                    document.getElementById("filter-files-input").value = that.filterValue;
+                    new BeautifiedModalAdapter().beautifyForm(that.$el);
                 },
                 error: function (xhr, status, error) {
                     var errorMessage = "";
@@ -144,35 +148,26 @@ define(
                         errorMessage = ": " + (xhr.status == 401 || xhr.status == 403 ? xhr.statusText : xhr.errorMessage);
                     }
                     StudioClient.alert('Error', "Failed to access " + pathname + errorMessage, 'error');
+                    document.getElementById("filter-files-input").value = that.filterValue;
+                    new BeautifiedModalAdapter().beautifyForm(that.$el);
                 }
             });
-            document.getElementById("filter-files-input").value = this.filterValue;
-            new BeautifiedModalAdapter().beautifyForm(this.$el);
+
         },
 
-        getFilesMetadata: function(fileNames) {
+        getFilesMetadata: function(fileNames, response) {
             var that = this;
             var filesMetadata = [];
             for (let i = 0; i < fileNames.length; i++) {
-                var filePath = that.model['currentPath'] + fileNames[i];
-                $.ajax({
-                    url: that.dataspaceRestUrl + encodeURIComponent(filePath),
-                    type: "HEAD",
-                    headers: { "sessionid": localStorage['pa.session'] },
-                    async: false,
-                    success: function (response, status, xhr){
-                        filesMetadata[i] = {
-                            name: fileNames[i],
-                            type: xhr.getResponseHeader('x-proactive-ds-type'),
-                            rights: xhr.getResponseHeader('x-proactive-ds-permissions'),
-                            modified: that.toDateInClientFormat(xhr.getResponseHeader('Last-Modified'))
-                        };
-                        if(filesMetadata[i].type == 'FILE') {
-                            filesMetadata[i].type = xhr.getResponseHeader('Content-Type');
-                            filesMetadata[i].size = that.toReadableFileSize(xhr.getResponseHeader('Content-Length'));
-                        }
-                    }
-                });
+                filesMetadata[i] = {
+                    name: fileNames[i],
+                    type: response.types[fileNames[i]],
+                    rights: response.permissions[fileNames[i]],
+                    modified: that.toDateInClientFormat(response.lastModifiedDates[fileNames[i]])
+                };
+                if(filesMetadata[i].type != 'DIRECTORY') {
+                    filesMetadata[i].size = that.toReadableFileSize(response.sizes[fileNames[i]]);
+                }
             }
             return filesMetadata;
         },
