@@ -195,11 +195,11 @@ define(function () {
             },
             {
                 'name': 'Machine Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'machine-learning', 'machine-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'federated-learning', 'model-as-a-service']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'ai-machine-learning', 'ai-machine-learning-workflows', 'ai-data-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
             },
             {
                 'name': 'Deep Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'deep-learning', 'deep-learning-workflows', 'data-visualization', 'auto-ml-optimization', 'federated-learning', 'model-as-a-service', 'azure-cognitive-services']
+                'buckets': ['controls', 'notification-tools', 'basic-examples', 'ai-deep-learning', 'ai-deep-learning-workflows', 'ai-data-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
             },
             {
                 'name': 'Big Data',
