@@ -1764,3 +1764,10 @@ ul, #submitFormUL {
     top: 0.1em;
     font-size: 0.8em;
 }
+
+#breadcrumb-job-name, #breadcrumb-task-name {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -55,13 +55,13 @@ define(
 					    modelInUse = this.model.parentModel;
 					}
 					if (modelInUse.get("Task Name")) {
-						jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Name") + '</a></span></li>');
+						jobBreadcrumb = $('<li class="active" style="display: inline-flex;"><span id="breadcrumb-job-name"><a href="#" id="breadcrumb-selected-job">' + StudioApp.models.jobModel.get("Name") + '</a></span></li>');
 						breadcrumb.append(jobBreadcrumb)
 
-						breadcrumb.append('<li class="active"><span id="breadcrumb-task-name">' + modelInUse.get("Task Name") + '</span></li>')
+						breadcrumb.append('<li class="active" style="display: inline-flex;"><span id="breadcrumb-task-name">' + modelInUse.get("Task Name") + '</span></li>')
 
 					} else {
-						jobBreadcrumb = $('<li class="active"><span id="breadcrumb-job-name">' + modelInUse.get("Name") + '</span></li>');
+						jobBreadcrumb = $('<li class="active" style="display: inline-flex;"><span id="breadcrumb-job-name">' + modelInUse.get("Name") + '</span></li>');
 						breadcrumb.append(jobBreadcrumb)
                         //hidden the context-menu
                         $(".context-menu-canvas").hide();
