@@ -1485,6 +1485,7 @@ li.success {
 
 #workflow-list label {
     width:45%;
+    max-width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
