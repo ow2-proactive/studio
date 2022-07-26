@@ -397,10 +397,15 @@ define(
                 $("#publish-catalog-view table").show();
                 $("#publish-catalog-view p").text('');
                 _(this.buckets.models).each(function(bucket) {
-                    var bucketName = bucket.get("name");
-                    this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
-                    if ( bucketName == alreadyPublishedBucketName ){
-                        selectIndex = i;
+                    /*
+                      * Display buckets with workflows, and empty buckets when not filter is applied
+                    */
+                    if( bucket.get('objectCount') || (!bucket.get('objectCount') && !this.getPreferenceObjectName().length )){
+                        var bucketName = bucket.get("name");
+                        this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                        if ( bucketName == alreadyPublishedBucketName ){
+                            selectIndex = i;
+                        }
                     }
                     i++;
                 }, this);
