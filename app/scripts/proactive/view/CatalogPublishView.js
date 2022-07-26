@@ -200,7 +200,7 @@ define(
             $(row).addClass(selectedClassName);
         },
         getPreferenceObjectName: function(){
-            return $('#publish-object-by-name input').val();
+            return $('#publish-object-by-name input').length ? $('#publish-object-by-name input').val() : "";
         },
         selectBucket: function(e){
         	var row = $(e.currentTarget);
