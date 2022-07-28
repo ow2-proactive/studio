@@ -148,7 +148,8 @@ define(
                     callback: function (revision) {
                         $('#catalog-publish-description-container').empty();
                         var objectDescription = _.template(publishDescription);
-                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: objectName, kind: that.kind, kindLabel: that.kindLabel, projectname: projectName}));
+                        var objectKind = that.isPsaWorkflow(that.kind) ? "workflow/psa" : that.kind;
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: objectName, kind: objectKind, kindLabel: that.kindLabel, projectname: projectName}));
                     }
                 });
             revisionsModel.fetch();
@@ -156,7 +157,8 @@ define(
         addObjectDescription: function(objectName, projectName) {
             var objectDescription = _.template(publishDescriptionFirst);
             this.$('#catalog-publish-description-container').empty();
-            this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: this.kind, kindLabel: this.kindLabel, projectname: projectName}));
+            var objectKind = this.isPsaWorkflow(this.kind) ? "workflow/psa" : this.kind;
+            this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: objectKind, kindLabel: this.kindLabel, projectname: projectName}));
         },
         disablePublishWhenNoPermission: function(rights, targetDescription) {
             if (['write', 'admin'].indexOf(rights) >= 0) {
@@ -198,7 +200,7 @@ define(
             $(row).addClass(selectedClassName);
         },
         getPreferenceObjectName: function(){
-            return $('#publish-object-by-name input').val();
+            return $('#publish-object-by-name input').length ? $('#publish-object-by-name input').val() : "";
         },
         selectBucket: function(e){
         	var row = $(e.currentTarget);
@@ -336,6 +338,20 @@ define(
             studioApp.models.catalogBuckets.setKind(filterKind);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
+        isPsaWorkflow : function (kind) {
+            if (kind.toLowerCase().indexOf('workflow') != 0) {
+                return false;
+            }
+            var studioApp = require('StudioApp');
+            var genericInfo = studioApp.models.jobModel.get("Generic Info");
+            if (genericInfo) {
+                var pcaStates = genericInfo.filter(function(item){ return item["Property Name"] === "pca.states";})
+                var pcaServiceId = genericInfo.filter(function(item){ return item["Property Name"] === "pca.service.id";})
+                return pcaStates.length && pcaServiceId.length;
+            } else {
+                return false;
+            }
+        },
         filterByObjectsByName : function (event){
             event.preventDefault();
             const objectName = $('#publish-object-by-name input').val();
@@ -381,10 +397,15 @@ define(
                 $("#publish-catalog-view table").show();
                 $("#publish-catalog-view p").text('');
                 _(this.buckets.models).each(function(bucket) {
-                    var bucketName = bucket.get("name");
-                    this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
-                    if ( bucketName == alreadyPublishedBucketName ){
-                        selectIndex = i;
+                    /*
+                      * Display buckets with workflows, and empty buckets when not filter is applied
+                    */
+                    if( bucket.get('objectCount') || (!bucket.get('objectCount') && !this.getPreferenceObjectName().length )){
+                        var bucketName = bucket.get("name");
+                        this.$('#catalog-publish-buckets-table').append(BucketList({bucket: bucket, bucketname: bucketName}));
+                        if ( bucketName == alreadyPublishedBucketName ){
+                            selectIndex = i;
+                        }
                     }
                     i++;
                 }, this);
