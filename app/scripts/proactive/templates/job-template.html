@@ -6,7 +6,7 @@
     <% if (job["Variables"] && job["Variables"].length>0) { %>
     <variables>
     <% _.each(job["Variables"], function(variable) { %>
-            <variable name="<%=variable["Name"]%>" value="<%=_.escape(variable.hasOwnProperty("Value")?variable["Value"]:"")%>" <% if (variable.hasOwnProperty("Model")) { %>model="<%=_.escape(variable["Model"])%>"<% }%> <% if (variable.hasOwnProperty("Description")) { %>description="<%=escapeHtml(variable["Description"])%>"<% }%> <% if (variable.hasOwnProperty("Group")) { %>group="<%=escapeHtml(variable["Group"])%>"<% }%> <% if (variable.hasOwnProperty("Advanced")) { %>advanced="<%=escapeHtml(variable["Advanced"])%>"<% }%> <% if (variable.hasOwnProperty("Hidden")) { %>hidden="<%=escapeHtml(variable["Hidden"])%>"<% }%>/>
+            <variable name="<%=variable["Name"]%>" value="<%=_.escape(variable.hasOwnProperty("Value")?variable["Value"]:"").replace(/(?:\r\n|\r|\n)/g,"&#xA;")%>" <% if (variable.hasOwnProperty("Model")) { %>model="<%=_.escape(variable["Model"])%>"<% }%> <% if (variable.hasOwnProperty("Description")) { %>description="<%=escapeHtml(variable["Description"])%>"<% }%> <% if (variable.hasOwnProperty("Group")) { %>group="<%=escapeHtml(variable["Group"])%>"<% }%> <% if (variable.hasOwnProperty("Advanced")) { %>advanced="<%=escapeHtml(variable["Advanced"])%>"<% }%> <% if (variable.hasOwnProperty("Hidden")) { %>hidden="<%=escapeHtml(variable["Hidden"])%>"<% }%>/>
     <% }) %>
     </variables>
     <% } %>
