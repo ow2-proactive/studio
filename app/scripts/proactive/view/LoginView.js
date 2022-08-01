@@ -50,6 +50,7 @@ define(
                     StudioClient.setCurrentUser();
                     that.remove();
                     that.options.app.login();
+                    that.showHideShortcuts();
                 });
             },
 
@@ -126,6 +127,27 @@ define(
                 }
             },
 
+            showHideShortcuts: function() {
+                var authorizedPortals = StudioClient.getPortalsAuthorizations();
+                if (authorizedPortals) {
+                    if (_.intersection(authorizedPortals, ["catalog-portal","workflow-execution","service-automation","job-analytics","job-gantt","node-gantt","job-planner-calendar-def","job-planner-calendar-def-workflows","job-planner-execution-planning","job-planner-gantt-chart","notification-portal"]).length > 0) {
+                        $('#automation-dashboard-shortcut').show();
+                    } else {
+                        $('#automation-dashboard-shortcut').hide();
+                    }
+                    if (_.contains(authorizedPortals, "scheduler")) {
+                        $('#scheduler-portal-shortcut').show();
+                    } else {
+                        $('#scheduler-portal-shortcut').hide();
+                    }
+                    if (_.contains(authorizedPortals, "rm")) {
+                        $('#rm-portal-shortcut').show();
+                    } else {
+                        $('#rm-portal-shortcut').hide();
+                    }
+                }
+            },
+
             render: function() {
                 var that = this;
                 that.$el = $(that.template());
@@ -140,6 +162,7 @@ define(
                     console.log("Logged in");
                     that.remove();
                     that.options.app.login();
+                    that.showHideShortcuts();
                     $('body').show();
                 }, function() {
                     // failed to login - show login form

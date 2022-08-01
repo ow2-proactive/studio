@@ -233,6 +233,27 @@ define(
                 });
             },
 
+            getPortalsAuthorizations : function () {
+                var result = null;
+                $.ajax({
+                    type: 'GET',
+                    url: config.commonRestApiUrl + "/permissions/portals?portals=catalog-portal&portals=workflow-execution&portals=service-automation&portals=job-analytics&portals=job-gantt&portals=node-gantt&&portals=job-planner-calendar-def&portals=job-planner-calendar-def-workflows&portals=job-planner-execution-planning&portals=job-planner-gantt-chart&portals=notification-portal&portals=rm&portals=scheduler",
+                    dataType: "json",
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('sessionid', localStorage['pa.session']);
+                    },
+                    async: false,
+                    success: function(data) {
+                        result = data;
+                    },
+                    error: function(data) {
+                        console.log("Invalid response returned when retrieving portals authorization", data)
+                        fail()
+                    }
+                });
+                return result;
+            },
+
             uploadBinaryFile: function(data, success, error) {
                 var that = this;
 
