@@ -166,6 +166,14 @@ define(
 
             // showing target endpoints
             jsPlumb.bind('connectionDrag', function (connection) {
+                var source = connection.source;
+                var target = connection.target;
+                if ($(target).data("view")) {
+                    var sourceModel = $(source).data("view").model;
+                    var targetModel = $(target).data("view").model;
+                    targetModel.removeDependency(sourceModel);
+                }
+
                 $('.task').each(function (i, task) {
                     // do not display the possible destination on the same element as the origin, except for the loop
                     if (connection.scope == 'loop' || $(task).attr('id') != connection.sourceId) {
@@ -176,6 +184,14 @@ define(
             });
 
             jsPlumb.bind('connectionDragStop', function (connection) {
+                var source = connection.source;
+                var target = connection.target;
+                if ($(target).data("view")) {
+                    var sourceModel = $(source).data("view").model;
+                    var targetModel = $(target).data("view").model;
+                    targetModel.addDependency(sourceModel);
+                }
+
                 removeUnconnectedTargetEndpoints()
 
                 if (!connection.target) {
