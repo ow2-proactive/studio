@@ -168,7 +168,7 @@ define(
             jsPlumb.bind('connectionDrag', function (connection) {
                 var source = connection.source;
                 var target = connection.target;
-                if ($(target).data("view")) {
+                if ($(target).data("view") && connection.scope == 'dependency') {
                     var sourceModel = $(source).data("view").model;
                     var targetModel = $(target).data("view").model;
                     targetModel.removeDependency(sourceModel);
@@ -186,7 +186,7 @@ define(
             jsPlumb.bind('connectionDragStop', function (connection) {
                 var source = connection.source;
                 var target = connection.target;
-                if ($(target).data("view")) {
+                if ($(target).data("view") && connection.scope == 'dependency') {
                     var sourceModel = $(source).data("view").model;
                     var targetModel = $(target).data("view").model;
                     targetModel.addDependency(sourceModel);
