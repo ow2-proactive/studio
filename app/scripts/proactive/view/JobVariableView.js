@@ -58,7 +58,7 @@ define(
             for(var key in jobVariables) {
                 this.model.jobVariables[key].Value = jobVariables[key];
                 var updatedVarElement = $(document.getElementById(key));
-                updatedVarElement.text(jobVariables[key]);
+                updatedVarElement.attr('value', _.escape(jobVariables[key]));
             }
         },
 
