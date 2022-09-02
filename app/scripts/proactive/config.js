@@ -220,7 +220,7 @@ define(function () {
 import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 
-containerName = "java"
+containerName = "adoptopenjdk/openjdk8:latest"
 cmd = []
 cmd.add("docker")
 cmd.add("run")
@@ -466,7 +466,7 @@ podman_env_script: `
 import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 
-containerName = "java"
+containerName = "adoptopenjdk/openjdk8:latest"
 cmd = []
 cmd.add("podman")
 cmd.add("run")
