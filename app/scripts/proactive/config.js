@@ -220,7 +220,7 @@ define(function () {
 import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 
-containerName = "java"
+containerName = "adoptopenjdk/openjdk8:latest"
 cmd = []
 cmd.add("docker")
 cmd.add("run")
@@ -329,7 +329,7 @@ import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 
-imageUrl = "docker://java"
+imageUrl = "docker://adoptopenjdk/openjdk8:latest"
 imageName = imageUrl.substring(imageUrl.indexOf("://") + 3).replace("/","_").replace(":","_")
 imageLockFileName = imageName + ".lock"
 userHome = System.getProperty("user.home")
@@ -466,7 +466,7 @@ podman_env_script: `
 import org.ow2.proactive.utils.OperatingSystem;
 import org.ow2.proactive.utils.OperatingSystemFamily;
 
-containerName = "java"
+containerName = "adoptopenjdk/openjdk8:latest"
 cmd = []
 cmd.add("podman")
 cmd.add("run")
