@@ -7,6 +7,8 @@ define(
         'proactive/view/FileBrowserView',
         'proactive/view/ThirdPartyCredentialView',
         'proactive/rest/studio-client',
+        'proactive/model/Task',
+        'proactive/view/xml/TaskXmlView',
         'xml2json',
         'codemirror',
         'proactive/view/BeautifiedModalAdapter',
@@ -54,7 +56,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
+    function ($, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, Task, TaskXmlView, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -1350,14 +1352,24 @@ define(
             }
 
             function pasteTasks(){
-                var newTaskModel = []
+                var newTaskModel = [];
                 var tasksView = [];
+                var newTasksJson = [];
+                var studioApp = require('StudioApp');
                  $.each(copiedTasks, function (i) {
                     tasksView.push(copiedTasks[i]);
-                    newTaskModel.push(jQuery.extend(true, {}, copiedTasks[i].model));
+                    // build new task models by converting existing models to xml and reparse it
+                    var taskModel = new Task();
+                    taskModel.isDragAndDrop = false;
+                    var taskXmlView = new TaskXmlView({model: copiedTasks[i].model, jobView: studioApp.views.workflowView}).render();
+                    var taskJson = xml2json.xmlToJson(xml2json.parseXml(taskXmlView.$el.text()))
+                    taskModel.populateSchema(taskJson.task, false, false);
+                    taskModel.populateSimpleForm();
+                    newTaskModel.push(taskModel);
+                    newTasksJson.push(taskJson);
 
                 });
-                require('StudioApp').views.workflowView.copyPasteTasks(pasteAllow,newTaskModel, tasksView, positions);
+                studioApp.views.workflowView.copyPasteTasks(pasteAllow, newTaskModel, tasksView, newTasksJson, positions);
             }
             $('.copy-task').on("click", function() {
                         copyTasks();
