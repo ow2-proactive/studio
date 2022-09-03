@@ -4,11 +4,12 @@ define(
         'proactive/rest/studio-client',
         'proactive/model/Job',
         'proactive/view/ViewWithProperties',
+        'proactive/model/script/FlowScript',
         'proactive/view/TaskView',
         'proactive/view/utils/undo'
     ],
 
-    function (d, StudioClient, Job, ViewWithProperties, TaskView, undoManager) {
+    function (d, StudioClient, Job, ViewWithProperties, FlowScript, TaskView, undoManager) {
 
     "use strict";
 
@@ -560,7 +561,7 @@ define(
                 return (name === view.model.get("Task Name"));
             })
         },
-        copyPasteTasks: function (position , newTaskModels, tasksView, tasksPosition) {
+        copyPasteTasks: function (position, newTaskModels, tasksView, newTasksJson, tasksPosition) {
 
             // to avoid model change by creating connections clean all jsplumb events
             jsPlumb.unbind();
@@ -568,7 +569,10 @@ define(
             var thizz = this;
             var StudioApp = require('StudioApp');
             var jobModel = StudioApp.models.jobModel;
+            // association <copied_task_name, new_task_view>
             var newTaskViews = {};
+            // association <new_task_name, new_task_view>
+            var newTaskViewsByNewTaskNames = {};
             var minLeft = 0;
             var minTop = 0;
             function sort(arr, type){
@@ -610,66 +614,77 @@ define(
                     position = {top: taskView.$el.offset().top + 100, left: taskView.$el.offset().left + 100};
                 }
 
-               if(tasksPosition[i].left == minLeft){
-                   tasksPosition[i].left = position.left
-               } else if(minLeft){
-                   tasksPosition[i].left = tasksPosition[i].left - minLeft + position.left
-             }
+                if (tasksPosition[i].left == minLeft) {
+                    tasksPosition[i].left = position.left
+                } else if (minLeft){
+                    tasksPosition[i].left = tasksPosition[i].left - minLeft + position.left
+                }
 
-              if(tasksPosition[i].top == minTop){
-                   tasksPosition[i].top = position.top
-            } else if(minTop){
-               tasksPosition[i].top = tasksPosition[i].top - minTop + position.top
-               }
+                if (tasksPosition[i].top == minTop) {
+                    tasksPosition[i].top = position.top
+                } else if (minTop) {
+                    tasksPosition[i].top = tasksPosition[i].top - minTop + position.top
+                }
                 thizz.addView(newTaskView, {left: tasksPosition[i].left , top: tasksPosition[i].top  })
                 newTaskViews[taskView.model.get("Task Name")] = newTaskView;
+                newTaskViewsByNewTaskNames[newTaskView.model.get("Task Name")] = newTaskView;
+
             })
             // process dependencies
-            $.each(newTaskViews, function (name, taskView) {
+            $.each(tasksView, function (i, taskView) {
                 if (taskView.model.dependencies) {
+                    var copiedTaskView = newTaskViews[taskView.model.get("Task Name")]
                     var newDependencies = [];
                     $.each(taskView.model.dependencies, function (i, task) {
-                        var copiedTaskView = newTaskViews[task.get("Task Name")];
-                        if (copiedTaskView) {
-                            newDependencies.push(copiedTaskView.model)
-                            copiedTaskView.addDependency(taskView);
+                        var copiedDependantTaskView = newTaskViews[task.get("Task Name")];
+                        if (copiedDependantTaskView) {
+                            newDependencies.push(copiedDependantTaskView.model)
+                            copiedDependantTaskView.addDependency(copiedTaskView);
                         }
                     })
-                    taskView.model.dependencies = newDependencies;
+                    copiedTaskView.model.dependencies = newDependencies;
                 }
             })
             // process control flows
-            $.each(newTaskViews, function (oldTaskName, taskView) {
+            $.each(tasksView, function (i, taskView) {
                 var task = taskView.model;
+                var copiedTaskView = newTaskViews[task.get("Task Name")]
                 if (task.controlFlow) {
                     if (task.controlFlow.if) {
-                        taskView.addIf(task.controlFlow.if, newTaskViews)
-                        // switching cloned model to new tasks
-                        if (task.controlFlow.if.task && newTaskViews[task.controlFlow.if.task.get("Task Name")]) {
-                            task.controlFlow.if.task = newTaskViews[task.controlFlow.if.task.get("Task Name")].model;
-                        } else {
-                            delete task.controlFlow['if']['task'];
+                        copiedTaskView.model.setif(newTaskViews[task.controlFlow.if.task.get("Task Name")].model)
+                        var copiedTaskJson = newTasksJson[i];
+                        copiedTaskView.model.controlFlow.if.model.populateSchema(copiedTaskJson.task.controlFlow.if);
+                        if (task.controlFlow.if.else) {
+                            copiedTaskView.model.setelse(newTaskViews[task.controlFlow.if.else.task.get("Task Name")].model)
                         }
-                        if (task.controlFlow.if.else && task.controlFlow.if.else.task && newTaskViews[task.controlFlow.if.else.task.get("Task Name")]) {
-                            task.controlFlow.if.else.task = newTaskViews[task.controlFlow.if.else.task.get("Task Name")].model;
-                        } else {
-                            delete task.controlFlow['if']['else'];
+                        if (task.controlFlow.if.continuation) {
+                            copiedTaskView.model.setcontinuation(newTaskViews[task.controlFlow.if.continuation.task.get("Task Name")].model)
                         }
-                        if (task.controlFlow.if.continuation && task.controlFlow.if.continuation.task && newTaskViews[task.controlFlow.if.continuation.task.get("Task Name")]) {
-                            task.controlFlow.if.continuation.task = newTaskViews[task.controlFlow.if.continuation.task.get("Task Name")].model;
-                        } else {
-                            delete task.controlFlow['if']['continuation'];
-                        }
+                        copiedTaskView.addIf(copiedTaskView.model.controlFlow.if, newTaskViewsByNewTaskNames)
                     }
                     if (task.controlFlow.replicate) {
-                        var taskDepView = newTaskViews[jobModel.getDependantTask(oldTaskName)];
-                        taskView.addReplicate(taskDepView);
+                        copiedTaskView.model.setreplicate();
+                        var copiedTaskJson = newTasksJson[i];
+                        copiedTaskView.model.controlFlow.replicate.model.populateSchema(copiedTaskJson.task.controlFlow.replicate);
+                        var taskDepView = newTaskViews[jobModel.getDependantTask(task.get("Task Name"))];
+                        copiedTaskView.addReplicate(taskDepView);
                     }
                     if (task.controlFlow.loop) {
-                        var loopTarget = task.controlFlow.loop.task;
-                        var targetView = newTaskViews[loopTarget.get('Task Name')];
-                        taskView.addLoop(targetView)
-                        task.controlFlow.loop.task = newTaskViews[task.controlFlow.loop.task.get("Task Name")].model;
+                        var branch = new FlowScript();
+                        var copiedTaskJson = newTasksJson[i];
+                        branch.populateSchema(copiedTaskJson.task.controlFlow.loop);
+                        var loopTargetView = newTaskViews[task.controlFlow.loop.task.get("Task Name")];
+                        var loopTarget = loopTargetView.model;
+                        copiedTaskView.model.set({
+                          'Control Flow': 'loop'
+                        });
+                        copiedTaskView.model.controlFlow = {
+                          'loop': {
+                            task: loopTarget,
+                            model: branch
+                          }
+                        };
+                        copiedTaskView.addLoop(loopTargetView)
                     }
                 }
             })
