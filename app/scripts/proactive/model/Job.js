@@ -52,6 +52,7 @@ define(
             editorClass: scriptArgumentsClass,
             fieldAttrs: {
                 'placeholder': '@attributes->tags',
+                'listseparator': /\s*,\s*/,
                 'data-help' : 'Tags given to the workflow.'
                 },
             itemTemplate: Utils.bigCrossTemplate

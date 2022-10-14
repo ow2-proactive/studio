@@ -80,7 +80,8 @@ define(
                             // when an attribute (instead of an element) is the type of list, it is a list of string separated by comma.
                             // e.g., prop == "Tags"
                             if (placeholder.startsWith('@attributes') && !Array.isArray(value)) {
-                                value = value.split(',');
+                                var separator = this.schema[prop].fieldAttrs.listseparator || ',';
+                                value = value.split(separator);
                                 this.set(prop, value);
                                 continue;
                             }
