@@ -18,6 +18,7 @@ define(
             'jobVariables': {},
             'jobName':'',
             'jobProjectName':'',
+            'jobTags':[],
             'jobDescription':'',
             'jobDocumentation':'',
             'jobGenericInfos':[],

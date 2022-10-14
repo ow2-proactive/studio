@@ -11,7 +11,10 @@
 
     <span class="font-bold"><b>Description : </b><div class="description"><small><%- jobDescription %></small></div></span>
     <span class="font-bold"><b>Project name : </b><small><%- jobProjectName %></small></span><br>
-<% _.each(jobGenericInfos, function(gi) {
+    <% if (jobTags && jobTags.length>0) { %>
+    <span class="font-bold"><b>Tags : </b><small><%=jobTags.join()%></small></span><br>
+    <% } %><br>
+    <% _.each(jobGenericInfos, function(gi) {
     var label = gi["Property Name"];
     if (label == "bucketName" )  %>
     <span class="font-bold"><b>Bucket name : </b><small><%=gi["Property Value"] %></small></span><br>
