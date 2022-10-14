@@ -18,7 +18,7 @@ define(
   ],
 
   // TODO REMOVE undoManager dependency - comes from view
-  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, FlowScript, Utils, undoManager, config, StudioClient, PNotify) {
+  function(Backbone, Link, SchemaModel, Task, ScriptExecutable, NativeExecutable, JavaExecutable, FlowScript, Utils, undoManager, config, StudioClient, PNotify, scriptArgumentsClass) {
 
     "use strict";
 
@@ -45,6 +45,17 @@ define(
             'placeholder': '@attributes->projectName',
             "data-help": 'Set a name of a project to be able to group different jobs of the same project later.'
           }
+        },
+        "Tags": {
+            type: 'List',
+            itemType: 'Text',
+            editorClass: scriptArgumentsClass,
+            fieldAttrs: {
+                'placeholder': '@attributes->tags',
+                'listseparator': /\s*,\s*/,
+                'data-help' : 'Tags given to the workflow.'
+                },
+            itemTemplate: Utils.bigCrossTemplate
         },
         "Description": {
           type: "TextArea",

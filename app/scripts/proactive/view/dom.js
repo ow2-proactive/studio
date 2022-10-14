@@ -466,6 +466,7 @@ define(
 
             var jobName = studioApp.models.jobModel.get("Name");
             var jobProjectName = studioApp.models.jobModel.get("Project");
+            var jobTags = studioApp.models.jobModel.get("Tags");
             var jobDescription = studioApp.models.jobModel.get("Description");
             var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
             var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
@@ -546,7 +547,7 @@ define(
                 executeIfConnected(submit);
                 return;
             }
-            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false, 'toggledTasks' : []});
+            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobTags':jobTags, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false, 'toggledTasks' : []});
             $('#execute-workflow-modal').modal();
 
             initializeSubmitFormForTaskVariables();
@@ -627,6 +628,7 @@ define(
                 readOrStoreVariablesInModel(inputVariables);
                 var jobName = studioApp.models.jobModel.get("Name");
                 var jobProjectName = studioApp.models.jobModel.get("Project");
+                var jobTags = studioApp.models.jobModel.get("Tags");
                 var jobDescription = studioApp.models.jobModel.get("Description");
                 var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
                 var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
@@ -635,9 +637,9 @@ define(
 
                 if (!validationData.valid) {
                     var jobVariables = extractUpdatedVariables(inputVariables, validationData);
-                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
+                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobTags':jobTags, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
                 } else if (check) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
+                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobTags':jobTags, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
                 } else {
                     $('#execute-workflow-modal').modal("hide");
                     if(!plan){

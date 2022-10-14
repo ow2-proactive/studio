@@ -51,8 +51,9 @@ define(['proactive/view/xml/JobXmlView', 'proactive/model/Job', 'proactive/view/
                             // remove description without cdata
                             originalJobXml = originalJobXml.replace(/<description>\s*\w.*<\/description>/g, '');
                             originalJobXml = originalJobXml.replace(/<javaExecutable (.*)\s+\/>/g, "<javaExecutable $1> </javaExecutable>");
-                            // we dropped this field
+                            // we dropped these fields
                             originalJobXml = originalJobXml.replace(/ projectName=\"\w*\"/g, '');
+                            originalJobXml = originalJobXml.replace(/ tags=\"(^$)|(^(\d+)(,\s*\d+)*$)", '');
 
                             try {
                                 var json = xml2json.xmlToJson(xml2json.parseXml(originalJobXml));
