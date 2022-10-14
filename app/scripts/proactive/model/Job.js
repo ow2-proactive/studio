@@ -51,8 +51,7 @@ define(
             itemType: 'Text',
             editorClass: scriptArgumentsClass,
             fieldAttrs: {
-                'placeholder': 'tags->tag',
-                'itemplaceholder': '@attributes->value',
+                'placeholder': '@attributes->tags',
                 'data-help' : 'Tags given to the workflow.'
                 },
             itemTemplate: Utils.bigCrossTemplate

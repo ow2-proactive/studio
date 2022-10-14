@@ -75,7 +75,16 @@ define(
                         var currentElements = this.get(prop) || [];
                         var newElements = [];
                         var value = this.getValue(placeholder, obj);
+
                         if (value) {
+                            // when an attribute (instead of an element) is the type of list, it is a list of string separated by comma.
+                            // e.g., prop == "Tags"
+                            if (placeholder.startsWith('@attributes') && !Array.isArray(value)) {
+                                value = value.split(',');
+                                this.set(prop, value);
+                                continue;
+                            }
+
                             if (prop == "Node Selection" && Array.isArray(value.script)) {
                                 value = value.script.map(function(val){
                                             return { script: val}
