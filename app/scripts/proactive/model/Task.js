@@ -88,11 +88,12 @@ define(
                     confirmDelete: 'You are about to remove a variable.'
                 },
                 "Generic Info": {
+                    title: 'Task Generic Info',
                     type: 'List',
                     itemType: 'Object',
                     fieldAttrs: {
                         'placeholder': 'genericInformation->info',
-                        "data-tab": "Generic Info",
+                        "data-tab": "Task Generic Info",
                         "data-tab-help": 'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'
                     },
                     itemToString: Utils.inlineNameValue, itemTemplate: Utils.bigCrossTemplate,

@@ -172,10 +172,11 @@ define(
           }
         },
         "Generic Info": {
+          title: 'Workflow Generic Info',
           type: 'List',
           itemType: 'Object',
           fieldAttrs: {
-            "data-tab": "Generic Info",
+            "data-tab": "Workflow Generic Info",
             'placeholder': 'genericInformation->info',
             "data-help": "Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this job to a node with token \"rack1\"."
           },
