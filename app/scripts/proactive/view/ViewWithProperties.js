@@ -219,6 +219,10 @@ define(
 					var currentAccordionGroup = undefined;
 					var curLabel = "";
 					var isTask = this.model.get("Task Name") != undefined;
+					var isWorkflow = this.model.get("Name") != undefined;
+					var accordionTitleText = isTask ?  'Task Parameters' : (isWorkflow ? '<b>Workflow Parameters</b>' : 'Control Flow Parameters');
+					var accordionTitle = $('<div class="panel-heading">' + accordionTitleText + '</div>');
+					accordion.append(accordionTitle);
 
 					$.each(form.$el.children().children(), function (i, elem) {
 						var el = $(elem);
