@@ -58,13 +58,21 @@ define(
                   },
                   title: 'Documentation'
                 },
-
+                "Task Result Added to Job Result": {
+                    type: "Checkbox",
+                    fieldAttrs: {
+                        'placeholder': '@attributes->preciousResult',
+                        "data-help": 'Indicates if you want to save the result of this task in the job result.'
+                    }
+                },
                 "Variables": {
                     type: 'List',
                     itemType: 'Object',
                     title: "Task Variables (Name, Value, Inherited)",
                     fieldAttrs: {
                         'placeholder': 'variables->variable',
+                        "data-tab": "Task Variables",
+                        'data-tab-help': 'Task Variables that will be available within task scope.',
                         "data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li><li><b>Inherited</b>: Job Variable&#39;s value will be used</li>"},
                     itemToString: Utils.inlineNameValueInherited, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
@@ -80,11 +88,13 @@ define(
                     confirmDelete: 'You are about to remove a variable.'
                 },
                 "Generic Info": {
+                    title: 'Task Generic Info',
                     type: 'List',
                     itemType: 'Object',
                     fieldAttrs: {
                         'placeholder': 'genericInformation->info',
-                        "data-help": 'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'
+                        "data-tab": "Task Generic Info",
+                        "data-tab-help": 'Some extra information about your job often used to change the scheduling behavior for a job. E.g. NODE_ACCESS_TOKEN=rack1 will assign this task to a node with token \"rack1\".'
                     },
                     itemToString: Utils.inlineNameValue, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
@@ -102,13 +112,6 @@ define(
                         }
                     },
                     confirmDelete: 'You are about to remove a property.'
-                },
-                "Task Result Added to Job Result": {
-                                    type: "Checkbox",
-                                    fieldAttrs: {
-                                        'placeholder': '@attributes->preciousResult',
-                                        "data-help": 'Indicates if you want to save the result of this task in the job result.'
-                                    }
                 },
                 "Input Files": {
                     type: 'List',
