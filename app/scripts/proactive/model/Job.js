@@ -97,11 +97,11 @@ define(
         "Variables": {
           type: 'List',
           itemType: 'Object',
+          title: "Workflow Variables",
           fieldAttrs: {
             "data-tab": "Workflow Variables",
             'placeholder': 'variables->variable',
-            "data-tab-help": "Workflow variables that will be available in all tasks.",
-            "data-help": "<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li>"
+            "data-tab-help": "Workflow variables that will be available in all tasks."
           },
           confirmDelete: 'You are about to remove a variable.',
           itemToString: Utils.inlineNameValue,

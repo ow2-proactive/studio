@@ -68,12 +68,12 @@ define(
                 "Variables": {
                     type: 'List',
                     itemType: 'Object',
-                    title: "Task Variables (Name, Value, Inherited)",
+                    title: "Task Variables",
                     fieldAttrs: {
                         'placeholder': 'variables->variable',
                         "data-tab": "Task Variables",
-                        'data-tab-help': 'Task Variables that will be available within task scope.',
-                        "data-help":"<li><b>Name</b>: Name of the variable</li><li><b>Value</b>: Value of the variable</li><li><b>Inherited</b>: Job Variable&#39;s value will be used</li>"},
+                        'data-tab-help': 'Task Variables that will be available within task scope.'
+                    },
                     itemToString: Utils.inlineNameValueInherited, itemTemplate: Utils.bigCrossTemplate,
                     subSchema: {
                     "Name": { validators: ['required'], fieldAttrs: {'placeholder': '@attributes->name', 'data-help': "Name of the variable. It must start with a letter and it can contain only alphanumeric and -, _ or . characters."}, title: 'Name', type: 'Text', editorClass: 'popup-input-text-field' },
