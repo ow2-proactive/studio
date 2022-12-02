@@ -192,19 +192,19 @@ define(function () {
         palette_presets: [
             {
                 'name': 'Basic Examples',
-                'buckets': ['controls', 'notification-tools', 'basic-examples']
+                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples']
             },
             {
                 'name': 'Machine Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'ai-machine-learning', 'ai-machine-learning-workflows', 'ai-data-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
+                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'ai-machine-learning', 'ai-machine-learning-workflows', 'ai-data-analysis-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
             },
             {
                 'name': 'Deep Learning',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'ai-deep-learning', 'ai-deep-learning-workflows', 'ai-data-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
+                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'ai-deep-learning', 'ai-deep-learning-workflows', 'ai-data-analysis-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
             },
             {
                 'name': 'Big Data',
-                'buckets': ['controls', 'notification-tools', 'basic-examples', 'big-data', 'data-connectors', 'database-services']
+                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'data-big-data', 'data-connectors', 'data-database-services']
             }
         ],
         docker_env_script: `
