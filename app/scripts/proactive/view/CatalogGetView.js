@@ -89,6 +89,9 @@ define(
             this.disableActionButtons(true, true);
             
             if (currentBucketRow){
+                var objectSelectionIndex=0;
+                //this.objectName is given as input to the render function
+                var objName = this.objectName;
 	            this.highlightSelectedRow('#catalog-get-buckets-table', currentBucketRow);
 
 	            var that = this;
@@ -110,6 +113,12 @@ define(
                     objectName: this.getPreferenceObjectName(),
                     contentType: this.filterContentType,
                     callback: function (catalogObjects) {
+                    //Loop over catalog objects and get the right selection index based on the input objectName
+                    for (var k=0; k<catalogObjects.length; k++){
+                    if (catalogObjects[k].name == objName){
+                    objectSelectionIndex=k;
+                    }
+                    }
                         that.$('#catalog-get-objects-table').empty();
                         if (catalogObjects.length === 0)
                             $('#catalog-get-import-button').prop('disabled', true);
@@ -131,7 +140,8 @@ define(
                 });
                 setTimeout(function(){
                   objectsModel.fetch({async:false});
-                  that.internalSelectObject(this.$('#catalog-get-objects-table tr')[0]);
+                  // default objectSelectionIndex is always 0 unless an input object is given to the render function
+                  that.internalSelectObject(this.$('#catalog-get-objects-table tr')[objectSelectionIndex], true);
                 }, 10)
             }
         },
@@ -140,7 +150,7 @@ define(
         	 $('#catalog-get-append-button').prop('disabled', enableAppend);       
         },
 
-        internalSelectObject: function (currentObjectRow) {
+        internalSelectObject: function (currentObjectRow, shouldScrollToTheSelectedObject) {
             this.$('#catalog-get-revisions-table').empty();
             if (currentObjectRow){
                 var currentWorkflowName = $(currentObjectRow).data("objectname");
@@ -167,6 +177,9 @@ define(
 		            			}
 	            			);
 	            			that.internalSelectRevision(that.$('#catalog-get-revisions-table tr')[0])
+	            			if(shouldScrollToTheSelectedObject) {
+	            			    that.getScrollToObject();
+	            			}
 		            	}
 	            	});
 	            revisionsModel.fetch();
@@ -240,7 +253,7 @@ define(
         },
         selectObject: function(e){
         	var row = $(e.currentTarget);
-            this.internalSelectObject(row);
+            this.internalSelectObject(row, false);
         },
         copyClipBoard: function(){
             var inputCopy = $("#direct-object-url-input");
@@ -359,10 +372,13 @@ define(
                 }, this);
                 //
                 if(that.$('#catalog-get-buckets-table tr').length) {
-                    // Select the previous bucket if it isn't the first time, otherwise, select the first bucket on the list
-                    if(localStorage.selectBucket){
+                    // Select the previous bucket from the local storage if it isn't the first time
+                    // else, select the bucket given as input to the render function
+                    // otherwise, select the first bucket on the list
+                    var selectedBucketName = this.bucketName?this.bucketName:localStorage.selectBucket;
+                    if(selectedBucketName){
                         const indexOfSelectedBucket = (new Array(that.$('#catalog-get-buckets-table tr').length)).findIndex(function(elem, index){
-                            return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == localStorage.selectBucket;
+                            return that.$('#catalog-get-buckets-table tr')[index].getAttribute("data-bucketname") == selectedBucketName;
                         })
                         this.internalSelectBucket(this.$('#catalog-get-buckets-table tr')[indexOfSelectedBucket > 0 ? indexOfSelectedBucket : 0], true);
                     } else {
@@ -378,7 +394,15 @@ define(
                 $('#catalog-get-buckets-table').parent().scrollTop(scrollToVal);
             }
         },
-        render: function () {
+        getScrollToObject: function() {
+            if($("#catalog-get-modal").css("display") !== "none"){
+                var scrollToVal = $('#catalog-get-objects-table .catalog-selected-row').offset().top - $('#catalog-get-objects-table').parent().offset().top + $('#catalog-get-objects-table').parent().scrollTop();
+                $('#catalog-get-objects-table').parent().scrollTop(scrollToVal);
+            }
+        },
+        render: function (bucket, object) {
+            this.bucketName = bucket;
+            this.objectName = object;
             this.$el.html(this.template());
             var bucketKind = this.kind;
             //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)

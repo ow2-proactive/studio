@@ -93,14 +93,16 @@ define(
             this.model.on("change:Fork Execution Environment", this.updateForkEnvironment, this);
             
             this.model.on("change:Generic Information", this.updateIcon, this);
+            this.model.on("change:Variables", this.updateButtonRightIcon, this);
 
             this.model.on("invalid", this.setInvalid, this);
             var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
             this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="'
                 + description.replace(/"/g,'&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">'
-                + this.model.get("Task Name") + '</span></a></div>');
+                + this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i id="called-icon"></i></a></div>');
 
-
+            //we add an arrow Icon to special tasks that contain at least one PA:CATALOG_OBJECT variable
+            updateIconsOnTasksCallingObjects(this.element);
             this.showBlockInTask();
 
             // convert model fork value from String to boolean
@@ -190,6 +192,11 @@ define(
             }
         },
 
+        //we update the task icons when we add/remove a PA:CATALOG_OBJECT variable
+        updateButtonRightIcon: function (changed) {
+           updateIconsOnTasksCallingObjects(this.element);
+        },
+
         /**
         * enable or disable editing of all the related fork environment elements
         * @param disabled whether the fork environment elements should be disabled
@@ -255,7 +262,6 @@ define(
             // then the previous inputs will just be kept.
         },
 
-        
         updateIcon: function (changed) {
             var executableTypeStr = this.model.get("Type");
             var iconPath = this.icons[executableTypeStr];
@@ -549,6 +555,21 @@ define(
         render: function () {
             var that = this;
             ViewWithProperties.prototype.render.call(this);
+            //fill up the modal of called workflows and objects when we click on the "arrow" icon on the buttom right
+            this.$el.find("#called-icon-a").on("click", function() {
+            generateCalledWorkflowModal(that.$el);
+            //show up the modal
+            $('#called-workflow-modal').modal();
+            });
+
+           //fill up the modal of called workflows and objects when we click on the contextual menu "Called Workflow"
+           $("#called-workflow").click(function(event) {
+           if(that.$el.hasClass("selected-task")){
+               //fill up the modal of called workflows and objects
+               generateCalledWorkflowModal(that.$el);
+               //show up the modal
+               $('#called-workflow-modal').modal();
+           }});
             this.$el.mousedown(function (e) {
                 if (!e.ctrlKey && !that.$el.hasClass("selected-task")) {
                     $(".selected-task").removeClass("selected-task");
@@ -561,6 +582,8 @@ define(
                     // selecting the current task
                     that.$el.addClass("selected-task");
                     $('.selected-task').on('contextmenu', function(e) {
+                    //add the contextual menu "Called Workflow"
+                    addCalledWorkflowMenu(that.$el);
                      var top = that.$el[0].offsetTop + 54;
                      var left = that.$el[0].offsetLeft + 50;
                      $(".context-menu-canvas").hide();
@@ -596,7 +619,205 @@ define(
             })
             return this;
         }
+    }
+    )
 
-    })
+       function generateCalledWorkflowModal(element) {
+           //delete all table rows except the first
+           $('#called-description-container-table').find("tr:gt(0)").remove();
+           //get current task variables that calls another workflow or object from the model
+           var currentTaskVariables = getTaskVariablesCallingWorkflowsInModel(element);
+           for (var key of Object.keys(currentTaskVariables)) {
+               var currentTaskName = key.split(":")[0];
+               var currentVariable = currentTaskVariables[key];
+               var hrefEyeIcon;
+               if (currentVariable.Value != "" && currentVariable.Value != null) {
+                   var calledObjectDetails = getCalledObjectDetails(currentVariable.Value)
+                   var objectKind = getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
+                   if (objectKind == 'Workflow/standard' || objectKind == 'Workflow/psa') {
+                       hrefEyeIcon = "<a href='javascript:void(0)' class='open-in-studio' ><i title='Open the workflow in a new Studio Tab' class='visu-icon glyphicon glyphicon-eye-open'></i></a>"
+                   } else {
+                       hrefEyeIcon = "<i title='You cannot open non-workflows objects in the Studio' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
+                   }
+               } else {
+                   hrefEyeIcon = "<i title='You cannot open empty objects in the Studio, select a catalog object first' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
+                   currentVariable.Value = "";
+                   objectKind = "";
+               }
+               var markup = "<tr><td>" + currentVariable.Name + "</td><td>" + currentVariable.Value + "</td><td><button title='Select one catalog object' class='called-catalogobject-button btn' type='button' style='background-color:Transparent'><img src='images/catalog-portal.png' height='20'></button></td><td>" + objectKind + "</td><td style='text-align: center'>" + hrefEyeIcon + "</td></tr>";
+               $("#called-description-container-table").append(markup);
+           }
+           //event to activate the visualization on another tab
+           visuIconEvent();
 
+           //action on the change button to modify the catalog object in the called workflow modal
+           $(".called-catalogobject-button").click(function(event) {
+               event.preventDefault();
+               var studioApp = require('StudioApp');
+               var parentVariableValue = $(event.currentTarget).parent().parent().children()[1].innerHTML;
+               var parentVariableName = $(event.currentTarget).parent().parent().children()[0].innerHTML;
+               var parentObjectDetails = getCalledObjectDetails(parentVariableValue);
+
+               studioApp.views.catalogGetView.setKind("all", "Object");
+               studioApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
+               studioApp.views.catalogGetView.render(parentObjectDetails["bucketName"], parentObjectDetails["objectName"]);
+               var previousZIndex = $("#catalog-get-modal").css("z-index");
+               studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
+               var zIndexModal = parseInt($("#catalog-get-modal").parents().find(".modal").css("z-index")); // #execute-workflow-modal
+               $("#catalog-get-modal").css("z-index", (zIndexModal + 1).toString());
+               $("#catalog-get-select-button").hide();
+               $("#catalog-get-browse-button").show();
+               $('#catalog-get-modal').modal();
+
+               //action on click on the select button of the get catalog view
+               $("#catalog-get-browse-button").click(function(e) {
+                   var splitRawUrl = ($(($("#catalog-get-revisions-table .catalog-selected-row"))[0])).data("rawurl").split('/');
+                   var newBucketName = splitRawUrl[1];
+                   var newObjectName = splitRawUrl[3];
+                   var newRevisionId = "";
+                   if (splitRawUrl.length > 4) {
+                       newRevisionId = splitRawUrl[5];
+                   }
+                   var newVariableValue = newBucketName + '/' + newObjectName;
+                   if (newRevisionId != "") {
+                       newVariableValue += "/" + newRevisionId;
+                   }
+                   //update the task variables model based on the new selected object values (bucket, object, and revision)
+                   updateVariablesCallingWorkflowsInModel(currentTaskName, parentVariableName, parentVariableValue, newVariableValue);
+                   $('#catalog-get-modal').modal('hide');
+
+                   //update the variable value based on the new select catalog object
+                   $(event.currentTarget).parent().parent().children()[1].innerHTML = newVariableValue;
+                   var selectedObjectKind = getObjectKind(newBucketName, newObjectName);
+                   //update the variable type based on the new object kind
+                   $(event.currentTarget).parent().parent().children()[3].innerHTML = selectedObjectKind;
+                   var SelectedHrefEyeIcon;
+                   if (selectedObjectKind == 'Workflow/standard' || selectedObjectKind == 'Workflow/psa') {
+                       SelectedHrefEyeIcon = "<a href='javascript:void(0)' class='open-in-studio' ><i title='Open the workflow in a new Studio Tab' class='visu-icon glyphicon glyphicon-eye-open'></i></a>";
+                   } else {
+                       SelectedHrefEyeIcon = "<i title='You cannot open non-workflows objects in the Studio' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>";
+                   }
+                   //update the icon based on the new kind
+                   $(event.currentTarget).parent().parent().children()[4].innerHTML = SelectedHrefEyeIcon;
+                   //update the visualization
+                   visuIconEvent();
+                   //click again on the current task to refresh variables with the new model values
+                   element.find(".task-name").click();
+               });
+           });
+       }
+
+       //action on click on the eye icon to open the workflow on another tab in the studio
+       function visuIconEvent() {
+           $(".visu-icon").click(function(evt) {
+               var parentVariableValue = $(evt.currentTarget).parent().parent().parent().children()[1].innerHTML;
+               var parentObjectDetails = getCalledObjectDetails(parentVariableValue);
+               var url = '/studio/#workflowcatalog/' + parentObjectDetails["bucketName"] + '/workflow/' + parentObjectDetails["objectName"];
+               var parentObjectKind = $(evt.currentTarget).parent().parent().parent().children()[3].innerHTML;
+               if (parentObjectKind == 'Workflow/standard' || parentObjectKind == 'Workflow/psa') {
+                   var win = window.open(url);
+               }
+           });
+       }
+
+       //update variable models with newly selected bucket/object/revision
+       function updateVariablesCallingWorkflowsInModel(currentTaskName, parentVariableName, parentVariableValue, newVariableValue) {
+           var studioApp = require('StudioApp');
+           var tasks = studioApp.models.jobModel.tasks;
+           var TasksArray = [];
+           for (var i = 0; i < tasks.length; i++) {
+               TasksArray[i] = tasks[i];
+           }
+           for (var i = 0; i < TasksArray.length; i++) {
+               var task = TasksArray[i];
+               if (task.has('Variables') && task.get('Task Name') == currentTaskName) {
+                   var variables = task.get('Variables');
+                   for (var j = 0; j < variables.length; j++) {
+                       var variable = variables[j];
+                       if (variable.Value == parentVariableValue && variable.Name == parentVariableName) {
+                           variable.Value = newVariableValue;
+                       }
+                   }
+               }
+           }
+       }
+
+       //returns the kind of a given objectName from a given bucketName
+       function getObjectKind(bucketName, objectName) {
+           var objectKind = null;
+           $.ajax({
+               'async': false,
+               'type': "GET",
+               'url': "/catalog/buckets/" + bucketName + "/resources/" + objectName + "/revisions",
+               'beforeSend': function(xhr) {
+                   xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+               },
+               'success': function(data) {
+                   console.debug("Request catalog object data", data);
+                   var map = JSON.parse(JSON.stringify(data));
+                   var kind = map[0].kind;
+                   objectKind = kind;
+               },
+               'error': function(data) {
+                   console.log("Failed to get object kind", data);
+               }
+           });
+           return objectKind;
+       }
+
+       //add "Called Workflow" in the contextual menu of the selected task when there are called objects
+       function addCalledWorkflowMenu(element) {
+           $("#called-workflow").hide();
+           var currentTaskVariables = getTaskVariablesCallingWorkflowsInModel(element);
+           if (Object.keys(currentTaskVariables).length > 0) {
+               $("#called-workflow").show();
+           }
+       }
+
+       //add "arrow" icons to the tasks that call other objects
+       function updateIconsOnTasksCallingObjects(element) {
+           element.find("#called-icon").removeClass("glyphicon glyphicon-share-alt");
+           var currentTaskVariables = getTaskVariablesCallingWorkflowsInModel(element);
+           if (Object.keys(currentTaskVariables).length > 0) {
+               element.find("#called-icon").addClass("glyphicon glyphicon-share-alt");
+           }
+       }
+
+       //parse the given string and return an object of 3 elements (bucketName, objectName, objectRevision)
+       function getCalledObjectDetails(variableValue) {
+           var calledObjectDetails = [];
+           calledObjectDetails["bucketName"] = variableValue.substr(0, variableValue.indexOf('/'));
+           calledObjectDetails["objectName"] = variableValue.substr(variableValue.indexOf('/') + 1);
+           if (calledObjectDetails["objectName"].includes("/")) {
+               calledObjectDetails["objectRevision"] = calledObjectDetails["objectName"].substr(calledObjectDetails["objectName"].indexOf('/') + 1);
+               calledObjectDetails["objectName"] = calledObjectDetails["objectName"].substr(0, calledObjectDetails["objectName"].indexOf('/'));
+           }
+           return calledObjectDetails;
+       }
+
+       //Returns a key value array (from the model) containing the list of PA:CATALOG_OBJECT variables of the input element task
+       //The returned form is: taskVariables[TASK_NAME:VARIABLE_NAME] = Variable Object (containing the variable Name, Value, and Model)
+       function getTaskVariablesCallingWorkflowsInModel(element) {
+           var taskVariables = [];
+           var studioApp = require('StudioApp');
+           var tasks = studioApp.models.jobModel.tasks;
+           var TasksArray = [];
+           for (var i = 0; i < tasks.length; i++) {
+               TasksArray[i] = tasks[i];
+           }
+           for (var i = 0; i < TasksArray.length; i++) {
+               var task = TasksArray[i];
+               var taskname = element.find(".task-name").text().trim()
+               if (task.has('Variables') && task.get('Task Name') == taskname) {
+                   var variables = task.get('Variables');
+                   for (var j = 0; j < variables.length; j++) {
+                       var variable = variables[j];
+                       if (variable.Model != null && variable.Model.includes("PA:CATALOG_OBJECT")) {
+                           taskVariables[task.get('Task Name') + ":" + variable.Name] = variable;
+                       }
+                   }
+               }
+           }
+           return taskVariables;
+       }
 })
