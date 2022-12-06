@@ -97,9 +97,9 @@ define(
 
             this.model.on("invalid", this.setInvalid, this);
             var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
-            this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="'
-                + description.replace(/"/g,'&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">'
-                + this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i id="called-icon"></i></a></div>');
+            this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="' +
+                description.replace(/"/g, '&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">' +
+                this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i id="called-icon"></i></a></div>');
 
             //we add an arrow Icon to special tasks that contain at least one PA:CATALOG_OBJECT variable
             updateIconsOnTasksCallingObjects(this.element);
@@ -193,8 +193,8 @@ define(
         },
 
         //we update the task icons when we add/remove a PA:CATALOG_OBJECT variable
-        updateButtonRightIcon: function (changed) {
-           updateIconsOnTasksCallingObjects(this.element);
+        updateButtonRightIcon: function(changed) {
+            updateIconsOnTasksCallingObjects(this.element);
         },
 
         /**
@@ -552,25 +552,26 @@ define(
             var endpointTarget = view.addTargetEndPoint('loop')
             jsPlumb.connect({source: endpointSource, target: endpointTarget, overlays: this.overlays()});
         },
-        render: function () {
+        render: function() {
             var that = this;
             ViewWithProperties.prototype.render.call(this);
             //fill up the modal of called workflows and objects when we click on the "arrow" icon on the buttom right
             this.$el.find("#called-icon-a").on("click", function() {
-            generateCalledWorkflowModal(that.$el);
-            //show up the modal
-            $('#called-workflow-modal').modal();
+                generateCalledWorkflowModal(that.$el);
+                //show up the modal
+                $('#called-workflow-modal').modal();
             });
 
-           //fill up the modal of called workflows and objects when we click on the contextual menu "Called Workflow"
-           $("#called-workflow").click(function(event) {
-           if(that.$el.hasClass("selected-task")){
-               //fill up the modal of called workflows and objects
-               generateCalledWorkflowModal(that.$el);
-               //show up the modal
-               $('#called-workflow-modal').modal();
-           }});
-            this.$el.mousedown(function (e) {
+            //fill up the modal of called workflows and objects when we click on the contextual menu "Called Workflow"
+            $("#called-workflow").click(function(event) {
+                if (that.$el.hasClass("selected-task")) {
+                    //fill up the modal of called workflows and objects
+                    generateCalledWorkflowModal(that.$el);
+                    //show up the modal
+                    $('#called-workflow-modal').modal();
+                }
+            });
+            this.$el.mousedown(function(e) {
                 if (!e.ctrlKey && !that.$el.hasClass("selected-task")) {
                     $(".selected-task").removeClass("selected-task");
                 }
@@ -582,38 +583,38 @@ define(
                     // selecting the current task
                     that.$el.addClass("selected-task");
                     $('.selected-task').on('contextmenu', function(e) {
-                    //add the contextual menu "Called Workflow"
-                    addCalledWorkflowMenu(that.$el);
-                     var top = that.$el[0].offsetTop + 54;
-                     var left = that.$el[0].offsetLeft + 50;
-                     $(".context-menu-canvas").hide();
-                     $(".context-menu-task").css({
-                       top: top,
-                       left: left
-                     }).show();
-                     return false; //blocks default Webbrowser right click menu
-                   }).on("click", function() {
-                     $(".context-menu-task").hide();
-                   });
-                   $("#workflow-designer, #breadcrumb-list-workflows").on("click", function() {
-                                                                          $(".context-menu-task").hide();
-                                                                        });
+                        //add the contextual menu "Called Workflow"
+                        addCalledWorkflowMenu(that.$el);
+                        var top = that.$el[0].offsetTop + 54;
+                        var left = that.$el[0].offsetLeft + 50;
+                        $(".context-menu-canvas").hide();
+                        $(".context-menu-task").css({
+                            top: top,
+                            left: left
+                        }).show();
+                        return false; //blocks default Webbrowser right click menu
+                    }).on("click", function() {
+                        $(".context-menu-task").hide();
+                    });
+                    $("#workflow-designer, #breadcrumb-list-workflows").on("click", function() {
+                        $(".context-menu-task").hide();
+                    });
 
-                   $(".context-menu-task li").on("click", function() {
-                     $(".context-menu-task").hide();
-                   });
+                    $(".context-menu-task li").on("click", function() {
+                        $(".context-menu-task").hide();
+                    });
                 }
 
                 $(".active-task").removeClass("active-task");
                 that.$el.addClass("active-task");
 
                 //Show task Implementation of the selected Task after double click
-                that.$el.dblclick(function(){
-                   //Hide the current panel
-                   $('.panel-body.in').collapse('hide')
-                   //Show task implementation
-                   $('#accordion-properties > div:nth-child(4)').children().last().collapse('show')
-               })
+                that.$el.dblclick(function() {
+                    //Hide the current panel
+                    $('.panel-body.in').collapse('hide')
+                    //Show task implementation
+                    $('#accordion-properties > div:nth-child(4)').children().last().collapse('show')
+                })
                 e.stopPropagation();
 
             })
@@ -631,7 +632,7 @@ define(
                var currentTaskName = key.split(":")[0];
                var currentVariable = currentTaskVariables[key];
                var hrefEyeIcon;
-               if (currentVariable.Value != "" && currentVariable.Value != null) {
+               if (currentVariable.Value) {
                    var calledObjectDetails = getCalledObjectDetails(currentVariable.Value)
                    var objectKind = getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                    if (objectKind == 'Workflow/standard' || objectKind == 'Workflow/psa') {
@@ -675,6 +676,7 @@ define(
                    var newBucketName = splitRawUrl[1];
                    var newObjectName = splitRawUrl[3];
                    var newRevisionId = "";
+                   //revision is added at the 4th and 5th element of splitRawUrl
                    if (splitRawUrl.length > 4) {
                        newRevisionId = splitRawUrl[5];
                    }
@@ -785,7 +787,7 @@ define(
 
        //parse the given string and return an object of 3 elements (bucketName, objectName, objectRevision)
        function getCalledObjectDetails(variableValue) {
-           var calledObjectDetails = [];
+           var calledObjectDetails = {};
            calledObjectDetails["bucketName"] = variableValue.substr(0, variableValue.indexOf('/'));
            calledObjectDetails["objectName"] = variableValue.substr(variableValue.indexOf('/') + 1);
            if (calledObjectDetails["objectName"].includes("/")) {
@@ -798,7 +800,7 @@ define(
        //Returns a key value array (from the model) containing the list of PA:CATALOG_OBJECT variables of the input element task
        //The returned form is: taskVariables[TASK_NAME:VARIABLE_NAME] = Variable Object (containing the variable Name, Value, and Model)
        function getTaskVariablesCallingWorkflowsInModel(element) {
-           var taskVariables = [];
+           var taskVariables = {};
            var studioApp = require('StudioApp');
            var tasks = studioApp.models.jobModel.tasks;
            var TasksArray = [];
@@ -812,7 +814,7 @@ define(
                    var variables = task.get('Variables');
                    for (var j = 0; j < variables.length; j++) {
                        var variable = variables[j];
-                       if (variable.Model != null && variable.Model.includes("PA:CATALOG_OBJECT")) {
+                       if (variable.Model && variable.Model.includes("PA:CATALOG_OBJECT")) {
                            taskVariables[task.get('Task Name') + ":" + variable.Name] = variable;
                        }
                    }

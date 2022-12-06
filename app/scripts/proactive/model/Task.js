@@ -472,7 +472,7 @@ define(
                                     }
                                     that.trigger("change:Variables", formValues);
                                 } else {
-                                that.trigger("change:Variables", formValues);
+                                    that.trigger("change:Variables", formValues);
                                 }
                                 delete that.attributes.BackupVariables;
                             }
