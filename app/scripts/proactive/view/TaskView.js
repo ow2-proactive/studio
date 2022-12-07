@@ -670,8 +670,15 @@ define(
                $("#catalog-get-browse-button").show();
                $('#catalog-get-modal').modal();
 
+               //to avoid to fire the next event two times
+               let firstCall = true
                //action on click on the select button of the get catalog view
                $("#catalog-get-browse-button").click(function(e) {
+                   e.preventDefault();
+                   if (!firstCall) {
+                       return;
+                   }
+                   firstCall = false;
                    var splitRawUrl = ($(($("#catalog-get-revisions-table .catalog-selected-row"))[0])).data("rawurl").split('/');
                    var newBucketName = splitRawUrl[1];
                    var newObjectName = splitRawUrl[3];
