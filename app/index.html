@@ -424,6 +424,12 @@
                                 Description
                             </a>
                         </li>
+                        <li id="called-workflow">
+                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                                <i class="glyphicon glyphicon-share-alt called-description-container"></i>
+                                Called Workflow
+                            </a>
+                        </li>
                 </ul>
                 <ul class="dropdown-menu context-menu-canvas">
                         <li class="copy-task">
@@ -516,6 +522,9 @@
                     Import
                 </button>
                 <button id="catalog-get-select-button" class="btn btn-primary" aria-hidden="true">
+                    Select
+                </button>
+                <button id="catalog-get-browse-button" class="btn btn-primary" aria-hidden="true">
                     Select
                 </button>
                 <button id="catalog-get-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
@@ -655,6 +664,64 @@
             </div>
             <div class="modal-footer">
                 <button id="task-description-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="called-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 910px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 style="text-align: center;">Called Workflows and Objects</h3>
+            </div>
+            <div style="height: 270px; overflow: auto; padding-left: 35px">
+                &nbsp;&nbsp;
+                <table id="called-description-container-table" style="width: 100%;">
+                    <tr>
+                        <td style="width: 260px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div class="pull-left" style="font-weight: bold;padding-left: 15px;">Variable</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                        <td style="width: 390px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div class="pull-left" style="font-weight: bold;padding-left: 15px;">Called Object</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                        <td style="width: 200px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div class="pull-left" style="font-weight: bold;padding-left: 15px;">Change</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                        <td style="width: 200px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div class="pull-left" style="font-weight: bold;padding-left: 15px;">Type</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                        <td style="width: 350px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div style="font-weight: bold;text-align: center;padding-left: 15px;">Open</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="called-description-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
                     Close
                 </button>
             </div>

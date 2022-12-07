@@ -97,6 +97,7 @@ define(
             studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
             var zIndexModal = parseInt($("#catalog-get-modal").parents().find(".modal").css("z-index")); // #execute-workflow-modal
             $("#catalog-get-modal").css("z-index", (zIndexModal+1).toString());
+            $("#catalog-get-browse-button").hide();
             $('#catalog-get-modal').modal();
         },
     })

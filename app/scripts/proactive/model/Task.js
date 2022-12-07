@@ -470,6 +470,9 @@ define(
                                     if (form) {
                                         form.setValue(formValues);
                                     }
+                                    that.trigger("change:Variables", formValues);
+                                } else {
+                                    that.trigger("change:Variables", formValues);
                                 }
                                 delete that.attributes.BackupVariables;
                             }
