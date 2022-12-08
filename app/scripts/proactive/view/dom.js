@@ -210,6 +210,7 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             studioApp.views.catalogGetView.setKind("workflow/standard", "Workflow");
+            $("#catalog-get-browse-button").hide();
             studioApp.views.catalogGetView.render();
             $('#catalog-get-modal').modal();
         });

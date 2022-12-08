@@ -645,7 +645,7 @@ define(
                    currentVariable.Value = "";
                    objectKind = "";
                }
-               var markup = "<tr><td>" + currentVariable.Name + "</td><td>" + currentVariable.Value + "</td><td><button title='Select one catalog object' class='called-catalogobject-button btn' type='button' style='background-color:Transparent'><img src='images/catalog-portal.png' height='20'></button></td><td>" + objectKind + "</td><td style='text-align: center'>" + hrefEyeIcon + "</td></tr>";
+               var markup = "<tr><td>" + currentVariable.Name + "</td><td>" + currentVariable.Value + "</td><td><button title='Select one catalog object' class='called-catalogobject-button btn' type='button' style='background-color:Transparent'><img src='images/catalog-portal.png' height='20'></button></td><td>" + objectKind + "</td><td style='text-align: center'>" + hrefEyeIcon + "</td><td style='display:none;'>" + currentVariable.Model + "</td></tr>";
                $("#called-description-container-table").append(markup);
            }
            //event to activate the visualization on another tab
@@ -657,10 +657,16 @@ define(
                var studioApp = require('StudioApp');
                var parentVariableValue = $(event.currentTarget).parent().parent().children()[1].innerHTML;
                var parentVariableName = $(event.currentTarget).parent().parent().children()[0].innerHTML;
+               var parentVariableModel = $(event.currentTarget).parent().parent().children()[5].innerHTML;
                var parentObjectDetails = getCalledObjectDetails(parentVariableValue);
 
                studioApp.views.catalogGetView.setKind("all", "Object");
                studioApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
+               var matches = parentVariableModel.match(/\((.*)\)/); //matches[1] contains the value between the parentheses
+               if (matches && matches.length > 1) {
+                   var params = matches[1].split(',');
+                   studioApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
+               }
                studioApp.views.catalogGetView.render(parentObjectDetails["bucketName"], parentObjectDetails["objectName"]);
                var previousZIndex = $("#catalog-get-modal").css("z-index");
                studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
