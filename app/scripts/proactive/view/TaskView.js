@@ -632,20 +632,25 @@ define(
                var currentTaskName = key.split(":")[0];
                var currentVariable = currentTaskVariables[key];
                var hrefEyeIcon;
+               var variablePathValue = "<td>" + currentVariable.Value + "</td>";
                if (currentVariable.Value) {
                    var calledObjectDetails = getCalledObjectDetails(currentVariable.Value)
                    var objectKind = getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                    if (objectKind == 'Workflow/standard' || objectKind == 'Workflow/psa') {
                        hrefEyeIcon = "<a href='javascript:void(0)' class='open-in-studio' ><i title='Open the workflow in a new Studio Tab' class='visu-icon glyphicon glyphicon-eye-open'></i></a>"
+                   } else if (objectKind == null){
+                       objectKind = "";
+                       variablePathValue = "<td title='The provided workflow/object path does not exist in the Catalog' style='color: red;'>" + currentVariable.Value + "</td>";
+                       hrefEyeIcon = "<i title='The selected workflow or object does not exist' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>";
                    } else {
                        hrefEyeIcon = "<i title='You cannot open non-workflows objects in the Studio' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
                    }
                } else {
                    hrefEyeIcon = "<i title='You cannot open empty objects in the Studio, select a catalog object first' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
-                   currentVariable.Value = "";
+                   variablePathValue = "<td></td>";
                    objectKind = "";
                }
-               var markup = "<tr><td>" + currentVariable.Name + "</td><td>" + currentVariable.Value + "</td><td><button title='Select one catalog object' class='called-catalogobject-button btn' type='button' style='background-color:Transparent'><img src='images/catalog-portal.png' height='20'></button></td><td>" + objectKind + "</td><td style='text-align: center'>" + hrefEyeIcon + "</td><td style='display:none;'>" + currentVariable.Model + "</td></tr>";
+               var markup = "<tr><td>" + currentVariable.Name + "</td>" + variablePathValue + "<td><button title='Select one catalog object' class='called-catalogobject-button btn' type='button' style='background-color:Transparent'><img src='images/catalog-portal.png' height='20'></button></td><td>" + objectKind + "</td><td style='text-align: center'>" + hrefEyeIcon + "</td><td style='display:none;'>" + currentVariable.Model + "</td></tr>";
                $("#called-description-container-table").append(markup);
            }
            //event to activate the visualization on another tab
@@ -714,6 +719,7 @@ define(
                    }
                    //update the icon based on the new kind
                    $(event.currentTarget).parent().parent().children()[4].innerHTML = SelectedHrefEyeIcon;
+                   $(event.currentTarget).parent().parent().children().css("color", "#333");
                    //update the visualization
                    visuIconEvent();
                    //click again on the current task to refresh variables with the new model values
