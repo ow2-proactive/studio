@@ -624,7 +624,7 @@ define(
     )
 
        function generateCalledWorkflowModal(element) {
-       `   //remove the previous task name from the modal title if it exists
+           //remove the previous task name from the modal title if it exists
            $('#called-workflows-title').find("span").remove();
            //add the current task name to the modal title
            $("#called-workflows-title").append("<span style='background-color: #DCDCDC;'>"+element.find(".task-name").text().trim()+"</span>");
