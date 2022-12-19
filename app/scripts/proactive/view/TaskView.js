@@ -624,6 +624,10 @@ define(
     )
 
        function generateCalledWorkflowModal(element) {
+       `   //remove the previous task name from the modal title if it exists
+           $('#called-workflows-title').find("span").remove();
+           //add the current task name to the modal title
+           $("#called-workflows-title").append("<span style='background-color: #DCDCDC;'>"+element.find(".task-name").text().trim()+"</span>");
            //delete all table rows except the first
            $('#called-description-container-table').find("tr:gt(0)").remove();
            //get current task variables that calls another workflow or object from the model
@@ -692,7 +696,8 @@ define(
                    firstCall = false;
                    var splitRawUrl = ($(($("#catalog-get-revisions-table .catalog-selected-row"))[0])).data("rawurl").split('/');
                    var newBucketName = splitRawUrl[1];
-                   var newObjectName = splitRawUrl[3];
+                   //we use decode to preserve the variable references inside the objects name
+                   var newObjectName = decodeURIComponent(splitRawUrl[3]);
                    var newRevisionId = "";
                    //revision is added at the 4th and 5th element of splitRawUrl
                    if (splitRawUrl.length > 4) {
