@@ -273,7 +273,7 @@ define(
 
             //when you select an object revision from the Import modal, its objectName is already encoded.
             var bucketName = splitRawUrl[1];
-            var objectName = splitRawUrl[3];
+            var objectName = decodeURIComponent(splitRawUrl[3]);
             var revisionId;
             if (splitRawUrl.length > 4) {
                 revisionId = splitRawUrl[5];
