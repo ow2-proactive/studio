@@ -645,12 +645,12 @@ define(
                    } else if (objectKind == null){
                        objectKind = "";
                        variablePathValue = "<td title='The provided workflow/object path does not exist in the Catalog' style='color: red;'>" + currentVariable.Value + "</td>";
-                       hrefEyeIcon = "<i title='The selected workflow or object does not exist' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>";
+                       hrefEyeIcon = "<i title='The selected workflow does not exist in the Catalog' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>";
                    } else {
                        hrefEyeIcon = "<i title='You cannot open non-workflows objects in the Studio' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
                    }
                } else {
-                   hrefEyeIcon = "<i title='You cannot open empty objects in the Studio, select a catalog object first' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
+                   hrefEyeIcon = "<i title='You cannot open empty objects in the Studio, select a workflow first' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>"
                    variablePathValue = "<td></td>";
                    objectKind = "";
                }
