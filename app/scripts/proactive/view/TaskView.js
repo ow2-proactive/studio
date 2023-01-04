@@ -755,9 +755,9 @@ define(
                     if (currentVariable.Value) {
                         var calledObjectDetails = this.getCalledObjectDetails(currentVariable.Value)
                         var objectKind = this.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
-                        if (objectKind == 'Workflow/standard' || objectKind == 'Workflow/psa') {
+                        if (objectKind.indexOf('Workflow') == 0) {
                             hrefEyeIcon = "<a href='javascript:void(0)' class='open-in-studio' ><i title='Open the workflow in a new Studio Tab' class='visu-icon glyphicon glyphicon-eye-open'></i></a>"
-                        } else if (objectKind == null) {
+                        } else if (objectKind == "null") {
                             objectKind = "";
                             variablePathValue = "<td title='The provided workflow/object path does not exist in the Catalog' style='color: red;'>" + currentVariable.Value + "</td>";
                             hrefEyeIcon = "<i title='The selected workflow does not exist in the Catalog' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>";
@@ -833,7 +833,7 @@ define(
                         //update the variable type based on the new object kind
                         $(event.currentTarget).parent().parent().children()[3].innerHTML = selectedObjectKind;
                         var SelectedHrefEyeIcon;
-                        if (selectedObjectKind == 'Workflow/standard' || selectedObjectKind == 'Workflow/psa') {
+                        if (selectedObjectKind.indexOf('Workflow') == 0) {
                             SelectedHrefEyeIcon = "<a href='javascript:void(0)' class='open-in-studio' ><i title='Open the workflow in a new Studio Tab' class='visu-icon glyphicon glyphicon-eye-open'></i></a>";
                         } else {
                             SelectedHrefEyeIcon = "<i title='You cannot open non-workflows objects in the Studio' class='visu-icon disabled glyphicon glyphicon-eye-close'></i>";
@@ -856,7 +856,7 @@ define(
                     var parentObjectDetails = that.getCalledObjectDetails(parentVariableValue);
                     var url = '/studio/#workflowcatalog/' + parentObjectDetails["bucketName"] + '/workflow/' + parentObjectDetails["objectName"];
                     var parentObjectKind = $(evt.currentTarget).parent().parent().parent().children()[3].innerHTML;
-                    if (parentObjectKind == 'Workflow/standard' || parentObjectKind == 'Workflow/psa') {
+                    if (parentObjectKind.indexOf('Workflow') == 0) {
                         var win = window.open(url);
                     }
                 });
@@ -865,12 +865,12 @@ define(
             updateVariablesCallingWorkflowsInModel: function(currentTaskName, parentVariableName, parentVariableValue, newVariableValue) {
                 var studioApp = require('StudioApp');
                 var tasks = studioApp.models.jobModel.tasks;
-                var TasksArray = [];
+                var tasksArray = [];
                 for (var i = 0; i < tasks.length; i++) {
-                    TasksArray[i] = tasks[i];
+                    tasksArray[i] = tasks[i];
                 }
-                for (var i = 0; i < TasksArray.length; i++) {
-                    var task = TasksArray[i];
+                for (var i = 0; i < tasksArray.length; i++) {
+                    var task = tasksArray[i];
                     if (task.has('Variables') && task.get('Task Name') == currentTaskName) {
                         var variables = task.get('Variables');
                         for (var j = 0; j < variables.length; j++) {
@@ -902,7 +902,7 @@ define(
                         console.log("Failed to get object kind", data);
                     }
                 });
-                return objectKind;
+                return String(objectKind);
             },
             //add "Called Workflow" in the contextual menu of the selected task when there are called objects
             addCalledWorkflowMenu: function(element) {
@@ -937,12 +937,12 @@ define(
                 var taskVariables = {};
                 var studioApp = require('StudioApp');
                 var tasks = studioApp.models.jobModel.tasks;
-                var TasksArray = [];
+                var tasksArray = [];
                 for (var i = 0; i < tasks.length; i++) {
-                    TasksArray[i] = tasks[i];
+                    tasksArray[i] = tasks[i];
                 }
-                for (var i = 0; i < TasksArray.length; i++) {
-                    var task = TasksArray[i];
+                for (var i = 0; i < tasksArray.length; i++) {
+                    var task = tasksArray[i];
                     var taskname = element.find(".task-name").text().trim()
                     if (task.has('Variables') && task.get('Task Name') == taskname) {
                         var variables = task.get('Variables');
