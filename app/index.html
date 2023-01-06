@@ -1,12 +1,16 @@
 <!doctype html>
 <!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<html class="no-js lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
 <!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<html class="no-js lt-ie9 lt-ie8">
+<![endif]-->
 <!--[if IE 8]>
-<html class="no-js lt-ie9"> <![endif]-->
+<html class="no-js lt-ie9">
+<![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js"> <!--<![endif]-->
+<html class="no-js">
+<!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,27 +30,22 @@
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="libs/components-font-awesome/css/fontawesome-all.css"/>
     <!-- endbower -->
-
     <link href="libs/pnotify/dist/pnotify.css" rel="stylesheet" type="text/css"/>
     <link href="libs/pnotify/dist/pnotify.buttons.css" rel="stylesheet" type="text/css"/>
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/studio.css -->
     <link rel="stylesheet" href="styles/login.css">
     <link rel="stylesheet" href="styles/studio.css">
-
-
     <script src="studio-conf.js"></script>
-
     <!-- endbuild -->
 </head>
 <body data-library="jquery" style="zoom: 1;display:none">
 <!--[if lt IE 10]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-    your browser</a> to improve your experience.</p>
+    your browser</a> to improve your experience.
+</p>
 <![endif]-->
-
 <div id="navbar-fixed" class="navbar navbar-default navbar-fixed-top" role="navigation">
-
     <div class="navbar-header" style="min-width:100%;">
         <div class="pull-left" style="display: inline-flex; margin-bottom: 5px">
             <div id = "ae-logo">
@@ -65,14 +64,12 @@
             </div>
         </div>
         <div id = "shortcuts-toolbar" class="btn-toolbar pull-right" role="toolbar">
-
             <!-- CUSTOM BRAND LOGO -->
             <div id="powered-by-logo" class="btn-group pa-shortcuts" style="width: auto!important; margin-right:50px">
                 <a class="pa-shortcuts" href="/doc" target="_blank" style="width: auto!important">
                     <img src="../assets/image/custom-logo.png" style="height:39px">
                 </a>
             </div>
-
             <!-- Automation Dashboard -->
             <div id="automation-dashboard-shortcut" class="btn-group pa-shortcuts" style="width: 188px">
                 <a class="btn btn-small btn-default pa-shortcuts" href="/automation-dashboard/"
@@ -81,7 +78,6 @@
                     <div class="pa-shortcut" style="width: 145px;">Automation Dashboard</div>
                 </a>
             </div>
-
             <!-- Studio -->
             <div id="studio-shortcut" class="btn-group pa-shortcuts" style="width: 146px">
                 <a class="btn btn-small btn-default pa-shortcuts active" href="#">
@@ -89,7 +85,6 @@
                     <div class="pa-shortcut" style="width: 103px;">Workflow Studio</div>
                 </a>
             </div>
-
             <!-- Scheduler Portal -->
             <div id="scheduler-portal-shortcut" class="btn-group pa-shortcuts" style="width: 214px">
                 <a class="btn btn-small btn-default pa-shortcuts" href="/scheduler/" target="/scheduler/">
@@ -97,7 +92,6 @@
                     <div class="pa-shortcut" style="width: 171px;">Scheduling & Orchestration</div>
                 </a>
             </div>
-
             <!-- Resource Manager -->
             <div id="rm-portal-shortcut" class="btn-group pa-shortcuts" style="width: 161px">
                 <a class="btn btn-small btn-default pa-shortcuts" href="/rm/" target="/rm/">
@@ -110,14 +104,10 @@
             </div>
         </div>
     </div>
-
     <div class="navbar-header">
-    <!--div class="collapse navbar-collapse"-->
-
+        <!--div class="collapse navbar-collapse"-->
         <!-- MENU BAR -->
-
         <ul id="menu-bar" class="nav navbar-nav pull-left">
-
             <!-- File -->
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" id="file-dropdown">File</a>
@@ -166,10 +156,10 @@
                     <li>
                         <a id="global-files-button" href="javascript:void(0)" class="pointer"
                            title="Browse, Upload and Download Global Space Files">
-                            <span class="fa-stack fa-xxs" aria-hidden="true">
-                                <i class="fa fa-folder fa-stack-2x"></i>
-                                <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
-                            </span>
+                                 <span class="fa-stack fa-xxs" aria-hidden="true">
+                                 <i class="fa fa-folder fa-stack-2x"></i>
+                                 <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                                 </span>
                             Manage Global Files
                         </a>
                     </li>
@@ -177,30 +167,30 @@
                     <li>
                         <a id="user-files-button" href="javascript:void(0)" class="pointer"
                            title="Browse, Upload and Download User Space Files">
-                            <span class="fa-stack fa-xxs" aria-hidden="true">
-                                <i class="fa fa-folder fa-stack-2x"></i>
-                                <i class="fa fa-user fa-stack-1x fa-inverse"></i>
-                            </span>
+                                 <span class="fa-stack fa-xxs" aria-hidden="true">
+                                 <i class="fa fa-folder fa-stack-2x"></i>
+                                 <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+                                 </span>
                             Manage User Files
                         </a>
                     </li>
-
                 </ul>
             </li>
-
             <!-- Edit -->
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" id="edit-dropdown">Edit</a>
                 <ul class="dropdown-menu">
                     <li><a id="clear-button" href="#" class="pointer" title="Clear current workflow">
-                        <i class="fas fa-trash-alt"></i> Clear</a></li>
+                        <i class="fas fa-trash-alt"></i> Clear</a>
+                    </li>
                     <li><a id="undo-button" href="#" class="pointer">
-                        <i class="fas fa-undo"></i> Undo</a></li>
+                        <i class="fas fa-undo"></i> Undo</a>
+                    </li>
                     <li><a id="redo-button" href="#" class="pointer">
-                        <i class="fas fa-redo"></i> Redo</a></li>
+                        <i class="fas fa-redo"></i> Redo</a>
+                    </li>
                 </ul>
             </li>
-
             <!-- View -->
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" id="view-dropdown">View</a>
@@ -218,7 +208,6 @@
                     </li>
                 </ul>
             </li>
-
             <!-- Catalog -->
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown" id="catalog-dropdown">Catalog</a>
@@ -237,7 +226,6 @@
                     </li>
                 </ul>
             </li>
-
             <!-- Help -->
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown">Help</a>
@@ -262,15 +250,11 @@
                     </li>
                 </ul>
             </li>
-
-        </ul>  <!-- END MENU BAR -->
-
+        </ul>
+        <!-- END MENU BAR -->
         <!-- TOOLBAR -->
-
         <div id="tool-bar" class="btn-toolbar pull-left" role="toolbar">
-
             <li class="divider-vertical"></li>
-
             <!-- GROUP 1 -->
             <div class="btn-group pa-tools">
                 <!-- Execute -->
@@ -289,9 +273,7 @@
                     <i class="glyphicon glyphicon-calendar"></i>
                 </a>
             </div>
-
             <div class="divider-vertical"></div>
-
             <!-- GROUP 2 -->
             <div class="btn-group pa-tools">
                 <!-- Save -->
@@ -307,9 +289,7 @@
                     <i class="fas fa-file-export"></i>
                 </a>
             </div>
-
             <div class="divider-vertical"></div>
-
             <!-- GROUP 3 -->
             <div class="btn-group pa-tools">
                 <!-- Clear -->
@@ -325,40 +305,35 @@
                     <i class="fas fa-redo"></i>
                 </a>
             </div>
-
             <div class="divider-vertical"></div>
-
             <!-- GROUP 4 -->
             <div class="btn-group pa-tools">
                 <!-- Global space file browser -->
                 <a id="global-files-button-tool" href="javascript:void(0)" class="pointer pa-tool-btn" title="Browse, Upload and Download Global Space Files">
-                    <span class="fa-stack fa-sm" aria-hidden="true">
-                        <i class="fa fa-folder fa-stack-2x"></i>
-                        <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
-                    </span>
+                           <span class="fa-stack fa-sm" aria-hidden="true">
+                           <i class="fa fa-folder fa-stack-2x"></i>
+                           <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                           </span>
                 </a>
                 <!-- User space file browser -->
                 <a id="user-files-button-tool" href="javascript:void(0)" class="pointer pa-tool-btn" title="Browse, Upload and Download User Space Files">
-                    <span class="fa-stack fa-sm" aria-hidden="true">
-                        <i class="fa fa-folder fa-stack-2x"></i>
-                        <i class="fa fa-user fa-stack-1x fa-inverse"></i>
-                    </span>
+                           <span class="fa-stack fa-sm" aria-hidden="true">
+                           <i class="fa fa-folder fa-stack-2x"></i>
+                           <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+                           </span>
                 </a>
             </div>
-        </div> <!-- END TOOLBAR -->
-
+        </div>
+        <!-- END TOOLBAR -->
         <!-- Proactive Nostalgia -->
         <div class="btn-group pull-right extra-logos">
             <a class="pa-logo" href="http://proactive.inria.fr" target="/rm/">
                 <img src="images/proactive_40.png" class="right-padding" style="height:25px">
             </a>
         </div>
-
     </div>
-
     <div style="height: 3px; background: #E86D1F; margin-top: 1px;"></div>
 </div>
-
 <table id="body-container" style="min-width:100%;height:100%">
     <tbody style="height:100%">
     <tr style="height:100%">
@@ -369,22 +344,33 @@
             <div id="workflow-designer-outer" tabindex="0">
                 <table id="tools-table">
                     <tr>
+                        <td>
+                                <span id="span-called-draggable" class="dropdown open" style="position: relative;">
+                                    <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-called"><i title="Browse the workflows that are calling the current workflow in the Catalog" class="glyphicon glyphicon-circle-arrow-down"></i> Called by<span class="caret"></span></span>
+                                    <ul id="ul-called" class="dropdown-menu templates-menu" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
+                                    </ul>
+                                </span>
+                        </td>
+                        <td>
+                                <span id="span-calling-draggable" class="dropdown open" style="position: relative;">
+                                    <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-calling"><i title="Browse the workflows that are being called by the current workflow in the Catalog" class="glyphicon glyphicon-circle-arrow-up"> </i> Calling<span class="caret"></span></span>
+                                    <ul id="ul-calling" class="dropdown-menu templates-menu" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
+                                    </ul>
+                                </span>
+                        </td>
                         <td id="palette-container">
                             <div style="display: inline-flex;">
                                 <div class="btn-group">
-                                    <button id="layout-button" type="button" class="btn"
-                                            title="Auto layout">
+                                    <button id="layout-button" type="button" class="btn" title="Auto layout">
                                         <i class="glyphicon glyphicon-align-center"></i>
                                     </button>
                                 </div>
                                 <div id="palette-container-div"></div>
                                 <div class="btn-group">
-                                    <button id="add-bucket-button" type="button" class="btn"
-                                            title="Add bucket">
+                                    <button id="add-bucket-button" type="button" class="btn" title="Add bucket">
                                         <i class="glyphicon glyphicon-plus"></i>
                                     </button>
-                                    <button id="pin-palette-button" type="button" class="btn"
-                                            title="Pin Catalog menu">
+                                    <button id="pin-palette-button" type="button" class="btn" title="Pin Catalog menu">
                                         <img width="13px" src="images/icon-unpin.png">
                                     </button>
                                 </div>
@@ -393,94 +379,89 @@
                     </tr>
                 </table>
                 <ul class="dropdown-menu context-menu-task">
-                        <li class="copy-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="far fa-copy"></i>
-                                Copy
-                            </a>
-                        </li>
-
-                        <li class="cut-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="fas fa-cut"></i>
-                                Cut
-                            </a>
-                        </li>
-                        <li class="select-all">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="fa fa-check-square"></i>
-                                Select All
-                            </a>
-                        </li>
-                        <li class="delete-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="far fa-trash-alt"></i>
-                                Delete
-                            </a>
-                        </li>
-                        <li class="task-descritption">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="glyphicon glyphicon-info-sign"></i>
-                                Description
-                            </a>
-                        </li>
-                        <li id="called-workflow">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="glyphicon glyphicon-share-alt called-description-container"></i>
-                                Called Workflow
-                            </a>
-                        </li>
+                    <li class="copy-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="far fa-copy"></i>
+                            Copy
+                        </a>
+                    </li>
+                    <li class="cut-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="fas fa-cut"></i>
+                            Cut
+                        </a>
+                    </li>
+                    <li class="select-all">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="fa fa-check-square"></i>
+                            Select All
+                        </a>
+                    </li>
+                    <li class="delete-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="far fa-trash-alt"></i>
+                            Delete
+                        </a>
+                    </li>
+                    <li class="task-descritption">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="glyphicon glyphicon-info-sign"></i>
+                            Description
+                        </a>
+                    </li>
+                    <li id="called-workflow">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="glyphicon glyphicon-share-alt called-description-container"></i>
+                            Called Workflow
+                        </a>
+                    </li>
                 </ul>
                 <ul class="dropdown-menu context-menu-canvas">
-                        <li class="copy-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="far fa-copy fa-xm" ></i>
-                                Copy
-                            </a>
-                        </li>
-                        <li class="cut-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="fas fa-cut"></i>
-                                Cut
-                            </a>
-                        </li>
-                        <li class="paste-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="fa fa-paste" ></i>
-                                Paste
-                            </a>
-                        </li>
-                        <li class="select-all">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="fa fa-check-square"></i>
-                                Select All
-                            </a>
-                        </li>
-                        <li class="delete-task">
-                            <a class="context-menu__item" href="javascript:void(0)" class="pointer">
-                                <i class="far fa-trash-alt"></i>
-                                Delete
-                            </a>
-                        </li>
+                    <li class="copy-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="far fa-copy fa-xm"></i>
+                            Copy
+                        </a>
+                    </li>
+                    <li class="cut-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="fas fa-cut"></i>
+                            Cut
+                        </a>
+                    </li>
+                    <li class="paste-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="fa fa-paste"></i>
+                            Paste
+                        </a>
+                    </li>
+                    <li class="select-all">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="fa fa-check-square"></i>
+                            Select All
+                        </a>
+                    </li>
+                    <li class="delete-task">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="far fa-trash-alt"></i>
+                            Delete
+                        </a>
+                    </li>
                 </ul>
             </div>
         </td>
     </tr>
     </tbody>
 </table>
-
 <form>
     <input type="file" id="import-file" style="display:none"/>
 </form>
-
 <form>
     <input type="file" id="add-file" style="display:none"/>
 </form>
-
 <form>
     <input type="file" id="import-archive-file" style="display:none"/>
 </form>
-
 <div id="xml-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -500,7 +481,6 @@
         </div>
     </div>
 </div>
-
 <div id="catalog-get-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -534,7 +514,6 @@
         </div>
     </div>
 </div>
-
 <div id="catalog-publish-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -556,7 +535,6 @@
         </div>
     </div>
 </div>
-
 <div id="set-templates-secondary-bucket-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="width:30%">
         <div class="modal-content">
@@ -578,7 +556,6 @@
         </div>
     </div>
 </div>
-
 <div id="set-preset-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="width:30%">
         <div class="modal-content">
@@ -600,7 +577,6 @@
         </div>
     </div>
 </div>
-
 <div id="select-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -617,7 +593,6 @@
         </div>
     </div>
 </div>
-
 <div id="select-archive-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -634,7 +609,6 @@
         </div>
     </div>
 </div>
-
 <div id="open-a-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -651,7 +625,6 @@
         </div>
     </div>
 </div>
-
 <div id="task-description-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -670,7 +643,6 @@
         </div>
     </div>
 </div>
-
 <div id="called-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="width: 910px">
         <div class="modal-content">
@@ -728,7 +700,6 @@
         </div>
     </div>
 </div>
-
 <div id="publish-current-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -748,7 +719,6 @@
         </div>
     </div>
 </div>
-
 <div id="import-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -769,7 +739,6 @@
         </div>
     </div>
 </div>
-
 <div id="add-workflow-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -789,7 +758,6 @@
         </div>
     </div>
 </div>
-
 <div id="import-catalog-object-confirmation-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -810,7 +778,6 @@
         </div>
     </div>
 </div>
-
 <div id="about-modal" class="modal fade no-padding" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -827,24 +794,22 @@
                         <p>Version: <b id="version"></b></p>
                         <p>Copyright (C) 2007-<span id="current-year"></span>, Activeeon, All rights reserved</p>
                         <script>
-                            var date = document.getElementById("current-year");
-                            date.innerText = (new Date()).getFullYear();
-                        </script>
+                                    var date = document.getElementById("current-year");
+                                    date.innerText = (new Date()).getFullYear();
+                                 </script>
                         <p>Visit <a target="_blank" href="http://proactive.inria.fr/">http://proactive.inria.fr/</a> and
-                            <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a></p>
+                            <a target="_blank" href="http://www.activeeon.com/">http://www.activeeon.com/</a></a>
+                        </p>
                         <p>Contact: +33 (0)9 88 777 660, contact@activeeon.com</p>
                         <p>REST server <a target="_blank" href="" id="restServer"></a></p>
                         <p>REST version <b id="restVersion"></b></p>
                         <p>Studio version <b id="studioVersion"></b></p>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
-
 <div id="execute-workflow-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="min-width: 900px;">
         <div class="modal-content">
@@ -862,14 +827,9 @@
         </div>
     </div>
 </div>
-
 <!--style="overflow:hidden; outline:none"-->
-<div id="third-party-credential-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true">
-</div>
-
-<div id="file-browser-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true">
-</div>
-
+<div id="third-party-credential-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="file-browser-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="plan-workflow-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="min-width: 900px;">
@@ -894,7 +854,6 @@
         </div>
     </div>
 </div>
-
 <div id="full-edit-modal" class="modal fade" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="width:90%;height:90%">
         <div class="modal-content" style="height: 100%;">
@@ -902,10 +861,8 @@
                 <tr>
                     <td style="height:80px">
                         <div class="modal-header">
-
                             <div class="row"
                                  style="width:100%;margin-left: 0px;margin-right: 0px;display: flex;align-items: flex-end;">
-
                                 <div class="col col-md-2 col-lg-2"
                                      style="text-align:left;font-size:18px;margin-bottom: -4px;">
                                     Script Editor
@@ -914,19 +871,24 @@
                                      style="text-align:center;font-size:14px;margin-bottom: -2px;">
                                     <a id="variable_reference_link"
                                        href="#"
-                                       target="_blank">Documentation</a></div>
+                                       target="_blank">Documentation</a>
+                                </div>
                                 <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
                                     <b>Ctrl+Space:</b>
-                                    <i>Auto-Complete</i></div>
+                                    <i>Auto-Complete</i>
+                                </div>
                                 <div class="col col-md-2 col-lg-2" style="text-align:right;font-size:10px;">
                                     <b>[Shift-]Ctrl+F:</b>
-                                    <i>Find[Replace]</i></div>
+                                    <i>Find[Replace]</i>
+                                </div>
                                 <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
                                     <b>Shift-Tab:</b>
-                                    <i>Indent</i></div>
+                                    <i>Indent</i>
+                                </div>
                                 <div class="col col-md-1 col-lg-1" style="text-align:right;font-size:10px;">
                                     <b>Ctrl-/:</b>
-                                    <i>Comment</i></div>
+                                    <i>Comment</i>
+                                </div>
                                 <div class="col col-md-1 col-lg-1"
                                      style="text-align:right;font-size:10px;">
                                     <div class="hover-editor-container">
@@ -977,26 +939,21 @@
                                         </div>
                                         Other Keys
                                     </div>
-
-
                                 </div>
                                 <div class="col col-md-1 col-lg-1"
                                      style="text-align:right;font-size: 18px;margin-bottom: -3px;">
-
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                         ×
                                     </button>
                                 </div>
-
-
                             </div>
                         </div>
                     </td>
                 </tr>
                 <tr class="code-editor-container">
                     <td style="height:99%;min-height:99%;vertical-align: top;">
-                        <textarea id="full-edit-modal-script-content" class="form-control"
-                                  style="width:100%;height:100%"></textarea>
+                                 <textarea id="full-edit-modal-script-content" class="form-control"
+                                           style="width:100%;height:100%"></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -1020,7 +977,6 @@
         </div>
     </div>
 </div>
-
 <div id="confirm-data-loss" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1040,8 +996,6 @@
         </div>
     </div>
 </div>
-
-
 <script data-main="scripts/main" src="libs/requirejs/require.js"></script>
 </body>
 </html>
