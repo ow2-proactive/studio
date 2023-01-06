@@ -327,6 +327,7 @@ define(
         }
 
         $("#menu-calling").click(function(event) {
+            event.preventDefault();
             //make the calling dropdown draggable
             $("#span-calling-draggable").draggable({
                 helper: "original",
@@ -347,7 +348,6 @@ define(
                 pinUnpin($("#ul-calling"), $("#li-pin-calling"));
             });
 
-            event.preventDefault();
             var studioApp = require('StudioApp');
             var tasks = studioApp.models.jobModel.tasks;
             var tasksArray = [];
@@ -379,14 +379,14 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + ''+taskName + '</a><a style="display: table-cell; padding:3px 10px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><i class="glyphicon glyphicon-eye-open"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><i class="glyphicon glyphicon-eye-open"></i></a></li>');
                                 } else if (objectKind == "null") {
-                                    var menuItemCalling = $(liCallingStyle + ''+taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
-                                    var menuItemCalling = $(liCallingStyle + ''+taskName + '</a><a style="display: table-cell; padding:3px 10px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="You cannot open non-workflows objects in the Studio" class="glyphicon glyphicon-eye-close"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="You cannot open non-workflows objects in the Studio" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 }
                             } else {
-                                var menuItemCalling = $(liCallingStyle + ''+taskName + '</a><a title="The variable calling a catalog object is empty" style="color:red; display: table-cell; padding:3px 10px"> [Empty Catalog Object Variable] </a><a style="display: table-cell;"><i title="You cannot open empty workflows in the Studio, select a workflow first" class="glyphicon glyphicon-eye-close"></i></a></li>');
+                                var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The variable calling a catalog object is empty" style="color:red; display: table-cell; padding:3px 10px"> [Empty Catalog Object Variable] </a><a style="display: table-cell;"><i title="You cannot open empty workflows in the Studio, select a workflow first" class="glyphicon glyphicon-eye-close"></i></a></li>');
                             }
                             $("#ul-calling").append(menuItemCalling);
                         }
@@ -402,6 +402,7 @@ define(
         });
 
         $("#menu-called").click(function(event) {
+            event.preventDefault();
             //make the called by dropdown draggable
             $("#span-called-draggable").draggable({
                 helper: "original",
@@ -422,7 +423,6 @@ define(
                 pinUnpin($("#ul-called"), $("#li-pin"));
             });
 
-            event.preventDefault();
             var studioApp = require('StudioApp');
             //get the workflow name from the model
             var jobName = studioApp.models.jobModel.get("Name");
@@ -447,7 +447,7 @@ define(
                     } else {
                         const calledByWorkflowArray = x.split(",");
                         for (let i = 0; i < calledByWorkflowArray.length; i++) {
-                            var menuItemCalled = $(liCalledStyle +''+ calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i class="glyphicon glyphicon-eye-open"></i></a></a></li>');
+                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i class="glyphicon glyphicon-eye-open"></i></a></a></li>');
                             $("#ul-called").append(menuItemCalled);
                         }
                     }
