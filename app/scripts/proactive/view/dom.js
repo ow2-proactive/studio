@@ -348,7 +348,7 @@ define(
                 pinUnpin($("#ul-calling"), $("#li-pin-calling"));
             });
 
-            var menuHeadersCalling = $('<li class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 230px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
+            var menuHeadersCalling = $('<li id= "menuHeadersCalling" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 230px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
             $("#ul-calling").append(menuHeadersCalling);
 
             var studioApp = require('StudioApp');
@@ -398,6 +398,8 @@ define(
             }
             //If no PA:CATALOG_OBJECT variable is detected, we add a simple message
             if (!isCallingObjects) {
+                //we remove the headers
+                $("#menuHeadersCalling").remove();
                 var menuItemCalling = $(liCallingStyle + 'There are no called workflows or objects</a></li>');
                 $("#ul-calling").append(menuItemCalling);
             }
@@ -426,6 +428,9 @@ define(
                 pinUnpin($("#ul-called"), $("#li-pin"));
             });
 
+            var menuHeadersCalled = $('<li id= "menuHeadersCalled" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 330px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
+            $("#ul-called").append(menuHeadersCalled);
+
             var studioApp = require('StudioApp');
             //get the workflow name from the model
             var jobName = studioApp.models.jobModel.get("Name");
@@ -441,10 +446,11 @@ define(
             var urlCatalog = "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
             //call the rest endpoint to get the list of workflows calling the current workflow
             getWorkflowDependencies(urlCatalog, function(res) {
-                var liCalledStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px">';
+                var liCalledStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px; min-width: 330px">';
                 if (res.called_by) {
                     var x = res.called_by + "";
                     if (x == "") {
+                        $("#menuHeadersCalled").remove();
                         var menuItemCalled = $(liCalledStyle + 'No parent workflows are identified</a></li>');
                         $("#ul-called").append(menuItemCalled);
                     } else {
@@ -455,6 +461,7 @@ define(
                         }
                     }
                 } else {
+                    $("#menuHeadersCalled").remove();
                     var menuItemCalled = $(liCalledStyle + 'The current workflow does not exist in the Catalog</a></li>');
                     $("#ul-called").append(menuItemCalled);
                 }
