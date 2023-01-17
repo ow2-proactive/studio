@@ -731,7 +731,7 @@ define(
                         //Hide the current panel
                         $('.panel-body.in').collapse('hide')
                         //Show task implementation
-                        $('#accordion-properties > div:nth-child(4)').children().last().collapse('show')
+                        $('#accordion-properties > div:nth-child(7)').children().last().collapse('show')
                     })
                     e.stopPropagation();
 
