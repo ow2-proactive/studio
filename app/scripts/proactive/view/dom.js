@@ -382,7 +382,7 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><i class="glyphicon glyphicon-eye-open"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></li>');
                                 } else if (objectKind == "null") {
                                     var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
@@ -456,7 +456,7 @@ define(
                     } else {
                         const calledByWorkflowArray = x.split(",");
                         for (let i = 0; i < calledByWorkflowArray.length; i++) {
-                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i class="glyphicon glyphicon-eye-open"></i></a></a></li>');
+                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></a></li>');
                             $("#ul-called").append(menuItemCalled);
                         }
                     }
