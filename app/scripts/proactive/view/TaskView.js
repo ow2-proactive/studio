@@ -457,7 +457,7 @@ define(
                         'loop': {
                             color: '#316b31',
                             anchorSource: 'TopRight',
-                            anchorTarget: 'BottomRight',
+                            anchorTarget: [1, 1, 1, 1],
                             scope: "loop",
                             overlays: [
                                 ["Arrow", {
