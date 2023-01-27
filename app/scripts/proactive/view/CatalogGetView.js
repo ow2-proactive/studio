@@ -54,6 +54,7 @@ define(
                     } else if (this.inputToImportId.indexOf('_Url') > -1) {
                         $("#get-modal-title").text("Import a Script by reference from the Catalog");
                         $("#confirm-import-object-message").text("You are about to import a script (reference) from the Catalog. If you continue it will replace and remove the current reference.");
+                        $("#catalog-get-browse-button").hide();
                     }
                 } else {
                     $("#get-modal-title").text("Import from the Catalog");
@@ -70,6 +71,9 @@ define(
         setFilter: function(filterKind, filterContentType) {
             this.filterKind = filterKind;
             this.filterContentType = filterContentType;
+        },
+        setObjectNameFilter: function(objNameFilter) {
+            this.objectNameFilter = objNameFilter;
         },
         clearFilter: function(filterKind, filterContentType) {
             this.filterKind = undefined;
@@ -271,7 +275,11 @@ define(
             document.execCommand("copy");
         },
         getPreferenceObjectName: function(){
-            return this.$('#get-object-by-name input').val();
+            if (this.objectNameFilter) {
+                return this.objectNameFilter;
+            } else {
+                return this.$('#get-object-by-name input').val();
+            }
         },
         selectRevision: function(e){
         	var row = $(e.currentTarget);

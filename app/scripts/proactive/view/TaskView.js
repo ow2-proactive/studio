@@ -791,6 +791,9 @@ define(
                     if (matches && matches.length > 1) {
                         var params = matches[1].split(',');
                         studioApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
+                        if (params[3]) {
+                            studioApp.views.catalogGetView.setObjectNameFilter(params[3].replace(/%/g, "")); //filterObjectName
+                        }
                     }
                     studioApp.views.catalogGetView.render(parentObjectDetails["bucketName"], parentObjectDetails["objectName"]);
                     var previousZIndex = $("#catalog-get-modal").css("z-index");
@@ -914,10 +917,10 @@ define(
             },
             //add "arrow" icons to the tasks that call other objects
             updateIconsOnTasksCallingObjects: function(element) {
-                element.find("#called-icon").removeClass("glyphicon glyphicon-share-alt");
+                element.find("#called-icon").removeClass("glyphicon glyphicon-arrow-right");
                 var currentTaskVariables = this.getTaskVariablesCallingWorkflowsInModel(element);
                 if (Object.keys(currentTaskVariables).length > 0) {
-                    element.find("#called-icon").addClass("glyphicon glyphicon-share-alt");
+                    element.find("#called-icon").addClass("glyphicon glyphicon-arrow-right");
                 }
             },
             //parse the given string and return an object of 3 elements (bucketName, objectName, objectRevision)
