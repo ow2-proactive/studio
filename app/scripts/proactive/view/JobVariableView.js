@@ -90,6 +90,9 @@ define(
             if (matches && matches.length > 1) {
                 var params = matches[1].split(',');
                 studioApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
+                if (params[3]) {
+                    studioApp.views.catalogGetView.setObjectNameFilter(params[3].replace(/%/g, "")); //filterObjectName
+                }
             }
             studioApp.views.catalogGetView.render();
 
