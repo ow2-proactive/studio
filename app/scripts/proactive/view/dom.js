@@ -1122,7 +1122,6 @@ define(
 
         $("#confirm-publication-to-catalog").click(function () {
             var studioApp = require('StudioApp');
-            var studioApp = require('StudioApp');
             const genericInformation = studioApp.models.jobModel.get("Generic Info");
             var BucketNameIndex = genericInformation.findIndex(function (gen) {
                 return gen["Property Name"] === "bucketName";
