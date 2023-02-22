@@ -1122,6 +1122,25 @@ define(
 
         $("#confirm-publication-to-catalog").click(function () {
             var studioApp = require('StudioApp');
+            const genericInformation = studioApp.models.jobModel.get("Generic Info");
+            var BucketNameIndex = genericInformation.findIndex(function (gen) {
+                return gen["Property Name"] === "bucketName";
+            })
+            // update generic info
+            if(localStorage.selectBucket && BucketNameIndex !== -1) {
+                genericInformation[BucketNameIndex]["Property Value"] = localStorage.selectBucket;
+                // Update the ui: not the best solution but there's no other option for now
+                $("#workflow-designer").click()
+            } else if( localStorage.selectBucket ) {
+                const genericItem = {
+                    "Property Name": "bucketName",
+                    "Property Value": localStorage.selectBucket
+                }
+                genericInformation.push(genericItem);
+                // Update the ui: not the best solution but there's no other option for now
+                $("#workflow-designer").click()
+            }
+            studioApp.models.jobModel.set("Generic Info", genericInformation);
             studioApp.views.catalogPublishView.publishToCatalog();
         })
         // The aim object of this function is to remove selected tasks
