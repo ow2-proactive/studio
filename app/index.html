@@ -345,21 +345,26 @@
                 <table id="tools-table">
                     <tr>
                         <td>
-                                <span id="span-called-draggable" class="dropdown open" style="position: relative;">
+                                <span id="span-called-draggable" class="dropdown open" style="position: relative;float: left; padding-bottom: 10px">
                                     <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-called"><i title="Browse the workflows that are calling the current workflow in the Catalog" class="glyphicon glyphicon-arrow-down"></i> Called by<span class="caret"></span></span>
-                                    <ul id="ul-called" class="dropdown-menu templates-menu" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
+                                    <ul id="ul-called" class="dropdown-menu templates-menu pipelines" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
+                                    </ul>
+                                </span>
+                            <span id="span-calling-draggable" class="dropdown open" style="position: relative;float: left; padding-bottom: 10px">
+                                    <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-calling"><i title="Browse the workflows that are being called by the current workflow in the Catalog" class="glyphicon glyphicon-arrow-right"> </i> Calling<span class="caret"></span></span>
+                                    <ul id="ul-calling" class="dropdown-menu templates-menu pipelines" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
+                                    </ul>
+                                </span>
+                            <span id="span-reference-draggable" class="dropdown open" style="position: relative;float: left;">
+                                    <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-reference"><i title="Browse the workflows that are being called by the current workflow in the Catalog" class="glyphicon glyphicon-list-alt"> </i> References<span class="caret"></span></span>
+                                    <ul id="ul-reference" class="dropdown-menu templates-menu pipelines" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
                                     </ul>
                                 </span>
                         </td>
-                        <td>
-                                <span id="span-calling-draggable" class="dropdown open" style="position: relative;">
-                                    <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-calling"><i title="Browse the workflows that are being called by the current workflow in the Catalog" class="glyphicon glyphicon-arrow-right"> </i> Calling<span class="caret"></span></span>
-                                    <ul id="ul-calling" class="dropdown-menu templates-menu" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
-                                    </ul>
-                                </span>
+
                         </td>
                         <td id="palette-container">
-                            <div style="display: inline-flex;">
+                            <div style="display: inline-flex;padding-bottom: 50px;">
                                 <div class="btn-group">
                                     <button id="layout-button" type="button" class="btn" title="Auto layout">
                                         <i class="glyphicon glyphicon-align-center"></i>
@@ -413,6 +418,12 @@
                         <a class="context-menu__item" href="javascript:void(0)" class="pointer">
                             <i class="glyphicon glyphicon-arrow-right called-description-container"></i>
                             Called Workflow
+                        </a>
+                    </li>
+                    <li id="referenced-scripts">
+                        <a class="context-menu__item" href="javascript:void(0)" class="pointer">
+                            <i class="glyphicon glyphicon-list-alt referenced-scripts-container"></i>
+                            Script References
                         </a>
                     </li>
                 </ul>
@@ -694,6 +705,42 @@
             </div>
             <div class="modal-footer">
                 <button id="called-description-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="script-reference-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 910px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="script-reference-title" style="text-align: center;">Script References in </h3>
+            </div>
+            <div style="height: 270px; overflow: auto; padding-left: 35px">
+                &nbsp;&nbsp;
+                <table id="script-reference-container-table" style="width: 100%;">
+                    <tr>
+                        <td style="width: 200px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div class="pull-left" style="font-weight: bold;padding-left: 15px;">Section</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                        <td style="width: 600px;">
+                            <fieldset>
+                                <legend class="row">
+                                    <div class="pull-left" style="font-weight: bold;padding-left: 15px;">Script Reference URL</div>
+                                </legend>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="script-reference-close-button" class="btn btn-white" data-dismiss="modal" aria-hidden="true">
                     Close
                 </button>
             </div>

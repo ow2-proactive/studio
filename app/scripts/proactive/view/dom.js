@@ -326,6 +326,118 @@ define(
             });
         }
 
+        $("#menu-reference").click(function(event) {
+            event.preventDefault();
+            //make the reference dropdown draggable
+            $("#span-reference-draggable").draggable({
+                helper: "original",
+                distance: 20,
+                stop: 200
+            });
+            //make the reference dropdown empty
+            $("#ul-reference").empty();
+            //add pin Open as first item in the dropdown
+            var pinOpen = $('<li id="li-pin-reference" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
+            $("#ul-reference").append(pinOpen);
+            var menuElement = $('#ul-reference').parent();
+            if (!menuElement.hasClass('dropdown')) {
+                $("#li-pin-reference").html('<img src="images/icon-unpin.png"> Unpin');
+            }
+            //pinUnpin function pin/unpin the menu
+            $("#li-pin-reference").click(function(event) {
+                pinUnpin($("#ul-reference"), $("#li-pin-reference"));
+            });
+
+            var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
+            $("#ul-reference").append(menuHeadersReference);
+
+            var studioApp = require('StudioApp');
+            var tasks = studioApp.models.jobModel.tasks;
+            var tasksArray = [];
+            for (var i = 0; i < tasks.length; i++) {
+                tasksArray[i] = tasks[i];
+            }
+
+            //isReferencingScripts becomes true when there is at least one called script
+            var isReferencingScripts = false;
+            var liReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 180px;"  class="select-task-reference"><span class="txt">';
+            var liNoReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
+            for (var i = 0; i < studioApp.views.workflowView.taskViews.length; i++) {
+                var taskViewModel = studioApp.views.workflowView.taskViews[i];
+                var currentReferencedScripts = taskViewModel.getTaskReferencingScriptsInModel();
+                if (JSON.stringify(currentReferencedScripts) != "{}") {
+                    isReferencingScripts = true;
+                    for (var key of Object.keys(currentReferencedScripts)) {
+                        var currentTaskName = key.split(":")[0];
+                        var currentScriptType = key.split(":")[1];
+                        var currentUrl = currentReferencedScripts[key].replace("${PA_CATALOG_REST_URL}", window.location.origin);
+
+                        var menuItemReference = $(liReferenceStyle + currentTaskName + '</span></a><a style="display: table-cell; padding:3px 10px;min-width: 150px"> ' + currentScriptType + ' </a><a target="_blank" style="color:#337ab7; display: table-cell;"><div class="input-group" style="display:inline-flex;" id="direct-object-url"> <input tooltip="' + currentUrl + '" type="text" class="form-control" id="reference-object-url-input" ng-disable="true" style=" width: 500px; " value="' + currentUrl + '"> <button class="reference-object-url-button btn btn-default" data-toggle="tooltip" title="Copy to clipboard"> <i class="fa fa-clone"></i> </button> </div></a></li>');
+                        $("#ul-reference").append(menuItemReference);
+                        $(".reference-object-url-button").click(function(event) {
+                            var parent = $(this).closest('#direct-object-url');
+                            var inputCopy = parent.find("#reference-object-url-input");
+                            inputCopy.select();
+                            document.execCommand("copy");
+                        });
+                    }
+                }
+            }
+            $(".select-task-reference").click(function(event) {
+                var parent = $(event.currentTarget).parent().children().children()[0].innerHTML;
+                var existingTasks = $('.task-name .name');
+                existingTasks.each(function(index) {
+                    $(this).parent().parent().removeClass("selected-task");
+                    $(this).parent().parent().removeClass("active-task");
+                    if ($(this).text() == parent) {
+                        $(this).parent().parent().addClass("selected-task");
+                        $(this).parent().parent().addClass("active-task");
+                        $(this).parent().click();
+                    }
+                });
+
+                var parent2 = $(event.currentTarget).parent().children()[1].innerHTML;
+                var index = 1;
+                switch (parent2.trim()) {
+                    case 'Task Implementation':
+                        index = 7;
+                        break;
+                    case 'Pre Script':
+                        index = 8;
+                        break;
+                    case 'Post Script':
+                        index = 8;
+                        break;
+                    case 'Clean Script':
+                        index = 8;
+                        break;
+                    case 'Node Selection Script':
+                        index = 10;
+                        break;
+                    case 'Environment Script':
+                        index = 11;
+                        break;
+                    case 'Control Flow Script':
+                        index = 12;
+                        break;
+                }
+                //Hide the current panel
+                $('.panel-body.in').collapse('hide')
+                //Show the section
+                $('#accordion-properties > div:nth-child(' + index + ')').children().last().collapse('show')
+
+
+            });
+            //If no references are detected, we add a simple message
+            if (!isReferencingScripts) {
+                //we remove the headers
+                $("#menuHeadersReference").remove();
+                var menuItemReference = $(liNoReferenceStyle + 'There are no script references</a></li>');
+                $("#ul-reference").append(menuItemReference);
+            }
+
+        });
+
         $("#menu-calling").click(function(event) {
             event.preventDefault();
             //make the calling dropdown draggable
@@ -359,7 +471,8 @@ define(
             }
             //isCallingObjects becomes true when there is at least one called catalog object
             var isCallingObjects = false;
-            var liCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
+            var liCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 180px;"  class="select-task"><span class="txt">';
+            var liNoCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
             for (var i = 0; i < tasksArray.length; i++) {
                 var task = tasksArray[i];
                 if (task.has('Variables')) {
@@ -382,7 +495,7 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><a style="display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span class="txt"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
                                 } else if (objectKind == "null") {
                                     var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
@@ -400,9 +513,27 @@ define(
             if (!isCallingObjects) {
                 //we remove the headers
                 $("#menuHeadersCalling").remove();
-                var menuItemCalling = $(liCallingStyle + 'There are no called workflows or objects</a></li>');
+                var menuItemCalling = $(liNoCallingStyle + 'There are no called workflows or objects</a></li>');
                 $("#ul-calling").append(menuItemCalling);
             }
+
+            $(".select-task").click(function(event) {
+                var parent = $(event.currentTarget).parent().children().children()[0].innerHTML;
+                var existingTasks = $('.task-name .name');
+                existingTasks.each(function(index) {
+                    $(this).parent().parent().removeClass("selected-task");
+                    $(this).parent().parent().removeClass("active-task");
+                    if ($(this).text() == parent) {
+                        $(this).parent().parent().addClass("selected-task");
+                        $(this).parent().parent().addClass("active-task");
+                        $(this).parent().click();
+                        //Hide the current panel
+                        $('.panel-body.in').collapse('hide')
+                        //Show the section
+                        $('#accordion-properties > div:nth-child(3)').children().last().collapse('show')
+                    }
+                });
+            });
 
         });
 
@@ -456,7 +587,7 @@ define(
                     } else {
                         const calledByWorkflowArray = x.split(",");
                         for (let i = 0; i < calledByWorkflowArray.length; i++) {
-                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></a></li>');
+                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><span class="txt"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></a></li>');
                             $("#ul-called").append(menuItemCalled);
                         }
                     }

@@ -88,6 +88,11 @@ define(
                 }
 
                 this.model.on("change:ScriptExecutable", this.updateIcon, this);
+                this.model.on("change:Pre Script", this.updateReferenceIcon, this);
+                this.model.on("change:Post Script", this.updateReferenceIcon, this);
+                this.model.on("change:Clean Script", this.updateReferenceIcon, this);
+                this.model.on("change:Fork Environment", this.updateReferenceIcon, this);
+                this.model.on("change:Node Selection", this.updateReferenceIcon, this);
                 this.model.on("change:Task Name", this.updateTaskName, this);
                 this.model.on("change:Description", this.updateTaskDescription, this);
                 this.model.on("change:Type", this.updateIcon, this);
@@ -105,10 +110,11 @@ define(
                 var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
                 this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="' +
                     description.replace(/"/g, '&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">' +
-                    this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i id="called-icon"></i></a></div>');
+                    this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i id="called-icon"></i></a><a id="reference-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: -7px; right: 3px;"><i id="reference-icon"></i></a></div>');
 
                 //we add an arrow Icon to special tasks that contain at least one PA:CATALOG_OBJECT variable
                 this.updateIconsOnTasksCallingObjects(this.element);
+                this.updateIconsOnTasksReferencingScripts(this.element);
                 this.showBlockInTask();
 
                 // convert model fork value from String to boolean
@@ -207,6 +213,10 @@ define(
             //we update the task icons when we add/remove a PA:CATALOG_OBJECT variable
             updateButtonRightIcon: function(changed) {
                 this.updateIconsOnTasksCallingObjects(this.element);
+            },
+
+            updateReferenceIcon: function(changed) {
+                this.updateIconsOnTasksReferencingScripts(this.element);
             },
 
             /**
@@ -310,6 +320,7 @@ define(
                     iconPath = "/studio/" + iconPath;
                 }
                 this.$el.find("img").attr('src', iconPath);
+                this.updateIconsOnTasksReferencingScripts(this.element);
             },
 
             setInvalid: function() {
@@ -689,6 +700,24 @@ define(
                         $('#called-workflow-modal').modal();
                     }
                 });
+
+                //fill up the modal of script references when we click on the contextual menu "Script Referneces"
+                $("#referenced-scripts").click(function(event) {
+                    if (that.$el.hasClass("selected-task")) {
+                        //fill up the modal of script references
+                        that.generateScriptReferenceModal(that.$el);
+                        //show up the modal
+                        $('#script-reference-modal').modal();
+                    }
+                });
+
+                //fill up the modal of referenced scripts when we click on the "script" icon on the top right
+                this.$el.find("#reference-icon-a").on("click", function() {
+                    that.generateScriptReferenceModal(that.$el);
+                    //show up the modal
+                    $('#script-reference-modal').modal();
+                });
+
                 this.$el.mousedown(function(e) {
                     if (!e.ctrlKey && !that.$el.hasClass("selected-task")) {
                         $(".selected-task").removeClass("selected-task");
@@ -703,7 +732,8 @@ define(
                         $('.selected-task').on('contextmenu', function(e) {
                             //add the contextual menu "Called Workflow"
                             that.addCalledWorkflowMenu(that.$el);
-                            var top = that.$el[0].offsetTop + 54;
+                            that.addReferencedScriptsMenu(that.$el);
+                            var top = that.$el[0].offsetTop + 94;
                             var left = that.$el[0].offsetLeft + 50;
                             $(".context-menu-canvas").hide();
                             $(".context-menu-task").css({
@@ -737,6 +767,171 @@ define(
 
                 })
                 return this;
+            },
+            getTaskReferencingScriptsInModel: function() {
+                var taskVariables = {};
+                var taskName = this.model.get("Task Name").trim()
+
+                //Test if there is a reference to a Script in Task Implementation
+                if (this.model.get("ScriptExecutable").hasOwnProperty("ScriptType")) {
+                    if (this.model.get("ScriptExecutable").ScriptType === "ScriptFile" && this.model.get("ScriptExecutable").ScriptFile) {
+                        var UrlTaskImplementation = this.model.get("ScriptExecutable").ScriptFile.Url;
+                        taskVariables[taskName + ":Task Implementation"] = UrlTaskImplementation;
+                    }
+                } else {
+                    if (this.model.get("ScriptExecutable").get("ScriptType") === "ScriptFile" && this.model.get("ScriptExecutable").get("ScriptFile")) {
+                        var UrlTaskImplementation = this.model.get("ScriptExecutable").get("ScriptFile").get("Url");
+                        taskVariables[taskName + ":Task Implementation"] = UrlTaskImplementation;
+                    }
+                }
+
+                //Test if there is a reference to a Pre Script
+                if (this.model.get("Pre Script")) {
+                    if (this.model.get("Pre Script").hasOwnProperty("ScriptType")) {
+                        if (this.model.get("Pre Script").ScriptType === "ScriptFile" && this.model.get("Pre Script").ScriptFile) {
+                            var UrlTaskImplementation = this.model.get("Pre Script").ScriptFile.Url;
+                            taskVariables[taskName + ":Pre Script"] = UrlTaskImplementation;
+                        }
+                    } else {
+                        if (this.model.get("Pre Script").get("ScriptType") === "ScriptFile" && this.model.get("Pre Script").get("ScriptFile")) {
+                            var UrlPreScript = this.model.get("Pre Script").get("ScriptFile").get("Url");
+                            taskVariables[taskName + ":Pre Script"] = UrlPreScript;
+                        }
+                    }
+                }
+
+                //Test if there is a reference to a Post Script
+                if (this.model.get("Post Script")) {
+                    if (this.model.get("Post Script").hasOwnProperty("ScriptType")) {
+                        if (this.model.get("Post Script").ScriptType === "ScriptFile" && this.model.get("Post Script").ScriptFile) {
+                            var UrlPostScript = this.model.get("Post Script").ScriptFile.Url;
+                            taskVariables[taskName + ":Post Script"] = UrlPostScript;
+                        }
+                    } else {
+                        if (this.model.get("Post Script").get("ScriptType") === "ScriptFile" && this.model.get("Post Script").get("ScriptFile")) {
+                            var UrlPostScript = this.model.get("Post Script").get("ScriptFile").get("Url");
+                            taskVariables[taskName + ":Post Script"] = UrlPostScript;
+                        }
+                    }
+                }
+
+                //Test if there is a reference to a Clean Script
+                if (this.model.get("Clean Script")) {
+                    if (this.model.get("Clean Script").hasOwnProperty("ScriptType")) {
+                        if (this.model.get("Clean Script").ScriptType === "ScriptFile" && this.model.get("Clean Script").ScriptFile) {
+                            var UrlCleanScript = this.model.get("Clean Script").ScriptFile.Url;
+                            taskVariables[taskName + ":Clean Script"] = UrlCleanScript;
+                        }
+                    } else {
+                        if (this.model.get("Clean Script").get("ScriptType") === "ScriptFile" && this.model.get("Clean Script").get("ScriptFile")) {
+                            var UrlCleanScript = this.model.get("Clean Script").get("ScriptFile").get("Url");
+                            taskVariables[taskName + ":Clean Script"] = UrlCleanScript;
+                        }
+                    }
+                }
+
+                //Test if there is a reference to a Fork Environment Script
+                if (JSON.stringify(this.model.get("Fork Environment")) != "{}") {
+                    if (this.model.get("Fork Environment").hasOwnProperty("Environment Script")) {
+                        if (this.model.get("Fork Environment")['Environment Script'].ScriptType === "ScriptFile" && this.model.get("Fork Environment")['Environment Script'].ScriptFile) {
+                            var UrlForkScript = this.model.get("Fork Environment")['Environment Script'].ScriptFile.Url;
+                            taskVariables[taskName + ":Environment Script"] = UrlForkScript;
+                        }
+                    } else {
+                        if (this.model.get("Fork Environment").get("Environment Script").get("ScriptType") === "ScriptFile" && this.model.get("Fork Environment").get("Environment Script").get("ScriptFile")) {
+                            var UrlForkScript = this.model.get("Fork Environment").get("Environment Script").get("ScriptFile").get("Url");
+                            taskVariables[taskName + ":Environment Script"] = UrlForkScript;
+                        }
+                    }
+                }
+
+                //Test if there is a reference to a Control Flow Script
+                if (this.model.controlFlow[this.model.get("Control Flow")]) {
+                    if (this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptType") === "ScriptFile" && this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptFile")) {
+                        var UrlFlowScript = this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptFile").get("Url");
+                        taskVariables[taskName + ":Control Flow Script"] = UrlFlowScript;
+                    }
+
+                }
+
+                //Test if there is a reference to a Node Selection Script
+                if (this.model.get("Node Selection")) {
+                    for (var i = 0; i < this.model.get("Node Selection").length; i++) {
+                        if (this.model.get("Node Selection")[i].hasOwnProperty("ScriptType")) {
+                            if (this.model.get("Node Selection")[i].ScriptType === "ScriptFile" && this.model.get("Node Selection")[i].ScriptFile) {
+                                if (this.model.get("Node Selection")[i].ScriptFile.hasOwnProperty("Url")) {
+                                    var UrlSelectionScript = this.model.get("Node Selection")[i].ScriptFile.Url;
+                                } else {
+                                    var UrlSelectionScript = this.model.get("Node Selection")[i].ScriptFile.get("Url");
+                                }
+                                taskVariables[taskName + ":Node Selection Script:" + i] = UrlSelectionScript;
+                            }
+                        } else {
+                            if (this.model.get("Node Selection")[i].get("ScriptType") === "ScriptFile" && this.model.get("Node Selection")[i].get("ScriptFile")) {
+                                var UrlSelectionScript = this.model.get("Node Selection")[i].get("ScriptFile").get("Url");
+                                taskVariables[taskName + ":Node Selection Script:" + i] = UrlSelectionScript;
+                            }
+                        }
+                    }
+                }
+                return taskVariables;
+            },
+            generateScriptReferenceModal: function(element) {
+                element.find(".task-name").click();
+
+                //remove the previous task name from the modal title if it exists
+                $('#script-reference-title').find("span").remove();
+                //add the current task name to the modal title
+                $("#script-reference-title").append("<span style='background-color: #DCDCDC;'>" + element.find(".task-name").text().trim() + "</span>");
+                //delete all table rows except the first
+                $('#script-reference-container-table').find("tr:gt(0)").remove();
+                //get current scripts references from the model
+                var currentReferencedScripts = this.getTaskReferencingScriptsInModel();
+                for (var key of Object.keys(currentReferencedScripts)) {
+                    var currentScriptType = key.split(":")[1];
+                    var currentUrl = currentReferencedScripts[key].replace("${PA_CATALOG_REST_URL}", window.location.origin);
+                    var markup = '<tr><td><a href="javascript:void(0)" class="open-section">' + currentScriptType + '</a></td><td><div class="input-group" style="display:inline-flex;" id="direct-object-url"> <input tooltip="' + currentUrl + '" type="text" class="form-control" id="reference-object-url-input" ng-disable="true" style=" width: 650px; " value="' + currentUrl + '"> <button class="reference-object-url-button btn btn-default" data-toggle="tooltip" title="Copy to clipboard"> <i class="fa fa-clone"></i> </button> </div></td></tr>';
+                    var emptyMarkup = "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>";
+                    $("#script-reference-container-table").append(markup);
+                    $("#script-reference-container-table").append(emptyMarkup);
+                }
+                $(".reference-object-url-button").click(function(event) {
+                    var parent = $(this).closest('#direct-object-url');
+                    var inputCopy = parent.find("#reference-object-url-input");
+                    inputCopy.select();
+                    document.execCommand("copy");
+                });
+                $(".open-section").click(function(event) {
+                    var parent = $(event.currentTarget).parent().children()[0].innerHTML;
+                    var index = 1;
+                    switch (parent.trim()) {
+                        case 'Task Implementation':
+                            index = 7;
+                            break;
+                        case 'Pre Script':
+                            index = 8;
+                            break;
+                        case 'Post Script':
+                            index = 8;
+                            break;
+                        case 'Clean Script':
+                            index = 8;
+                            break;
+                        case 'Node Selection Script':
+                            index = 10;
+                            break;
+                        case 'Environment Script':
+                            index = 11;
+                            break;
+                        case 'Control Flow Script':
+                            index = 12;
+                            break;
+                    }
+                    //Hide the current panel
+                    $('.panel-body.in').collapse('hide')
+                    //Show the section
+                    $('#accordion-properties > div:nth-child(' + index + ')').children().last().collapse('show')
+                });
             },
             generateCalledWorkflowModal: function(element) {
                 //remove the previous task name from the modal title if it exists
@@ -915,12 +1110,27 @@ define(
                     $("#called-workflow").show();
                 }
             },
+            //add "Script references" in the contextual menu of the selected task only when there are refrences
+            addReferencedScriptsMenu: function(element) {
+                $("#referenced-scripts").hide();
+                var currentReferences = this.getTaskReferencingScriptsInModel();
+                if (Object.keys(currentReferences).length > 0) {
+                    $("#referenced-scripts").show();
+                }
+            },
             //add "arrow" icons to the tasks that call other objects
             updateIconsOnTasksCallingObjects: function(element) {
                 element.find("#called-icon").removeClass("glyphicon glyphicon-arrow-right");
                 var currentTaskVariables = this.getTaskVariablesCallingWorkflowsInModel(element);
                 if (Object.keys(currentTaskVariables).length > 0) {
                     element.find("#called-icon").addClass("glyphicon glyphicon-arrow-right");
+                }
+            },
+            updateIconsOnTasksReferencingScripts: function(element) {
+                element.find("#reference-icon").removeClass("glyphicon glyphicon-list-alt");
+                var currentReferences = this.getTaskReferencingScriptsInModel();
+                if (Object.keys(currentReferences).length > 0) {
+                    element.find("#reference-icon").addClass("glyphicon glyphicon-list-alt");
                 }
             },
             //parse the given string and return an object of 3 elements (bucketName, objectName, objectRevision)
