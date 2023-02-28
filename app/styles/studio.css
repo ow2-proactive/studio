@@ -1048,6 +1048,11 @@ li.success {
     opacity: 0.3;
 }
 
+.txt:hover {
+    text-decoration: underline;
+    color: #E87224;
+}
+
 .templates-menu {
     text-align: left;
     margin-left: 10px;
@@ -1056,6 +1061,12 @@ li.success {
 
 .templates-menu.locked {
     max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.templates-menu.pipelines {
+    max-height: 60vh;
     overflow-x: hidden;
     overflow-y: auto;
 }
