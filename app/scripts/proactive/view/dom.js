@@ -348,7 +348,7 @@ define(
                 pinUnpin($("#ul-reference"), $("#li-pin-reference"));
             });
 
-            var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
+            var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Task Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
             $("#ul-reference").append(menuHeadersReference);
 
             var studioApp = require('StudioApp');
@@ -460,7 +460,7 @@ define(
                 pinUnpin($("#ul-calling"), $("#li-pin-calling"));
             });
 
-            var menuHeadersCalling = $('<li id= "menuHeadersCalling" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 230px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
+            var menuHeadersCalling = $('<li id= "menuHeadersCalling" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 250px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 300px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
             $("#ul-calling").append(menuHeadersCalling);
 
             var studioApp = require('StudioApp');
@@ -471,7 +471,7 @@ define(
             }
             //isCallingObjects becomes true when there is at least one called catalog object
             var isCallingObjects = false;
-            var liCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 180px;"  class="select-task"><span class="txt">';
+            var liCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 250px;"  class="select-task"><span class="txt">';
             var liNoCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
             for (var i = 0; i < tasksArray.length; i++) {
                 var task = tasksArray[i];
@@ -495,14 +495,14 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><a style="display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span class="txt"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><a style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</a><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span class="txt"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
                                 } else if (objectKind == "null") {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 250px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px;min-width: 230px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="You cannot open non-workflows objects in the Studio" class="glyphicon glyphicon-eye-close"></i></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</a><a style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="You cannot open non-workflows objects in the Studio" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 }
                             } else {
-                                var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The variable calling a catalog object is empty" style="color:red; display: table-cell; padding:3px 10px;min-width: 230px"> [Empty Catalog Object Variable] </a><a style="display: table-cell;"><i title="You cannot open empty workflows in the Studio, select a workflow first" class="glyphicon glyphicon-eye-close"></i></a></li>');
+                                var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The variable calling a catalog object is empty" style="color:red; display: table-cell; padding:3px 10px;min-width: 250px"> [Empty Catalog Object Variable] </a><a style="display: table-cell;"><i title="You cannot open empty workflows in the Studio, select a workflow first" class="glyphicon glyphicon-eye-close"></i></a></li>');
                             }
                             $("#ul-calling").append(menuItemCalling);
                         }

@@ -110,7 +110,7 @@ define(
                 var description = this.model.get("Description") ? this.model.get("Description") : "This task has no description";
                 this.element = $('<div class="task"><a class="task-name" data-toggle="tooltip" data-placement="right" title="' +
                     description.replace(/"/g, '&quot;') + '"><img src="' + iconPath + '" width="20px">&nbsp;<span class="name">' +
-                    this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i id="called-icon"></i></a><a id="reference-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: -7px; right: 3px;"><i id="reference-icon"></i></a></div>');
+                    this.model.get("Task Name") + '</span></a>&nbsp;&nbsp;<a id="called-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: 17px; right: 3px;"><i title="Workflows being Called by this Task" id="called-icon"></i></a><a title="Scripts being Called by this Task" id="reference-icon-a" href="javascript:void(0)" class="pointer" style=" position: inherit; top: -7px; right: 3px;"><i id="reference-icon"></i></a></div>');
 
                 //we add an arrow Icon to special tasks that contain at least one PA:CATALOG_OBJECT variable
                 this.updateIconsOnTasksCallingObjects(this.element);
