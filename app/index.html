@@ -346,20 +346,20 @@
                     <tr>
                         <td>
                                 <span title="Workflows Calling Current Workflow" id="span-called-draggable" class="dropdown open" style="position: relative;float: left; padding-bottom: 10px">
-                                    <span style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-called"><i class="glyphicon glyphicon-arrow-down"></i> Called by<span class="caret"></span></span>
+                                    <div style="background-color: #337ab7b8; display: inline-flex; align-items: center;" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-called"><i class="glyphicon glyphicon-arrow-down"></i> <span style="width: 60px;">Called by</span><span class="caret"></span></div>
                                     <ul id="ul-called" class="dropdown-menu templates-menu pipelines" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
                                     </ul>
                                 </span>
                             <span id="span-calling-draggable" class="dropdown open" style="position: relative;float: left; padding-bottom: 10px">
-                                    <span title="Workflows being Called by Current Workflow" style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-calling"><i class="glyphicon glyphicon-arrow-right"> </i> Workflows<span class="caret"></span></span>
+                                    <div title="Workflows being Called by Current Workflow" style="background-color: #337ab7b8; display: inline-flex; align-items: center;" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-calling"><i class="glyphicon glyphicon-arrow-right"> </i> <span style="width: 60px;">Workflows</span><span class="caret"></span></div>
                                     <ul id="ul-calling" class="dropdown-menu templates-menu pipelines" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
                                     </ul>
                                 </span>
-                            <span id="span-reference-draggable" class="dropdown open" style="position: relative;float: left;">
-                                    <span title="Scripts being Called by Current Workflow" style="background-color: #337ab7b8" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-reference"><i class="glyphicon glyphicon-arrow-right"> </i> Scripts<span class="caret"></span></span>
+                            <div id="span-reference-draggable" class="dropdown open" style="position: relative;float: left;">
+                                <div title="Scripts being Called by Current Workflow" style="background-color: #337ab7b8; display: inline-flex; align-items: center;" data-toggle="dropdown" aria-expanded="true" class="label job-element top-level-menu btn dropdown-toggle" id="menu-reference"><i class="glyphicon glyphicon-arrow-right"> </i> <span style="width: 60px;">Scripts</span><span class="caret"></span></div>
                                     <ul id="ul-reference" class="dropdown-menu templates-menu pipelines" aria-labelledby="dropdown-secondary-templates-menu" role="menu">
                                     </ul>
-                                </span>
+                                </div>
                         </td>
 
                         </td>
@@ -417,13 +417,13 @@
                     <li id="called-workflow">
                         <a class="context-menu__item" href="javascript:void(0)" class="pointer">
                             <i class="glyphicon glyphicon-arrow-right called-description-container"></i>
-                            Called Workflow
+                            Called Workflows
                         </a>
                     </li>
                     <li id="referenced-scripts">
                         <a class="context-menu__item" href="javascript:void(0)" class="pointer">
                             <i class="glyphicon glyphicon-list-alt referenced-scripts-container"></i>
-                            Script References
+                            Called Scripts
                         </a>
                     </li>
                 </ul>
