@@ -730,7 +730,7 @@ define(
                         // selecting the current task
                         that.$el.addClass("selected-task");
                         $('.selected-task').on('contextmenu', function(e) {
-                            //add the contextual menu "Called Workflow"
+                            //add the contextual menu "Called Workflows"
                             that.addCalledWorkflowMenu(that.$el);
                             that.addReferencedScriptsMenu(that.$el);
                             var top = that.$el[0].offsetTop + 94;
@@ -971,7 +971,7 @@ define(
                 this.visuIconEvent();
 
                 var that = this;
-                //action on the change button to modify the catalog object in the called workflow modal
+                //action on the change button to modify the catalog object in the called workflows modal
                 $(".called-catalogobject-button").click(function(event) {
                     event.preventDefault();
                     var studioApp = require('StudioApp');
@@ -1102,7 +1102,7 @@ define(
                 });
                 return String(objectKind);
             },
-            //add "Called Workflow" in the contextual menu of the selected task when there are called objects
+            //add "Called Workflows" in the contextual menu of the selected task when there are called objects
             addCalledWorkflowMenu: function(element) {
                 $("#called-workflow").hide();
                 var currentTaskVariables = this.getTaskVariablesCallingWorkflowsInModel(element);

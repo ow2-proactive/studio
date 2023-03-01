@@ -336,6 +336,8 @@ define(
             });
             //make the reference dropdown empty
             $("#ul-reference").empty();
+            var referenceTitle = $('<li role="presentation" class="dropdown-header"><span style="font-size: medium;">Scripts being Called by Current Workflow</span></li>');
+            $("#ul-reference").append(referenceTitle);
             //add pin Open as first item in the dropdown
             var pinOpen = $('<li id="li-pin-reference" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
             $("#ul-reference").append(pinOpen);
@@ -432,7 +434,7 @@ define(
             if (!isReferencingScripts) {
                 //we remove the headers
                 $("#menuHeadersReference").remove();
-                var menuItemReference = $(liNoReferenceStyle + 'There are no script references</a></li>');
+                var menuItemReference = $(liNoReferenceStyle + 'There are no called scripts</a></li>');
                 $("#ul-reference").append(menuItemReference);
             }
 
@@ -448,6 +450,8 @@ define(
             });
             //make the calling dropdown empty
             $("#ul-calling").empty();
+            var callingTitle = $('<li role="presentation" class="dropdown-header"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></li>');
+            $("#ul-calling").append(callingTitle);
             //add pin Open as first item in the dropdown
             var pinOpen = $('<li id="li-pin-calling" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
             $("#ul-calling").append(pinOpen);
@@ -547,6 +551,8 @@ define(
             });
             //make the called by dropdown empty
             $("#ul-called").empty();
+            var calledTitle = $('<li role="presentation" class="dropdown-header"><span style="font-size: medium;">Workflows Calling Current Workflow</span></li>');
+            $("#ul-called").append(calledTitle);
             //add pin Open as first item in the dropdown
             var pinOpen = $('<li id="li-pin" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
             $("#ul-called").append(pinOpen);
