@@ -785,6 +785,7 @@ define(
             var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
             var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
 
+
             var jobVariablesOriginal = readOrStoreVariablesInModel();
 
             var jobVariables = {};
