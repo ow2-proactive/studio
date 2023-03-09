@@ -322,7 +322,7 @@ define(
 
                 var that = this;
 
-                that.send_multipart_request(config.restApiUrl + "/submit", jobXml, {
+                that.send_multipart_request(config.restApiUrl + "/submit?submission.mode=studio", jobXml, {
                     "sessionid": localStorage['pa.session']
                 }, function(result) {
                     that.pausecomp(2000);

@@ -785,14 +785,6 @@ define(
             var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
             var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
 
-            // set submission mode on generic information to know the portal from where the workflow was submitted
-            const submissionMode = {
-                "Property Name": "submission.mode",
-                "Property Value": "studio"
-            }
-            jobGenericInfos.push(submissionMode);
-            studioApp.models.jobModel.set("Generic Info", jobGenericInfos);
-
             var jobVariablesOriginal = readOrStoreVariablesInModel();
 
             var jobVariables = {};
