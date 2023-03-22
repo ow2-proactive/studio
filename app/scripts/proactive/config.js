@@ -196,11 +196,11 @@ define(function () {
             },
             {
                 'name': 'Machine Learning',
-                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'ai-machine-learning', 'ai-machine-learning-workflows', 'ai-data-analysis-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
+                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'ai-machine-learning', 'ai-machine-learning-workflows', 'ai-data-analysis-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-mlops-dashboard', 'ai-azure-cognitive-services']
             },
             {
                 'name': 'Deep Learning',
-                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'ai-deep-learning', 'ai-deep-learning-workflows', 'ai-data-analysis-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-azure-cognitive-services']
+                'buckets': ['control-templates', 'control-notification', 'control-signal', 'basic-examples', 'ai-deep-learning', 'ai-deep-learning-workflows', 'ai-data-analysis-visualization', 'ai-auto-ml-optimization', 'ai-federated-learning', 'ai-model-as-a-service', 'ai-mlops-dashboard', 'ai-azure-cognitive-services']
             },
             {
                 'name': 'Big Data',
