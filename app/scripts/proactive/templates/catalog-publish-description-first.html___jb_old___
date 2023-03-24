@@ -1,13 +1,15 @@
-<div id="catalog-publish-description">
+<div id="catalog-publish-description" data-first="true">
 	<table>
 		<tr>
-			<td colspan="2" style="padding-bottom: 3em">You are about to add a <b>new Version</b> of the existing <span style="word-break:break-word">&quot;<%= name %>&quot;</span> <%= kindLabel %> to this bucket.</td>
+			<td colspan="2" style="padding-bottom: 5em">You are about to publish a <b>new <%= kindLabel %></b> named <span style="word-break:break-word">&quot;<%= name %>&quot;</span> to this bucket.</td>
 		</tr>
 		<tr>
-			<td>Last update: </td><td><%= revision.commit_time %></td>
+			<td>Name:</td>
+			<td><input type="text" id="catalog-publish-name" value="<%= name %>" disabled class="disabled-input"></td>
 		</tr>
 		<tr>
-			<td style="padding-bottom: 3em; width: 40%">Last commit message: </td><td style="padding-bottom: 3em"><%= revision.commit_message %></td>
+			<td>Kind:</td>
+			<td><input type="text" id="catalog-publish-kind" value="<%= kind %>"></td>
 		</tr>
 		<tr>
 			<td>Project name:</td>
@@ -18,8 +20,8 @@
 			<% } %>
 		</tr>
 		<tr>
-			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
 			<td>Tags:</td>
+			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
 			<td><input type="text" id="workflow-publish-tags" value="<%= tags %>" disabled class="disabled-input"></td>
 			<% } %>
 		</tr>

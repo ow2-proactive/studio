@@ -10,6 +10,12 @@
 			<td><%= projectname %></td>
 		</tr>
 		<% } %>
+		<% if(tags) { %>
+		<tr>
+			<th>Tags</th>
+			<td><%= tags %></td>
+		</tr>
+		<% } %>
 		<tr>
 			<th>Commit message</th>
 			<td><%= commitmessage %></td>

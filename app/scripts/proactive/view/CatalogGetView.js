@@ -172,20 +172,24 @@ define(
                         var latestRevision = JSON.parse(JSON.stringify(revisions[0])); //Copy of the fist revision: the latest one
                         latestRevision.links[1].href = 'buckets/' + latestRevision.bucket_name + '/resources/' + latestRevision.name;
                         var latestRevisionProjectName = latestRevision.project_name;
+                        var latestRevisionTags = latestRevision.tags;
                         var RevisionList = _.template(catalogRevision);
                         $('#catalog-get-revisions-table').append(RevisionList({
                             revision: latestRevision,
                             projectname: latestRevisionProjectName,
+                            tags: latestRevisionTags,
                             isLatest: true
                         }));
                         _.each(
                             revisions,
                             function(revision) {
                                 var projectName = revision.project_name;
+                                var tags = revision.tags;
                                 var RevisionList = _.template(catalogRevision);
                                 $('#catalog-get-revisions-table').append(RevisionList({
                                     revision: revision,
                                     projectname: projectName,
+                                    tags: tags,
                                     isLatest: false
                                 }));
                             }
@@ -226,6 +230,7 @@ define(
 	        	var name = $(currentRevisionRow).data("name");
 	        	var commitMessage = $(currentRevisionRow).data("commitmessage");
         		var projectName = $(currentRevisionRow).data("projectname");
+        		var tags = $(currentRevisionRow).data("tags");
         		var username = $(currentRevisionRow).data("username");
 
 	            this.highlightSelectedRow('#catalog-get-revisions-table', currentRevisionRow);
@@ -237,6 +242,7 @@ define(
 					commitmessage: commitMessage,
 					username: username,
 					projectname: projectName,
+					tags:tags,
 					kindLabel: this.kindLabel
 					}));
 

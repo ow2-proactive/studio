@@ -83,6 +83,7 @@ define(
             var studioApp = require('StudioApp');
             var currentWorkflowName = studioApp.models.currentWorkflow.attributes.name;
             var currentProjectName = studioApp.models.currentWorkflow.getProject();
+            var currentTags = studioApp.models.jobModel.get("Tags");
             var matchedObject; // the catalog object which match to the workflow who is about to be published.
             var that = this;
             this.getBucketCatalogObjects(currentBucketName, function(catalogObjects) {
@@ -98,11 +99,11 @@ define(
                 });
                 if (matchedObject){
                     // publishing a new version of an existing catalog object
-                    that.addRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName);
+                    that.addRevisionDescription(currentBucketName, currentWorkflowName, currentProjectName, currentTags);
                     that.disablePublishWhenNoPermission(matchedObject.rights, "workflow " + currentWorkflowName);
                 } else {
                     // publish a new catalog object
-                    that.addObjectDescription(currentWorkflowName, currentProjectName);
+                    that.addObjectDescription(currentWorkflowName, currentProjectName, currentTags);
                     var currentBucket = that.buckets.models.find(function(bucket){ return bucket.get('name') == currentBucketName})
                     that.disablePublishWhenNoPermission(currentBucket.get('rights'), "bucket " + currentBucketName);
                 }
@@ -139,7 +140,7 @@ define(
                 }, 500)
             })
         },
-        addRevisionDescription: function(bucketName, objectName, projectName) {
+        addRevisionDescription: function(bucketName, objectName, projectName, tags) {
             var that = this;
             var revisionsModel = new CatalogObjectLastRevisionDescription(
                 {
@@ -149,16 +150,16 @@ define(
                         $('#catalog-publish-description-container').empty();
                         var objectDescription = _.template(publishDescription);
                         var objectKind = that.isPsaWorkflow(that.kind) ? "workflow/psa" : that.kind;
-                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: objectName, kind: objectKind, kindLabel: that.kindLabel, projectname: projectName}));
+                        $('#catalog-publish-description-container').append(objectDescription({revision: revision, name: objectName, kind: objectKind, kindLabel: that.kindLabel, projectname: projectName, tags: tags}));
                     }
                 });
             revisionsModel.fetch();
         },
-        addObjectDescription: function(objectName, projectName) {
+        addObjectDescription: function(objectName, projectName, tags) {
             var objectDescription = _.template(publishDescriptionFirst);
             this.$('#catalog-publish-description-container').empty();
             var objectKind = this.isPsaWorkflow(this.kind) ? "workflow/psa" : this.kind;
-            this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: objectKind, kindLabel: this.kindLabel, projectname: projectName}));
+            this.$('#catalog-publish-description-container').append(objectDescription({name: objectName, kind: objectKind, kindLabel: this.kindLabel, projectname: projectName, tags: tags}));
         },
         disablePublishWhenNoPermission: function(rights, targetDescription) {
             if (['write', 'admin'].indexOf(rights) >= 0) {
@@ -179,7 +180,8 @@ define(
                 var bucketName = this.getSelectedBucketRow().data("bucketname");
                 var selectedObjectName = $(currentObjectRow).data("objectname");
                 var selectedProjectName = $(currentObjectRow).data("projectname");
-                this.addRevisionDescription(bucketName, selectedObjectName, selectedProjectName);
+                var selectedTags = $(currentObjectRow).data("tags");
+                this.addRevisionDescription(bucketName, selectedObjectName, selectedProjectName, selectedTags);
                 var objectRights = $(currentObjectRow).data("objectrights");
                 this.disablePublishWhenNoPermission(objectRights, "object " + selectedObjectName);
             }
@@ -241,12 +243,19 @@ define(
             var objectName;
             var fileName;
             var projectName;
+            var tags;
             if (this.kind.toLowerCase().indexOf('workflow') == 0) {
                 objectName = studioApp.models.currentWorkflow.attributes.name;
                 fileName = objectName + ".xml";
+
                 projectName = $("#workflow-publish-project-name").val();
                 //synchronize project name values
-                studioApp.models.jobModel.set("Project", $("#workflow-publish-project-name").val());
+                studioApp.models.jobModel.set("Project", projectName);
+
+                tags = $("#workflow-publish-tags").val();
+                //synchronize tags values
+                studioApp.models.jobModel.set("Tags", tags.split(","));
+
             } else {
                 projectName = $("#script-publish-project-name").val();
                 objectName = $("#catalog-publish-name").val();
@@ -281,6 +290,7 @@ define(
             payload.append('commitMessage', $("#catalog-publish-commit-message").val());
             payload.append('kind', $("#catalog-publish-kind").val());
             payload.append('projectName', projectName);
+            payload.append('tags', tags);
             payload.append('objectContentType', contentTypeToPublish );
 
             var url = '/catalog/buckets/' + bucketName + '/resources';
@@ -379,7 +389,7 @@ define(
 
             if( typeof alreadyPublishedBucketName === "undefined"){
                 var studioApp = require('StudioApp');
-                const bucketNameObject = studioApp.models.jobModel.get("Generic Info").filter(function(item){
+                const bucketNameObject = studioApp.models.jobModel.attributes["Generic Info"].filter(function(item){
                                             return item["Property Name"] === "bucketName";
                                         })
                 alreadyPublishedBucketName = bucketNameObject.length ? bucketNameObject[0]["Property Value"] : "";
