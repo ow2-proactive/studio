@@ -18,6 +18,12 @@
 			<% } %>
 		</tr>
 		<tr>
+			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
+			<td>Tags:</td>
+			<td><input type="text" id="workflow-publish-tags" value="<%= tags %>" disabled class="disabled-input"></td>
+			<% } %>
+		</tr>
+		<tr>
 			<td>Commit message:</td>
 			<td colspan="2"><input type="text" id="catalog-publish-commit-message"></td>
 		</tr>
