@@ -245,23 +245,23 @@ define(
           type: 'Select',
           fieldAttrs: {
             'placeholder': '@attributes->onTaskError',
-            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started)."
+            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution <br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- Cancel: Running Tasks are aborted, and others not started."
           },
           options: [{
               val: "continueJobExecution",
-              label: "Ignore error and continue job execution (Default)"
+              label: "Default: Ignore Error and continue Job execution"
             },
             {
               val: "suspendTask",
-              label: "Only suspend dependencies of In-Error tasks and set job as In-Error"
+              label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"
             },
             {
               val: "pauseJob",
-              label: "Pause job execution (running tasks can terminate)"
+              label: "Pause: Continue running Tasks, and suspend all others"
             },
             {
               val: "cancelJob",
-              label: "Cancel job (running tasks are aborted and remaining ones not started)"
+              label: "Cancel: Running Tasks are aborted, and others not started"
             }
           ]
         },
@@ -352,6 +352,18 @@ define(
                       return err;
                 }
             }
+        ]
+
+        this.schema["Number of Execution Attempts"].validators = [
+            function checkNumberOfExecution(value, formValues, form){
+                if(value < 1){
+                    var err = {
+                        type: 'Validation',
+                        message: "<br>The value cannot be lower than 1"
+                        };
+                        return err;
+                }
+           }
         ]
 
         this.tasks = [];
