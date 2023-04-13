@@ -1069,7 +1069,6 @@ li.success {
     overflow-x: hidden;
     overflow-y: auto;
 }
-
 .templates-menu .templates-menu-locked> li {
     background-color: white !important;
 }
@@ -1422,6 +1421,13 @@ li.success {
     color: #333 !important;
     font-weight: bold;
     font-size: 13px;
+}
+.pipeline-header {
+    display:flex;
+    justify-content:space-around;
+    align-items:baseline;
+    padding-bottom: 10px;
+    min-width: 430px;
 }
 
 .preset-menu-header{

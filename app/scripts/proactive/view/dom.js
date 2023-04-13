@@ -336,10 +336,9 @@ define(
             });
             //make the reference dropdown empty
             $("#ul-reference").empty();
-            var referenceTitle = $('<li role="presentation" class="dropdown-header"><span style="font-size: medium;">Scripts being Called by Current Workflow</span></li>');
-            $("#ul-reference").append(referenceTitle);
             //add pin Open as first item in the dropdown
-            var pinOpen = $('<li id="li-pin-reference" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
+            var pinOpen = $('<li id="li-pin-reference" role="presentation" class="dropdown-header pipeline-header">' +
+                          '<div id="ul-reference-toggle-pin"><img src="images/icon-pin.png"> Pin open </div> <div> <span style="font-size: medium;">Scripts being Called by Current Workflow</span></div></li>');
             $("#ul-reference").append(pinOpen);
             var menuElement = $('#ul-reference').parent();
             if (!menuElement.hasClass('dropdown')) {
@@ -347,7 +346,7 @@ define(
             }
             //pinUnpin function pin/unpin the menu
             $("#li-pin-reference").click(function(event) {
-                pinUnpin($("#ul-reference"), $("#li-pin-reference"));
+                pinUnpin($("#ul-reference"), $("#ul-reference-toggle-pin"));
             });
 
             var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Task Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
@@ -450,18 +449,17 @@ define(
             });
             //make the calling dropdown empty
             $("#ul-calling").empty();
-            var callingTitle = $('<li role="presentation" class="dropdown-header"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></li>');
-            $("#ul-calling").append(callingTitle);
             //add pin Open as first item in the dropdown
-            var pinOpen = $('<li id="li-pin-calling" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
+            var pinOpen = $('<li id="li-pin-calling" role="presentation" class="dropdown-header pipeline-header">'+
+                           '<div id="ul-calling-toggle-pin"><img src="images/icon-pin.png"> Pin open </div><div"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></div></li>');
             $("#ul-calling").append(pinOpen);
             var menuElement = $('#ul-calling').parent();
             if (!menuElement.hasClass('dropdown')) {
-                $("#li-pin-calling").html('<img src="images/icon-unpin.png"> Unpin');
+                $("#li-pin-calling").html('<div><img src="images/icon-unpin.png"> Unpin</div><div"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></div>');
             }
             //pinUnpin function pin/unpin the menu
             $("#li-pin-calling").click(function(event) {
-                pinUnpin($("#ul-calling"), $("#li-pin-calling"));
+                pinUnpin($("#ul-calling"), $("#ul-calling-toggle-pin"));
             });
 
             var menuHeadersCalling = $('<li id= "menuHeadersCalling" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 250px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 300px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
@@ -551,10 +549,9 @@ define(
             });
             //make the called by dropdown empty
             $("#ul-called").empty();
-            var calledTitle = $('<li role="presentation" class="dropdown-header"><span style="font-size: medium;">Workflows Calling Current Workflow</span></li>');
-            $("#ul-called").append(calledTitle);
             //add pin Open as first item in the dropdown
-            var pinOpen = $('<li id="li-pin" role="presentation" class="dropdown-header"><img src="images/icon-pin.png"> Pin open</li>');
+            var pinOpen = $('<li id="li-pin" role="presentation" class="dropdown-header pipeline-header">' +
+                          '<div id="ul-called-toggle-pin"><img src="images/icon-pin.png"> Pin open </div><div><span style="font-size: medium;">Workflows Calling Current Workflow</span></div></li>')
             $("#ul-called").append(pinOpen);
             var menuElement = $('#ul-called').parent();
             if (!menuElement.hasClass('dropdown')) {
@@ -562,7 +559,7 @@ define(
             }
             //pinUnpin function pin/unpin the menu
             $("#li-pin").click(function(event) {
-                pinUnpin($("#ul-called"), $("#li-pin"));
+                pinUnpin($("#ul-called"), $("#ul-called-toggle-pin"));
             });
 
             var menuHeadersCalled = $('<li id= "menuHeadersCalled" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 330px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
