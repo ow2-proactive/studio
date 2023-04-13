@@ -33,7 +33,7 @@ define(
         "Name": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": 'General Parameters',
+            "data-tab": 'Workflow General Parameters',
             'data-tab-help': 'General workflow parameters (name, description, priority...)',
             'placeholder': '@attributes->name',
             "data-help": 'The name of your workflow.'
@@ -205,7 +205,7 @@ define(
         "User Space Url": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": "Data Management",
+            "data-tab": "Workflow Data Management",
             'data-tab-help': 'DataSpaces allow to automatically manage File transfer at the level of Job and Tasks.',
             'placeholder': 'userSpace->@attributes->url',
             "data-help": "A User Space which is a personal user data storage. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."
@@ -235,7 +235,7 @@ define(
         "Number of Execution Attempts": {
           type: 'Number',
           fieldAttrs: {
-            "data-tab": "Error Handling",
+            "data-tab": "Workflow Error Management Policy",
             'data-tab-help': 'Configure workflow behavior upon errors',
             'placeholder': '@attributes->maxNumberOfExecution',
             "data-help": "Defines the maximum number of execution attempts for the tasks."
@@ -245,19 +245,19 @@ define(
           type: 'Select',
           fieldAttrs: {
             'placeholder': '@attributes->onTaskError',
-            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started)."
+            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution <br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started)."
           },
           options: [{
               val: "continueJobExecution",
-              label: "Ignore error and continue job execution (Default)"
+              label: "Default: Ignore Error and continue Job execution"
             },
             {
               val: "suspendTask",
-              label: "Only suspend dependencies of In-Error tasks and set job as In-Error"
+              label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"
             },
             {
               val: "pauseJob",
-              label: "Pause job execution (running tasks can terminate)"
+              label: "Pause: Continue running Tasks, and suspend all others"
             },
             {
               val: "cancelJob",
@@ -352,6 +352,18 @@ define(
                       return err;
                 }
             }
+        ]
+
+        this.schema["Number of Execution Attempts"].validators = [
+            function checkNumberOfExecution(value, formValues, form){
+                if(value < 1){
+                    var err = {
+                        type: 'Validation',
+                        message: "<br>The value cannot be lower than 1"
+                        };
+                        return err;
+                }
+           }
         ]
 
         this.tasks = [];
