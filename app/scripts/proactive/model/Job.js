@@ -353,7 +353,6 @@ define(
                 }
             }
         ]
-
         this.schema["Number of Execution Attempts"].validators = [
             function checkNumberOfExecution(value, formValues, form){
                 if(value < 1){
