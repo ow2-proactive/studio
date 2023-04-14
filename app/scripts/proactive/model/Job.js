@@ -235,7 +235,7 @@ define(
         "Number of Execution Attempts": {
           type: 'Number',
           fieldAttrs: {
-            "data-tab": "Error Handling",
+            "data-tab": "Workflow Error Management Policy",
             'data-tab-help': 'Configure workflow behavior upon errors',
             'placeholder': '@attributes->maxNumberOfExecution',
             "data-help": "Defines the maximum number of execution attempts for the tasks."
