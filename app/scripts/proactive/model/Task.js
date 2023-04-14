@@ -508,6 +508,19 @@ define(
                         }
                     }
                 ];
+
+                this.schema["Number of Execution Attempts"].validators = [
+                    function checkNumberOfExecution(value, formValues, form){
+                        if(value < 0){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br>The value cannot be lower than 1"
+                                };
+                                return err;
+                        }
+                   }
+                ]
+
                 this.schema["Output Files"].subSchema["Access Mode"].validators = [
                     function checkInputFileData(value, formValues, form) {
                         if(undoManager.isHTML(formValues["Excludes"]) || undoManager.isHTML(formValues["Includes"])){
