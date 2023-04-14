@@ -354,6 +354,18 @@ define(
             }
         ]
 
+        this.schema["Number of Execution Attempts"].validators = [
+            function checkNumberOfExecution(value, formValues, form){
+                if(value < 1){
+                    var err = {
+                        type: 'Validation',
+                        message: "<br>The value cannot be lower than 1"
+                        };
+                        return err;
+                }
+           }
+        ]
+
         this.tasks = [];
 
         this.on("change", function(updatedData, error) {
