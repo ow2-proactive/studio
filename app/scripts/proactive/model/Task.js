@@ -37,7 +37,7 @@ define(
                     type: "Text",
                     fieldAttrs: {
                         'placeholder': '@attributes->name',
-                        "data-tab": "General Parameters",
+                        "data-tab": "Task General Parameters",
                         'data-tab-help': 'General Task Parameters (name, description, variables...)',
                         "data-help": 'Unique name of a task without spaces.'
                     }
@@ -117,7 +117,7 @@ define(
                     type: 'List',
                     itemType: 'Object',
                     fieldAttrs: {
-                        "data-tab": "Data Management",
+                        "data-tab": "Task Data Management",
                         'data-tab-help': 'Input and output files transferred before and after the task execution',
                         'placeholder': 'inputFiles->files',
                         "data-help": 'Files from your user or global spaces that will be transferred to computing nodes automatically.'
@@ -195,10 +195,10 @@ define(
                 "Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
-                        "data-tab": "Error Management",
+                        "data-tab": "Task Error Management",
                         'data-tab-help': 'Task error management',
                         'placeholder': '@attributes->maxNumberOfExecution',
-                        "data-help": 'Defines the maximum number of execution attempts of the task.'
+                        "data-help": 'Defines the maximum number of execution attempts of the task.<br> If 0, it will inherit  the maximum number of execution attempts of the job'
                     }
                 },
                 "Maximum Execution Time (hh:mm:ss)": {
@@ -212,13 +212,13 @@ define(
                     type: 'Select',
                     fieldAttrs: {
                         'placeholder': '@attributes->onTaskError',
-                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default)<br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started).'
+                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution<br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Cancel: Running Tasks are aborted, and others not started.'
                     },
                     options: [
-                              {val: "continueJobExecution", label: "Ignore error and continue job execution (Default)"},
-                              {val: "suspendTask", label: "Only suspend dependencies of In-Error tasks and set job as In-Error"},
-                              {val: "pauseJob", label: "Pause job execution (running tasks can terminate)"},
-                              {val: "cancelJob", label: "Cancel job (running tasks are aborted and remaining ones not started)"},
+                              {val: "continueJobExecution", label: "Default: Ignore Error and continue Job execution"},
+                              {val: "suspendTask", label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"},
+                              {val: "pauseJob", label: "Pause: Continue running Tasks, and suspend all others"},
+                              {val: "cancelJob", label: "Cancel: Running Tasks are aborted, and others not started"},
                               {val: "none", label: "default (defined at job level)"}
                               ]
                 },
@@ -286,7 +286,7 @@ define(
                     type: 'NestedModel',
                     model: PreScript,
                     fieldAttrs: {
-                        "data-tab": "Pre/Post/Clean scripts",
+                        "data-tab": "Task Pre/Post/Clean scripts",
                         'data-tab-help': 'Scripts executed before and after the task',
                         'placeholder': 'pre',
                         "data-help": 'A script that is executed on the computing node before executing the task.'
@@ -311,7 +311,7 @@ define(
                 "Number of Nodes": {
                     type: 'Text',
                     fieldAttrs: {
-                        "data-tab": "Multi-Node Execution",
+                        "data-tab": "Task Multi-Node Execution",
                         'data-tab-help': 'Configuration of resources requirements',
                         'placeholder': 'parallel->@attributes->numberOfNodes',
                         "data-help": 'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'
@@ -337,7 +337,7 @@ define(
                         "data-help": 'Hosts in the network with predefined max latency between all of them.'
                     }
                 },
-                "Node Selection": {
+                "Task Node Selection": {
                     type: 'List',
                     itemType: 'NestedModel',
                     model: SelectionScript,
@@ -349,7 +349,7 @@ define(
                     },
                     itemTemplate: Utils.bigCrossTemplate,
                     fieldAttrs: {
-                        "data-tab": "Node Selection",
+                        "data-tab": "Task Node Selection",
                         'placeholder': 'selection',
                         "data-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
                     },
@@ -361,7 +361,7 @@ define(
                         // The Fork Execution Environment begins the Fork Environment tab, 'data-tab',
                         // everything which comes after this tab is included in it, if no new 'data-tab'
                         // is defined.
-                        "data-tab": "Fork Environment",
+                        "data-tab": "Task Fork Environment",
                         "data-tab-help": "Fork environment is a new customisable JVM started to only run the task it belongs to. Also specify how to start this JVM, like in a Docker container for example.",
                         'placeholder': '@attributes->fork',
                         "data-help": 'Executes the task in a forked JVM. When it is false, all the other fork environment configurations are not taken into account.'
@@ -388,7 +388,7 @@ define(
                         "Example: Docker selected will execute this task inside a Docker container."
                     }
                 },
-                "Fork Environment": {
+                "Task Fork Environment": {
                     type: 'NestedModel',
                     model: ForkEnvironment,
                     fieldAttrs: {
@@ -396,11 +396,11 @@ define(
                     },
                     title: ""
                 },
-                "Control Flow": {
+                "Task Control Flow": {
                     type: 'Select',
                     options: ["none", "if", "replicate", "loop"],
                     fieldAttrs: {
-                        "data-tab": "Control Flow",
+                        "data-tab": "Task Control Flow",
                         "data-help": 'Advanced control flow constructions, such as if, loop and replicate.'
                     }
                 },
@@ -438,7 +438,7 @@ define(
                 });
                 this.set({"Type": "ScriptExecutable"});
                 this.set({"ScriptExecutable": new ScriptExecutable()});
-                this.set({"Fork Environment": new ForkEnvironment()});
+                this.set({"Task Fork Environment": new ForkEnvironment()});
                 this.set({"Fork": true});
                 this.set({"Run as me": false});
                 this.set({"Task Name": "Task" + (++Task.counter)});
@@ -497,6 +497,19 @@ define(
                         }
                     }
                 ]
+
+                this.schema["Number of Execution Attempts"].validators = [
+                    function checkNumberOfExecution(value, formValues, form){
+                        if(value < 0){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br>The value cannot be lower than 1"
+                                };
+                                return err;
+                        }
+                   }
+                ]
+
                 this.schema["Input Files"].subSchema["Access Mode"].validators = [
                     function checkInputFileData(value, formValues, form) {
                         if(undoManager.isHTML(formValues["Excludes"]) || undoManager.isHTML(formValues["Includes"])){
@@ -698,7 +711,7 @@ define(
                 if (!task) {
                     return;
                 }
-                this.set({'Control Flow': 'if'});
+                this.set({'Task Control Flow': 'if'});
                 if (!this.controlFlow['if']) {
                     this.controlFlow = {'if': {}}
                     this.controlFlow['if'].model = new FlowScript();
@@ -721,7 +734,7 @@ define(
                 this.controlFlow['if']['continuation'] = {task: task};
             },
             removeif: function (task) {
-                this.set({'Control Flow': 'none'});
+                this.set({'Task Control Flow': 'none'});
                 if (this.controlFlow['if'].task == task) {
                     console.log('Removing IF')
                     delete this.controlFlow['if'].task;
@@ -736,30 +749,30 @@ define(
                     // at least one branch is present
                 } else {
                     console.log('Removing if branch', this.controlFlow, task)
-                    this.set({'Control Flow': 'none'});
+                    this.set({'Task Control Flow': 'none'});
                     delete this.controlFlow['if'];
                 }
             },
             setloop: function (task) {
                 console.log('Adding loop')
-                this.set({'Control Flow': 'loop'});
+                this.set({'Task Control Flow': 'loop'});
                 this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
             },
             removeloop: function (controlFlow, task) {
                 console.log('Removing loop')
-                this.set({'Control Flow': 'none'});
+                this.set({'Task Control Flow': 'none'});
                 delete this.controlFlow['loop']
             },
             setreplicate: function () {
                 console.log('Adding replicate')
                 if (!this.controlFlow['replicate']) { // keep existing script if it is already defined
-                    this.set({'Control Flow': 'replicate'});
+                    this.set({'Task Control Flow': 'replicate'});
                     this.controlFlow = {'replicate': {model: new FlowScript()}}
                 }
             },
             removereplicate: function (controlFlow, task) {
                 console.log('Removing replicate')
-                this.set({'Control Flow': 'none'});
+                this.set({'Task Control Flow': 'none'});
                 delete this.controlFlow['replicate']
             },
 

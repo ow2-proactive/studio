@@ -27,8 +27,8 @@ define(
             var forkEnvironment = forkEnvironmentView.render().$el.text();
 
             var selectionScripts = [];
-            if (this.model.get("Node Selection")) {
-                $.each(this.model.get("Node Selection"), function (i, script) {
+            if (this.model.get("Task Node Selection")) {
+                $.each(this.model.get("Task Node Selection"), function (i, script) {
                     var view = new TemplateView({model: script, template: "selection-script-template"}).render();
                     selectionScripts.push(view.$el.text());
                 })
