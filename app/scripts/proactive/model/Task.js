@@ -511,7 +511,7 @@ define(
 
                 this.schema["Number of Execution Attempts"].validators = [
                     function checkNumberOfExecution(value, formValues, form){
-                        if(value < 1){
+                        if(value < 0){
                             var err = {
                                 type: 'Validation',
                                 message: "<br>The value cannot be lower than 1"

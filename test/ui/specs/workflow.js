@@ -147,6 +147,7 @@ module.exports = {
             .waitForElementVisible("input[name='Task Name']")
             .clearValue("input[name='Task Name']")
             .setValue("input[name='Task Name']", _taskNameVal)
+            .waitForElementVisible("input[name='Task Name']")
             .assert.containsText('.task-name > .name', _taskNameVal)
             .clickCloseWorkflow()
             .removeAllWorkflows()
