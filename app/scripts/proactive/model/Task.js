@@ -337,7 +337,7 @@ define(
                         "data-help": 'Hosts in the network with predefined max latency between all of them.'
                     }
                 },
-                "Node Selection": {
+                "Task Node Selection": {
                     type: 'List',
                     itemType: 'NestedModel',
                     model: SelectionScript,
@@ -349,7 +349,7 @@ define(
                     },
                     itemTemplate: Utils.bigCrossTemplate,
                     fieldAttrs: {
-                        "data-tab": "Node Selection",
+                        "data-tab": "Task Node Selection",
                         'placeholder': 'selection',
                         "data-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
                     },
