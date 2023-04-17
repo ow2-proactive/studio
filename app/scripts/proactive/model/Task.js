@@ -212,13 +212,13 @@ define(
                     type: 'Select',
                     fieldAttrs: {
                         'placeholder': '@attributes->onTaskError',
-                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default)<br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started).'
+                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution<br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Cancel: Running Tasks are aborted, and others not started.'
                     },
                     options: [
-                              {val: "continueJobExecution", label: "Ignore error and continue job execution (Default)"},
-                              {val: "suspendTask", label: "Only suspend dependencies of In-Error tasks and set job as In-Error"},
-                              {val: "pauseJob", label: "Pause job execution (running tasks can terminate)"},
-                              {val: "cancelJob", label: "Cancel job (running tasks are aborted and remaining ones not started)"},
+                              {val: "continueJobExecution", label: "Default: Ignore Error and continue Job execution"},
+                              {val: "suspendTask", label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"},
+                              {val: "pauseJob", label: "Pause: Continue running Tasks, and suspend all others"},
+                              {val: "cancelJob", label: "Cancel: Running Tasks are aborted, and others not started"},
                               {val: "none", label: "default (defined at job level)"}
                               ]
                 },
@@ -508,6 +508,19 @@ define(
                         }
                     }
                 ];
+
+                this.schema["Number of Execution Attempts"].validators = [
+                    function checkNumberOfExecution(value, formValues, form){
+                        if(value < 1){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br>The value cannot be lower than 1"
+                                };
+                                return err;
+                        }
+                   }
+                ];
+
                 this.schema["Output Files"].subSchema["Access Mode"].validators = [
                     function checkInputFileData(value, formValues, form) {
                         if(undoManager.isHTML(formValues["Excludes"]) || undoManager.isHTML(formValues["Includes"])){
