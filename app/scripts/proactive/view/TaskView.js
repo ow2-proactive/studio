@@ -92,7 +92,7 @@ define(
                 this.model.on("change:Post Script", this.updateReferenceIcon, this);
                 this.model.on("change:Clean Script", this.updateReferenceIcon, this);
                 this.model.on("change:Fork Environment", this.updateReferenceIcon, this);
-                this.model.on("change:Node Selection", this.updateReferenceIcon, this);
+                this.model.on("change:Task Node Selection", this.updateReferenceIcon, this);
                 this.model.on("change:Task Name", this.updateTaskName, this);
                 this.model.on("change:Description", this.updateTaskDescription, this);
                 this.model.on("change:Type", this.updateIcon, this);
@@ -854,22 +854,22 @@ define(
 
                 }
 
-                //Test if there is a reference to a Node Selection Script
-                if (this.model.get("Node Selection")) {
-                    for (var i = 0; i < this.model.get("Node Selection").length; i++) {
-                        if (this.model.get("Node Selection")[i].hasOwnProperty("ScriptType")) {
-                            if (this.model.get("Node Selection")[i].ScriptType === "ScriptFile" && this.model.get("Node Selection")[i].ScriptFile) {
-                                if (this.model.get("Node Selection")[i].ScriptFile.hasOwnProperty("Url")) {
-                                    var UrlSelectionScript = this.model.get("Node Selection")[i].ScriptFile.Url;
+                //Test if there is a reference to a Task Node Selection Script
+                if (this.model.get("Task Node Selection")) {
+                    for (var i = 0; i < this.model.get("Task Node Selection").length; i++) {
+                        if (this.model.get("Task Node Selection")[i].hasOwnProperty("ScriptType")) {
+                            if (this.model.get("Task Node Selection")[i].ScriptType === "ScriptFile" && this.model.get("Task Node Selection")[i].ScriptFile) {
+                                if (this.model.get("Task Node Selection")[i].ScriptFile.hasOwnProperty("Url")) {
+                                    var UrlSelectionScript = this.model.get("Task Node Selection")[i].ScriptFile.Url;
                                 } else {
-                                    var UrlSelectionScript = this.model.get("Node Selection")[i].ScriptFile.get("Url");
+                                    var UrlSelectionScript = this.model.get("Task Node Selection")[i].ScriptFile.get("Url");
                                 }
-                                taskVariables[taskName + ":Node Selection Script:" + i] = UrlSelectionScript;
+                                taskVariables[taskName + ":Task Node Selection Script:" + i] = UrlSelectionScript;
                             }
                         } else {
-                            if (this.model.get("Node Selection")[i].get("ScriptType") === "ScriptFile" && this.model.get("Node Selection")[i].get("ScriptFile")) {
-                                var UrlSelectionScript = this.model.get("Node Selection")[i].get("ScriptFile").get("Url");
-                                taskVariables[taskName + ":Node Selection Script:" + i] = UrlSelectionScript;
+                            if (this.model.get("Task Node Selection")[i].get("ScriptType") === "ScriptFile" && this.model.get("Task Node Selection")[i].get("ScriptFile")) {
+                                var UrlSelectionScript = this.model.get("Task Node Selection")[i].get("ScriptFile").get("Url");
+                                taskVariables[taskName + ":Task Node Selection Script:" + i] = UrlSelectionScript;
                             }
                         }
                     }
@@ -917,7 +917,7 @@ define(
                         case 'Clean Script':
                             index = 8;
                             break;
-                        case 'Node Selection Script':
+                        case 'Task Node Selection Script':
                             index = 10;
                             break;
                         case 'Environment Script':
