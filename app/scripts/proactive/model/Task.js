@@ -396,11 +396,11 @@ define(
                     },
                     title: ""
                 },
-                "Control Flow": {
+                "Task Control Flow": {
                     type: 'Select',
                     options: ["none", "if", "replicate", "loop"],
                     fieldAttrs: {
-                        "data-tab": "Control Flow",
+                        "data-tab": "Task Control Flow",
                         "data-help": 'Advanced control flow constructions, such as if, loop and replicate.'
                     }
                 },
@@ -711,7 +711,7 @@ define(
                 if (!task) {
                     return;
                 }
-                this.set({'Control Flow': 'if'});
+                this.set({'Task Control Flow': 'if'});
                 if (!this.controlFlow['if']) {
                     this.controlFlow = {'if': {}}
                     this.controlFlow['if'].model = new FlowScript();
@@ -734,7 +734,7 @@ define(
                 this.controlFlow['if']['continuation'] = {task: task};
             },
             removeif: function (task) {
-                this.set({'Control Flow': 'none'});
+                this.set({'Task Control Flow': 'none'});
                 if (this.controlFlow['if'].task == task) {
                     console.log('Removing IF')
                     delete this.controlFlow['if'].task;
@@ -749,30 +749,30 @@ define(
                     // at least one branch is present
                 } else {
                     console.log('Removing if branch', this.controlFlow, task)
-                    this.set({'Control Flow': 'none'});
+                    this.set({'Task Control Flow': 'none'});
                     delete this.controlFlow['if'];
                 }
             },
             setloop: function (task) {
                 console.log('Adding loop')
-                this.set({'Control Flow': 'loop'});
+                this.set({'Task Control Flow': 'loop'});
                 this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
             },
             removeloop: function (controlFlow, task) {
                 console.log('Removing loop')
-                this.set({'Control Flow': 'none'});
+                this.set({'Task Control Flow': 'none'});
                 delete this.controlFlow['loop']
             },
             setreplicate: function () {
                 console.log('Adding replicate')
                 if (!this.controlFlow['replicate']) { // keep existing script if it is already defined
-                    this.set({'Control Flow': 'replicate'});
+                    this.set({'Task Control Flow': 'replicate'});
                     this.controlFlow = {'replicate': {model: new FlowScript()}}
                 }
             },
             removereplicate: function (controlFlow, task) {
                 console.log('Removing replicate')
-                this.set({'Control Flow': 'none'});
+                this.set({'Task Control Flow': 'none'});
                 delete this.controlFlow['replicate']
             },
 

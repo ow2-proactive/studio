@@ -96,7 +96,7 @@ define(
                 this.model.on("change:Task Name", this.updateTaskName, this);
                 this.model.on("change:Description", this.updateTaskDescription, this);
                 this.model.on("change:Type", this.updateIcon, this);
-                this.model.on("change:Control Flow", this.controlFlowChanged, this);
+                this.model.on("change:Task Control Flow", this.controlFlowChanged, this);
                 this.model.on("change:Block", this.showBlockInTask, this);
                 this.model.on("change:Fork", this.updateFork, this);
                 // Register a handler, listening for changes on Fork Execution Environment,
@@ -330,7 +330,7 @@ define(
             controlFlowChanged: function(changed, valu, handler) {
                 var fromFormChange = handler.error; // its defined when form was
                 // changed
-                var control = this.model.get("Control Flow");
+                var control = this.model.get("Task Control Flow");
                 if (fromFormChange && control) {
 
                     var endPoints = jsPlumb.getEndpoints(this.$el);
@@ -845,11 +845,11 @@ define(
                     }
                 }
 
-                //Test if there is a reference to a Control Flow Script
-                if (this.model.controlFlow[this.model.get("Control Flow")]) {
-                    if (this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptType") === "ScriptFile" && this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptFile")) {
-                        var UrlFlowScript = this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptFile").get("Url");
-                        taskVariables[taskName + ":Control Flow Script"] = UrlFlowScript;
+                //Test if there is a reference to a Task Control Flow Script
+                if (this.model.controlFlow[this.model.get("Task Control Flow")]) {
+                    if (this.model.controlFlow[this.model.get("Task Control Flow")]['model'].get("ScriptType") === "ScriptFile" && this.model.controlFlow[this.model.get("Task Control Flow")]['model'].get("ScriptFile")) {
+                        var UrlFlowScript = this.model.controlFlow[this.model.get("Task Control Flow")]['model'].get("ScriptFile").get("Url");
+                        taskVariables[taskName + ":Task Control Flow Script"] = UrlFlowScript;
                     }
 
                 }
@@ -923,7 +923,7 @@ define(
                         case 'Environment Script':
                             index = 11;
                             break;
-                        case 'Control Flow Script':
+                        case 'Task Control Flow Script':
                             index = 12;
                             break;
                     }

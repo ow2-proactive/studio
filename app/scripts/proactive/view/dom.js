@@ -418,7 +418,7 @@ define(
                     case 'Environment Script':
                         index = 11;
                         break;
-                    case 'Control Flow Script':
+                    case 'Task Control Flow Script':
                         index = 12;
                         break;
                 }
