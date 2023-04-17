@@ -205,7 +205,7 @@ define(
         "User Space Url": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": "Data Management",
+            "data-tab": "Workflow Data Management",
             'data-tab-help': 'DataSpaces allow to automatically manage File transfer at the level of Job and Tasks.',
             'placeholder': 'userSpace->@attributes->url',
             "data-help": "A User Space which is a personal user data storage. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."

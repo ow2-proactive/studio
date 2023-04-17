@@ -117,7 +117,7 @@ define(
                     type: 'List',
                     itemType: 'Object',
                     fieldAttrs: {
-                        "data-tab": "Data Management",
+                        "data-tab": "Task Data Management",
                         'data-tab-help': 'Input and output files transferred before and after the task execution',
                         'placeholder': 'inputFiles->files',
                         "data-help": 'Files from your user or global spaces that will be transferred to computing nodes automatically.'
