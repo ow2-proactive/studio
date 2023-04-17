@@ -33,7 +33,7 @@ define(
         "Name": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": 'General Parameters',
+            "data-tab": 'Workflow General Parameters',
             'data-tab-help': 'General workflow parameters (name, description, priority...)',
             'placeholder': '@attributes->name',
             "data-help": 'The name of your workflow.'

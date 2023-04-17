@@ -37,7 +37,7 @@ define(
                     type: "Text",
                     fieldAttrs: {
                         'placeholder': '@attributes->name',
-                        "data-tab": "General Parameters",
+                        "data-tab": "Task General Parameters",
                         'data-tab-help': 'General Task Parameters (name, description, variables...)',
                         "data-help": 'Unique name of a task without spaces.'
                     }
