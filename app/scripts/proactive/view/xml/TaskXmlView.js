@@ -23,7 +23,7 @@ define(
             var executable = executableView.render().$el.text();
 
             var forkEnvironmentViewType = require('proactive/view/xml/ForkEnvironmentXmlView');
-            var forkEnvironmentView = new forkEnvironmentViewType({model: this.model.get("Fork Environment")});
+            var forkEnvironmentView = new forkEnvironmentViewType({model: this.model.get("Task Fork Environment")});
             var forkEnvironment = forkEnvironmentView.render().$el.text();
 
             var selectionScripts = [];

@@ -14,7 +14,7 @@ define(
                 "Class": {type: "Text",
                     fieldAttrs: {
                         'placeholder': '@attributes->class',
-                        "data-help": 'A java class extending the Scheduler API. It can be in a JAR attached to additional classpath (see Fork Environment).'
+                        "data-help": 'A java class extending the Scheduler API. It can be in a JAR attached to additional classpath (see Task Fork Environment).'
                     }
                 },
                 "Application Parameters": {
