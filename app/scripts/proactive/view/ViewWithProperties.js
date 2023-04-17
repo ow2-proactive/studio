@@ -338,10 +338,10 @@ define(
 					if (disableForkEnv) {
 						accordion.find("[id='" + this.model.cid + "_Run as me']").prop('disabled', disableForkEnv);
 						accordion.find("[id='" + this.model.cid + "_Fork Execution Environment']").prop('disabled', disableForkEnv);
-						accordion.find("[id='" + this.model.cid + "_Fork Environment']").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Task Fork Environment']").prop('disabled', disableForkEnv);
 						// disable input and button of List parameters
-						accordion.find("[id='" + this.model.cid + "_Fork Environment'] :input").prop('disabled', disableForkEnv);
-						accordion.find("[id='" + this.model.cid + "_Fork Environment'] :button").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Task Fork Environment'] :input").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Task Fork Environment'] :button").prop('disabled', disableForkEnv);
 					}
 
 					accordion.find("[simple-view]").remove()
