@@ -195,7 +195,7 @@ define(
                 "Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
-                        "data-tab": "Error Management",
+                        "data-tab": "Task Error Management",
                         'data-tab-help': 'Task error management',
                         'placeholder': '@attributes->maxNumberOfExecution',
                         "data-help": 'Defines the maximum number of execution attempts of the task.'
@@ -286,7 +286,7 @@ define(
                     type: 'NestedModel',
                     model: PreScript,
                     fieldAttrs: {
-                        "data-tab": "Pre/Post/Clean scripts",
+                        "data-tab": "Task Pre/Post/Clean scripts",
                         'data-tab-help': 'Scripts executed before and after the task',
                         'placeholder': 'pre',
                         "data-help": 'A script that is executed on the computing node before executing the task.'
@@ -311,7 +311,7 @@ define(
                 "Number of Nodes": {
                     type: 'Text',
                     fieldAttrs: {
-                        "data-tab": "Multi-Node Execution",
+                        "data-tab": "Task Multi-Node Execution",
                         'data-tab-help': 'Configuration of resources requirements',
                         'placeholder': 'parallel->@attributes->numberOfNodes',
                         "data-help": 'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'
