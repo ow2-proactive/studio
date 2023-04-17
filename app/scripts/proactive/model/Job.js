@@ -342,6 +342,7 @@ define(
             }
           }
         ]
+
         this.schema["Generic Info"].subSchema["Property Value"].validators = [
             function checkInputGenericINfo(value, formValues, form){
                 if(undoManager.isHTML(formValues["Property Name"])){
