@@ -160,11 +160,11 @@ module.exports = {
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
-            .assert.attributeEquals("a[id='Error Handling']", "data-help", "Configure workflow behavior upon errors")
+            .assert.attributeEquals("a[id='Workflow Error Management Policy']", "data-help", "Configure workflow behavior upon errors")
             .createTask()
             .waitForElementVisible('.task')
             .click(".task")
-            .assert.attributeEquals("a[id='Multi-Node Execution']", "data-help", "Configuration of resources requirements")
+            .assert.attributeEquals("a[id='Task Multi-Node Execution']", "data-help", "Configuration of resources requirements")
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .end();

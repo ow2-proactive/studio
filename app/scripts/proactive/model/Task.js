@@ -37,7 +37,7 @@ define(
                     type: "Text",
                     fieldAttrs: {
                         'placeholder': '@attributes->name',
-                        "data-tab": "General Parameters",
+                        "data-tab": "Task General Parameters",
                         'data-tab-help': 'General Task Parameters (name, description, variables...)',
                         "data-help": 'Unique name of a task without spaces.'
                     }
@@ -117,7 +117,7 @@ define(
                     type: 'List',
                     itemType: 'Object',
                     fieldAttrs: {
-                        "data-tab": "Data Management",
+                        "data-tab": "Task Data Management",
                         'data-tab-help': 'Input and output files transferred before and after the task execution',
                         'placeholder': 'inputFiles->files',
                         "data-help": 'Files from your user or global spaces that will be transferred to computing nodes automatically.'
@@ -195,7 +195,7 @@ define(
                 "Number of Execution Attempts": {
                     type: 'Number',
                     fieldAttrs: {
-                        "data-tab": "Error Management",
+                        "data-tab": "Task Error Management",
                         'data-tab-help': 'Task error management',
                         'placeholder': '@attributes->maxNumberOfExecution',
                         "data-help": 'Defines the maximum number of execution attempts of the task.'
@@ -286,7 +286,7 @@ define(
                     type: 'NestedModel',
                     model: PreScript,
                     fieldAttrs: {
-                        "data-tab": "Pre/Post/Clean scripts",
+                        "data-tab": "Task Pre/Post/Clean scripts",
                         'data-tab-help': 'Scripts executed before and after the task',
                         'placeholder': 'pre',
                         "data-help": 'A script that is executed on the computing node before executing the task.'
@@ -311,7 +311,7 @@ define(
                 "Number of Nodes": {
                     type: 'Text',
                     fieldAttrs: {
-                        "data-tab": "Multi-Node Execution",
+                        "data-tab": "Task Multi-Node Execution",
                         'data-tab-help': 'Configuration of resources requirements',
                         'placeholder': 'parallel->@attributes->numberOfNodes',
                         "data-help": 'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'
@@ -337,7 +337,7 @@ define(
                         "data-help": 'Hosts in the network with predefined max latency between all of them.'
                     }
                 },
-                "Node Selection": {
+                "Task Node Selection": {
                     type: 'List',
                     itemType: 'NestedModel',
                     model: SelectionScript,
@@ -349,7 +349,7 @@ define(
                     },
                     itemTemplate: Utils.bigCrossTemplate,
                     fieldAttrs: {
-                        "data-tab": "Node Selection",
+                        "data-tab": "Task Node Selection",
                         'placeholder': 'selection',
                         "data-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
                     },
@@ -358,10 +358,10 @@ define(
                 "Fork": {
                     type: "Checkbox",
                     fieldAttrs: {
-                        // The Fork Execution Environment begins the Fork Environment tab, 'data-tab',
+                        // The Fork Execution Environment begins the Task Fork Environment tab, 'data-tab',
                         // everything which comes after this tab is included in it, if no new 'data-tab'
                         // is defined.
-                        "data-tab": "Fork Environment",
+                        "data-tab": "Task Fork Environment",
                         "data-tab-help": "Fork environment is a new customisable JVM started to only run the task it belongs to. Also specify how to start this JVM, like in a Docker container for example.",
                         'placeholder': '@attributes->fork',
                         "data-help": 'Executes the task in a forked JVM. When it is false, all the other fork environment configurations are not taken into account.'
@@ -374,9 +374,9 @@ define(
                         "data-help": 'Executes the task under your system account, it also implies the task is executed in a forked JVM.'
                     }
                 },
-                // Add the Fork Execution Environment select before the Fork Environment model. Because
+                // Add the Fork Execution Environment select before the Task Fork Environment model. Because
                 // that is the only way to receive precise events. If something changes in the
-                // Fork Environment the whole model will be copied in the changed event, therefore specific events
+                // Task Fork Environment the whole model will be copied in the changed event, therefore specific events
                 // can't be distinguished. That is because Backbone js dos not support nested models (without
                 // appropriate plugins/frameworks). In this case, nested models are used but no code which
                 // handles them. That's why we arrived at this hybrid design.
@@ -388,7 +388,7 @@ define(
                         "Example: Docker selected will execute this task inside a Docker container."
                     }
                 },
-                "Fork Environment": {
+                "Task Fork Environment": {
                     type: 'NestedModel',
                     model: ForkEnvironment,
                     fieldAttrs: {
@@ -438,7 +438,7 @@ define(
                 });
                 this.set({"Type": "ScriptExecutable"});
                 this.set({"ScriptExecutable": new ScriptExecutable()});
-                this.set({"Fork Environment": new ForkEnvironment()});
+                this.set({"Task Fork Environment": new ForkEnvironment()});
                 this.set({"Fork": true});
                 this.set({"Run as me": false});
                 this.set({"Task Name": "Task" + (++Task.counter)});
@@ -508,6 +508,19 @@ define(
                         }
                     }
                 ];
+
+                this.schema["Number of Execution Attempts"].validators = [
+                    function checkNumberOfExecution(value, formValues, form){
+                        if(value < 0){
+                            var err = {
+                                type: 'Validation',
+                                message: "<br>The value cannot be lower than 1"
+                                };
+                                return err;
+                        }
+                   }
+                ]
+
                 this.schema["Output Files"].subSchema["Access Mode"].validators = [
                     function checkInputFileData(value, formValues, form) {
                         if(undoManager.isHTML(formValues["Excludes"]) || undoManager.isHTML(formValues["Includes"])){
