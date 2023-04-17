@@ -161,7 +161,7 @@ module.exports = {
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
-            .assert.attributeEquals("a[id='Error Handling']", "data-help", "Configure workflow behavior upon errors")
+            .assert.attributeEquals("a[id='Workflow Error Management Policy']", "data-help", "Configure workflow behavior upon errors")
             .createTask()
             .waitForElementVisible('.task')
             .click(".task")

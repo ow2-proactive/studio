@@ -33,7 +33,7 @@ define(
         "Name": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": 'General Parameters',
+            "data-tab": 'Workflow General Parameters',
             'data-tab-help': 'General workflow parameters (name, description, priority...)',
             'placeholder': '@attributes->name',
             "data-help": 'The name of your workflow.'
@@ -205,7 +205,7 @@ define(
         "User Space Url": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": "Data Management",
+            "data-tab": "Workflow Data Management",
             'data-tab-help': 'DataSpaces allow to automatically manage File transfer at the level of Job and Tasks.',
             'placeholder': 'userSpace->@attributes->url',
             "data-help": "A User Space which is a personal user data storage. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."
@@ -235,7 +235,7 @@ define(
         "Number of Execution Attempts": {
           type: 'Number',
           fieldAttrs: {
-            "data-tab": "Error Handling",
+            "data-tab": "Workflow Error Management Policy",
             'data-tab-help': 'Configure workflow behavior upon errors',
             'placeholder': '@attributes->maxNumberOfExecution',
             "data-help": "Defines the maximum number of execution attempts for the tasks."
