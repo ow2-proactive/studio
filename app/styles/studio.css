@@ -1424,12 +1424,16 @@ li.success {
 }
 .pipeline-header {
     display:flex;
-    justify-content:space-around;
+    padding-left: 5px;
     align-items:baseline;
     padding-bottom: 10px;
-    min-width: 430px;
+    min-width: 480px;
 }
 
+.pipeline-title {
+    margin-left: auto;
+    margin-right: auto;
+}
 .preset-menu-header{
     padding: 3px 10px 0px 7px;
     text-transform: none;

@@ -338,19 +338,16 @@ define(
             $("#ul-reference").empty();
             //add pin Open as first item in the dropdown
             var pinOpen = $('<li id="li-pin-reference" role="presentation" class="dropdown-header pipeline-header">' +
-                          '<div id="ul-reference-toggle-pin"><img src="images/icon-pin.png"> Pin open </div> <div> <span style="font-size: medium;">Scripts being Called by Current Workflow</span></div></li>');
+                          '<div id="ul-reference-toggle-pin"><img src="images/icon-pin.png"> Pin open </div> <div class="pipeline-title"> <span style="font-size: medium;">Scripts being Called by Current Workflow</span></div></li>');
             $("#ul-reference").append(pinOpen);
             var menuElement = $('#ul-reference').parent();
             if (!menuElement.hasClass('dropdown')) {
-                $("#li-pin-reference").html('<img src="images/icon-unpin.png"> Unpin');
+                $("#ul-reference-toggle-pin").html('<img src="images/icon-unpin.png"> Unpin');
             }
             //pinUnpin function pin/unpin the menu
             $("#li-pin-reference").click(function(event) {
                 pinUnpin($("#ul-reference"), $("#ul-reference-toggle-pin"));
             });
-
-            var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Task Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
-            $("#ul-reference").append(menuHeadersReference);
 
             var studioApp = require('StudioApp');
             var tasks = studioApp.models.jobModel.tasks;
@@ -361,6 +358,7 @@ define(
 
             //isReferencingScripts becomes true when there is at least one called script
             var isReferencingScripts = false;
+            var itemsReference = [];
             var liReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 180px;"  class="select-task-reference"><span class="txt">';
             var liNoReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
             for (var i = 0; i < studioApp.views.workflowView.taskViews.length; i++) {
@@ -374,7 +372,7 @@ define(
                         var currentUrl = currentReferencedScripts[key].replace("${PA_CATALOG_REST_URL}", window.location.origin);
 
                         var menuItemReference = $(liReferenceStyle + currentTaskName + '</span></a><a style="display: table-cell; padding:3px 10px;min-width: 150px"> ' + currentScriptType + ' </a><a target="_blank" style="color:#337ab7; display: table-cell;"><div class="input-group" style="display:inline-flex;" id="direct-object-url"> <input tooltip="' + currentUrl + '" type="text" class="form-control" id="reference-object-url-input" ng-disable="true" style=" width: 500px; " value="' + currentUrl + '"> <button class="reference-object-url-button btn btn-default" data-toggle="tooltip" title="Copy to clipboard"> <i class="fa fa-clone"></i> </button> </div></a></li>');
-                        $("#ul-reference").append(menuItemReference);
+                        itemsReference.push(menuItemReference);
                         $(".reference-object-url-button").click(function(event) {
                             var parent = $(this).closest('#direct-object-url');
                             var inputCopy = parent.find("#reference-object-url-input");
@@ -431,10 +429,14 @@ define(
             });
             //If no references are detected, we add a simple message
             if (!isReferencingScripts) {
-                //we remove the headers
-                $("#menuHeadersReference").remove();
                 var menuItemReference = $(liNoReferenceStyle + 'There are no called scripts</a></li>');
                 $("#ul-reference").append(menuItemReference);
+            } else {
+                var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Task Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
+                $("#ul-reference").append(menuHeadersReference);
+                itemsReference.forEach(function(item){
+                    $("#ul-reference").append(item);
+                })
             }
 
         });
@@ -451,19 +453,16 @@ define(
             $("#ul-calling").empty();
             //add pin Open as first item in the dropdown
             var pinOpen = $('<li id="li-pin-calling" role="presentation" class="dropdown-header pipeline-header">'+
-                           '<div id="ul-calling-toggle-pin"><img src="images/icon-pin.png"> Pin open </div><div"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></div></li>');
+                           '<div id="ul-calling-toggle-pin"><img src="images/icon-pin.png"> Pin open </div><div class="pipeline-title"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></div></li>');
             $("#ul-calling").append(pinOpen);
             var menuElement = $('#ul-calling').parent();
             if (!menuElement.hasClass('dropdown')) {
-                $("#li-pin-calling").html('<div><img src="images/icon-unpin.png"> Unpin</div><div"><span style="font-size: medium;">Workflows being Called by Current Workflow</span></div>');
+                $("#ul-calling-toggle-pin").html('<img src="images/icon-unpin.png"> Unpin');
             }
             //pinUnpin function pin/unpin the menu
             $("#li-pin-calling").click(function(event) {
                 pinUnpin($("#ul-calling"), $("#ul-calling-toggle-pin"));
             });
-
-            var menuHeadersCalling = $('<li id= "menuHeadersCalling" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 250px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 300px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
-            $("#ul-calling").append(menuHeadersCalling);
 
             var studioApp = require('StudioApp');
             var tasks = studioApp.models.jobModel.tasks;
@@ -475,6 +474,7 @@ define(
             var isCallingObjects = false;
             var liCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 250px;"  class="select-task"><span class="txt">';
             var liNoCallingStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
+            var itemsCalling = [];
             for (var i = 0; i < tasksArray.length; i++) {
                 var task = tasksArray[i];
                 if (task.has('Variables')) {
@@ -506,17 +506,21 @@ define(
                             } else {
                                 var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The variable calling a catalog object is empty" style="color:red; display: table-cell; padding:3px 10px;min-width: 250px"> [Empty Catalog Object Variable] </a><a style="display: table-cell;"><i title="You cannot open empty workflows in the Studio, select a workflow first" class="glyphicon glyphicon-eye-close"></i></a></li>');
                             }
-                            $("#ul-calling").append(menuItemCalling);
+                            itemsCalling.push(menuItemCalling);
                         }
                     }
                 }
             }
             //If no PA:CATALOG_OBJECT variable is detected, we add a simple message
             if (!isCallingObjects) {
-                //we remove the headers
-                $("#menuHeadersCalling").remove();
                 var menuItemCalling = $(liNoCallingStyle + 'There are no called workflows or objects</a></li>');
                 $("#ul-calling").append(menuItemCalling);
+            } else {
+                var menuHeadersCalling = $('<li id= "menuHeadersCalling" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 250px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 300px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
+                $("#ul-calling").append(menuHeadersCalling);
+                itemsCalling.forEach(function(item){
+                   $("#ul-calling").append(item);
+                })
             }
 
             $(".select-task").click(function(event) {
@@ -551,19 +555,16 @@ define(
             $("#ul-called").empty();
             //add pin Open as first item in the dropdown
             var pinOpen = $('<li id="li-pin" role="presentation" class="dropdown-header pipeline-header">' +
-                          '<div id="ul-called-toggle-pin"><img src="images/icon-pin.png"> Pin open </div><div><span style="font-size: medium;">Workflows Calling Current Workflow</span></div></li>')
+                          '<div id="ul-called-toggle-pin"><img src="images/icon-pin.png"> Pin open </div><div class="pipeline-title"><span style="font-size: medium;">Workflows Calling Current Workflow</span></div></li>')
             $("#ul-called").append(pinOpen);
             var menuElement = $('#ul-called').parent();
             if (!menuElement.hasClass('dropdown')) {
-                $("#li-pin").html('<img src="images/icon-unpin.png"> Unpin');
+                $("#ul-called-toggle-pin").html('<img src="images/icon-unpin.png"> Unpin');
             }
             //pinUnpin function pin/unpin the menu
             $("#li-pin").click(function(event) {
                 pinUnpin($("#ul-called"), $("#ul-called-toggle-pin"));
             });
-
-            var menuHeadersCalled = $('<li id= "menuHeadersCalled" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 330px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
-            $("#ul-called").append(menuHeadersCalled);
 
             var studioApp = require('StudioApp');
             //get the workflow name from the model
@@ -584,10 +585,13 @@ define(
                 if (res.called_by) {
                     var x = res.called_by + "";
                     if (x == "") {
-                        $("#menuHeadersCalled").remove();
                         var menuItemCalled = $(liCalledStyle + 'No parent workflows are identified</a></li>');
                         $("#ul-called").append(menuItemCalled);
                     } else {
+                        // add the header
+                        var menuHeadersCalled = $('<li id= "menuHeadersCalled" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 330px">Workflow Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Open</a></li>');
+                        $("#ul-called").append(menuHeadersCalled);
+
                         const calledByWorkflowArray = x.split(",");
                         for (let i = 0; i < calledByWorkflowArray.length; i++) {
                             var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><span class="txt"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></a></li>');
@@ -595,7 +599,6 @@ define(
                         }
                     }
                 } else {
-                    $("#menuHeadersCalled").remove();
                     var menuItemCalled = $(liCalledStyle + 'The current workflow does not exist in the Catalog</a></li>');
                     $("#ul-called").append(menuItemCalled);
                 }
