@@ -233,7 +233,7 @@ define(
           }
         },
         "Number of Execution Attempts": {
-          type: 'Number',
+          type: "Text",
           fieldAttrs: {
             "data-tab": "Workflow Error Management Policy",
             'data-tab-help': 'Configure workflow behavior upon errors',
@@ -356,16 +356,51 @@ define(
         ]
 
         this.schema["Number of Execution Attempts"].validators = [
-            function checkNumberOfExecution(value, formValues, form){
-                if(value < 1){
+            function checkNumberOfExecutionForTask(value, formValues, form){
+                if(!validVariableOrPositiveNumber(value)) {
                     var err = {
                         type: 'Validation',
-                        message: "<br>The value cannot be lower than 1"
-                        };
-                        return err;
+                        message: "<br>The value should contain a variable or a number higher than 0"
+                    };
+                    return err;
                 }
-           }
+            }
         ];
+
+        this.schema["Delay Before Retry Task (hh:mm:ss)"].validators = [
+            function checkMaxExecutionTime(value, formValues, form){
+                if (!validTimeFormat(value)) {
+                    var err = {
+                        type: 'Validation',
+                        message: "<br>The value does not match <b>hh:mm:ss</b> format"
+                    };
+                    return err;
+                }
+            }
+        ];
+
+        function validTimeFormat(value){
+            var hourMinSecondsRegexp = new RegExp("^((([0-9]|[1-9][0-9]+):?([0-5][0-9]):?([0-5][0-9]))$)");
+            var minSecondsRegexp = new RegExp("^((([0-9]|[1-9][0-9]+):?([0-9]|[0-5][0-9])$))");
+            var secondsRegexp = new RegExp("^([0-9]|[1-9][0-9]+)$");
+            if (!value || value.length === 0 || hourMinSecondsRegexp.test(value) || minSecondsRegexp.test(value) || secondsRegexp.test(value)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+       }
+
+        function validVariableOrPositiveNumber(value){
+            var varRegexBrackets = new RegExp(".*\\$\\{([a-zA-Z]+)}+");
+            var varRegex = new RegExp(".*\\$[a-zA-Z]+");
+            var numberRegex = new RegExp("^[1-9][0-9]*$");
+            if (!value || value.length === 0 || varRegexBrackets.test(value) || varRegex.test(value) || numberRegex.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         this.tasks = [];
 

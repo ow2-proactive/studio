@@ -110,6 +110,7 @@ footer {
     background: #ffffff;
     border-bottom: thin solid #e0e0e0;
     border-radius: 0px;
+    margin-bottom: 0px;
 }
 
 #current-path .breadcrumb {
