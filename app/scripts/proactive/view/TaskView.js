@@ -91,12 +91,12 @@ define(
                 this.model.on("change:Pre Script", this.updateReferenceIcon, this);
                 this.model.on("change:Post Script", this.updateReferenceIcon, this);
                 this.model.on("change:Clean Script", this.updateReferenceIcon, this);
-                this.model.on("change:Fork Environment", this.updateReferenceIcon, this);
-                this.model.on("change:Node Selection", this.updateReferenceIcon, this);
+                this.model.on("change:Task Fork Environment", this.updateReferenceIcon, this);
+                this.model.on("change:Task Node Selection", this.updateReferenceIcon, this);
                 this.model.on("change:Task Name", this.updateTaskName, this);
                 this.model.on("change:Description", this.updateTaskDescription, this);
                 this.model.on("change:Type", this.updateIcon, this);
-                this.model.on("change:Control Flow", this.controlFlowChanged, this);
+                this.model.on("change:Task Control Flow", this.controlFlowChanged, this);
                 this.model.on("change:Block", this.showBlockInTask, this);
                 this.model.on("change:Fork", this.updateFork, this);
                 // Register a handler, listening for changes on Fork Execution Environment,
@@ -226,10 +226,10 @@ define(
             updateForkEnvironmentDisableStatus: function(disabled) {
                 $("[id='" + this.model.cid + "_Run as me']").prop('disabled', disabled);
                 $("[id='" + this.model.cid + "_Fork Execution Environment']").prop('disabled', disabled);
-                $("[id='" + this.model.cid + "_Fork Environment']").prop('disabled', disabled);
+                $("[id='" + this.model.cid + "_Task Fork Environment']").prop('disabled', disabled);
                 // List elements cannot be directly enabled/disabled, need to search all the input and button elements to enable or disable them
-                $("[id='" + this.model.cid + "_Fork Environment'] :input").prop('disabled', disabled);
-                $("[id='" + this.model.cid + "_Fork Environment'] :button").prop('disabled', disabled);
+                $("[id='" + this.model.cid + "_Task Fork Environment'] :input").prop('disabled', disabled);
+                $("[id='" + this.model.cid + "_Task Fork Environment'] :button").prop('disabled', disabled);
             },
 
             /**
@@ -271,13 +271,13 @@ define(
                         // Set the script and language inside the Browser, this will render it immediately.
                         // We did not find a way to render the model, so the last possibility was to
                         // just set it in the DOM.
-                        $('[id*="_Fork Environment_Java Home"]').val(javaHome);
-                        $('[id*="_Fork Environment_Environment Script_ScriptCode_Language"]').val(prefixCommandLanguage);
-                        $('[id*="_Fork Environment_Environment Script_ScriptCode_Code"]').val(prefixContainerCommandString);
+                        $('[id*="_Task Fork Environment_Java Home"]').val(javaHome);
+                        $('[id*="_Task Fork Environment_Environment Script_ScriptCode_Language"]').val(prefixCommandLanguage);
+                        $('[id*="_Task Fork Environment_Environment Script_ScriptCode_Code"]').val(prefixContainerCommandString);
                         // Set the script and language in the model. This persists the changes but does not render
                         // them immediately.
-                        this.model.get('Fork Environment')['Java Home'] = javaHome;
-                        this.model.get('Fork Environment')['Environment Script'] = {
+                        this.model.get('Task Fork Environment')['Java Home'] = javaHome;
+                        this.model.get('Task Fork Environment')['Environment Script'] = {
                             ScriptType: "ScriptCode",
                             ScriptCode: {
                                 Code: prefixContainerCommandString,
@@ -330,7 +330,7 @@ define(
             controlFlowChanged: function(changed, valu, handler) {
                 var fromFormChange = handler.error; // its defined when form was
                 // changed
-                var control = this.model.get("Control Flow");
+                var control = this.model.get("Task Control Flow");
                 if (fromFormChange && control) {
 
                     var endPoints = jsPlumb.getEndpoints(this.$el);
@@ -830,46 +830,46 @@ define(
                     }
                 }
 
-                //Test if there is a reference to a Fork Environment Script
-                if (JSON.stringify(this.model.get("Fork Environment")) != "{}") {
-                    if (this.model.get("Fork Environment").hasOwnProperty("Environment Script")) {
-                        if (this.model.get("Fork Environment")['Environment Script'].ScriptType === "ScriptFile" && this.model.get("Fork Environment")['Environment Script'].ScriptFile) {
-                            var UrlForkScript = this.model.get("Fork Environment")['Environment Script'].ScriptFile.Url;
+                //Test if there is a reference to a Task Fork Environment Script
+                if (JSON.stringify(this.model.get("Task Fork Environment")) != "{}") {
+                    if (this.model.get("Task Fork Environment").hasOwnProperty("Environment Script")) {
+                        if (this.model.get("Task Fork Environment")['Environment Script'].ScriptType === "ScriptFile" && this.model.get("Task Fork Environment")['Environment Script'].ScriptFile) {
+                            var UrlForkScript = this.model.get("Task Fork Environment")['Environment Script'].ScriptFile.Url;
                             taskVariables[taskName + ":Environment Script"] = UrlForkScript;
                         }
                     } else {
-                        if (this.model.get("Fork Environment").get("Environment Script").get("ScriptType") === "ScriptFile" && this.model.get("Fork Environment").get("Environment Script").get("ScriptFile")) {
-                            var UrlForkScript = this.model.get("Fork Environment").get("Environment Script").get("ScriptFile").get("Url");
+                        if (this.model.get("Task Fork Environment").get("Environment Script").get("ScriptType") === "ScriptFile" && this.model.get("Task Fork Environment").get("Environment Script").get("ScriptFile")) {
+                            var UrlForkScript = this.model.get("Task Fork Environment").get("Environment Script").get("ScriptFile").get("Url");
                             taskVariables[taskName + ":Environment Script"] = UrlForkScript;
                         }
                     }
                 }
 
-                //Test if there is a reference to a Control Flow Script
-                if (this.model.controlFlow[this.model.get("Control Flow")]) {
-                    if (this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptType") === "ScriptFile" && this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptFile")) {
-                        var UrlFlowScript = this.model.controlFlow[this.model.get("Control Flow")]['model'].get("ScriptFile").get("Url");
-                        taskVariables[taskName + ":Control Flow Script"] = UrlFlowScript;
+                //Test if there is a reference to a Task Control Flow Script
+                if (this.model.controlFlow[this.model.get("Task Control Flow")]) {
+                    if (this.model.controlFlow[this.model.get("Task Control Flow")]['model'].get("ScriptType") === "ScriptFile" && this.model.controlFlow[this.model.get("Task Control Flow")]['model'].get("ScriptFile")) {
+                        var UrlFlowScript = this.model.controlFlow[this.model.get("Task Control Flow")]['model'].get("ScriptFile").get("Url");
+                        taskVariables[taskName + ":Task Control Flow Script"] = UrlFlowScript;
                     }
 
                 }
 
-                //Test if there is a reference to a Node Selection Script
-                if (this.model.get("Node Selection")) {
-                    for (var i = 0; i < this.model.get("Node Selection").length; i++) {
-                        if (this.model.get("Node Selection")[i].hasOwnProperty("ScriptType")) {
-                            if (this.model.get("Node Selection")[i].ScriptType === "ScriptFile" && this.model.get("Node Selection")[i].ScriptFile) {
-                                if (this.model.get("Node Selection")[i].ScriptFile.hasOwnProperty("Url")) {
-                                    var UrlSelectionScript = this.model.get("Node Selection")[i].ScriptFile.Url;
+                //Test if there is a reference to a Task Node Selection Script
+                if (this.model.get("Task Node Selection")) {
+                    for (var i = 0; i < this.model.get("Task Node Selection").length; i++) {
+                        if (this.model.get("Task Node Selection")[i].hasOwnProperty("ScriptType")) {
+                            if (this.model.get("Task Node Selection")[i].ScriptType === "ScriptFile" && this.model.get("Task Node Selection")[i].ScriptFile) {
+                                if (this.model.get("Task Node Selection")[i].ScriptFile.hasOwnProperty("Url")) {
+                                    var UrlSelectionScript = this.model.get("Task Node Selection")[i].ScriptFile.Url;
                                 } else {
-                                    var UrlSelectionScript = this.model.get("Node Selection")[i].ScriptFile.get("Url");
+                                    var UrlSelectionScript = this.model.get("Task Node Selection")[i].ScriptFile.get("Url");
                                 }
-                                taskVariables[taskName + ":Node Selection Script:" + i] = UrlSelectionScript;
+                                taskVariables[taskName + ":Task Node Selection Script:" + i] = UrlSelectionScript;
                             }
                         } else {
-                            if (this.model.get("Node Selection")[i].get("ScriptType") === "ScriptFile" && this.model.get("Node Selection")[i].get("ScriptFile")) {
-                                var UrlSelectionScript = this.model.get("Node Selection")[i].get("ScriptFile").get("Url");
-                                taskVariables[taskName + ":Node Selection Script:" + i] = UrlSelectionScript;
+                            if (this.model.get("Task Node Selection")[i].get("ScriptType") === "ScriptFile" && this.model.get("Task Node Selection")[i].get("ScriptFile")) {
+                                var UrlSelectionScript = this.model.get("Task Node Selection")[i].get("ScriptFile").get("Url");
+                                taskVariables[taskName + ":Task Node Selection Script:" + i] = UrlSelectionScript;
                             }
                         }
                     }
@@ -917,13 +917,13 @@ define(
                         case 'Clean Script':
                             index = 8;
                             break;
-                        case 'Node Selection Script':
+                        case 'Task Node Selection Script':
                             index = 10;
                             break;
                         case 'Environment Script':
                             index = 11;
                             break;
-                        case 'Control Flow Script':
+                        case 'Task Control Flow Script':
                             index = 12;
                             break;
                     }

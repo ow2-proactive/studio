@@ -410,13 +410,13 @@ define(
                     case 'Clean Script':
                         index = 8;
                         break;
-                    case 'Node Selection Script':
+                    case 'Task Node Selection Script':
                         index = 10;
                         break;
                     case 'Environment Script':
                         index = 11;
                         break;
-                    case 'Control Flow Script':
+                    case 'Task Control Flow Script':
                         index = 12;
                         break;
                 }

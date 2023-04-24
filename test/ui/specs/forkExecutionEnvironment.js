@@ -10,10 +10,10 @@ module.exports = {
             .createTask() // Add a task to the workflow
             .click(".task") // Select the task -- that will show a new sidebar
             .useXpath() // every selector now must be xpath
-            .waitForElementVisible('//*[@id=\"Fork Environment\"]') // Check for the Fork Environment tab
-            .moveToElement('//*[@id=\"Fork Environment\"]', 10, 10)
+            .waitForElementVisible('//*[@id=\"Task Fork Environment\"]') // Check for the Task Fork Environment tab
+            .moveToElement('//*[@id=\"Task Fork Environment\"]', 10, 10)
             .pause(browser.globals.menuAnimationTime)
-            .click('//*[@id=\"Fork Environment\"]') // Click on the Fork Environment tab
+            .click('//*[@id=\"Task Fork Environment\"]') // Click on the Task Fork Environment tab
             .pause(browser.globals.menuAnimationTime)
             // Wait for the For Execution Environment select to be visible
             .waitForElementVisible('//select[@name=\"Fork Execution Environment\"]')
@@ -31,10 +31,10 @@ module.exports = {
             .createTask() // Add a task to the workflow
             .click(".task") // Select the task -- that will show a new sidebar
             .useXpath() // every selector now must be xpath
-            .waitForElementVisible('//*[@id=\"Fork Environment\"]') // Check for the Fork Environment tab
-            .moveToElement('//*[@id=\"Fork Environment\"]', 10, 10)
+            .waitForElementVisible('//*[@id=\"Task Fork Environment\"]') // Check for the Task Fork Environment tab
+            .moveToElement('//*[@id=\"Task Fork Environment\"]', 10, 10)
             .pause(browser.globals.menuAnimationTime)
-            .click('//*[@id=\"Fork Environment\"]') // Click on the Fork Environment tab
+            .click('//*[@id=\"Task Fork Environment\"]') // Click on the Task Fork Environment tab
             .pause(browser.globals.menuAnimationTime)
             // Wait for the For Execution Environment select to be visible
             .waitForElementVisible('//select[@name=\"Fork Execution Environment\"]')

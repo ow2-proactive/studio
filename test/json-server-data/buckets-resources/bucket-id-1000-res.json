@@ -71,7 +71,7 @@
         ]
       },
       {
-        "name": "Data Management",
+        "name": "Workflow Data Management",
         "links": [
           {
             "rel": "content",
@@ -90,7 +90,7 @@
         "object_key_values": [
           {
             "key": "name",
-            "value": "Data Management",
+            "value": "Workflow Data Management",
             "label": "job_information"
           },
           {

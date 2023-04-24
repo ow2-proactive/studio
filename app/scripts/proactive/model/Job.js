@@ -33,7 +33,7 @@ define(
         "Name": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": 'General Parameters',
+            "data-tab": 'Workflow General Parameters',
             'data-tab-help': 'General workflow parameters (name, description, priority...)',
             'placeholder': '@attributes->name',
             "data-help": 'The name of your workflow.'
@@ -205,7 +205,7 @@ define(
         "User Space Url": {
           type: "Text",
           fieldAttrs: {
-            "data-tab": "Data Management",
+            "data-tab": "Workflow Data Management",
             'data-tab-help': 'DataSpaces allow to automatically manage File transfer at the level of Job and Tasks.',
             'placeholder': 'userSpace->@attributes->url',
             "data-help": "A User Space which is a personal user data storage. Usually you set this url if you want to use your own dataspace server, not the one that is included into the Scheduler."
@@ -233,9 +233,9 @@ define(
           }
         },
         "Number of Execution Attempts": {
-          type: 'Number',
+          type: "Text",
           fieldAttrs: {
-            "data-tab": "Error Handling",
+            "data-tab": "Workflow Error Management Policy",
             'data-tab-help': 'Configure workflow behavior upon errors',
             'placeholder': '@attributes->maxNumberOfExecution',
             "data-help": "Defines the maximum number of execution attempts for the tasks."
@@ -245,23 +245,23 @@ define(
           type: 'Select',
           fieldAttrs: {
             'placeholder': '@attributes->onTaskError',
-            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Ignore error and continue job execution (Default) <br>&nbsp;&nbsp;- Only suspend dependencies of In-Error tasks and set job as In-Error <br>&nbsp;&nbsp;- Pause job execution (running tasks can terminate) <br>&nbsp;&nbsp;- Cancel job (running tasks are aborted and remaining ones not started)."
+            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution <br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- Cancel: Running Tasks are aborted, and others not started."
           },
           options: [{
               val: "continueJobExecution",
-              label: "Ignore error and continue job execution (Default)"
+              label: "Default: Ignore Error and continue Job execution"
             },
             {
               val: "suspendTask",
-              label: "Only suspend dependencies of In-Error tasks and set job as In-Error"
+              label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"
             },
             {
               val: "pauseJob",
-              label: "Pause job execution (running tasks can terminate)"
+              label: "Pause: Continue running Tasks, and suspend all others"
             },
             {
               val: "cancelJob",
-              label: "Cancel job (running tasks are aborted and remaining ones not started)"
+              label: "Cancel: Running Tasks are aborted, and others not started"
             }
           ]
         },
@@ -342,6 +342,7 @@ define(
             }
           }
         ]
+
         this.schema["Generic Info"].subSchema["Property Value"].validators = [
             function checkInputGenericINfo(value, formValues, form){
                 if(undoManager.isHTML(formValues["Property Name"])){
@@ -353,6 +354,53 @@ define(
                 }
             }
         ]
+
+        this.schema["Number of Execution Attempts"].validators = [
+            function checkNumberOfExecutionForTask(value, formValues, form){
+                if(!validVariableOrPositiveNumber(value)) {
+                    var err = {
+                        type: 'Validation',
+                        message: "<br>The value should contain a variable or a number higher than 0"
+                    };
+                    return err;
+                }
+            }
+        ];
+
+        this.schema["Delay Before Retry Task (hh:mm:ss)"].validators = [
+            function checkMaxExecutionTime(value, formValues, form){
+                if (!validTimeFormat(value)) {
+                    var err = {
+                        type: 'Validation',
+                        message: "<br>The value does not match <b>hh:mm:ss</b> format"
+                    };
+                    return err;
+                }
+            }
+        ];
+
+        function validTimeFormat(value){
+            var hourMinSecondsRegexp = new RegExp("^((([0-9]|[1-9][0-9]+):?([0-5][0-9]):?([0-5][0-9]))$)");
+            var minSecondsRegexp = new RegExp("^((([0-9]|[1-9][0-9]+):?([0-9]|[0-5][0-9])$))");
+            var secondsRegexp = new RegExp("^([0-9]|[1-9][0-9]+)$");
+            if (!value || value.length === 0 || hourMinSecondsRegexp.test(value) || minSecondsRegexp.test(value) || secondsRegexp.test(value)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+       }
+
+        function validVariableOrPositiveNumber(value){
+            var varRegexBrackets = new RegExp(".*\\$\\{([a-zA-Z]+)}+");
+            var varRegex = new RegExp(".*\\$[a-zA-Z]+");
+            var numberRegex = new RegExp("^[1-9][0-9]*$");
+            if (!value || value.length === 0 || varRegexBrackets.test(value) || varRegex.test(value) || numberRegex.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         this.tasks = [];
 
@@ -596,7 +644,7 @@ define(
                 var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
                 var targetTask = name2Task[loopTarget];
                 taskModel.set({
-                  'Control Flow': 'loop'
+                  'Task Control Flow': 'loop'
                 });
                 taskModel.controlFlow = {
                   'loop': {

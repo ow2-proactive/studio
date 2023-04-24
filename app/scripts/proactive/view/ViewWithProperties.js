@@ -220,7 +220,7 @@ define(
 					var curLabel = "";
 					var isTask = this.model.get("Task Name") != undefined;
 					var isWorkflow = this.model.get("Name") != undefined;
-					var accordionTitleText = isTask ?  'Task Parameters' : (isWorkflow ? '<b>Workflow Parameters</b>' : 'Control Flow Parameters');
+					var accordionTitleText = isTask ?  '<b>Task Parameters</b>' : (isWorkflow ? '<b>Workflow Parameters</b>' : 'Task Control Flow Parameters');
 					var accordionTitle = $('<div class="panel-heading">' + accordionTitleText + '</div>');
 					accordion.append(accordionTitle);
 
@@ -338,10 +338,10 @@ define(
 					if (disableForkEnv) {
 						accordion.find("[id='" + this.model.cid + "_Run as me']").prop('disabled', disableForkEnv);
 						accordion.find("[id='" + this.model.cid + "_Fork Execution Environment']").prop('disabled', disableForkEnv);
-						accordion.find("[id='" + this.model.cid + "_Fork Environment']").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Task Fork Environment']").prop('disabled', disableForkEnv);
 						// disable input and button of List parameters
-						accordion.find("[id='" + this.model.cid + "_Fork Environment'] :input").prop('disabled', disableForkEnv);
-						accordion.find("[id='" + this.model.cid + "_Fork Environment'] :button").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Task Fork Environment'] :input").prop('disabled', disableForkEnv);
+						accordion.find("[id='" + this.model.cid + "_Task Fork Environment'] :button").prop('disabled', disableForkEnv);
 					}
 
 					accordion.find("[simple-view]").remove()
