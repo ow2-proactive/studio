@@ -373,15 +373,26 @@ define(
 
                         var menuItemReference = $(liReferenceStyle + currentTaskName + '</span></a><a style="display: table-cell; padding:3px 10px;min-width: 150px"> ' + currentScriptType + ' </a><a target="_blank" style="color:#337ab7; display: table-cell;"><div class="input-group" style="display:inline-flex;" id="direct-object-url"> <input tooltip="' + currentUrl + '" type="text" class="form-control" id="reference-object-url-input" ng-disable="true" style=" width: 500px; " value="' + currentUrl + '"> <button class="reference-object-url-button btn btn-default" data-toggle="tooltip" title="Copy to clipboard"> <i class="fa fa-clone"></i> </button> </div></a></li>');
                         itemsReference.push(menuItemReference);
-                        $(".reference-object-url-button").click(function(event) {
-                            var parent = $(this).closest('#direct-object-url');
-                            var inputCopy = parent.find("#reference-object-url-input");
-                            inputCopy.select();
-                            document.execCommand("copy");
-                        });
                     }
                 }
             }
+            //If no references are detected, we add a simple message
+            if (!isReferencingScripts) {
+                var menuItemReference = $(liNoReferenceStyle + 'There are no called scripts</a></li>');
+                $("#ul-reference").append(menuItemReference);
+            } else {
+                var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Task Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
+                $("#ul-reference").append(menuHeadersReference);
+                itemsReference.forEach(function(item){
+                    $("#ul-reference").append(item);
+                })
+            }
+            $(".reference-object-url-button").click(function(event) {
+                var parent = $(this).closest('#direct-object-url');
+                var inputCopy = parent.find("#reference-object-url-input");
+                inputCopy.select();
+                document.execCommand("copy");
+            });
             $(".select-task-reference").click(function(event) {
                 var parent = $(event.currentTarget).parent().children().children()[0].innerHTML;
                 var existingTasks = $('.task-name .name');
@@ -427,18 +438,6 @@ define(
 
 
             });
-            //If no references are detected, we add a simple message
-            if (!isReferencingScripts) {
-                var menuItemReference = $(liNoReferenceStyle + 'There are no called scripts</a></li>');
-                $("#ul-reference").append(menuItemReference);
-            } else {
-                var menuHeadersReference = $('<li id="menuHeadersReference" class="sub-menu draggable ui-draggable job-element"><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 180px;">Task Name</a><a style="font-weight: bold; display: table-cell; padding:3px 10px;min-width: 159px">Task Section</a><a style="font-weight: bold; display: table-cell; padding:3px 10px">Script Reference URL</a></li>');
-                $("#ul-reference").append(menuHeadersReference);
-                itemsReference.forEach(function(item){
-                    $("#ul-reference").append(item);
-                })
-            }
-
         });
 
         $("#menu-calling").click(function(event) {
