@@ -314,7 +314,7 @@ define(
                         "data-tab": "Task Multi-Node Execution",
                         'data-tab-help': 'Configuration of resources requirements',
                         'placeholder': 'parallel->@attributes->numberOfNodes',
-                        "data-help": 'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If number of nodes is more than 1 scheduler will run the task on one of reserved nodes passing all other as parameters.'
+                        "data-help": 'Usually a task require one computing node to be executed. Sometimes task can be a distributed program itself (e.g. MPI computations).<br/><br/>If the number of nodes is greater than one, the scheduler can optimize task allocation by running the task on a reserved node and passing the other available nodes as parameters.'
                     }
                 },
                 "Topology": {
