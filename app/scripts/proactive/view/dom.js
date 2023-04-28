@@ -359,7 +359,7 @@ define(
             //isReferencingScripts becomes true when there is at least one called script
             var isReferencingScripts = false;
             var itemsReference = [];
-            var liReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 180px;"  class="select-task-reference"><span class="txt">';
+            var liReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="color:#337ab7; display: table-cell; padding:3px 10px;min-width: 180px;"  class="select-task-reference"><span>';
             var liNoReferenceStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="display: table-cell; padding:3px 10px;min-width: 180px;">';
             for (var i = 0; i < studioApp.views.workflowView.taskViews.length; i++) {
                 var taskViewModel = studioApp.views.workflowView.taskViews[i];
@@ -496,7 +496,7 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><span style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</span><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span ><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><span style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</span><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
                                 } else if (objectKind == "null") {
                                     var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 250px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
