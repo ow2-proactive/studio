@@ -1431,6 +1431,10 @@ li.success {
     min-width: 480px;
 }
 
+#ul-called li:not(.dropdown-header) {
+    display:flex;
+    justify-content:space-between;
+}
 .pipeline-title {
     margin-left: auto;
     margin-right: auto;
