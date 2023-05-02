@@ -255,7 +255,25 @@ define(
                 tags = $("#workflow-publish-tags").val();
                 //synchronize tags values
                 studioApp.models.jobModel.set("Tags", tags.split(","));
-
+                // add/update bucket name in the generic info
+                const genericInformation = studioApp.models.jobModel.get("Generic Info");
+                var BucketNameIndex = genericInformation.findIndex(function (gen) {
+                    return gen["Property Name"] === "bucketName";
+                });
+                if(localStorage.selectBucket && BucketNameIndex !== -1) {
+                    genericInformation[BucketNameIndex]["Property Value"] = localStorage.selectBucket;
+                    // Update the ui: not the best solution but there's no other option for now
+                    $("#workflow-designer").click()
+                } else if( localStorage.selectBucket ) {
+                    const genericItem = {
+                        "Property Name": "bucketName",
+                        "Property Value": localStorage.selectBucket
+                    }
+                    genericInformation.push(genericItem);
+                    // Update the ui: not the best solution but there's no other option for now
+                    $("#workflow-designer").click()
+                }
+                studioApp.models.jobModel.set("Generic Info", genericInformation);
             } else {
                 projectName = $("#script-publish-project-name").val();
                 objectName = $("#catalog-publish-name").val();
