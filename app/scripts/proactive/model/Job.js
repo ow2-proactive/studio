@@ -245,23 +245,23 @@ define(
           type: 'Select',
           fieldAttrs: {
             'placeholder': '@attributes->onTaskError',
-            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution <br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- Cancel: Running Tasks are aborted, and others not started."
+            "data-help": "Actions to take if an error occurs in a task. Setting this property in the job defines the behavior for every task. Each task can overwrite this behavior.<br><br>The actions that are available at the Job level are:<br>&nbsp;&nbsp;- Level 0 - Default: Ignore Error and continue Job execution <br>&nbsp;&nbsp;- Level 1 - In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Level 2 - Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- Level 3 - Cancel: Running Tasks are aborted, and others not started."
           },
           options: [{
               val: "continueJobExecution",
-              label: "Default: Ignore Error and continue Job execution"
+              label: "Level 0 - Default: Ignore Error and continue Job execution"
             },
             {
               val: "suspendTask",
-              label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"
+              label: "Level 1 - In-Error: Continue Job execution, but suspend error-dependent Tasks"
             },
             {
               val: "pauseJob",
-              label: "Pause: Continue running Tasks, and suspend all others"
+              label: "Level 2 - Pause: Continue running Tasks, and suspend all others"
             },
             {
               val: "cancelJob",
-              label: "Cancel: Running Tasks are aborted, and others not started"
+              label: "Level 3 - Cancel: Running Tasks are aborted, and others not started"
             }
           ]
         },
