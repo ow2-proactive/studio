@@ -276,6 +276,7 @@ define(
                 studioApp.models.jobModel.set("Generic Info", genericInformation);
             } else {
                 projectName = $("#script-publish-project-name").val();
+                tags = $("#script-publish-tags").val();
                 objectName = $("#catalog-publish-name").val();
                 if (!objectName) {
                     // in case of publishing a new revision of script, the objectname is the selected object row

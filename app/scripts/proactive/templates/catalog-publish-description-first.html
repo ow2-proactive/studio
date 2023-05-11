@@ -20,9 +20,11 @@
 			<% } %>
 		</tr>
 		<tr>
-			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
 			<td>Tags:</td>
+			<% if (kind.toLowerCase().indexOf('workflow')>-1) { %>
 			<td><input type="text" id="workflow-publish-tags" value="<%= tags %>" disabled class="disabled-input"></td>
+			<% } else { %>
+			<td><input type="text" id="script-publish-tags" value="<%= tags %>"></td>
 			<% } %>
 		</tr>
 		<tr>

@@ -195,7 +195,7 @@ define(
                 "Number of Execution Attempts": {
                     type: "Text",
                     fieldAttrs: {
-                        "data-tab": "Task Error Management",
+                        "data-tab": "Task Error Management Policy",
                         'data-tab-help': 'Task error management',
                         'placeholder': '@attributes->maxNumberOfExecution',
                         "data-help": 'Defines the maximum number of execution attempts of the task.<br> If 0, it will inherit  the maximum number of execution attempts of the job.'
@@ -212,14 +212,14 @@ define(
                     type: 'Select',
                     fieldAttrs: {
                         'placeholder': '@attributes->onTaskError',
-                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Default: Ignore Error and continue Job execution<br>&nbsp;&nbsp;- In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- default (defined at job level)<br>&nbsp;&nbsp;- Cancel: Running Tasks are aborted, and others not started.'
+                        "data-help": 'Overwrites the on task error policy set for the job.<br><br>The actions that are available at the Task level are:<br>&nbsp;&nbsp;- Defined at job level<br>&nbsp;&nbsp;- Level 0 - Default: Ignore Error and continue Job execution<br>&nbsp;&nbsp;- Level 1 - In-Error: Continue Job execution, but suspend error-dependent Tasks <br>&nbsp;&nbsp;- Level 2 - Pause: Continue running Tasks, and suspend all others <br>&nbsp;&nbsp;- Level 3 - Cancel: Running Tasks are aborted, and others not started.'
                     },
                     options: [
-                              {val: "continueJobExecution", label: "Default: Ignore Error and continue Job execution"},
-                              {val: "suspendTask", label: "In-Error: Continue Job execution, but suspend error-dependent Tasks"},
-                              {val: "pauseJob", label: "Pause: Continue running Tasks, and suspend all others"},
-                              {val: "cancelJob", label: "Cancel: Running Tasks are aborted, and others not started"},
-                              {val: "none", label: "default (defined at job level)"}
+                              {val: "none", label: "Defined at job level"},
+                              {val: "continueJobExecution", label: "Level 0 - Default: Ignore Error and continue Job execution"},
+                              {val: "suspendTask", label: "Level 1 - In-Error: Continue Job execution, but suspend error-dependent Tasks"},
+                              {val: "pauseJob", label: "Level 2 - Pause: Continue running Tasks, and suspend all others"},
+                              {val: "cancelJob", label: "Level 3 - Cancel: Running Tasks are aborted, and others not started"}
                               ]
                 },
                 "If An Error Occurs Restart Task": {
