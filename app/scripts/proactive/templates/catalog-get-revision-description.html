@@ -13,7 +13,7 @@
 		<% if(tags) { %>
 		<tr>
 			<th>Tags</th>
-			<td><%= tags %></td>
+			<td><%= tags.replace(/,/g, ', ') %></td>
 		</tr>
 		<% } %>
 		<tr>
