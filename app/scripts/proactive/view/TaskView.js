@@ -829,7 +829,6 @@ define(
                         }
                     }
                 }
-
                 //Test if there is a reference to a Task Fork Environment Script
                 if (JSON.stringify(this.model.get("Task Fork Environment")) != "{}") {
                     if (this.model.get("Task Fork Environment").hasOwnProperty("Environment Script")) {
@@ -838,7 +837,7 @@ define(
                             taskVariables[taskName + ":Environment Script"] = UrlForkScript;
                         }
                     } else {
-                        if (this.model.get("Task Fork Environment").get("Environment Script").get("ScriptType") === "ScriptFile" && this.model.get("Task Fork Environment").get("Environment Script").get("ScriptFile")) {
+                        if (this.model.get("Task Fork Environment").get("Environment Script") && this.model.get("Task Fork Environment").get("Environment Script").get("ScriptType") === "ScriptFile" && this.model.get("Task Fork Environment").get("Environment Script").get("ScriptFile")) {
                             var UrlForkScript = this.model.get("Task Fork Environment").get("Environment Script").get("ScriptFile").get("Url");
                             taskVariables[taskName + ":Environment Script"] = UrlForkScript;
                         }
