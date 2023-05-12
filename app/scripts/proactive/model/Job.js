@@ -644,7 +644,7 @@ define(
                 var loopTarget = taskJson.controlFlow.loop['@attributes']['target'];
                 var targetTask = name2Task[loopTarget];
                 taskModel.set({
-                  'Task Control Flow': 'loop'
+                  'Control Flow': 'loop'
                 });
                 taskModel.controlFlow = {
                   'loop': {

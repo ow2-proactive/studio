@@ -337,7 +337,7 @@ define(
                         "data-help": 'Hosts in the network with predefined max latency between all of them.'
                     }
                 },
-                "Task Node Selection": {
+                "Node Selection": {
                     type: 'List',
                     itemType: 'NestedModel',
                     model: SelectionScript,
@@ -358,11 +358,11 @@ define(
                 "Fork": {
                     type: "Checkbox",
                     fieldAttrs: {
-                        // The Fork Execution Environment begins the Task Fork Environment tab, 'data-tab',
+                        // The Fork Execution Environment begins the Fork Environment tab, 'data-tab',
                         // everything which comes after this tab is included in it, if no new 'data-tab'
                         // is defined.
                         "data-tab": "Task Fork Environment",
-                        "data-tab-help": "Task Fork environment is a new customisable JVM started to only run the task it belongs to. Also specify how to start this JVM, like in a Docker container for example.",
+                        "data-tab-help": "Task Fork Environment is a new customisable JVM started to only run the task it belongs to. Also specify how to start this JVM, like in a Docker container for example.",
                         'placeholder': '@attributes->fork',
                         "data-help": 'Executes the task in a forked JVM. When it is false, all the other fork environment configurations are not taken into account.'
                     }
@@ -374,9 +374,9 @@ define(
                         "data-help": 'Executes the task under your system account, it also implies the task is executed in a forked JVM.'
                     }
                 },
-                // Add the Fork Execution Environment select before the Task Fork Environment model. Because
+                // Add the Fork Execution Environment select before the Fork Environment model. Because
                 // that is the only way to receive precise events. If something changes in the
-                // Task Fork Environment the whole model will be copied in the changed event, therefore specific events
+                // Fork Environment the whole model will be copied in the changed event, therefore specific events
                 // can't be distinguished. That is because Backbone js dos not support nested models (without
                 // appropriate plugins/frameworks). In this case, nested models are used but no code which
                 // handles them. That's why we arrived at this hybrid design.
@@ -388,7 +388,7 @@ define(
                         "Example: Docker selected will execute this task inside a Docker container."
                     }
                 },
-                "Task Fork Environment": {
+                "Fork Environment": {
                     type: 'NestedModel',
                     model: ForkEnvironment,
                     fieldAttrs: {
@@ -396,13 +396,14 @@ define(
                     },
                     title: ""
                 },
-                "Task Control Flow": {
+                "Control Flow": {
                     type: 'Select',
                     options: ["none", "if", "replicate", "loop"],
                     fieldAttrs: {
                         "data-tab": "Task Control Flow",
-                        "data-help": 'Advanced control flow constructions, such as if, loop and replicate.'
-                    }
+                        "data-tab-help": 'Advanced control flow constructions, such as if, loop and replicate.'
+                    },
+                    title: ""
                 },
                 "Block": {
                     type: 'Select',
@@ -438,7 +439,7 @@ define(
                 });
                 this.set({"Type": "ScriptExecutable"});
                 this.set({"ScriptExecutable": new ScriptExecutable()});
-                this.set({"Task Fork Environment": new ForkEnvironment()});
+                this.set({"Fork Environment": new ForkEnvironment()});
                 this.set({"Fork": true});
                 this.set({"Run as me": false});
                 this.set({"Task Name": "Task" + (++Task.counter)});
@@ -771,7 +772,7 @@ define(
                 if (!task) {
                     return;
                 }
-                this.set({'Task Control Flow': 'if'});
+                this.set({'Control Flow': 'if'});
                 if (!this.controlFlow['if']) {
                     this.controlFlow = {'if': {}}
                     this.controlFlow['if'].model = new FlowScript();
@@ -794,7 +795,7 @@ define(
                 this.controlFlow['if']['continuation'] = {task: task};
             },
             removeif: function (task) {
-                this.set({'Task Control Flow': 'none'});
+                this.set({'Control Flow': 'none'});
                 if (this.controlFlow['if'].task == task) {
                     console.log('Removing IF')
                     delete this.controlFlow['if'].task;
@@ -809,30 +810,30 @@ define(
                     // at least one branch is present
                 } else {
                     console.log('Removing if branch', this.controlFlow, task)
-                    this.set({'Task Control Flow': 'none'});
+                    this.set({'Control Flow': 'none'});
                     delete this.controlFlow['if'];
                 }
             },
             setloop: function (task) {
                 console.log('Adding loop')
-                this.set({'Task Control Flow': 'loop'});
+                this.set({'Control Flow': 'loop'});
                 this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
             },
             removeloop: function (controlFlow, task) {
                 console.log('Removing loop')
-                this.set({'Task Control Flow': 'none'});
+                this.set({'Control Flow': 'none'});
                 delete this.controlFlow['loop']
             },
             setreplicate: function () {
                 console.log('Adding replicate')
                 if (!this.controlFlow['replicate']) { // keep existing script if it is already defined
-                    this.set({'Task Control Flow': 'replicate'});
+                    this.set({'Control Flow': 'replicate'});
                     this.controlFlow = {'replicate': {model: new FlowScript()}}
                 }
             },
             removereplicate: function (controlFlow, task) {
                 console.log('Removing replicate')
-                this.set({'Task Control Flow': 'none'});
+                this.set({'Control Flow': 'none'});
                 delete this.controlFlow['replicate']
             },
 

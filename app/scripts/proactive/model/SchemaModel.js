@@ -86,7 +86,7 @@ define(
                                 continue;
                             }
 
-                            if (prop == "Task Node Selection" && Array.isArray(value.script)) {
+                            if (prop == "Node Selection" && Array.isArray(value.script)) {
                                 value = value.script.map(function(val){
                                             return { script: val}
                                         })
