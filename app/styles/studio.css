@@ -728,7 +728,7 @@ div[name="Environment Variables"] {
     margin-top: 15px;
 }
 
-div[name="Task Fork Environment"] > form > fieldset > div {
+div[name="Fork Environment"] > form > fieldset > div {
     margin-top: 20px;
 }
 
