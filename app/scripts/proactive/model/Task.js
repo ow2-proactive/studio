@@ -351,8 +351,9 @@ define(
                     fieldAttrs: {
                         "data-tab": "Task Node Selection",
                         'placeholder': 'selection',
-                        "data-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
+                        "data-tab-help": 'A node selection provides an ability for the scheduler to execute tasks on particular ProActive nodes. E.g. you can specify that a task must be executed on a Unix/Linux system.'
                     },
+                    title: "",
                     confirmDelete: 'You are about to remove a Selection script.'
                 },
                 "Fork": {
