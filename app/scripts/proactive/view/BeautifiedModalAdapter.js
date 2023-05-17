@@ -3,13 +3,15 @@ define(
         'jquery',
         'backbone',
         'pnotify',
+        'proactive/config',
+        'autoComplete',
         'list',
         'backboneFormsAdapter',
         'StudioApp',
         'bootstrap',
     ],
 
-    function ($, Backbone, PNotify) {
+    function ($, Backbone, PNotify, config, autoComplete) {
 
         "use strict";
 
@@ -30,7 +32,24 @@ define(
                 container.find("[data-help]").each(function() {
                     that.addHelpTooltip($(this))
                 })
+                // adding auto-complete
+                container.find("input").each(function() {
+                    that.addAutoComplete($(this))
+                })
 
+            },
+            addAutoComplete: function(el) {
+                if (el.hasClass("jobGenericInfo")) {
+                    var configAC = config.autoCompleteJobGenericInfo;
+                    configAC.selector = function() { return el[0]};
+                    var autoCompleteJS = new autoComplete(configAC);
+                    autoCompleteJS.init();
+                } else if (el.hasClass("taskGenericInfo")) {
+                    var configAC = config.autoCompleteTaskGenericInfo;
+                    configAC.selector = function() { return el[0]};
+                    var autoCompleteJS = new autoComplete(configAC);
+                    autoCompleteJS.init();
+                }
             },
             addHelpTooltip: function(el) {
 
