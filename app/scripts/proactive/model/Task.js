@@ -100,6 +100,13 @@ define(
                     subSchema: {
                         "Property Name": {
                             validators: ['required'],
+                            editorClass: 'taskGenericInfo',
+                            editorAttrs: {
+                                'spellcheck' : 'false',
+                                'autocorrect' : 'off',
+                                'autocomplete' : 'off',
+                                'autocapitalize' : 'off'
+                            },
                             fieldAttrs: {'placeholder': '@attributes->name'},
                             title: '<br><a target="_blank" href="' + config.docUrl + '/user/ProActiveUserGuide.html#_generic_information">Documentation</a><br><br>Property Name'
                         },

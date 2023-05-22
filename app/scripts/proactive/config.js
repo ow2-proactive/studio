@@ -14,6 +14,134 @@ define(function () {
         commonRestApiUrl: '/rest/common',
         execution_scheduler_restApiUrl: '/job-planner/planned_jobs',
         docUrl: '/doc',
+        autoCompleteJobGenericInfo: {
+            selector: ".jobGenericInfo",
+            wrapper: true,
+            data: {
+                src: [
+                    {"Resource Manager" : "NODE_ACCESS_TOKEN"}, {"Resource Manager" : "NODE_SOURCE"}, {"Resource Manager" : "NODESOURCENAME"},
+                    {"Resource Manager" : "NS"}, {"Resource Manager" : "NS_BATCH"}, {"Resource Manager" : "NS_PRE"},
+                    {"Scheduling" : "JOB_DDL"}, {"Scheduling" : "JOB_EXEC_TIME"}, {"Scheduling" : "START_AT"}, {"Scheduling" : "WALLTIME"},
+                    {"Housekeeping" : "REMOVE_DELAY"}, {"Housekeeping" : "REMOVE_DELAY_ON_ERROR"},
+                    {"Notification" : "EMAIL"}, {"Notification" : "NOTIFICATION_EVENTS"},
+                    {"User Interface" : "Documentation"}, {"User Interface" : "submission.mode"}, {"User Interface" : "workflow.icon"},
+                    {"RunAs" : "RUNAS_DOMAIN"}, {"RunAs" : "RUNAS_METHOD"}, {"RunAs" : "RUNAS_PWD"}, {"RunAs" : "RUNAS_PWD_CRED"}, {"RunAs" : "RUNAS_SSH_KEY_CRED"}, {"RunAs" : "RUNAS_USER"},
+                    {"CPython" : "PYTHON_COMMAND"},
+                    {"Dockerfile" : "docker-build-options"}, {"Dockerfile" : "docker-exec-command"}, {"Dockerfile" : "docker-exec-options"}, {"Dockerfile" : "docker-file-options-split-regex"}, {"Dockerfile" : "docker-rmi-options"},
+                    {"Dockerfile" : "docker-rm-options"}, {"Dockerfile" : "docker-run-options"}, {"Dockerfile" : "docker-stop-options"}, {"Docker Compose" : "docker-compose-options"}, {"Docker Compose" : "docker-compose-options-split-regex"},
+                    {"Docker Compose" : "docker-compose-up-options"}
+                ],
+                keys: ["Resource Manager", "Scheduling", "Housekeeping", "Notification", "User Interface", "RunAs", "CPython", "Dockerfile", "Docker Compose"],
+                cache: true,
+                filter: (list) => {
+                  // remove undefined element due to our custom data src definition
+                  list = list.filter(item => item.value.hasOwnProperty(item.key));
+                  // Filter duplicates
+                  // incase of multiple data keys usage
+                  const filteredResults = Array.from(
+                    new Set(list.map((value) => value.match))
+                  ).map((food) => {
+                    return list.find((value) => value.match === food);
+                  });
+
+                  return filteredResults;
+                }
+            },
+            threshold: 0,
+            resultsList: {
+                maxResults: undefined,
+                noResults: true,
+                tabSelect: true
+            },
+            resultItem: {
+                element: (item, data) => {
+                  // Modify Results Item Style
+                  item.style = "display: flex; justify-content: space-between;";
+                  // Modify Results Item Content
+                  item.innerHTML = `
+                  <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                    ${data.match}
+                  </span>
+                  <span style="display: flex; align-items: center; font-size: 13px; font-weight: 100; text-transform: uppercase; color: rgba(0,0,0,.2);">
+                    ${data.key}
+                  </span>`;
+                },
+                highlight: true
+            },
+            events: {
+                input: {
+                    selection: (event) => {
+                        const selection = event.detail.selection;
+                        event.target.value = selection.value[selection.key];
+                    }
+                }
+            }
+        },
+        autoCompleteTaskGenericInfo: {
+            selector: ".taskGenericInfo",
+            wrapper: true,
+            data: {
+                src: [
+                    {"Resource Manager" : "NODE_ACCESS_TOKEN"}, {"Resource Manager" : "NODE_SOURCE"}, {"Resource Manager" : "NODESOURCENAME"},
+                    {"Resource Manager" : "NS"}, {"Resource Manager" : "NS_BATCH"}, {"Resource Manager" : "NS_PRE"},
+                    {"Scheduling" : "START_AT"}, {"Scheduling" : "WALLTIME"},
+                    {"Task Control" : "DISABLE_PTK"}, {"Task Control" : "PRE_SCRIPT_AS_FILE"},
+                    {"Result Format" : "content.type"}, {"Result Format" : "file.name"}, {"Result Format" : "file.extension"},
+                    {"User Interface" : "task.documentation"}, {"User Interface" : "task.icon"},
+                    {"RunAs" : "RUNAS_DOMAIN"}, {"RunAs" : "RUNAS_METHOD"}, {"RunAs" : "RUNAS_PWD"}, {"RunAs" : "RUNAS_PWD_CRED"}, {"RunAs" : "RUNAS_SSH_KEY_CRED"}, {"RunAs" : "RUNAS_USER"},
+                    {"CPython" : "PYTHON_COMMAND"},
+                    {"Dockerfile" : "docker-actions"}, {"Dockerfile" : "docker-image-tag"}, {"Dockerfile" : "docker-container-tag"},
+                    {"Dockerfile" : "docker-build-options"}, {"Dockerfile" : "docker-exec-command"}, {"Dockerfile" : "docker-exec-options"}, {"Dockerfile" : "docker-file-options-split-regex"},
+                    {"Dockerfile" : "docker-rmi-options"}, {"Dockerfile" : "docker-rm-options"}, {"Dockerfile" : "docker-run-options"}, {"Dockerfile" : "docker-stop-options"},
+                    {"Docker Compose" : "docker-compose-options"}, {"Docker Compose" : "docker-compose-options-split-regex"},
+                    {"Docker Compose" : "docker-compose-up-options"}
+                ],
+                keys: ["Resource Manager", "Scheduling", "Task Control", "Result Format", "User Interface", "RunAs", "CPython", "Dockerfile", "Docker Compose"],
+                cache: true,
+                filter: (list) => {
+                  // remove undefined element due to our custom data src definition
+                  list = list.filter(item => item.value.hasOwnProperty(item.key));
+                  // Filter duplicates
+                  // incase of multiple data keys usage
+                  const filteredResults = Array.from(
+                    new Set(list.map((value) => value.match))
+                  ).map((food) => {
+                    return list.find((value) => value.match === food);
+                  });
+
+                  return filteredResults;
+                }
+            },
+            threshold: 0,
+            resultsList: {
+                maxResults: undefined,
+                noResults: true,
+                tabSelect: true
+            },
+            resultItem: {
+                element: (item, data) => {
+                  // Modify Results Item Style
+                  item.style = "display: flex; justify-content: space-between;";
+                  // Modify Results Item Content
+                  item.innerHTML = `
+                  <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                    ${data.match}
+                  </span>
+                  <span style="display: flex; align-items: center; font-size: 13px; font-weight: 100; text-transform: uppercase; color: rgba(0,0,0,.2);">
+                    ${data.key}
+                  </span>`;
+                },
+                highlight: true
+            },
+            events: {
+                input: {
+                    selection: (event) => {
+                        const selection = event.detail.selection;
+                        event.target.value = selection.value[selection.key];
+                    }
+                }
+            }
+        },
         tasks: {
             '1. OS Shells': {
                 'Shell': 'templates/script_shell.xml',

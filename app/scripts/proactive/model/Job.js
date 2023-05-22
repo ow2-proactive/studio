@@ -186,6 +186,13 @@ define(
           subSchema: {
             "Property Name": {
               validators: ['required'],
+              editorClass: 'jobGenericInfo',
+              editorAttrs: {
+                'spellcheck' : 'false',
+                'autocorrect' : 'off',
+                'autocomplete' : 'off',
+                'autocapitalize' : 'off'
+              },
               fieldAttrs: {
                 'placeholder': '@attributes->name'
               },

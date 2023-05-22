@@ -95,6 +95,7 @@ require.config({
         jsplumb: '../libs/jsplumb/dist/js/jquery.jsPlumb-1.7.2-min',
         filesaver: '../libs/FileSaver/FileSaver',
         xml2json: 'thirdparties/xml2json',
+        autoComplete: '../libs/autocomplete/autoComplete.min',
 
         StudioApp: 'proactive/app'
     }
