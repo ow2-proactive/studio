@@ -142,6 +142,68 @@ define(function () {
                 }
             }
         },
+        autoCompleteVariableModel: {
+            selector: "#Model",
+            wrapper: true,
+            data: {
+                src: [
+                    {"Scalar" : "PA:BOOLEAN"}, {"Scalar" : "PA:INTEGER"}, {"Scalar" : "PA:LONG"}, {"Scalar" : "PA:FLOAT"},
+                    {"Scalar" : "PA:DOUBLE"}, {"Scalar" : "PA:SHORT"}, {"Scalar" : "PA:NOT_EMPTY_STRING"},
+                    {"Scalar" : "PA:URL"}, {"Scalar" : "PA:URI"}, {"Scalar" : "PA:REGEXP(expr)"}, {"Scalar" : "PA:CRON"}, {"Scalar" : "PA:DATETIME(format)"},
+                    {"Choice" : "PA:LIST(choices)"}, {"Password" : "PA:HIDDEN"}, {"Password" : "PA:CREDENTIAL"},
+                    {"Resource" : "PA:CATALOG_OBJECT"}, {"Resource" : "PA:GLOBAL_FILE"}, {"Resource" : "PA:GLOBAL_FOLDER"},
+                    {"Resource" : "PA:USER_FILE"}, {"Resource" : "PA:USER_FOLDER"}, {"Resource" : "PA:MODEL_FROM_URL(url)"},
+                    {"Resource" : "PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/nodesources)"},
+                    {"Resource" : "PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/hosts)"},
+                    {"Resource" : "PA:MODEL_FROM_URL(${PA_SCHEDULER_REST_PUBLIC_URL}/rm/model/tokens)"},
+                    {"Advanced" : "PA:SPEL(expr)"}
+                ],
+                keys: ["Scalar", "Choice", "Password", "Resource", "Advanced"],
+                cache: true,
+                filter: (list) => {
+                  // remove undefined element due to our custom data src definition
+                  list = list.filter(item => item.value.hasOwnProperty(item.key));
+                  // Filter duplicates
+                  // incase of multiple data keys usage
+                  const filteredResults = Array.from(
+                    new Set(list.map((value) => value.match))
+                  ).map((food) => {
+                    return list.find((value) => value.match === food);
+                  });
+
+                  return filteredResults;
+                }
+            },
+            threshold: 0,
+            resultsList: {
+                maxResults: undefined,
+                noResults: true,
+                tabSelect: true
+            },
+            resultItem: {
+                element: (item, data) => {
+                  // Modify Results Item Style
+                  item.style = "display: flex; justify-content: space-between;";
+                  // Modify Results Item Content
+                  item.innerHTML = `
+                  <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                    ${data.match}
+                  </span>
+                  <span style="display: flex; align-items: center; font-size: 13px; font-weight: 100; text-transform: uppercase; color: rgba(0,0,0,.2);">
+                    ${data.key}
+                  </span>`;
+                },
+                highlight: true
+            },
+            events: {
+                input: {
+                    selection: (event) => {
+                        const selection = event.detail.selection;
+                        event.target.value = selection.value[selection.key];
+                    }
+                }
+            }
+        },
         tasks: {
             '1. OS Shells': {
                 'Shell': 'templates/script_shell.xml',

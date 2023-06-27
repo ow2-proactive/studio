@@ -36,6 +36,10 @@ define(
                 container.find("input").each(function() {
                     that.addAutoComplete($(this))
                 })
+                // adding auto-complete for variable model
+                container.find("textarea").each(function() {
+                    that.addAutoComplete($(this))
+                })
 
             },
             addAutoComplete: function(el) {
@@ -46,6 +50,11 @@ define(
                     autoCompleteJS.init();
                 } else if (el.hasClass("taskGenericInfo")) {
                     var configAC = config.autoCompleteTaskGenericInfo;
+                    configAC.selector = function() { return el[0]};
+                    var autoCompleteJS = new autoComplete(configAC);
+                    autoCompleteJS.init();
+                } else if (el.attr("id") === "Model") {
+                    var configAC = config.autoCompleteVariableModel;
                     configAC.selector = function() { return el[0]};
                     var autoCompleteJS = new autoComplete(configAC);
                     autoCompleteJS.init();
