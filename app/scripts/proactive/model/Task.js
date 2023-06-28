@@ -108,7 +108,7 @@ define(
                                 'autocapitalize' : 'off'
                             },
                             fieldAttrs: {'placeholder': '@attributes->name'},
-                            title: '<br><a target="_blank" href="' + config.docUrl + '/user/ProActiveUserGuide.html#_generic_information">Documentation</a><br><br>Property Name'
+                            title: '<br>Property Name.<br>see <a target="_blank" href="' + config.docUrl + '/user/ProActiveUserGuide.html#_generic_information">documentation</a><br>'
                         },
                         "Property Value": {
                             type: 'TextArea',
