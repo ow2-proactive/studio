@@ -219,7 +219,7 @@ define(
                     success: function(data) {
                         var username = data["userName"];
                         var domain = data["domain"];
-                        if(domain) {
+                        if (domain) {
                             username = domain + "\\" + username;
                         }
                         localStorage['pa.login'] = username;
