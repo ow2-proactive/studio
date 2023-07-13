@@ -81,23 +81,25 @@ define(
 
         showCatalogModal: function(event) {
             event.preventDefault();
-            var studioApp = require('StudioApp');
-            studioApp.views.catalogGetView.setKind("all", "Object");
-            studioApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
+            var stApp = require('StudioApp');
+            stApp.views.catalogGetView.setKind("all", "Object");
+            stApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
             // retrieve the filter of kind and contentType from variable model definition
             var model = event.currentTarget.previousElementSibling.getAttribute('title');
             var matches = model.match(/\((.*)\)/); //matches[1] contains the value between the parentheses
+            var wfName = "";
             if (matches && matches.length > 1) {
                 var params = matches[1].split(',');
-                studioApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
+                stApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
                 if (params[3]) {
-                    studioApp.views.catalogGetView.setObjectNameFilter(params[3].replace(/%/g, "")); //filterObjectName
+                    wfName = params[3].replace(/%/g, "") //filterObjectName
+                    stApp.views.catalogGetView.setObjectNameFilter(wfName);
                 }
             }
-            studioApp.views.catalogGetView.render();
+            stApp.views.catalogGetView.render();
 
             var previousZIndex = $("#catalog-get-modal").css("z-index");
-            studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
+            stApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
             var zIndexModal = parseInt($("#catalog-get-modal").parents().find(".modal").css("z-index")); // #execute-workflow-modal
             $("#catalog-get-modal").css("z-index", (zIndexModal+1).toString());
             $("#catalog-get-browse-button").hide();

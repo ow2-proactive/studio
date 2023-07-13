@@ -210,6 +210,7 @@ define(
             event.preventDefault();
             var studioApp = require('StudioApp');
             studioApp.views.catalogGetView.setKind("workflow/standard", "Workflow");
+            studioApp.views.catalogGetView.setObjectNameFilter("") // ensure that the bucket buckets and objects are not filtered
             $("#catalog-get-browse-button").hide();
             studioApp.views.catalogGetView.render();
             $('#catalog-get-modal').modal();
@@ -1587,6 +1588,7 @@ define(
                 var studioApp = require('StudioApp');
                 studioApp.views.catalogGetView.setInputToImportId(relatedInputId);
                 studioApp.views.catalogGetView.setKind(catalogKind, "Script");
+                studioApp.views.catalogGetView.setObjectNameFilter(""); // ensure that the bucket buckets and objects are not filtered
                 studioApp.views.catalogGetView.render();
                 $('#catalog-get-modal').modal();
             })
