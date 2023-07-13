@@ -47,7 +47,7 @@ define(
                 StudioClient.login(loginData, function() {
                     // on success
                     //set the localStorage['pa.login'] with the user returned from the server
-                    localStorage['pa.login'] = $('#user').val();
+                    StudioClient.setCurrentUser();
                     that.remove();
                     that.options.app.login();
                     that.showHideShortcuts();

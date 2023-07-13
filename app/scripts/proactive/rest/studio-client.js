@@ -211,24 +211,21 @@ define(
             setCurrentUser : function () {
                 $.ajax({
                     type: 'GET',
-                    url: config.restApiUrl + "/currentuser",
+                    url: config.restApiUrl + "/currentuserdata",
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('sessionid', localStorage['pa.session']);
                     },
                     async: false,
                     success: function(data) {
-                        //does not  return a json so even in case of success goes to error callback
-                        console.log("Should not be here")
+                        var username = data["userName"];
+                        var domain = data["domain"];
+                        if(domain) {
+                            username = domain + "\\" + username;
+                        }
+                        localStorage['pa.login'] = username;
                     },
                     error: function(data) {
-                        if (data.status == 200) {
-                            // ProActive Studio login request return invalid json with status code 200
-                            console.log("Current username is " + data.responseText)
-                            localStorage['pa.login'] = data.responseText;
-                        }else{
-                            console.log("Problems to retrieve current user " + data.responseText)
-                        }
-
+                            console.log("Problems to retrieve current user data" + data.responseText)
                     }
                 });
             },
