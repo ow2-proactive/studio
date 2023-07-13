@@ -109,7 +109,6 @@ define(
                 if (this.filterKind) {
                     filterKind = this.filterKind;
                 }
-
                 var objectsModel = new CatalogObjectCollection({
                     bucketname: bucketName,
                     kind: filterKind,
@@ -445,7 +444,7 @@ define(
             }
             this.buckets.setKind(bucketKind);
             this.buckets.setContentType(this.filterContentType);
-            this.buckets.setObjectName("");
+            this.buckets.setObjectName(this.getPreferenceObjectName());
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be
             //passed as parameter (on page load, we don't know the kind yet)
