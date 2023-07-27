@@ -230,6 +230,27 @@ define(
                 });
             },
 
+            getDomains : function () {
+                var domains=[];
+                $.ajax({
+                    type: 'GET',
+                    url: config.restApiUrl + "/domains",
+                    async: false,
+                    success: function(data) {
+                        if (!data.includes("")) {
+                            domains.push("");
+                        }
+                        for(var i = 0; i < data.length ; i++){
+                            domains.push(data[i]);
+                        }
+                    },
+                    error: function(data) {
+                            console.log("Problems to retrieve domains" + data.responseText)
+                    }
+                });
+                return domains;
+            },
+
             getPortalsAuthorizations : function () {
                 var result = null;
                 $.ajax({
@@ -327,6 +348,7 @@ define(
                         that.alert("Cannot submit the job", result.errorMessage, 'error');
                     } else if (result.id) {
                         that.alert("Job submitted", "<html></html><a href='/scheduler' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id + ")</a></html>", 'success');
+                        that.alert("Job submitted", "<html></html><a href='/automation-dashboard/#/job-info?jobid=" + result.id + "&tab=0' target='_blank'>'" + result.readableName + "' submitted successfully (Id " + result.id + ")</a></html>", 'success');
                     } else {
                         that.alert("Job submission", request.responseText, 'error');
                     }
