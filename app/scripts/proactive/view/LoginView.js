@@ -37,7 +37,12 @@ define(
                 if ($('#login-mode').val() === "credentials") {
                     loginData.append("credential", $("#credential")[0].files[0]);
                 } else {
-                    loginData.append("username", $('#user').val());
+                    var username = $('#user').val();
+                    var domain = $('#domain-mode').val();
+                    if(domain) {
+                        username = $('#domain-mode').val() + "\\" + $('#user').val();
+                    }
+                    loginData.append("username", username);
                     loginData.append("password", $('#password').val());
                     if ($("#sshKey")[0].files[0]) {
                         loginData.append("sshKey", $("#sshKey")[0].files[0]);
@@ -63,7 +68,7 @@ define(
                 $('#login-option-plus').hide();
                 $('#login-option-minus').show();
                 $('#login-options').show();
-                if($('#login-mode').val() === "basic"){
+                if($('#login-mode').val() === "standard"){
                     $('#login-credentials').hide();
                     $('#login-basic').show();
                     $('#login-ssh').show();
@@ -83,7 +88,7 @@ define(
             },
 
             switchMode : function () {
-                if($('#login-mode').val() === "basic"){
+                if($('#login-mode').val() === "standard"){
                     $('#login-credentials').hide();
                     $('#login-basic').show();
                     $('#login-ssh').show();
@@ -105,8 +110,17 @@ define(
 
             fill: function() {
                 var user = this.getCookie('user');
+                var domain = null;
+                if (user && user.includes("\\")) {
+                    var domainUsername = user.split("\\");
+                    domain = domainUsername[0];
+                    user = domainUsername[1];
+                }
                 if (user!= "null") {
                     $("#user").val(user);
+                }
+                if (domain !== null) {
+                    $("#domain-mode").val(domain);
                 }
 
             },
@@ -151,6 +165,7 @@ define(
             render: function() {
                 var that = this;
                 that.$el = $(that.template());
+                var domains = StudioClient.getDomains();
 
                 // get the cookie variable "user"
                 var user = this.getCookie('user');
@@ -173,7 +188,19 @@ define(
                     // Otherwise, keep the usual browser's behavior (stored credentials, cached login name)
                     that.fill();
                 });
-
+                if (domains.length !== 0) {
+                    var domainOptionString = '<div class="form-group style="width:160px; height:50px;"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" class="controls font-size-11" style="width:170.667px;">';
+                    for(var i = 0; i < domains.length ; i++) {
+                        domainOptionString = domainOptionString + '<option style="width:160px; height:50px;" value="' + domains[i] + '">' +  new String(domains[i]) + '</option>';
+                    }
+                    domainOptionString = domainOptionString + '</select></div>';
+                    var domainOption = $(domainOptionString);
+                    $("#login-basic").prepend(domainOption);
+                }
+                else {
+                    var domainOption = $('<div class="form-group"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" disabled="disabled" class="controls font-size-11" style="width:170.667px"> </select></div>');
+                    $("#login-options").append(domainOption);
+                }
                 return this;
             }
         })
