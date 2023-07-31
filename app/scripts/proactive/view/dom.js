@@ -642,7 +642,10 @@ define(
         function getWorkflowFromScheduler(url, successCallback) {
             $.ajax({
                 url: url,
-                type: 'GET'
+                type: 'GET',
+                headers: {
+                    'sessionId': localStorage['pa.session']
+                }
             }).success(function (response) {
                 successCallback(response);
             }).error(function (response) {
