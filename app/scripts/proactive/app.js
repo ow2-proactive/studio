@@ -232,9 +232,7 @@ define(
         },
         openWorkflowFromScheduler : function(jobId) {
             var that = this;
-            var sessionId = localStorage['pa.session'];
-
-            var url = '/scheduler/portal/downloadjobxml?jobId='+jobId+'&sessionId='+sessionId;
+            var url = '/rest/scheduler/jobs/'+jobId+'/xml/';
             dom.getWorkflowFromScheduler(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
                 dom.open_catalog_workflow();
