@@ -81,30 +81,24 @@ define(
 
         showCatalogModal: function(event) {
             event.preventDefault();
-            var stApp = require('StudioApp');
-            stApp.views.catalogGetView.setKind("all", "Object");
-            stApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
+            var studioApp = require('StudioApp');
+            studioApp.views.catalogGetView.setKind("all", "Object");
+            studioApp.views.catalogGetView.setVarKey(event.currentTarget.getAttribute('value'));
             // retrieve the filter of kind and contentType from variable model definition
             var model = event.currentTarget.previousElementSibling.getAttribute('title');
             var matches = model.match(/\((.*)\)/); //matches[1] contains the value between the parentheses
-            var wfName = "";
             if (matches && matches.length > 1) {
                 var params = matches[1].split(',');
-                stApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
+                studioApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
                 if (params[3]) {
-<<<<<<< HEAD
                     var wfName = params[3] //filterObjectName
                     studioApp.views.catalogGetView.setObjectNameFilter(wfName);
-=======
-                    wfName = params[3].replace(/%/g, "") //filterObjectName
-                    stApp.views.catalogGetView.setObjectNameFilter(wfName);
->>>>>>> b48de31c (Fix: display of empty buckets in import modal)
                 }
             }
-            stApp.views.catalogGetView.render();
+            studioApp.views.catalogGetView.render();
 
             var previousZIndex = $("#catalog-get-modal").css("z-index");
-            stApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
+            studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
             var zIndexModal = parseInt($("#catalog-get-modal").parents().find(".modal").css("z-index")); // #execute-workflow-modal
             $("#catalog-get-modal").css("z-index", (zIndexModal+1).toString());
             $("#catalog-get-browse-button").hide();
