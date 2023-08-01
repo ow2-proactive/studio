@@ -68,9 +68,10 @@ define(
                 $("#get-modal-title").text("Import a Workflow from the Catalog");
             }
         },
-        setFilter: function(filterKind, filterContentType) {
+        setFilter: function(filterKind, filterContentType, bucketNameFilter) {
             this.filterKind = filterKind;
             this.filterContentType = filterContentType;
+            this.bucketNameFilter = bucketNameFilter;
         },
         setObjectNameFilter: function(objNameFilter) {
             this.objectNameFilter = objNameFilter;
@@ -78,6 +79,7 @@ define(
         clearFilter: function(filterKind, filterContentType) {
             this.filterKind = undefined;
             this.filterContentType = undefined;
+            this.bucketNameFilter = undefined;
         },
         setVarKey: function(varKey) {
             this.varKey = varKey;
@@ -347,6 +349,7 @@ define(
         showAllChanged : function(kind) {
             var filterKind = undefined;
             var filterContentType = undefined;
+            var bucketNameFilter = undefined;
             if (!$('#get-show-all-checkbox input:checkbox').is(':checked')) {
                 filterKind = kind;
                 //for workflows, we don't want subkind filters (ie we want to be able to import workflow/pca and workflow/standard)
@@ -359,10 +362,15 @@ define(
                 if (this.filterContentType) {
                     filterContentType = this.filterContentType;
                 }
+                if (this.bucketNameFilter) {
+                    bucketNameFilter = this.bucketNameFilter;
+                }
             }
             var studioApp = require('StudioApp');
             studioApp.models.catalogBuckets.setKind(filterKind);
             studioApp.models.catalogBuckets.setContentType(filterContentType);
+            studioApp.models.catalogBuckets.setBucketName(bucketNameFilter);
+            studioApp.models.catalogBuckets.set(filterContentType);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
         filterByObjectsByName : function (event){
@@ -444,6 +452,7 @@ define(
             }
             this.buckets.setKind(bucketKind);
             this.buckets.setContentType(this.filterContentType);
+            this.buckets.setBucketName(this.bucketNameFilter);
             this.buckets.setObjectName(this.getPreferenceObjectName());
             this.buckets.fetch({reset: true, async: false});
             //setting kind in catalogBrowser (catalog-get.html) because it can't be

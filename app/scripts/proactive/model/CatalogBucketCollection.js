@@ -24,11 +24,15 @@ define(
             setObjectName: function(newName){
                 this.objectName = newName;
             },
+            setBucketName: function(newBucketName){
+                this.bucketName = newBucketName;
+            },
             url: function() {
                 var kindFilter = (this.kind && this.kind.toLowerCase() != 'all') ? 'kind=' + encodeURIComponent(this.kind) : '';
                 var contentFilter = (this.contentType && this.contentType.toLowerCase() != 'all') ? 'contentType=' + encodeURIComponent(this.contentType) : '';
                 var objectName = this.objectName ? "objectName=" + encodeURIComponent(this.objectName) : '';
-                var params = [kindFilter, contentFilter, objectName].filter(x => typeof x === 'string' && x.length > 0).join('&');
+                var bucketName = this.bucketName ? "bucketName=" + encodeURIComponent(this.bucketName) : '';
+                var params = [kindFilter, contentFilter, bucketName, objectName].filter(x => typeof x === 'string' && x.length > 0).join('&');
                 return '/catalog/buckets/?' + params;
             },
             parse: function(data) {
