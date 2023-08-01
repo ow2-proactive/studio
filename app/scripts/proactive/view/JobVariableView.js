@@ -89,10 +89,20 @@ define(
             var matches = model.match(/\((.*)\)/); //matches[1] contains the value between the parentheses
             if (matches && matches.length > 1) {
                 var params = matches[1].split(',');
-                studioApp.views.catalogGetView.setFilter(params[0], params[1]); //filterKind, filterContentType
-                if (params[3]) {
-                    var wfName = params[3] //filterObjectName
-                    studioApp.views.catalogGetView.setObjectNameFilter(wfName);
+                switch (params.length) {
+                    case 1:
+                        studioApp.views.catalogGetView.setFilter(params[0], undefined, undefined);
+                        break;
+                    case 2:
+                        studioApp.views.catalogGetView.setFilter(params[0], params[1], undefined);
+                        break;
+                    case 3:
+                        studioApp.views.catalogGetView.setFilter(params[0], params[1], params[2]);
+                        break;
+                    case 4:
+                        studioApp.views.catalogGetView.setFilter(params[0], params[1], params[2]);
+                        studioApp.views.catalogGetView.setObjectNameFilter(params[3]);
+                        break;
                 }
             }
             studioApp.views.catalogGetView.render();
