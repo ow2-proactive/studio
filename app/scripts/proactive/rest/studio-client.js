@@ -118,9 +118,7 @@ define(
                             } catch (e) {}
 
                             if (data.status == 404) {
-                                if (data.responseText.indexOf("login.LoginException") >= 0) {
-                                    reason = "Invalid Login or Password";
-                                } else {
+                                if (data.responseText.indexOf("login.LoginException") < 0) {
                                     reason = "The studio rest server is not available at the following url: " + config.restApiUrl;
                                 }
 
