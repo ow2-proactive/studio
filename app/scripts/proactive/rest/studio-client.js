@@ -347,7 +347,8 @@ define(
                     if (result.errorMessage) {
                         that.alert("Cannot submit the job", result.errorMessage, 'error');
                     } else if (result.id) {
-                        that.alert("Job submitted", "<html></html><label style='font-size: 16px';>" + result.readableName + "' submitted successfully (Id " + result.id + ")</label><br><a href='/automation-dashboard/#/job-info?jobid=" + result.id + "&tab=0' target='_blank'>Open in Workflow Execution Portal</a></br><a href='/scheduler' target='_blank'>Open in Scheduler Portal</a></html>", 'success');
+                        that.alert("Job submitted", "<html></html><label style='font-size: 16px';>" + result.readableName + "' submitted successfully (Id " + result.id + ")</label>"+
+                        "<br><a href='/automation-dashboard/#/workflow-execution' target='_blank'>Open Workflow Execution Portal</a></br><a href='/scheduler' target='_blank'>Open Scheduler Portal</a></html>", 'success');
                     } else {
                         that.alert("Job submission", request.responseText, 'error');
                     }
