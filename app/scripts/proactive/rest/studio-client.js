@@ -197,7 +197,11 @@ define(
                             }
                         },
                         error: function(response) {
-                            console.error("Unknown User Permission", response)
+                            console.error("Unknown User Permission", response);
+                            var connectionError = $('<div id="connection-error" class="btn-group pa-tools"><label style="color:red; font-weight:bold; font-size:15px; padding-left:4px; padding-top:4px;">The server cannot be reached. Check the server status and your network connection. </label></div>');
+                            if (!$("#connection-error").is(":visible")) {
+                                $("#tool-bar").append(connectionError);
+                            }
                         }
                     });
                 } else {
