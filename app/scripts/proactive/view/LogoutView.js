@@ -53,9 +53,12 @@ define(
                     if (StudioClient.isLoggedIn()) {
                         isConnected()
                     } else {
-                        var connectionError = $('<div id="connection-error" class="btn-group pa-tools"><label style="color:red; font-weight:bold; font-size:15px; padding-left:4px; padding-top:4px;">You have been disconnected from the server. Reload the page in order to log into the portal again. </label></div>');
-                        if (!$("#connection-error").is(":visible")) {
-                            $("#tool-bar").append(connectionError);
+                        if (!$("#login-container").is(":visible")) {
+                            that.options.app.logout();
+                            var connectionError = $('<div id="connection-error" style="height: 50px; padding: 15px; border: 1px solid red; background-color: #fff0f0; margin-top: 10px; color:red; font-size:12px; width:100%;">You are logged out of the server. Please log into the portal again.</div>');
+                            if (!$("#connection-error").is(":visible")) {
+                                $("#login-header").prepend(connectionError);
+                            }
                         }
                     }
                 }
