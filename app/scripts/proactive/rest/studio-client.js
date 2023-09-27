@@ -198,7 +198,7 @@ define(
                         },
                         error: function(response) {
                             console.error("Unknown User Permission", response);
-                            var connectionError = $('<div id="connection-error" class="btn-group pa-tools"><label style="color:red; font-weight:bold; font-size:15px; padding-left:4px; padding-top:4px;">The server cannot be reached. Check the server status and your network connection. </label></div>');
+                            var connectionError = $('<div id="connection-error" style="color:red; font-size:15px; padding-left:4px; padding-top:4px;"><strong>The server cannot be reached. Check first your network connection, and potentially the server status.</strong></div>');
                             if (!$("#connection-error").is(":visible")) {
                                 $("#tool-bar").append(connectionError);
                             }
