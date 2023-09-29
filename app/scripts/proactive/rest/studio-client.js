@@ -199,7 +199,7 @@ define(
                         error: function(response) {
                             console.error("Unknown User Permission", response);
                             var connectionError = $('<div id="connection-error" style="color:red; font-size:15px; padding-left:4px; padding-top:4px;"><strong>The server cannot be reached. Check first your network connection, and potentially the server status.</strong></div>');
-                            if (!$("#connection-error").is(":visible")) {
+                            if (!$("#connection-error").is(":visible") && $("#tool-bar").is(":visible")) {
                                 $("#tool-bar").append(connectionError);
                             }
                         }
