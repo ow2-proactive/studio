@@ -198,6 +198,7 @@ define(
                              $("#connection-error").hide();
                         },
                         error: function(response) {
+                            console.error("Unknown User Permission", response);
                              $("#connection-error").show();
                         }
                     });
