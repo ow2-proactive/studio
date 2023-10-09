@@ -52,6 +52,10 @@ define(
                 function tryToConnect() {
                     if (StudioClient.isLoggedIn()) {
                         isConnected()
+                        if ($("#login-container").is(":visible")) {
+                            StudioClient.setCurrentUser();
+                            window.location.reload();
+                        }
                     } else {
                         if (!$("#login-container").is(":visible")) {
                             that.options.app.logout();
