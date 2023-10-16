@@ -14,6 +14,7 @@
 				<script>
 					<code language="cmd">
                         <![CDATA[
+chcp 65001 >nul
 dir
 ]]>
 					</code>
