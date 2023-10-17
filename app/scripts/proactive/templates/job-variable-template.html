@@ -211,7 +211,7 @@ jQuery(document).ready(function($){
                     <%
                 }
             %>
-            <div style="display:inline-flex; justify-content: right; width:30%"><label for="<%- key %>" class="Name<%- resolvedHidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label></div>
+            <div style="display:inline-flex; justify-content: right; width:30%"><label for="<%- key %>" class="Name" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label></div>
             <%
                 var model = null;
                 var resolvedModel = null;

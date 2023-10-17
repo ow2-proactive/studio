@@ -18,11 +18,11 @@ define(
                 var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
                 var value = prop['Value'] ? prop['Value'] : prop['Property Value'];
                 var color = "";
-                if (prop['Hidden'] == true) {
-                    color = "color:#888;";
-                }
                 if (prop['Advanced'] == true) {
                     color = "color:#E86D1F;";
+                }
+                if (prop['Hidden'] == true) {
+                    color = "color:#888;";
                 }
                 return "<input class='input-property-field' style='" + color + "' type=\"text\" value=\"" + _.escape(name) +
                 "\"><input class='input-property-field' type=\"text\"  value=\""+ _.escape(value) + "\">";
@@ -36,13 +36,12 @@ define(
                     checked=" checked"
                 }
                 var color = "";
-                if (prop['Hidden'] == true) {
-                    color = "color:#888;";
-                }
                 if (prop['Advanced'] == true) {
                     color = "color:#E86D1F;";
                 }
-
+                if (prop['Hidden'] == true) {
+                    color = "color:#888;";
+                }
                 return "<input class='input-property-field' style='" + color + "' type=\"text\" value=\"" + _.escape(prop['Name']) +
                 "\"><input class='input-property-field' type=\"text\"  value=\""+ _.escape(value) +
                 "\"><input class='input-property-field' type=\"checkbox\"" + checked + " onclick=\"return false;\">";
