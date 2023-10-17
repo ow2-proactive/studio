@@ -17,8 +17,14 @@ define(
             inlineNameValue: function(prop) {
                 var name = prop['Name'] ? prop['Name'] : prop['Property Name'];
                 var value = prop['Value'] ? prop['Value'] : prop['Property Value'];
-
-                return "<input class='input-property-field' type=\"text\" value=\"" + _.escape(name) +
+                var color = "";
+                if (prop['Hidden'] == true) {
+                    color = "color:#888;";
+                }
+                if (prop['Advanced'] == true) {
+                    color = "color:#E86D1F;";
+                }
+                return "<input class='input-property-field' style='" + color + "' type=\"text\" value=\"" + _.escape(name) +
                 "\"><input class='input-property-field' type=\"text\"  value=\""+ _.escape(value) + "\">";
             },
             inlineNameValueInherited: function(prop) {
@@ -29,8 +35,15 @@ define(
                 if (prop['Inherited']){
                     checked=" checked"
                 }
+                var color = "";
+                if (prop['Hidden'] == true) {
+                    color = "color:#888;";
+                }
+                if (prop['Advanced'] == true) {
+                    color = "color:#E86D1F;";
+                }
 
-                return "<input class='input-property-field' type=\"text\" value=\"" + _.escape(prop['Name']) +
+                return "<input class='input-property-field' style='" + color + "' type=\"text\" value=\"" + _.escape(prop['Name']) +
                 "\"><input class='input-property-field' type=\"text\"  value=\""+ _.escape(value) +
                 "\"><input class='input-property-field' type=\"checkbox\"" + checked + " onclick=\"return false;\">";
             },
