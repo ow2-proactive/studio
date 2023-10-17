@@ -28,8 +28,8 @@
 
 </div>
 <style>
-    .hidden-var {display: none !important;}
-    .advanced-var {display: <%= showAdvanced ? 'inherit' : 'none' %>;}
+    .hidden-var {display: none !important;color: #888;}
+    .advanced-var {display: <%= showAdvanced ? 'inherit' : 'none' %>;color: #E86D1F;}
     ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
     ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
 </style>
@@ -60,7 +60,7 @@ for (var key in jobVariables) {
         <%
         if (totalNumberOfadvancedVariables > 0) {
         %>
-        <label for="Advanced" style="text-align: left; display: table-cell; width: 10%; vertical-align: middle;" data-toggle="tooltip">Advanced
+        <label for="Advanced" style="color: #E86D1F; text-align: left; display: table-cell; width: 10%; vertical-align: middle;" data-toggle="tooltip">Advanced
             <%
                 if (showAdvanced) {
                     %>
