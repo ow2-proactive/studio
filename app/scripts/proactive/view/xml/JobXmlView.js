@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'vkbeautify',
@@ -11,7 +12,7 @@ define(
         'proactive/view/utils/escapeHtml'
     ],
 
-    function ($, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate, CodeMirror) {
+    function (_, $, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate, CodeMirror) {
 
     "use strict";
 
@@ -37,7 +38,7 @@ define(
                 });
             }
 
-            var jobRendering = _.template(JobTemplate, {'job': job, 'tasks': tasks, 'visualization': this.generateHtml()});
+            var jobRendering = _.template(JobTemplate)({'job': job, 'tasks': tasks, 'visualization': this.generateHtml()});
 
             // removing multiple \n before closing xml element tag
             jobRendering = jobRendering.replace(/\n+\s+>/g, '>\n');

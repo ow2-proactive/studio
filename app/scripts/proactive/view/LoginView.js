@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'proactive/rest/studio-client',
         'text!proactive/templates/login-template.html'
     ],
 
-    function($, Backbone, StudioClient, loginTemplate) {
+    function(_, $, Backbone, StudioClient, loginTemplate) {
 
         "use strict";
         var connectionCheckingTimer;

@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'proactive/config',
@@ -16,7 +17,7 @@ define(
         'proactive/view/utils/undo'
     ],
 
-    function ($, Backbone, config, PNotify, StudioClient, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable, undoManager) {
+    function (_, $, Backbone, config, PNotify, StudioClient, Task, Script, ScriptCode, ScriptFile, ViewWithProperties, NativeExecutable, JavaExecutable, ScriptExecutable, undoManager) {
 
     "use strict";
 

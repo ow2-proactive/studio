@@ -1,11 +1,12 @@
 define(
     [
+        'underscore',
         'backbone',
         'proactive/model/CatalogRestWorkflow',
         'proactive/model/GroupByProjectMixin'
     ],
 
-    function (Backbone, RestWorkflow, GroupByProjectMixin) {
+    function (_, Backbone, RestWorkflow, GroupByProjectMixin) {
 
         "use strict";
 

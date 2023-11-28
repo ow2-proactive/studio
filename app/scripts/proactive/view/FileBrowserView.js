@@ -1,11 +1,12 @@
 define(
     [
+        'underscore',
         'backbone',
         'text!proactive/templates/file-browser-template.html',
         'proactive/rest/studio-client',
         'proactive/view/BeautifiedModalAdapter'
     ],
-    function (Backbone, fileBrowserTemplate, StudioClient, BeautifiedModalAdapter) {
+    function (_, Backbone, fileBrowserTemplate, StudioClient, BeautifiedModalAdapter) {
 
     "use strict";
 

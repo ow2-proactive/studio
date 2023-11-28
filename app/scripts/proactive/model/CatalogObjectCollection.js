@@ -1,10 +1,11 @@
 define(
     [
+        'underscore',
         'backbone',
         'proactive/model/CatalogRestWorkflow'
     ],
 
-    function (Backbone, RestWorkflow) {
+    function (_, Backbone, RestWorkflow) {
 
         "use strict";
 

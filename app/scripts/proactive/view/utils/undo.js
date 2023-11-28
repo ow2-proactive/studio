@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'proactive/rest/studio-client',
         'xml2json'
     ],
 
-    function ($, Backbone, StudioClient, xml2json) {
+    function (_, $, Backbone, StudioClient, xml2json) {
 
     "use strict";
 

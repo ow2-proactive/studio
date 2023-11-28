@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'text!proactive/templates/java-executable-template.html',
         'proactive/view/TemplateView'
     ],
 
-    function ($, Backbone, tpl, TemplateView) {
+    function (_, $, Backbone, tpl, TemplateView) {
 
         "use strict";
 

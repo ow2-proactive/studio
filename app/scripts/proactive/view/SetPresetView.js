@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'text!proactive/templates/presets-set-preset.html',
         'text!proactive/templates/presets-item.html'
     ],
 
-    function ($, Backbone, presetsBrowser, presetsList) {
+    function (_, $, Backbone, presetsBrowser, presetsList) {
 
     "use strict";
 

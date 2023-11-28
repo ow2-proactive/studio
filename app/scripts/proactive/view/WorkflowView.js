@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'dagre',
         'proactive/rest/studio-client',
         'proactive/model/Job',
@@ -9,7 +10,7 @@ define(
         'proactive/view/utils/undo'
     ],
 
-    function (d, StudioClient, Job, ViewWithProperties, FlowScript, TaskView, undoManager) {
+    function (_, d, StudioClient, Job, ViewWithProperties, FlowScript, TaskView, undoManager) {
 
     "use strict";
 

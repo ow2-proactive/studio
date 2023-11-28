@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'backbone',
         'proactive/model/SchemaModel',
         'text!proactive/templates/script-code-form-template.html',
@@ -7,7 +8,7 @@ define(
         'proactive/model/utils'
     ],
 
-    function (Backbone, SchemaModel, tpl, config, Utils) {
+    function (_, Backbone, SchemaModel, tpl, config, Utils) {
 
         "use strict";
 

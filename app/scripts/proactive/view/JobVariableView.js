@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'backbone',
         'text!proactive/templates/job-variable-template.html',
         'proactive/view/ThirdPartyCredentialView',
         'proactive/view/FileBrowserView',
         'proactive/view/BeautifiedModalAdapter'
     ],
-    function (Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter) {
+    function (_, Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter) {
 
     "use strict";
 
