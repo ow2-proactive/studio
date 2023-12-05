@@ -36,11 +36,6 @@ define(['underscore'], function(_){
   // Current version of the library. Keep in sync with `package.json`.
   Backbone.VERSION = '1.0.0';
 
-  // Require Underscore, if we're on the server, and it's not already present.
-  console.log("test===")
-  //var _ = root._;
-  //if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
-
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
   Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;
