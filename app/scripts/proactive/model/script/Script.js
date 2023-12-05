@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'backbone',
         'proactive/model/SchemaModel',
         'proactive/model/script/ScriptCode',
@@ -8,7 +9,7 @@ define(
         'proactive/config'
     ],
 
-    function (Backbone, SchemaModel, ScriptCode, ScriptFile, tpl, config) {
+    function (_, Backbone, SchemaModel, ScriptCode, ScriptFile, tpl, config) {
 
         "use strict";
 

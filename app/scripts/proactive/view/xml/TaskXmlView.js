@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'require',
         'jquery',
         'backbone',
@@ -11,7 +12,7 @@ define(
         'proactive/view/xml/ForkEnvironmentXmlView'
 
     ],
-    function (require, $, Backbone, TaskTemplate, TemplateView) {
+    function (_, require, $, Backbone, TaskTemplate, TemplateView) {
 
     "use strict";
 
@@ -53,8 +54,7 @@ define(
                 })
             }
 
-            var taskTemplate = _.template(TaskTemplate,
-                {'task': this.model.toJSON(),
+            var taskTemplate = _.template(TaskTemplate)({'task': this.model.toJSON(),
                     'selectionScripts': selectionScripts,
                     'preScript': preScript.trim(),
                     'postScript': postScript.trim(),

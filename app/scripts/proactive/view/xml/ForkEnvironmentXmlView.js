@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'text!proactive/templates/fork-environment-template.html',
         'proactive/view/TemplateView'
     ],
 
-    function ($, Backbone, tpl, TemplateView) {
+    function (_, $, Backbone, tpl, TemplateView) {
 
         "use strict";
 
@@ -33,7 +34,7 @@ define(
                     (model["Additional Classpath"] && model["Additional Classpath"].length > 0) ||
                     (script && script.length > 0);
 
-                var template = _.template(tpl, {
+                var template = _.template(tpl)({
                     model: model,
                     'script': script,
                     'isForkEnvironmentDefined': isForkEnvironmentDefined

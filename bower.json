@@ -12,7 +12,7 @@
     "vkbeautify.0.99.00.beta": "./app/scripts/thirdparties/vkbeautify.0.99.00.beta.js",
     "dagre": "./app/scripts/thirdparties/dagre.min.js",
     "codemirror": "~5.38.0",
-    "underscore": "~1.5.2",
+    "underscore": "1.13.6",
     "backbone": "~1.0.0",
     "bootstrap": "~3.4.1",
     "requirejs": "~2.1.5",

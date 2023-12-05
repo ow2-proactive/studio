@@ -1,10 +1,11 @@
 define(
     [
+        'underscore',
         'backbone',
         'text!proactive/templates/no-workflows-template.html'
     ],
 
-    function (Backbone, noOpenWorkflowTemplate) {
+    function (_, Backbone, noOpenWorkflowTemplate) {
 
     "use strict";
 

@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'proactive/config',
@@ -56,7 +57,7 @@ define(
         'filesaver'
     ],
 
-    function ($, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, Task, TaskXmlView, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
+    function (_, $, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, Task, TaskXmlView, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 

@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'text!proactive/templates/native-executable-template.html',
         'proactive/view/TemplateView'
     ],
 
-    function ($, Backbone, tpl, TemplateView) {
+    function (_, $, Backbone, tpl, TemplateView) {
 
         "use strict";
 
@@ -17,7 +18,7 @@ define(
                 model = this.model.toJSON();
             }
             var script = undefined;
-            var template = _.template(tpl, {model: model, 'script': script});
+            var template = _.template(tpl)({model: model, 'script': script});
             this.$el.text(template);
             return this;
         }

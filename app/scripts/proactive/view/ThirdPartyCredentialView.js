@@ -1,9 +1,10 @@
 define(
     [
+        'underscore',
         'backbone',
         'text!proactive/templates/third-party-credential-template.html'
     ],
-    function (Backbone, credentialTemplate) {
+    function (_, Backbone, credentialTemplate) {
 
     "use strict";
 

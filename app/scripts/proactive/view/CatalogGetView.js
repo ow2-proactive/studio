@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'proactive/config',
@@ -13,7 +14,7 @@ define(
         'proactive/model/CatalogObjectCollection'
     ],
 
-    function ($, Backbone, config, StudioClient, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
+    function (_, $, Backbone, config, StudioClient, catalogBrowser, catalogList, catalogObject, catalogRevision, catalogRevisionDescription, CatalogObjectRevisionCollection, CatalogObjectCollection) {
 
     "use strict";
 

@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'text!proactive/templates/script-template.html',
@@ -9,7 +10,7 @@ define(
 
     ],
 
-    function ($, Backbone) {
+    function (_, $, Backbone) {
 
         "use strict";
 
@@ -22,7 +23,7 @@ define(
                 }
 
                 var tpl = require('text!proactive/templates/'+this.options.template+'.html')
-                var template = _.template(tpl, {'model': this.model});
+                var template = _.template(tpl)({'model': this.model});
                 this.$el.text(template);
             }
             return this;

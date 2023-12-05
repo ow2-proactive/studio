@@ -1,12 +1,13 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'text!proactive/templates/catalog-set-templates-bucket.html',
         'text!proactive/templates/catalog-bucket.html'
     ],
 
-    function ($, Backbone, catalogBrowser, catalogList) {
+    function (_, $, Backbone, catalogBrowser, catalogList) {
 
     "use strict";
 

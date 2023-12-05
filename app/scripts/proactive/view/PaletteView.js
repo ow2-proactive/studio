@@ -1,5 +1,6 @@
 define(
     [
+        'underscore',
         'jquery',
         'backbone',
         'proactive/config',
@@ -7,7 +8,7 @@ define(
         'proactive/rest/studio-client'
     ],
 
-    function ($, Backbone, config, CatalogWorkflowCollection, StudioClient) {
+    function (_, $, Backbone, config, CatalogWorkflowCollection, StudioClient) {
 
         "use strict";
 

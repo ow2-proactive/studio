@@ -1,4 +1,6 @@
-define(['jquery',
+define([
+        'underscore',
+        'jquery',
         'backbone',
         'proactive/model/Job',
         'proactive/model/WorkflowCollection',
@@ -10,7 +12,7 @@ define(['jquery',
         'proactive/view/utils/undo',
         'pnotify'
     ],
-    function ($, Backbone, Job, WorkflowList, XmlView, xml2json, workflowListTemplate, workflowListCategory, workflowListEntryTemplate, undoManager, PNotify) {
+    function (_, $, Backbone, Job, WorkflowList, XmlView, xml2json, workflowListTemplate, workflowListCategory, workflowListEntryTemplate, undoManager, PNotify) {
 
         "use strict";
 

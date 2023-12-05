@@ -5,7 +5,7 @@
 //     For all details and documentation:
 //     http://backbonejs.org
 
-(function(){
+define(['underscore'], function(_){
 
   // Initial Setup
   // -------------
@@ -35,10 +35,6 @@
 
   // Current version of the library. Keep in sync with `package.json`.
   Backbone.VERSION = '1.0.0';
-
-  // Require Underscore, if we're on the server, and it's not already present.
-  var _ = root._;
-  if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
 
   // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
   // the `$` variable.
@@ -1568,4 +1564,6 @@
     };
   };
 
-}).call(this);
+  return Backbone;
+
+})

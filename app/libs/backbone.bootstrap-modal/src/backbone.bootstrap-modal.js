@@ -12,7 +12,7 @@
  * cancel: The user dismissed the modal
  * ok: The user clicked OK
  */
-(function($, _, Backbone) {
+define(['jquery', 'underscore', 'backbone'], function($, _, Backbone) {
 
   //Set custom template settings
   var _interpolateBackup = _.templateSettings;
@@ -290,9 +290,8 @@
 
   //AMD / RequireJS
   if (typeof define === 'function' && define.amd) {
-    return define(function() {
-      Backbone.BootstrapModal = Modal;
-    })
+    Backbone.BootstrapModal = Modal
+
   }
 
   //Regular; add to Backbone.Bootstrap.Modal
@@ -300,4 +299,4 @@
     Backbone.BootstrapModal = Modal;
   }
 
-})(jQuery, _, Backbone);
+});
