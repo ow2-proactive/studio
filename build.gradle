@@ -29,6 +29,8 @@ task packageDist(type: Zip) {
 
 task packageDev(type: Zip) {
     from 'app'
+    exclude("**/*bower.json")
+    exclude("**/package.json")
     classifier 'dev'
 }
 
