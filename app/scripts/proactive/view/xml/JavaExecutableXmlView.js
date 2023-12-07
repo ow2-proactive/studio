@@ -17,7 +17,7 @@ define(
             if (typeof(this.model.toJSON) != "undefined") {
                 model = this.model.toJSON();
             }
-            var template = _.template(tpl, {model: model});
+            var template = _.template(tpl)({model: model});
             this.$el.text(template);
             return this;
         }

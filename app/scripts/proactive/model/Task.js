@@ -881,11 +881,10 @@ define(
                 var name = "Host Name"
                 if (data[name]) {
                     var selectionScript = {
-                            Script: _.template(ssHostTemplate, {hostName: data[name]}),
+                            Script: _.template(ssHostTemplate)({hostName: data[name]}),
                             "Language": "javascript",
                             Type: "dynamic"
                     };
-
                     selectionScripts.push(selectionScript)
                 }
                 this.addOrReplaceGenericInfo(name, data[name])
