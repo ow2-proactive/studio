@@ -690,7 +690,6 @@ define(
 
         $("#studio-bucket-title").on( 'click', '#preset-title > #presets-list > li > a', function () {
             var presetName = $(this).text();
-            console.log("ul pressed");
 
             var selectedIndex = config.palette_presets.findIndex(function(obj) {return obj.name==presetName});
             require('StudioApp').views.paletteView.render(selectedIndex, true);
