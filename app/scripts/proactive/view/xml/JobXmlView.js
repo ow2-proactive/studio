@@ -112,8 +112,8 @@ define(
                 var top = (-1 * (minTop - 5)) + "px";
                 var left = (-1 * (minLeft - 5)) + "px";
 
-                var html = _.template(WorkflowTemplate,
-                    {
+                var html = _.template(WorkflowTemplate)
+                    ({
                         'content': workflowDesigner,
                         'width': width, 'height': height, 'top': top, 'left': left
                     });
