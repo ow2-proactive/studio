@@ -202,6 +202,33 @@ define(
                     }
                 }
             }
+            /*
+                * Update the default value to 'Error Management Policy of the current job'
+                * when a new task is added from the drop-down list, which may have different default values.
+            */
+
+            if(isTemplate) {
+                if( this.attributes.hasOwnProperty("Number of Execution Attempts") ){
+                    if(obj["@attributes"].hasOwnProperty("maxNumberOfExecution") && this.get("Number of Execution Attempts") == 2 && obj["@attributes"]["maxNumberOfExecution"] !== 2) {
+                        var value = obj["@attributes"]["maxNumberOfExecution"];
+                        that.set('Number of Execution Attempts', value)
+                    }
+                }
+
+                if( this.attributes.hasOwnProperty("On Task Error Policy") ){
+                    if( obj["@attributes"].hasOwnProperty("onTaskError") && this.get("On Task Error Policy") == "continueJobExecution" && obj["@attributes"]["onTaskError"] !== "continueJobExecution") {
+                        var value = obj["@attributes"]["onTaskError"];
+                        that.set('On Task Error Policy', value)
+                    }
+                }
+
+                if( this.attributes.hasOwnProperty("If An Error Occurs Restart Task") ){
+                    if( obj["@attributes"].hasOwnProperty("restartTaskOnError") && this.get("If An Error Occurs Restart Task") == "anywhere" && obj["@attributes"]["restartTaskOnError"] !== "anywhere") {
+                        var value = obj["@attributes"]["restartTaskOnError"];
+                        that.set('If An Error Occurs Restart Task', value);
+                    }
+                }
+            }
         },
 
         //This method is used for the templates
