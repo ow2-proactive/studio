@@ -46,17 +46,6 @@ define(
             "data-help": 'Set a name of a project to be able to group different jobs of the same project later.'
           }
         },
-        "Tags": {
-            type: 'List',
-            itemType: 'Text',
-            editorClass: scriptArgumentsClass,
-            fieldAttrs: {
-                'placeholder': '@attributes->tags',
-                'listseparator': /\s*,\s*/,
-                'data-help' : 'Tags given to the workflow.'
-                },
-            itemTemplate: Utils.bigCrossTemplate
-        },
         "Description": {
           type: "TextArea",
           editorClass: "textareaworkflowdescription",
@@ -65,7 +54,6 @@ define(
             "data-help": "Small textual explanation of what this job does."
           }
         },
-
         "Copyright": {
           type: "Hidden"
         },
@@ -208,6 +196,18 @@ define(
               editorAttrs: {'rows': '1'}
             }
           }
+        },
+        "Tags": {
+            type: 'List',
+            itemType: 'Text',
+            title: "Workflow Tags",
+            editorClass: scriptArgumentsClass,
+            fieldAttrs: {
+                'placeholder': '@attributes->tags',
+                'listseparator': /\s*,\s*/,
+                'data-tab' : 'Workflow Tags'
+                },
+            itemTemplate: Utils.bigCrossTemplate
         },
         "User Space Url": {
           type: "Text",
