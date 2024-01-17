@@ -1797,3 +1797,13 @@ ul, #submitFormUL {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+#account-info-button {
+    float:right;
+    color: #777;
+}
+
+#account-info-button:hover {
+  background-color: #e7e7e7;
+  text-decoration: none;
+}

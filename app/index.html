@@ -329,12 +329,7 @@
             </div>
         </div>
         <!-- END TOOLBAR -->
-        <!-- Proactive Nostalgia -->
-        <div class="btn-group pull-right extra-logos">
-            <a class="pa-logo" href="http://proactive.inria.fr" target="/rm/">
-                <img src="images/proactive_40.png" class="right-padding" style="height:25px">
-            </a>
-        </div>
+        <a href="#" id="account-info-button">Account Info</a>
     </div>
     <div style="height: 3px; background: #E86D1F; margin-top: 1px;"></div>
 </div>
@@ -861,6 +856,29 @@
         </div>
     </div>
 </div>
+<div id="account-info-modal" class="modal fade no-padding" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Account Info</h3>
+            </div>
+            <div class="modal-body no-padding" style="height:100%">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <br><h3 style="display:inline"><b>Username: </b></h3><h3 id="accountUsername" style="display:inline"></h3>
+                        <br><br><p style="display:inline"><b>Domain: </b></p><p id="accountDomain" style="display:inline"></p>
+                        <br><br><p style="display:inline"><b>Tenant: </b></p><p id="accountTenant" style="display:inline"></p>
+                        <br><br><p style="display:inline"><b>Groups: </b></p><p id="accountGroups" style="display:inline"></p>
+                        <br><br><p style="display:inline"><b>Admin roles: </b></p><p id="accountAdminRoles" style="display:inline"></p>
+                        <br><br><p style="display:inline"><b>Portal Access Permission Display: </b></p><p id="accountPortalAccessPermissionDisplay" style="display:inline"></p><br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="execute-workflow-modal" class="modal fade nested-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="min-width: 900px;">
         <div class="modal-content">
