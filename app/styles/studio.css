@@ -1801,6 +1801,7 @@ ul, #submitFormUL {
 #account-info-button {
     float:right;
     color: #777;
+    padding-top: 4px;
 }
 
 #account-info-button:hover {
