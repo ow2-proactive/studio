@@ -1184,6 +1184,59 @@ define(
 
         });
 
+        $("#account-info-button").click(function (event) {
+            $.ajax({
+                type: "GET",
+                headers : { 'sessionID': localStorage['pa.session'] },
+                async: false,
+                url: '/rest/common/currentuserdata',
+                success: function (result) {
+                       $("#accountUsername").text(result.userName);
+                       if (result.domain != null) {
+                            $("#accountDomain").text(result.domain);
+                       }
+                       var accountGroups = "";
+                       for (var i=0; i<result.groups.length; i++) {
+                          accountGroups = accountGroups + result.groups[i];
+                          if (i< result.groups.length -1) {
+                            accountGroups = accountGroups + ", ";
+                          }
+                       }
+                       if (accountGroups != null) {
+                            $("#accountGroups").text(accountGroups);
+                       }
+                       if (result.tenant != null) {
+                            $("#accountTenant").text(result.tenant);
+                       }
+                       var accountAdminRoles = "";
+                        for (var i=0; i<result.adminRoles.length; i++) {
+                            accountAdminRoles = accountAdminRoles + result.adminRoles[i];
+                             if (i< result.adminRoles.length -1) {
+                                accountAdminRoles = accountAdminRoles + ", ";
+                            }
+                        }
+                        if (accountAdminRoles != null) {
+                            $("#accountAdminRoles").text(accountAdminRoles);
+                        }
+                        var accountPortalAccessPermissionDisplay = "";
+                        for (var i=0; i<result.portalAccessPermissionDisplay.length; i++) {
+                            accountPortalAccessPermissionDisplay = accountPortalAccessPermissionDisplay + result.portalAccessPermissionDisplay[i];
+                             if (i< result.portalAccessPermissionDisplay.length -1) {
+                                accountPortalAccessPermissionDisplay = accountPortalAccessPermissionDisplay + ", ";
+                            }
+                        }
+                        if (accountPortalAccessPermissionDisplay != null) {
+                            $("#accountPortalAccessPermissionDisplay").text(accountPortalAccessPermissionDisplay);
+                        }
+                        $('#account-info-modal').modal('show');
+                    },
+                error: function () {
+                    console.log('Could not get current user data.');
+                }
+            });
+            return;
+        });
+
         $("#download-xml-button").click(function (event) {
             event.preventDefault();
 
