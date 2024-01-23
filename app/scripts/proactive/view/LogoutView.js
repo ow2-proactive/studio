@@ -30,10 +30,14 @@ define(
                     +'</button>');
 
                 menu.click(function () {
+                    $('#confirm-logout-modal').modal('show');
+                })
+
+                 $("#confirm-logout-button").unbind('click').click(function () {
                     StudioClient.logout();
                     PNotify.removeAll();
                     that.options.app.logout();
-                })
+                 })
 
                 this.$el.html(menu);
 
