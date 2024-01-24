@@ -1856,3 +1856,13 @@ ul, #submitFormUL {
 .text-muted {
     color: #888888;
 }
+
+.container-flex{
+    display: inline-flex;
+    align-items: center;
+}
+
+.input-button{
+    height: 30px;
+    padding: 3px 5px;
+}
