@@ -1546,23 +1546,17 @@ li.success {
 .formLayout .variableName {
     display:inline-flex;
     justify-content: right;
-    /*width:25%;*/
 }
 
 .formLayout .variableInfo {
-    /*width: 25%;*/
     display:inline-flex;
     flex-flow: column;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .formLayout .variableInfoWButton {
     display:inline-flex;
     align-items: center;
     flex-wrap: nowrap;
-    /*width: 25%;*/
 }
 
 .formLayout .variableInfoWButton .variableInfo{
