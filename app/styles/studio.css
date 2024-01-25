@@ -1540,10 +1540,33 @@ li.success {
 }
 
 .formLayout .variableValue {
-    width: 45%;
-    display:inline-block;
-    padding: 5px;
-    margin-left: 5px;
+    max-width: 100%;
+}
+
+.formLayout .variableName {
+    display:inline-flex;
+    justify-content: right;
+}
+
+.formLayout .variableInfo {
+    display:inline-flex;
+    flex-flow: column;
+}
+
+.formLayout .variableInfoWButton {
+    display:inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.formLayout .variableInfoWButton .variableInfo{
+    width: 100%;
+}
+
+.formLayout .variableInfo label{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .formLayout .submitVariableValue {
@@ -1565,11 +1588,11 @@ li.success {
 }
 
 .formLayout {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
     padding: 3px;
-}
-
-.row {
-    display: table-row;
 }
 
 .property-field {
@@ -1807,4 +1830,39 @@ ul, #submitFormUL {
 #account-info-button:hover {
   background-color: #e7e7e7;
   text-decoration: none;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.font-smaller {
+    font-size: smaller;
+}
+
+.p-w-xs {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.m-r-xs {
+    margin-right: 10px;
+}
+
+.m-l-xs {
+    margin-left: 10px;
+}
+
+.text-muted {
+    color: #888888;
+}
+
+.container-flex{
+    display: inline-flex;
+    align-items: center;
+}
+
+.input-button{
+    height: 30px;
+    padding: 3px 5px;
 }

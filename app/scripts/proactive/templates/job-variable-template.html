@@ -55,20 +55,20 @@ for (var key in jobVariables) {
 }
 %>
 <ul id="submitFormUL">
-    <div style="display: table; width: 100%">
-        <span for="Job_Variables" class="Name" style="text-align:left; font-weight: bold; display: table-cell; width: 90%" data-toggle="tooltip">Job Variables</span>
+    <div class="formLayout">
+        <div for="Job_Variables" style="font-weight: bold;width: 100%" data-toggle="tooltip">Job Variables</div>
         <%
         if (totalNumberOfadvancedVariables > 0) {
         %>
-        <label for="Advanced" style="color: #E86D1F; text-align: left; display: table-cell; width: 10%; vertical-align: middle;" data-toggle="tooltip">Advanced
+        <label for="Advanced" style="color: #E86D1F; white-space: nowrap;" data-toggle="tooltip">Advanced
             <%
                 if (showAdvanced) {
                     %>
-            <input class="Name" id="advanced-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <input id="advanced-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
                     <%
                 } else {
                     %>
-            <input class="Name" id="advanced-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <input id="advanced-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
                     <%
                 }
             %>
@@ -161,57 +161,58 @@ jQuery(document).ready(function($){
                         currentGroup = null;
                         groupDisplayStack = [];
                 %>
-    <li class="formLayout">
-    <span for="Tasks_Variables" class="Name caretUL<%- toggledTasks.length > 0 ? ' caretUL-down' : '' %>" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</span>
+    <li class="formLayout inline-block" >
+        <div for="Tasks_Variables" class="caretUL<%- toggledTasks.length > 0 ? ' caretUL-down' : '' %>" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</div>
     <ul class="nestedUL<%- toggledTasks.length > 0 ? ' activeUL' : '' %>">
-    <li class="formLayout">
-    <span for="<%- splitted[0] %>" class="Name caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
-    <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
-                <%
-                    } else if (currentTask != splitted[0]) {
-                        currentTask = splitted[0];
-                        currentGroup = null;
-                        groupDisplayStack = [];
-        %>
-    </ul>
+    <li class="formLayout inline-block">
+    <div for="<%- splitted[0] %>" class="caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></div>
+        <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
+                    <%
+                        } else if (currentTask != splitted[0]) {
+                            currentTask = splitted[0];
+                            currentGroup = null;
+                            groupDisplayStack = [];
+            %>
+        </ul>
     </li>
-    <li class="formLayout">
-    <span for="<%- splitted[0] %>" class="Name caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></span>
+    <li class="formLayout inline-block">
+    <div for="<%- splitted[0] %>" class="Name caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></div>
     <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
         <%
                     }
                 }
     %>
-        <li class="formLayout<%- resolvedHidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
-            <%
-                if (group !== currentGroup) {
-                    // a new group to handle
-                    currentGroup = group;
-                    groupDisplayStack = [];
-                }
-                if (resolvedHidden) {
-                    groupDisplayStack.push('hidden');
-                } else if (advanced) {
-                    groupDisplayStack.push('advanced');
-                } else {
-                    groupDisplayStack.push('visible');
-                }
-                var strategy = displayGroupStrategy(groupDisplayStack);
-                if (strategy === 'display') {
-                        %>
-            <label class="Name" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
-            <br/>
 
-                    <%
-                } else if (strategy === 'display-with-class') {
-                    %>
-            <label class="Name advanced-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
-            <br class="advanced-to-hide"/>
-
-                    <%
-                }
-            %>
-            <div style="display:inline-flex; justify-content: right; width:30%"><label for="<%- key %>" class="Name" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label></div>
+        <%
+        if (group !== currentGroup) {
+        // a new group to handle
+        currentGroup = group;
+        groupDisplayStack = [];
+        }
+        if (resolvedHidden) {
+        groupDisplayStack.push('hidden');
+        } else if (advanced) {
+        groupDisplayStack.push('advanced');
+        } else {
+        groupDisplayStack.push('visible');
+        }
+        var strategy = displayGroupStrategy(groupDisplayStack);
+        if (strategy === 'display') {
+        %>
+        <li class="formLayout inline-block <%- resolvedHidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
+            <label class="col-md-3" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
+        </li>
+        <%
+        } else if (strategy === 'display-with-class') {
+        %>
+        <li class="formLayout inline-block <%- resolvedHidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
+            <label class="col-md-3 advanced-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
+        </li>
+        <%
+        }
+        %>
+        <li class="formLayout inline-block <%- resolvedHidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
+            <div class="variableName col-md-3"><label for="<%- key %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label></div>
             <%
                 var model = null;
                 var resolvedModel = null;
@@ -247,9 +248,9 @@ jQuery(document).ready(function($){
                         // failure to fetch implies no change in the model
                     }
                 }
-                var shortenModel = resolvedModel ? ((resolvedModel.length > 14) ? resolvedModel.substring(0, 14) + " ..." : resolvedModel) : "";
                 if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:list')==0) {  %>
-                    <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" onchange="$('#check-button').click()" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
+                    <div class="col-md-4">
+                        <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" onchange="$('#check-button').click()" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
                         <% var indexBegin = resolvedModel.indexOf('(');
                             var indexEnd = resolvedModel.lastIndexOf(')');
                             var options = resolvedModel.substring(indexBegin +1 , indexEnd).split(',');
@@ -261,8 +262,13 @@ jQuery(document).ready(function($){
                                     <option><%- option %></option>
                         <% } %>
                         </select>
+                    </div>
+                        <div class="variableInfo col-md-5">
+                            <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                            <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                        </div>
                 <% } else if ((resolvedModel && resolvedModel.toLowerCase().indexOf('pa:boolean')==0) ) {  %>
-                        <div class="variableValue radio-div" id="<%- key %>" onchange="$('#check-button').click()" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
+                        <div class="variableValue radio-div col-md-4" id="<%- key %>" onchange="$('#check-button').click()" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
                     <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) %>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
@@ -270,44 +276,108 @@ jQuery(document).ready(function($){
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
                         </div>
+                        <div class="variableInfo col-md-5">
+                            <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                            <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                        </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:hidden')==0) {  %>
-                        <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                        <label class="Extra" data-toggle="tooltip" title="<%- resolvedModel %>"><%- resolvedModel  %></label>
+                        <div class="col-md-4">
+                            <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                        </div>
+                        <div class="variableInfo col-md-5">
+                            <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                            <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                        </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:credential')==0) {  %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="short" data-toggle="tooltip" title="<%- model %>"><%- model  %></label>
-                            <button title="Manage third-party credentials" class="third-party-credential-button btn" value="<%- key %>" type="button" style="background-color:Transparent"><img src="images/key.png"></button>
+                            <div class="col-md-4 container-flex">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                                <button class="third-party-credential-button btn input-button" value="<%- key %>" title="Manage third-party credentials" type="button"><img src="images/key.png"></button>
+                            </div>
+                            <div class="variableInfoWButton col-md-5">
+                                <div class="variableInfo">
+                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                    <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                                </div>
+                            </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_file') ==0 ) {  %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
-                            <button title="Browse Global Space files, Upload, and Select one file" value="<%- key %>" class="var-globalfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                            <div class="col-md-4 container-flex">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                                <button value="<%- key %>" class="var-globalfile-button btn far fa-folder-open input-button" type="button" title="Browse Global Space files, Upload, and Select one file"></button>
+                            </div>
+                            <div class="variableInfoWButton col-md-5">
+                                <div class="variableInfo">
+                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                    <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                                </div>
+                            </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_file') ==0 ) {  %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
-                            <button title="Browse User Space files, Upload, and Select one file" value="<%- key %>" class="var-userfile-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                            <div class="col-md-4 container-flex">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                                <button value="<%- key %>" class="var-userfile-button btn far fa-folder-open input-button" type="button" title="Browse User Space files, Upload, and Select one file"></button>
+                            </div>
+                            <div class="variableInfoWButton col-md-5">
+                                <div class="variableInfo">
+                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                    <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                                </div>
+                            </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_folder') ==0 ) {  %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
-                            <button title="Browse, Upload Global Space files, and Select one folder" value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                            <div class="col-md-4 container-flex">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                                <button value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload Global Space files, and Select one folder"></button>
+                            </div>
+                            <div class="variableInfoWButton col-md-5">
+                                <div class="variableInfo">
+                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                    <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                                </div>
+                            </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_folder') ==0 ) {  %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
-                            <button title="Browse, Upload User Space files, and Select one folder" value="<%- key %>" class="var-userfolder-button btn far fa-folder-open" type="button" style="background-color:Transparent"></button>
+                            <div class="col-md-4 container-flex">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                                <button value="<%- key %>" class="var-userfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload User Space files, and Select one folder"></button>
+                            </div>
+                            <div class="variableInfoWButton col-md-5">
+                                <div class="variableInfo">
+                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                    <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                                </div>
+                            </div>
                 <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:catalog_object') ==0 ) {  %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="short" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
-                            <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn" type="button" style="background-color:Transparent">
-                                <img src="images/catalog-portal.png" height="20">
-                            </button>
+                            <div class="col-md-4 container-flex">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                                <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn input-button" type="button"><img src="images/catalog-portal.png" height="20"></button>
+                            </div>
+                            <div class="variableInfoWButton col-md-5">
+                                <div class="variableInfo">
+                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                    <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                                </div>
+                            </div>
                 <% } else if (resolvedModel && (resolvedModel.toLowerCase().indexOf('pa:not_empty_string') == 0 || resolvedModel.toLowerCase().indexOf('pa:json') == 0 || resolvedModel.toLowerCase().indexOf('pa:spel') == 0 || resolvedModel.toLowerCase().indexOf('pa:regexp') == 0) ) {  %>
-                            <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
-                            <label class="Extra" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
+                            <div class="col-md-4">
+                                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
+                            </div>
+                            <div class="variableInfo col-md-5">
+                                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                            </div>
                 <% } else if (!resolvedModel) {  %>
-                            <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
-                            <label class="Extra" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
+                            <div class="col-md-4">
+                                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
+                            </div>
+                            <div class="variableInfo col-md-5">
+                                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                            </div>
                 <% } else { %>
-                            <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <label class="Extra" data-toggle="tooltip" title="<%- resolvedModel %>"><%- shortenModel %></label>
+                            <div class="col-md-4">
+                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                            </div>
+                            <div class="variableInfo col-md-5">
+                                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                                <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
+                            </div>
                 <% }
             %>
         </li>
