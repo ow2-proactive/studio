@@ -29,9 +29,9 @@
 </div>
 <style>
     .hidden-var {display: none !important;color: #888;}
-    .advanced-var {display: <%= showAdvanced ? 'inherit' : 'none' %>;color: #E86D1F;}
-    ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
-    ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inherit' %>;}
+    .advanced-var {display: <%= showAdvanced ? 'inline-flex' : 'none' %>;color: #E86D1F;}
+    ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;}
+    ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;}
 </style>
 <br>
 <%
@@ -79,14 +79,14 @@ jQuery(document).ready(function($){
 	$('#advanced-checkbox').on('change', function() {
         if ($(this).is(':checked')) {
             // show the advanced variables
-            $('.advanced-var').css('display', 'inherit')
+            $('.advanced-var').css('display', 'inline-flex')
             // hide group labels of visible variables if necessary (see below)
             $('.advanced-to-hide').css('display', 'none')
         } else {
             // hide the advanced variables
             $('.advanced-var').css('display', 'none')
             // show group labels of visible variables if necessary (see below)
-            $('.advanced-to-hide').css('display', 'inherit')
+            $('.advanced-to-hide').css('display', 'inline-flex')
         }
     })
 })
