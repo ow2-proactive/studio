@@ -1836,6 +1836,14 @@ ul, #submitFormUL {
     display: inline-block;
 }
 
+.font-bold {
+    font-weight: 600;
+}
+
+.font-small {
+    font-size: small;
+}
+
 .font-smaller {
     font-size: smaller;
 }
@@ -1851,6 +1859,10 @@ ul, #submitFormUL {
 
 .m-l-xs {
     margin-left: 10px;
+}
+
+.m-l-a {
+    margin-left: auto;
 }
 
 .text-muted {

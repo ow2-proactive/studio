@@ -36,7 +36,6 @@ define(
         },
 
         initialize: function () {
-            this.$el = $('#job-variables');
             // fix overlays of nested modal "third-party-credential-modal" inside "execute-workflow-modal" (backdrop overlays the previous modal)
             $(document).on('show.bs.modal', '.nested-modal', function() {
                 var zIndex = 1040 + (10 * $('.modal:visible').length);
@@ -51,6 +50,11 @@ define(
         render: function (jobInfos) {
             var jobInfosCloned = JSON.parse(JSON.stringify(jobInfos));
             this.model = $.extend(this.model, jobInfosCloned);
+            if (jobInfos.isSubmissionMode) {
+                this.$el = $('#job-variables');
+            } else {
+                this.$el = $('#job-variables-mode');
+            }
             this.$el.html(this.template(this.model));
             new BeautifiedModalAdapter().beautifyForm(this.$el);
             return this;

@@ -79,6 +79,10 @@ define(
             $('#execute-workflow-modal').on('hidden.bs.modal', function() {
                 that.closeFileBrowser();
             });
+            // whenever parent modal is hidden, close inside modal
+            $('#workflow-variables-modal').on('hidden.bs.modal', function() {
+                that.closeFileBrowser();
+            });
         },
 
         filterFiles: function () {
