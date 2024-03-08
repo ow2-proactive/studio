@@ -225,6 +225,7 @@ define(
                 studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
                 studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml());
                 studioApp.views.catalogPublishView.render();
+                studioApp.views.catalogPublishView.triggerClickShowAll();
                 $('#catalog-publish-modal').modal();
             }else{
                 $('#open-a-workflow-modal').modal();

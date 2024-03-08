@@ -368,6 +368,9 @@ define(
             studioApp.models.catalogBuckets.setKind(filterKind);
             studioApp.models.catalogBuckets.fetch({reset: true});
         },
+        triggerClickShowAll : function () {
+            $('#publish-show-all-checkbox input:checkbox').trigger('click');
+        },
         isPsaWorkflow : function (kind) {
             if (kind.toLowerCase().indexOf('workflow') != 0) {
                 return false;
