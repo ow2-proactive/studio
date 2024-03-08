@@ -106,7 +106,13 @@ define(
                         break;
                 }
             }
-            studioApp.views.catalogGetView.render();
+            var bucketWorkflow = event.currentTarget.previousElementSibling.getAttribute('value');
+            if (bucketWorkflow) {
+                var bucketWorkflowSplit = bucketWorkflow.split('/');
+                studioApp.views.catalogGetView.render(bucketWorkflowSplit[0], bucketWorkflowSplit[1]);
+            } else {
+                studioApp.views.catalogGetView.render();
+            }
 
             var previousZIndex = $("#catalog-get-modal").css("z-index");
             studioApp.views.catalogGetView.setPreviousZIndex(previousZIndex);
