@@ -1,5 +1,5 @@
 <div>
-    <center>
+    <div class="text-center">
         <% _.each(jobGenericInfos, function(gi) {
                     var label = gi["Property Name"];
                     if (label == "workflow.icon" )  %>
@@ -7,28 +7,31 @@
         <% }) %>
 
         <h4 class="modal-title"><%- jobName %> </h4>
-    </center>
+    </div>
 
-    <span class="font-bold"><b>Description : </b><div class="description"><small><%- jobDescription %></small></div></span>
-    <span class="font-bold"><b>Project name : </b><small><%- jobProjectName %></small></span><br>
+    <% if (isSubmissionMode) { %>
+    <div><span class="font-bold">Description :</span></div><div class="description font-small"><%- jobDescription %></div>
+    <div><span class="font-bold">Project name :</span><span class="p-w-xs font-small"><%- jobProjectName %></span></div>
     <% if (jobTags && jobTags.length>0) { %>
-    <span class="font-bold"><b>Tags : </b><small><%=jobTags.join()%></small></span><br>
-    <% } %><br>
+    <div><span class="font-bold">Tags :</span><span class="p-w-xs font-small"><%=jobTags.join()%></span></div>
+    <% } %>
     <% _.each(jobGenericInfos, function(gi) {
     var label = gi["Property Name"];
     if (label == "bucketName" )  %>
-    <span class="font-bold"><b>Bucket name : </b><small><%=gi["Property Value"] %></small></span><br>
+    <div><span class="font-bold">Bucket name :</span><span class="p-w-xs font-small"><%=gi["Property Value"] %></span></div>
 <% }) %>
 
 <% _.each(jobGenericInfos, function(gi) {
 	var label = gi["Property Name"];
     if (label == "Documentation" )  %>
-    <span class="font-bold"><b> Documentation : </b><small><a href='<%="/doc/"+gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small></span><br>
+    <div><span class="font-bold">Documentation :</span><span class="p-w-xs font-small"><a href='<%="/doc/"+gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></span></div>
 <% }) %>
+    <% } %>
 
 </div>
 <style>
-    .hidden-var {display: none !important;color: #888;}
+    /*.hidden-var {display: none !important;color: #888;}*/
+    .hidden-var {display: <%= showHidden ? 'inline-flex' : 'none' %>;color: #888;}
     .advanced-var {display: <%= showAdvanced ? 'inline-flex' : 'none' %>;color: #E86D1F;}
     ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;}
     ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;}
@@ -36,6 +39,7 @@
 <br>
 <%
 var totalNumberOfadvancedVariables = 0;
+var totalNumberOfHiddenVariables = 0;
 for (var key in jobVariables) {
     var variable;
     var hidden = false;
@@ -47,6 +51,9 @@ for (var key in jobVariables) {
         }
         if (variable.hasOwnProperty("resolvedHidden")) {
             hidden = variable.resolvedHidden;
+            if (hidden) {
+                totalNumberOfHiddenVariables++;
+            }
         }
         if (!hidden && variable.hasOwnProperty("Advanced") && variable.Advanced) {
             totalNumberOfadvancedVariables++;
@@ -58,9 +65,47 @@ for (var key in jobVariables) {
     <div class="formLayout">
         <div for="Job_Variables" style="font-weight: bold;width: 100%" data-toggle="tooltip">Job Variables</div>
         <%
+        if (!isSubmissionMode && totalNumberOfHiddenVariables > 0) {
+        %>
+        <label for="hidden-checkbox" class="p-w-xs" style="color: #888; white-space: nowrap;" data-toggle="tooltip">Hidden
+            <%
+            if (showHidden) {
+            %>
+            <input id="hidden-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <%
+            } else {
+            %>
+            <input id="hidden-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <%
+            }
+            %>
+        </label>
+        <script type="text/javascript">
+            //<![CDATA[
+            jQuery(document).ready(function($){
+                $('#hidden-checkbox').on('change', function() {
+                    if ($(this).is(':checked')) {
+                        // show the advanced variables
+                        $('.hidden-var').css('display', 'inline-flex')
+                        // hide group labels of visible variables if necessary (see below)
+                        $('.advanced-to-hide').css('display', 'none')
+                    } else {
+                        // hide the advanced variables
+                        $('.hidden-var').css('display', 'none')
+                        // show group labels of visible variables if necessary (see below)
+                        $('.advanced-to-hide').css('display', 'inline-flex')
+                    }
+                })
+            })
+            //]]>
+        </script>
+        <%
+        }
+        %>
+        <%
         if (totalNumberOfadvancedVariables > 0) {
         %>
-        <label for="Advanced" style="color: #E86D1F; white-space: nowrap;" data-toggle="tooltip">Advanced
+        <label for="advanced-checkbox" style="color: #E86D1F; white-space: nowrap;" data-toggle="tooltip">Advanced
             <%
                 if (showAdvanced) {
                     %>
