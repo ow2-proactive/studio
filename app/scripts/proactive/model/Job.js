@@ -89,7 +89,8 @@ define(
           fieldAttrs: {
             "data-tab": "Workflow Variables",
             'placeholder': 'variables->variable',
-            "data-tab-help": "Workflow variables that will be available in all tasks."
+            "data-tab-help": "Workflow variables that will be available in all tasks.",
+            "sub-data-tab": "See Variables Structured by Categories"
           },
           confirmDelete: 'You are about to remove a variable.',
           itemToString: Utils.inlineNameValue,

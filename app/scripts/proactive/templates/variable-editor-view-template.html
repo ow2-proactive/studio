@@ -1,0 +1,45 @@
+<form>
+    <div class="form-group">
+        <label for="var-name" class="control-label">Name</label>
+        <span class="glyphicon glyphicon-info-sign pointer help-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="Name of the variable. It must start with a letter and it can contain only alphanumeric and -, _ or . characters."></span>
+        <input id="var-name" name="var-name" type="text" class="form-control" required="required" value="<%- variable.Name %>" data-original="<%- variable.Name %>">
+    </div>
+    <div class="form-group">
+        <label for="var-value" class="control-label">Value</label>
+        <span class="glyphicon glyphicon-info-sign pointer help-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="Value of the variable."></span>
+        <textarea id="var-value" name="var-value" cols="40" rows="1" class="form-control textareavalues"><%- variable.Value %></textarea>
+    </div>
+    <div class="form-group">
+        <label for="var-model" class="control-label">Model or Data Type (PA:Integer, PA:Boolean, ...). See <a target="_blank" href="/doc/user/ProActiveUserGuide.html#_variable_model">documentation</a></label>
+        <textarea id="var-model" name="var-model" cols="40" rows="1" class="form-control textareavalues"><%- variable.Model %></textarea>
+    </div>
+    <div class="form-group">
+        <label for="var-description" class="control-label">Description</label>
+        <span class="glyphicon glyphicon-info-sign pointer help-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="Html Description of the variable. It can contain html tags."></span>
+        <textarea id="var-description" name="var-description" cols="40" rows="1" class="form-control textareavalues"><%- variable.Description %></textarea>
+    </div>
+    <div class="form-group">
+        <label for="var-group" class="control-label">Group</label>
+        <span class="glyphicon glyphicon-info-sign pointer help-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="The variable can be assigned to a group. Variables of the same group will appear together in the workflow submission form."></span>
+        <input id="var-group" name="var-group" type="text" class="form-control"value = "<%- variable.Group %>">
+    </div>
+    <div class="form-group">
+        <label for="var-advanced" class="control-label">Advanced</label>
+        <span class="glyphicon glyphicon-info-sign pointer help-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="An advanced variable is not shown by default in the submission form, but can be displayed if needed."></span>
+        <div>
+            <label>
+                <input type="checkbox" id="var-advanced" name="var-advanced" value="<%- variable.Advanced %>" <%= !!(variable.Advanced) ? 'checked' : '' %> >
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="var-hidden" class="control-label">Hidden</label>
+        <span class="glyphicon glyphicon-info-sign pointer help-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="A hidden variable is never shown in the submission form, but the hidden status can be modified using a model SpEL expression. This can be used to produce dynamic forms."></span>
+        <div>
+            <label>
+                <input type="checkbox" id="var-hidden" name="var-hidden" value="<%- variable.Hidden %>" <%= !!(variable.Hidden) ? 'checked' : '' %> >
+            </label>
+        </div>
+    </div>
+</form>
+<label id="variable-editor-error" style="color:red;text-align:center;width:100%"></label>

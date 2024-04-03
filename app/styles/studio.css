@@ -1857,12 +1857,21 @@ ul, #submitFormUL {
     color: #888888;
 }
 
-.container-flex{
+.text-link {
+    color: #337ab7
+}
+
+.container-flex {
     display: inline-flex;
     align-items: center;
 }
 
-.input-button{
+.input-button {
     height: 30px;
     padding: 3px 5px;
+}
+
+.bg-primary {
+    background-color: #1ab394 !important;
+    color: #ffffff;
 }

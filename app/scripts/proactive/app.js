@@ -23,6 +23,8 @@ define(
         'proactive/view/SetPresetView',
         'proactive/view/WorkflowListView',
         'proactive/view/JobVariableView',
+        'proactive/view/WorkflowVariablesView',
+        'proactive/view/VariableEditorView',
         'xml2json',
         'proactive/router',
         'proactive/view/dom',
@@ -32,7 +34,7 @@ define(
 
     ],
 
-    function ($, jsPlumb, PNotify, ui, Config, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, SetPresetView, WorkflowListView, JobVariableView, xml2json, StudioRouter, dom, version) {
+    function ($, jsPlumb, PNotify, ui, Config, Job, WorkflowCollection, CatalogBucketCollection, CatalogWorkflowCollection, PaletteView, WorkflowView, EmptyWorkflowView, JobXmlView, LoginView, LogoutView, CatalogGetView, CatalogPublishView, CatalogSetTemplatesBucketView, SetPresetView, WorkflowListView, JobVariableView, WorkflowVariablesView, VariableEditorView, xml2json, StudioRouter, dom, version) {
 
     'use strict';
 
@@ -62,7 +64,9 @@ define(
             catalogPublishView : undefined,
             setPresetView : undefined,
             catalogSetSecondaryTemplatesBucketView : undefined,
-            jobVariableView : undefined
+            jobVariableView : undefined,
+            workflowVariablesView : undefined,
+            variableEditorView : undefined
         },
 
         router: undefined,
@@ -97,6 +101,8 @@ define(
             this.views.catalogSetSecondaryTemplatesBucketView = new CatalogSetTemplatesBucketView({buckets: this.models.catalogBuckets});
             this.views.setPresetView = new SetPresetView({presets: Config.palette_presets});
             this.views.jobVariableView =  new JobVariableView();
+            this.views.workflowVariablesView =  new WorkflowVariablesView();
+            this.views.variableEditorView =  new VariableEditorView();
             this.router = new StudioRouter(this);
         },
         logout: function() {
