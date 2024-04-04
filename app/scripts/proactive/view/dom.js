@@ -10,6 +10,8 @@ define(
         'proactive/rest/studio-client',
         'proactive/model/Task',
         'proactive/view/xml/TaskXmlView',
+        'proactive/view/WorkflowView',
+        'proactive/view/xml/JobXmlView',
         'xml2json',
         'codemirror',
         'proactive/view/BeautifiedModalAdapter',
@@ -57,7 +59,7 @@ define(
         'filesaver'
     ],
 
-    function (_, $, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, Task, TaskXmlView, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
+    function (_, $, Backbone, config, undoManager, FileBrowserView, ThirdPartyCredentialView, StudioClient, Task, TaskXmlView, WorkflowView, JobXmlView, xml2json, CodeMirror, BeautifiedModalAdapter, PNotify) {
 
         "use strict";
 
@@ -291,7 +293,11 @@ define(
             var studioApp = require('StudioApp');
             var updatedVarKey = studioApp.views.catalogGetView.varKey;
             var updatedVar = {[updatedVarKey]: selectedObjectValue};
-            studioApp.views.jobVariableView.updateVariableValue(updatedVar);
+            if ($("#workflow-variables-modal").data('bs.modal') !== null && $("#workflow-variables-modal").data('bs.modal').isShown) {
+                studioApp.views.workflowVariablesView.updateVariableValue(updatedVar);
+            } else {
+                studioApp.views.jobVariableView.updateVariableValue(updatedVar);
+            }
 
             $('#catalog-get-modal').modal('hide');
         });
@@ -770,7 +776,7 @@ define(
             return toggledTasks;
         }
 
-        $("#submit-button").click(function (event) {
+        function openSubmissionView(event){
             event.preventDefault();
 
             var studioApp = require('StudioApp');
@@ -789,18 +795,18 @@ define(
             var jobDocumentation = studioApp.models.jobModel.get("Generic Info Documentation");
             var jobGenericInfos = studioApp.models.jobModel.get("Generic Info");
 
-
             var jobVariablesOriginal = readOrStoreVariablesInModel();
 
             var jobVariables = {};
 
             var validationData = validate();
+
             if (validationData.updatedModels && validationData.updatedVariables) {
 
-               function addVariableToGroup(key, variableToAdd, groupsAndVariables) {
+                function addVariableToGroup(key, variableToAdd, groupsAndVariables) {
                     var group = "NOGROUP";
                     if (variableToAdd.Group && variableToAdd.Group !== "") {
-                       group = variableToAdd.Group;
+                        group = variableToAdd.Group;
                     }
                     if (!groupsAndVariables.has(group)) {
                         groupsAndVariables.set(group, new Map());
@@ -809,12 +815,12 @@ define(
                 }
 
                 function addVariablesInGroupOrder(groupsAndVariables, variablesJob) {
-                     for (var group of groupsAndVariables.keys()) {
-                        var groupVarsMap =  groupsAndVariables.get(group);
+                    for (var group of groupsAndVariables.keys()) {
+                        var groupVarsMap = groupsAndVariables.get(group);
                         for (var key of groupVarsMap.keys()) {
                             variablesJob[key] = groupVarsMap.get(key);
                         }
-                     }
+                    }
                 }
 
                 var jobVariablesByGroup = new Map();
@@ -865,11 +871,78 @@ define(
                 executeIfConnected(submit);
                 return;
             }
-            studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobTags':jobTags, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage':'', 'infoMessage' :'', 'showAdvanced' : false, 'toggledTasks' : []});
             $('#execute-workflow-modal').modal();
+            studioApp.views.jobVariableView.render({
+                'jobVariables': jobVariables,
+                'jobName': jobName,
+                'jobProjectName': jobProjectName,
+                'jobTags': jobTags,
+                'jobDescription': jobDescription,
+                'jobDocumentation': jobDocumentation,
+                'jobGenericInfos': jobGenericInfos,
+                'errorMessage': '',
+                'infoMessage': '',
+                'showAdvanced': false,
+                'showHidden': false,
+                'toggledTasks': []
+            });
 
             initializeSubmitFormForTaskVariables();
-        });
+        }
+
+        function addVariableToGroup(key, variableToAdd, groupsAndVariables) {
+            var group = "NOGROUP";
+            if (variableToAdd.Group && variableToAdd.Group !== "") {
+                group = variableToAdd.Group;
+            }
+            if (!groupsAndVariables.has(group)) {
+                groupsAndVariables.set(group, new Map());
+            }
+            groupsAndVariables.get(group).set(key, variableToAdd);
+        }
+
+        function addVariablesInGroupOrder(groupsAndVariables, variablesJob) {
+            for (var group of groupsAndVariables.keys()) {
+                var groupVarsMap = groupsAndVariables.get(group);
+                for (var key of groupVarsMap.keys()) {
+                    variablesJob[key] = groupVarsMap.get(key);
+                }
+            }
+        }
+
+        function openVariablesView(event) {
+            event.preventDefault();
+
+            var studioApp = require('StudioApp');
+            if (!studioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
+            save_workflow();
+            closeCollapsedMenu();
+
+            var jobModel = studioApp.models.jobModel;
+
+            var jobVariables = {};
+
+            var jobVariablesByGroup = new Map();
+            jobVariablesByGroup.set("NOGROUP", new Map());
+            // first, add only job variables defined in the workflow
+            for (var variable of jobModel.attributes.Variables) {
+                addVariableToGroup(variable.Name, variable, jobVariablesByGroup);
+            }
+            // Add all grouped variables to the final structure
+            addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
+
+            $('#workflow-variables-modal').modal();
+            studioApp.views.workflowVariablesView.render({
+                'jobModel': jobModel,
+                'jobVariables': jobVariables,
+                'showAdvanced': false,
+                'showHidden': false
+            });
+        }
 
         $("#plan-button").click(function (event) {
             event.preventDefault();
@@ -894,6 +967,10 @@ define(
             executeOrCheck(event, true, false)
         });
 
+        $("#workflow-variables-modal,#execute-workflow-modal,#variable-editor-modal").on('hidden.bs.modal', function () {
+            $(this).data('bs.modal', null);
+        });
+
         // show ThirdPartyCredential modal with updated value of the corresponding variable
         $(document).on("click", '.third-party-credential-button', function (event) {
             var varKey = event.currentTarget.getAttribute('value');
@@ -914,10 +991,11 @@ define(
                 var inputVariables = {};
                 var inputReceived = $('#job-variables .variableValue');
                 var showAdvanced = $('#advanced-checkbox').is(":checked");
+                var showHidden = $('#hidden-checkbox').is(":checked");
                 var toggledTasks = getToggledTasks();
 
-                var extractVariableName = function (key) { return (key.split(":").length == 2 ? key.split(":")[1] : key) };
-                var isTaskVariable = function (key) { return (key.split(":").length == 2) };
+                var extractVariableName = function (key) { return (key.split(":").length === 2 ? key.split(":")[1] : key) };
+                var isTaskVariable = function (key) { return (key.split(":").length === 2) };
                 var checkBoolean = function (value) { return "true" === value || true === value };
                 function setInheritedField(key) {
                   if (isTaskVariable(key)) {
@@ -955,21 +1033,47 @@ define(
 
                 if (!validationData.valid) {
                     var jobVariables = extractUpdatedVariables(inputVariables, validationData);
-                    studioApp.views.jobVariableView.render({'jobVariables': jobVariables, 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobTags':jobTags, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': validationData.errorMessage, 'infoMessage' : '', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
+                    studioApp.views.jobVariableView.render({
+                        'jobVariables': jobVariables,
+                        'jobName': jobName,
+                        'jobProjectName': jobProjectName,
+                        'jobTags': jobTags,
+                        'jobDescription': jobDescription,
+                        'jobDocumentation': jobDocumentation,
+                        'jobGenericInfos': jobGenericInfos,
+                        'errorMessage': validationData.errorMessage,
+                        'infoMessage': '',
+                        'showAdvanced': showAdvanced,
+                        'showHidden': showHidden,
+                        'toggledTasks': toggledTasks
+                    });
                 } else if (check) {
-                    studioApp.views.jobVariableView.render({'jobVariables': extractUpdatedVariables(inputVariables, validationData), 'jobName':jobName, 'jobProjectName':jobProjectName, 'jobTags':jobTags, 'jobDescription':jobDescription, 'jobDocumentation':jobDocumentation, 'jobGenericInfos':jobGenericInfos, 'errorMessage': '', 'infoMessage' : 'Workflow is valid.', 'showAdvanced' : showAdvanced, 'toggledTasks' : toggledTasks});
+                    studioApp.views.jobVariableView.render({
+                        'jobVariables': extractUpdatedVariables(inputVariables, validationData),
+                        'jobName': jobName,
+                        'jobProjectName': jobProjectName,
+                        'jobTags': jobTags,
+                        'jobDescription': jobDescription,
+                        'jobDocumentation': jobDocumentation,
+                        'jobGenericInfos': jobGenericInfos,
+                        'errorMessage': '',
+                        'infoMessage': 'Workflow is valid.',
+                        'showAdvanced': showAdvanced,
+                        'showHidden': showHidden,
+                        'toggledTasks': toggledTasks
+                    });
                 } else {
                     $('#execute-workflow-modal').modal("hide");
-                    if(!plan){
+                    if (!plan) {
                         submit();
-                    }else{
+                    } else {
                         $("#plan-workflow-modal").modal();
                     }
                 }
                 readOrStoreVariablesInModel(oldVariables);
 
                 initializeSubmitFormForTaskVariables();
-                
+
                 if (handler) {
                     handler(validationData);
                 }
@@ -1678,6 +1782,8 @@ define(
             var copiedTasks = [];
             var positions = [];
 
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+
             $.getScript("studio-conf.js", function () {
                 var docUrl = config.docUrl;
                 if (!docUrl.endsWith("/")) {
@@ -1799,12 +1905,116 @@ define(
                 pasteAllow = {left: e.pageX, top: e.pageY};
                 e.stopPropagation();
             })
+
+            $("#submit-button").click(function (event) {
+                openSubmissionView(event)
+            });
+
+            $("#variables-button").click(function (event) {
+                openVariablesView(event)
+            });
+
+            function validateAndUpdateVariables(newVariables) {
+                var studioApp = require('StudioApp');
+                var backupVariables = JSON.parse(JSON.stringify(studioApp.models.jobModel.get('Variables')));
+                studioApp.models.jobModel.set({"BackupVariables": backupVariables});
+                studioApp.models.jobModel.set({"Variables": newVariables});
+
+                var validationData = validate();
+                if (validationData.valid) {
+                    studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                    studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                    studioApp.views.workflowView.importNoReset();
+                    delete studioApp.models.jobModel.attributes.BackupVariables;
+                    return {valid: true}
+                } else {
+                    studioApp.models.jobModel.set({"Variables": studioApp.models.jobModel.get('BackupVariables')});
+                    return {
+                        valid: false,
+                        errorMessage: validationData.errorMessage,
+                        backupVariables: studioApp.models.jobModel.get('BackupVariables')
+                    };
+                }
+            }
+
+            $("#save-variables-button").click(function () {
+                var studioApp = require('StudioApp');
+                var updatedVariablesArray = studioApp.views.workflowVariablesView.updateVariables();
+                var validationResult = validateAndUpdateVariables(updatedVariablesArray);
+                if (validationResult.valid) {
+                    $('#workflow-variables-modal').modal('hide');
+                    delete studioApp.models.jobModel.attributes.InitialVariables;
+                } else {
+                    $("#variables-view-error").text(validationResult.errorMessage)
+                }
+            });
+
+            $("#save-var-edit-button").click(function () {
+                var studioApp = require('StudioApp');
+                var updatedVariable = studioApp.views.variableEditorView.updateVariable();
+                var originalName = studioApp.views.variableEditorView.originalName();
+
+                var existingVariables = studioApp.views.workflowVariablesView.updateVariables();
+                for (let i = 0; i < existingVariables.length; i++) {
+                    if (existingVariables[i].Name === originalName) {
+                        existingVariables[i] = updatedVariable;
+                    }
+                }
+
+                var validationResult = validateAndUpdateVariables(existingVariables);
+
+                if (validationResult.valid) {
+                    var jobModel = studioApp.models.jobModel;
+                    var jobVariables = {};
+
+                    var jobVariablesByGroup = new Map();
+                    jobVariablesByGroup.set("NOGROUP", new Map());
+                    // first, add only job variables defined in the workflow
+                    for (var variable of existingVariables) {
+                        if (variable.Name === originalName) {
+                            variable = updatedVariable;
+                        }
+                        addVariableToGroup(variable.Name, variable, jobVariablesByGroup);
+                    }
+                    // Add all grouped variables to the final structure
+                    addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
+
+                    $('#variable-editor-modal').modal('hide');
+                    studioApp.views.workflowVariablesView.render({
+                        'jobModel': jobModel,
+                        'jobVariables': jobVariables,
+                        'showAdvanced': $('#advanced-checkbox').is(":checked"),
+                        'showHidden': $('#hidden-checkbox').is(":checked")
+                    });
+                } else {
+                    $("#variable-editor-error").text(validationResult.errorMessage)
+                }
+            });
+        });
+
+        $('#workflow-variables-modal').on('hidden.bs.modal', function () {
+            var studioApp = require('StudioApp');
+
+            if (studioApp.models.jobModel.get("InitialVariables")) {
+                var initialVariables = JSON.parse(JSON.stringify(studioApp.models.jobModel.get('InitialVariables')));
+                studioApp.models.jobModel.set({"Variables": initialVariables});
+                delete studioApp.models.jobModel.attributes.InitialVariables;
+
+                //Refresh Variables view in side menu
+                studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                studioApp.views.workflowView.importNoReset();
+            }
         });
 
         // adding form-control classes to new input elements after clicking on "add"
         // button in forms
         $(document).on('click', 'button[data-action="add"]', function () {
             $('input').addClass("form-control");
+        })
+
+        $(document).on('click', '#variables-button', function (event) {
+            openVariablesView(event)
         })
 
         // saving job xml every min to local store
