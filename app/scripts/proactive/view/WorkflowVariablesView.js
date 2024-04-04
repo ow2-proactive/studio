@@ -162,11 +162,8 @@ define(
 
                 var updatedVarElement = $(document.getElementById(selectedVariable.Name));
                 if (updatedVarElement.attr("data-variable-model").toLowerCase() === "pa:boolean") {
-                    console.log("boolean")
                     selectedVariable.Value = updatedVarElement.find("input:checked").val();
-                    console.log("value = " + selectedVariable.Value)
                 } else {
-                    console.log(updatedVarElement.attr("data-variable-model"))
                     selectedVariable.Value = updatedVarElement.val();
                 }
                 studioApp.views.variableEditorView.render({
