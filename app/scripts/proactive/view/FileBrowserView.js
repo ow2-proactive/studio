@@ -250,7 +250,7 @@ define(
                 }
                 var studioApp = require('StudioApp');
                 var updatedVar = {[this.model['varKey']]: selectedFilePath};
-                if ($("#workflow-variables-modal").data('bs.modal')?.isShown) {
+                if ($("#workflow-variables-modal").data('bs.modal') !== null && $("#workflow-variables-modal").data('bs.modal').isShown) {
                     studioApp.views.workflowVariablesView.updateVariableValue(updatedVar);
                 } else {
                     studioApp.views.jobVariableView.updateVariableValue(updatedVar);

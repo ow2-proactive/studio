@@ -293,7 +293,7 @@ define(
             var studioApp = require('StudioApp');
             var updatedVarKey = studioApp.views.catalogGetView.varKey;
             var updatedVar = {[updatedVarKey]: selectedObjectValue};
-            if ($("#workflow-variables-modal").data('bs.modal')?.isShown) {
+            if ($("#workflow-variables-modal").data('bs.modal') !== null && $("#workflow-variables-modal").data('bs.modal').isShown) {
                 studioApp.views.workflowVariablesView.updateVariableValue(updatedVar);
             } else {
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
