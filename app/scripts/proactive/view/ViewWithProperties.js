@@ -249,18 +249,16 @@ define(
 							}
 
 							var isWorkflowVariables = el.attr('sub-data-tab')
-							var detailedVarsViewLink = ""
-							if (isWorkflowVariables) {
-								detailedVarsViewLink = '<div id="variables-button" class="font-smaller text-muted m-l-xs pointer pull-right"><a class="skip">' + isWorkflowVariables + '</a></div>'
-							}
 
-							var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a id="' + el.attr("data-tab") + '" data-toggle="collapse"' + dataTabHelp + ' data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a>' + detailedVarsViewLink + '</div></div>');
+							var accordionGroup = $('<div class="panel panel-default"><div class="panel-heading"><a id="' + el.attr("data-tab") + '" data-toggle="collapse"' + dataTabHelp + ' data-parent="#accordion-properties" href="#' + accId + '">' + el.attr("data-tab") + '</a></div></div>');
 							currentAccordionGroup = $('<div id="' + accId + '" class="panel-body collapse ' + (openAccordion ? "in" : "") + '"></div>');
 
 							if (el.attr("data-help")) {
 								accordionGroup.attr("data-help", el.attr("data-help"));
 							}
-							accordionGroup.append(currentAccordionGroup);
+							if(!isWorkflowVariables){
+								accordionGroup.append(currentAccordionGroup);
+							}
 							accordion.append(accordionGroup);
 							curLabel = el.attr("data-tab").replace(/ /g, '');
 						}

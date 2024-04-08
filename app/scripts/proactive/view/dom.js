@@ -2037,7 +2037,8 @@ define(
             $('input').addClass("form-control");
         })
 
-        $(document).on('click', '#variables-button', function (event) {
+        $(document).on('click', 'a[id="Workflow Variables"]', function (event) {
+            event.preventDefault();
             openVariablesView(event)
         })
 
