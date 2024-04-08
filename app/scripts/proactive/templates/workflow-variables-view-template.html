@@ -1,18 +1,34 @@
 <div class="text-center">
     <% _.each(jobModel['Generic Info'], function(gi) {
-                var label = gi["Property Name"];
-                if (label == "workflow.icon" )  %>
-                    <img src="<%=gi["Property Value"]%>" style="width:100px;height:100px;">
-    <% }) %>
+    var label = gi["Property Name"];
+    if (label == "workflow.icon" )  %>
+        <img src="<%=gi["Property Value"]%>" style="width:100px;height:100px;">
+    <%
+    })
+    %>
     <h4 class="modal-title"><%- jobModel.Name %> </h4>
 </div>
 <style>
-    .hidden-var {display: <%= showHidden ? 'inline-flex' : 'none' %>;color: #888;}
-    .advanced-var {display: <%= showAdvanced ? 'inline-flex' : 'none' %>;color: #E86D1F;}
-    ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;justify-content: flex-end;}
-    ul li.formLayout label.hidden-to-hide {display: <%= showHidden ? 'none' : 'inline-flex' %>;justify-content: flex-end;}
+    .hidden-var {
+        display: <%= showHidden ? 'inline-flex': 'none' %>;
+        color: #888;
+    }
+
+    .advanced-var {
+        display: <%= showAdvanced ? 'inline-flex': 'none' %>;
+        color: #E86D1F;
+    }
+
+    ul li.formLayout label.advanced-to-hide {
+        display: <%= showAdvanced ? 'none': 'inline-flex' %>;
+        justify-content: flex-end;
+    }
+
+    ul li.formLayout label.hidden-to-hide {
+        display: <%= showHidden ? 'none': 'inline-flex' %>;
+        justify-content: flex-end;
+    }
 </style>
-<br>
 <%
 var totalNumberOfadvancedVariables = 0;
 var totalNumberOfHiddenVariables = 0;
@@ -33,21 +49,21 @@ for (var key in jobVariables) {
 %>
 <ul id="submitFormUL">
     <div class="formLayout">
-        <div for="Workflow_Variables" style="font-weight: bold;width: 100%" data-toggle="tooltip">Workflow Variables</div>
+        <div for="Workflow_Variables" class="w-100 font-bold" data-toggle="tooltip">Workflow Variables</div>
         <%
         if (totalNumberOfadvancedVariables > 0) {
         %>
         <label class="m-l-xs" for="Advanced" style="color: #E86D1F; white-space: nowrap;" data-toggle="tooltip">Advanced
             <%
-                if (showAdvanced) {
-                    %>
+            if (showAdvanced) {
+            %>
             <input id="advanced-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
-                    <%
-                } else {
-                    %>
+            <%
+            } else {
+            %>
             <input id="advanced-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
-                    <%
-                }
+            <%
+            }
             %>
         </label>
         <%
@@ -70,346 +86,359 @@ for (var key in jobVariables) {
         }
         %>
         <script type="text/javascript">
-        //<![CDATA[
-jQuery(document).ready(function($){
-	$('#advanced-checkbox').on('change', function() {
-        if ($(this).is(':checked')) {
-            // show the advanced variables
-            $('.advanced-var').css('display', 'inline-flex')
-            // hide group labels of visible variables if necessary (see below)
-            $('.advanced-to-hide').css('display', 'none')
-        } else {
-            // hide the advanced variables
-            $('.advanced-var').css('display', 'none')
-            // show group labels of visible variables if necessary (see below)
-            $('.advanced-to-hide').css('display', 'inline-block')
-        }
-    })
-    $('#hidden-checkbox').on('change', function() {
-        if ($(this).is(':checked')) {
-            // show the advanced variables
-            $('.hidden-var').css('display', 'inline-flex')
-            // hide group labels of visible variables if necessary (see below)
-            $('.hidden-to-hide').css('display', 'none')
-        } else {
-            // hide the advanced variables
-            $('.hidden-var').css('display', 'none')
-            // show group labels of visible variables if necessary (see below)
-            $('.hidden-to-hide').css('display', 'inline-block')
-        }
-    })
-})
-        //]]>
+            //<![CDATA[
+            jQuery(document).ready(function ($) {
+                $('#advanced-checkbox').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        // show the advanced variables
+                        $('.advanced-var').css('display', 'inline-flex')
+                        // hide group labels of visible variables if necessary (see below)
+                        $('.advanced-to-hide').css('display', 'none')
+                    } else {
+                        // hide the advanced variables
+                        $('.advanced-var').css('display', 'none')
+                        // show group labels of visible variables if necessary (see below)
+                        $('.advanced-to-hide').css('display', 'inline-block')
+                    }
+                })
+                $('#hidden-checkbox').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        // show the advanced variables
+                        $('.hidden-var').css('display', 'inline-flex')
+                        // hide group labels of visible variables if necessary (see below)
+                        $('.hidden-to-hide').css('display', 'none')
+                    } else {
+                        // hide the advanced variables
+                        $('.hidden-var').css('display', 'none')
+                        // show group labels of visible variables if necessary (see below)
+                        $('.hidden-to-hide').css('display', 'inline-block')
+                    }
+                })
+            })
+            //]]>
         </script>
     </div>
     <%
+    // contains the current group of variables
+    var currentGroup = null;
 
-        // contains the current workflow task
-        var currentTask = null;
-        // contains the current group of variables
-        var currentGroup = null;
-
-        // The following algorithm handles the complicated group display, which must appear on top of a set of variables, where some may be hidden or advanced.
-        // handling of advanced variables is especially difficult where they appear in the list before visible variables
-        // in that case, we must add two group labels in the list, one visible and one invisible, which will be toggled on/off when the advanced checkbox changes.
-        var groupDisplayStack = [];
-        function displayGroupStrategy(stack) {
-            var advancedVariables = 0;
-            var hiddenVariables = 0;
-            var visibleVariables = 0;
-            for (var i = 0; i < stack.length; i++) {
-                if (stack[i] === 'advanced') {
-                    advancedVariables++;
-                    if (advancedVariables === 1 && visibleVariables === 0 && i === stack.length - 1) {
-                        return 'display';
-                    }
-                }
-                else if (stack[i] === 'hidden') {
-                    hiddenVariables++;
-                    if (hiddenVariables === 1 && visibleVariables === 0 && i === stack.length - 1) {
-                        return 'display';
-                    }
-                }
-                else if (stack[i] === 'visible') {
-                    visibleVariables++;
-                    if (visibleVariables === 1 && i === stack.length - 1) {
-                        // display-with-class means that the group label will be visible or not, depending on the advanced checkbox status
-                        return (advancedVariables === 0 && hiddenVariables === 0) ? 'display' : 'display-with-class';
-                    }
+    // The following algorithm handles the complicated group display, which must appear on top of a set of variables, where some may be hidden or advanced.
+    // handling of advanced variables is especially difficult where they appear in the list before visible variables
+    // in that case, we must add two group labels in the list, one visible and one invisible, which will be toggled on/off when the advanced checkbox changes.
+    var groupDisplayStack = [];
+    function displayGroupStrategy(stack) {
+        var advancedVariables = 0;
+        var hiddenVariables = 0;
+        var visibleVariables = 0;
+        for (var i = 0; i < stack.length; i++) {
+            if (stack[i] === 'advanced') {
+                advancedVariables++;
+                if (advancedVariables === 1 && visibleVariables === 0 && i === stack.length - 1) {
+                    return 'display';
                 }
             }
-            return 'none';
+            else if (stack[i] === 'hidden') {
+                hiddenVariables++;
+                if (hiddenVariables === 1 && visibleVariables === 0 && i === stack.length - 1) {
+                    return 'display';
+                }
+            }
+            else if (stack[i] === 'visible') {
+                visibleVariables++;
+                if (visibleVariables === 1 && i === stack.length - 1) {
+                    // display-with-class means that the group label will be visible or not, depending on the advanced checkbox status
+                    return (advancedVariables === 0 && hiddenVariables === 0) ? 'display' : 'display-with-class';
+                }
+            }
         }
+        return 'none';
+    }
 
-        for (var key in jobVariables) {
-            var variable;
-            var hidden = false;
-            var description = "";
-            var group = "";
-            var advanced = false;
+    for (var key in jobVariables) {
+        var variable;
+        var hidden = false;
+        var description = "";
+        var group = "";
+        var advanced = false;
 
-            if (jobVariables.hasOwnProperty(key)) {
-                variable = jobVariables[key];
-                if (variable.hasOwnProperty("Hidden")) {
-                    hidden = variable.Hidden;
-                }
-                if (variable.hasOwnProperty("Description")) {
-                    description = variable.Description;
-                }
-                if (variable.hasOwnProperty("Group")) {
-                    group = variable.Group;
-                }
-                if (variable.hasOwnProperty("Advanced")) {
-                    advanced = variable.Advanced;
-                }
-
-                var splitted = key.split(":");
-                if (splitted.length == 2) {
-                    if (currentTask == null) {
-                        currentTask = splitted[0];
-                        currentGroup = null;
-                        groupDisplayStack = [];
-                %>
-    <li class="formLayout inline-block" >
-        <div for="Tasks_Variables" class="caretUL<%- toggledTasks.length > 0 ? ' caretUL-down' : '' %>" title="Tasks Variables (inherited variables are not displayed)" style="text-align:left; font-weight: bold" data-toggle="tooltip">Tasks Variables</div>
-    <ul class="nestedUL<%- toggledTasks.length > 0 ? ' activeUL' : '' %>">
-    <li class="formLayout inline-block">
-    <div for="<%- splitted[0] %>" class="caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></div>
-        <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
-                    <%
-                        } else if (currentTask != splitted[0]) {
-                            currentTask = splitted[0];
-                            currentGroup = null;
-                            groupDisplayStack = [];
+        if (jobVariables.hasOwnProperty(key)) {
+            variable = jobVariables[key];
+            if (variable.hasOwnProperty("Hidden")) {
+                hidden = variable.Hidden;
+            }
+            if (variable.hasOwnProperty("Description")) {
+                description = variable.Description;
+            }
+            if (variable.hasOwnProperty("Group")) {
+                group = variable.Group;
+            }
+            if (variable.hasOwnProperty("Advanced")) {
+                advanced = variable.Advanced;
+            }
+            // a new group to handle
+            if (group !== currentGroup) {
+                currentGroup = group;
+                groupDisplayStack = [];
+            }
+            if (hidden) {
+                groupDisplayStack.push('hidden');
+            } else if (advanced) {
+                groupDisplayStack.push('advanced');
+            } else {
+                groupDisplayStack.push('visible');
+            }
+            var strategy = displayGroupStrategy(groupDisplayStack);
+            if (strategy === 'display') {
             %>
-        </ul>
-    </li>
-    <li class="formLayout inline-block">
-    <div for="<%- splitted[0] %>" class="Name caretUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' caretUL-down' : '' %>" title="<%- splitted[0] %>" style="text-align:left; font-weight: bold" data-toggle="tooltip"><%- splitted[0] %></div>
-    <ul class="nestedUL<%- toggledTasks.indexOf(splitted[0]) >= 0 ? ' activeUL' : '' %>">
-        <%
-                    }
-                }
-    %>
-
-        <%
-        if (group !== currentGroup) {
-        // a new group to handle
-        currentGroup = group;
-        groupDisplayStack = [];
-        }
-        if (hidden) {
-        groupDisplayStack.push('hidden');
-        } else if (advanced) {
-        groupDisplayStack.push('advanced');
-        } else {
-        groupDisplayStack.push('visible');
-        }
-        var strategy = displayGroupStrategy(groupDisplayStack);
-        if (strategy === 'display') {
-        %>
         <li class="formLayout inline-block <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
             <label class="col-md-3" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
         </li>
-        <%
-        } else if (strategy === 'display-with-class') {
-        %>
+            <%
+            } else if (strategy === 'display-with-class') {
+            %>
         <li class="formLayout inline-block <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
             <label class="col-md-3 advanced-to-hide hidden-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
         </li>
-        <%
-        }
-        %>
+            <%
+            }
+            %>
         <li class="formLayout inline-block <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
             <div class="variableName col-md-3"><label for="<%- key %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label></div>
             <%
-                var model = null;
+            var model = null;
 
-                if (variable.hasOwnProperty("Model")) {
-                    model = variable.Model;
+            if (variable.hasOwnProperty("Model")) {
+                model = variable.Model;
 
-                    if (model && model.toLowerCase().indexOf('pa:model_from_url') ==0) {
-                        // fetch the specified urls and replace the current model by the result
-                        var indexBegin = model.indexOf('(');
-                        var indexEnd = model.lastIndexOf(')');
-                        var urlToFetch = model.substring(indexBegin + 1 , indexEnd)
-                        var origin = window.location.origin
-                        if (!origin.endsWith('/')) {
-                            origin += '/'
-                        }
-                        urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_URL}', origin + 'catalog');
-                        urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_URL}', origin + 'rest');
-                        $.ajax({url: urlToFetch,
-                            async: false,
-                            dataType: "text",
-                            success: function(data) {
-                            model = data;
-                            },
-                            error: function(xhr, ajaxOptions, thrownError) {
-                                alert("Could not fetch model from url '" + urlToFetch + "': " + xhr.responseText);
-                            }
-                        });
-                        // failure to fetch implies no change in the model
+                if (model && model.toLowerCase().indexOf('pa:model_from_url') ==0) {
+                    // fetch the specified urls and replace the current model by the result
+                    var indexBegin = model.indexOf('(');
+                    var indexEnd = model.lastIndexOf(')');
+                    var urlToFetch = model.substring(indexBegin + 1 , indexEnd)
+                    var origin = window.location.origin
+                    if (!origin.endsWith('/')) {
+                        origin += '/'
                     }
+                    urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_URL}', origin + 'catalog');
+                    urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_URL}', origin + 'rest');
+                    $.ajax({url: urlToFetch,
+                        async: false,
+                        dataType: "text",
+                        success: function(data) {
+                        model = data;
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert("Could not fetch model from url '" + urlToFetch + "': " + xhr.responseText);
+                        }
+                    });
+                    // failure to fetch implies no change in the model
                 }
-                if (model && model.toLowerCase().indexOf('pa:list')==0) {  %>
-                    <div class="col-md-4 container-flex">
-                        <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
-                        <% var indexBegin = model.indexOf('(');
-                            var indexEnd = model.lastIndexOf(')');
-                            var options = model.substring(indexBegin +1 , indexEnd).split(',');
-                            for (var i in options) {
-                                var option = options[i].trim();
-                                if (option === variable.Value) { %>
-                                    <option selected><%- option %></option>
-                                <% } else %>
-                                    <option><%- option %></option>
-                        <% } %>
-                        </select>
-                        <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                    </div>
-                        <div class="variableInfo col-md-5">
-                            <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                            <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                        </div>
-                <% } else if ((model && model.toLowerCase().indexOf('pa:boolean')==0) ) {  %>
-                        <div class="variableValue radio-div col-md-4" id="<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
-                    <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) {%>
-                            <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
-                            <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
-                            <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
-                    <% } else %>
-                            <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
-                            <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
-                            <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
-                        </div>
-                        <div class="variableInfo col-md-5">
-                            <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                            <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                        </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:hidden')==0) {  %>
-                        <div class="col-md-4 container-flex">
-                            <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                            <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                        </div>
-                        <div class="variableInfo col-md-5">
-                            <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                            <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                        </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:credential')==0) {  %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button class="third-party-credential-button btn input-button" value="<%- key %>" title="Manage third-party credentials" type="button"><img src="images/key.png"></button>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfoWButton col-md-5">
-                                <div class="variableInfo">
-                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                                </div>
-                            </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:global_file') ==0 ) {  %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button value="<%- key %>" class="var-globalfile-button btn far fa-folder-open input-button" type="button" title="Browse Global Space files, Upload, and Select one file"></button>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfoWButton col-md-5">
-                                <div class="variableInfo">
-                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                                </div>
-                            </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:user_file') ==0 ) {  %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button value="<%- key %>" class="var-userfile-button btn far fa-folder-open input-button" type="button" title="Browse User Space files, Upload, and Select one file"></button>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfoWButton col-md-5">
-                                <div class="variableInfo">
-                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                                </div>
-                            </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:global_folder') ==0 ) {  %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload Global Space files, and Select one folder"></button>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfoWButton col-md-5">
-                                <div class="variableInfo">
-                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                                </div>
-                            </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:user_folder') ==0 ) {  %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button value="<%- key %>" class="var-userfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload User Space files, and Select one folder"></button>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfoWButton col-md-5">
-                                <div class="variableInfo">
-                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                                </div>
-                            </div>
-                <% } else if (model && model.toLowerCase().indexOf('pa:catalog_object') ==0 ) {  %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn input-button" type="button"><img src="images/catalog-portal.png" height="20"></button>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfoWButton col-md-5">
-                                <div class="variableInfo">
-                                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                                </div>
-                            </div>
-                <% } else if (model && (model.toLowerCase().indexOf('pa:not_empty_string') == 0 || model.toLowerCase().indexOf('pa:json') == 0 || model.toLowerCase().indexOf('pa:spel') == 0 || model.toLowerCase().indexOf('pa:regexp') == 0) ) {  %>
-                            <div class="col-md-4 container-flex">
-                                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfo col-md-5">
-                                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                            </div>
-                <% } else if (!model) {  %>
-                            <div class="col-md-4 container-flex">
-                                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfo col-md-5">
-                                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                            </div>
-                <% } else { %>
-                            <div class="col-md-4 container-flex">
-                                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                                <button class="btn input-button var-edit-button glyphicon glyphicon-edit text-link m-l-xs" value="<%- key %>" title="Edit variable" type="button"></button>
-                            </div>
-                            <div class="variableInfo col-md-5">
-                                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
-                                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
-                            </div>
-                <% }
+            }
+            if (model && model.toLowerCase().indexOf('pa:list')==0) {  %>
+            <div class="col-md-4 container-flex">
+                <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
+                <%
+                var indexBegin = model.indexOf('(');
+                var indexEnd = model.lastIndexOf(')');
+                var options = model.substring(indexBegin +1 , indexEnd).split(',');
+                for (var i in options) {
+                    var option = options[i].trim();
+                    if (option === variable.Value) { %>
+                    <option selected><%- option %></option>
+                    <%
+                    } else
+                    %>
+                    <option><%- option %></option>
+                <%
+                }
+                %>
+                </select>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfo col-md-5">
+                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+            </div>
+            <%
+            } else if ((model && model.toLowerCase().indexOf('pa:boolean')==0) ) {
+            %>
+            <div class="variableValue radio-div col-md-4" id="<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
+            <%
+                if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) {%>
+                <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
+                <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs pull-right" value="<%- key %>" title="Delete variable" type="button"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
+                <%
+                } else
+                %>
+                <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
+                <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs pull-right" value="<%- key %>" title="Delete variable" type="button"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
+            </div>
+            <div class="variableInfo col-md-5">
+                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:hidden')==0) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfo col-md-5">
+                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:credential')==0) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button class="third-party-credential-button btn input-button" value="<%- key %>" title="Manage third-party credentials" type="button"><img src="images/key.png"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfoWButton col-md-5">
+                <div class="variableInfo">
+                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+                </div>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:global_file') ==0 ) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button value="<%- key %>" class="var-globalfile-button btn far fa-folder-open input-button" type="button" title="Browse Global Space files, Upload, and Select one file"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfoWButton col-md-5">
+                <div class="variableInfo">
+                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+                </div>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:user_file') ==0 ) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button value="<%- key %>" class="var-userfile-button btn far fa-folder-open input-button" type="button" title="Browse User Space files, Upload, and Select one file"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfoWButton col-md-5">
+                <div class="variableInfo">
+                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+                </div>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:global_folder') ==0 ) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload Global Space files, and Select one folder"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfoWButton col-md-5">
+                <div class="variableInfo">
+                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+                </div>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:user_folder') ==0 ) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button value="<%- key %>" class="var-userfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload User Space files, and Select one folder"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfoWButton col-md-5">
+                <div class="variableInfo">
+                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+                </div>
+            </div>
+            <%
+            } else if (model && model.toLowerCase().indexOf('pa:catalog_object') ==0 ) {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn input-button" type="button"><img src="images/catalog-portal.png" height="20"></button>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfoWButton col-md-5">
+                <div class="variableInfo">
+                    <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                    <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+                </div>
+            </div>
+            <%
+            } else if (model && (model.toLowerCase().indexOf('pa:not_empty_string') == 0 || model.toLowerCase().indexOf('pa:json') == 0 || model.toLowerCase().indexOf('pa:spel') == 0 || model.toLowerCase().indexOf('pa:regexp') == 0) ) {
+            %>
+            <div class="col-md-4 container-flex">
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfo col-md-5">
+                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+            </div>
+            <%
+            } else if (!model) {
+            %>
+            <div class="col-md-4 container-flex">
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfo col-md-5">
+                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+            </div>
+            <%
+            } else {
+            %>
+            <div class="col-md-4 container-flex">
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
+                <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
+            </div>
+            <div class="variableInfo col-md-5">
+                <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
+                <label class="font-smaller text-muted" data-help-self data-help="<%- model %>"><%- model %></label>
+            </div>
+            <%
+            }
             %>
         </li>
     <%
         }
     }
-    if (currentTask != null) {
-        %>
-    </ul>
-    </li>
-    </ul>
-    </li>
-        <%
-    }
+    %>
+    <li class="formLayout inline-block ">
+        <div class="col-md-3"></div>
 
-        %>
+        <div class="col-md-4 container-flex" style="flex-direction: row-reverse;">
+            <button id="add-variable-btn" class="btn btn-success var-add-btn m-l-xxs" title="Add a new variable" type="button" style="width: 85px">
+                <i class="glyphicon glyphicon-plus"></i><span class="m-l-xxs">Add</span>
+            </button>
+        </div>
+        <div class="variableInfo col-md-5">
+        </div>
+
+    </li>
 </ul>
 <label id="variables-view-error"style="color:red;text-align:center;width:100%"></label>

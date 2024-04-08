@@ -949,7 +949,26 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary" id="save-var-edit-button" type="button">Confirm</button>
+                <button class="btn btn-primary" id="save-var-edit-btn" type="button">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirm-delete-variable-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Are you sure?</h3>
+            </div>
+            <div class="modal-body" style="height:100%">
+                You are about to remove a variable.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button id="confirm-delete-variable-btn" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    Continue
+                </button>
             </div>
         </div>
     </div>
