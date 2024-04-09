@@ -23,7 +23,8 @@ define(
             },
 
             events: {
-                'click .var-edit-button': 'openVariableEditorView',
+                'click .var-edit-btn': 'openVariableEditorView',
+                'click #add-variable-btn': 'addNewVariable',
                 'click .var-globalfile-button': 'showGlobalFileModal',
                 'click .var-userfile-button': 'showUserFileModal',
                 'click .var-globalfolder-button': 'showGlobalFolderModal',
@@ -169,6 +170,35 @@ define(
                 studioApp.views.variableEditorView.render({
                     'variable': selectedVariable,
                 });
+            },
+
+            addNewVariable:function (){
+                $('#variable-editor-modal').modal();
+                var studioApp = require('StudioApp');
+                if (!studioApp.isWorkflowOpen()) {
+                    $('#select-workflow-modal').modal();
+                    return;
+                }
+                var emptyVariable = {
+                    Name: "",
+                    Value: "",
+                    Model: "",
+                    Description: "",
+                    Group: "",
+                    Advanced: false,
+                    Hidden: false,
+            }
+                studioApp.views.variableEditorView.render({
+                    'variable': emptyVariable,
+                });
+            },
+
+            deleteVariable: function (variableName) {
+                var that = this;
+                var filteredVariables = that.updateVariables().filter(function (variable) {
+                    return variable.Name !== variableName
+                })
+                return filteredVariables;
             }
         })
     })

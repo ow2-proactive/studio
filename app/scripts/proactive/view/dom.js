@@ -1495,6 +1495,69 @@ define(
             validate_job(false);
         });
 
+        function validateAndUpdateVariables(newVariables) {
+            var studioApp = require('StudioApp');
+            var backupVariables = JSON.parse(JSON.stringify(studioApp.models.jobModel.get('Variables')));
+            studioApp.models.jobModel.set({"BackupVariables": backupVariables});
+            studioApp.models.jobModel.set({"Variables": newVariables});
+
+            var validationData = validate();
+            if (validationData.valid) {
+                studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                studioApp.views.workflowView.importNoReset();
+                delete studioApp.models.jobModel.attributes.BackupVariables;
+                return {valid: true}
+            } else {
+                studioApp.models.jobModel.set({"Variables": studioApp.models.jobModel.get('BackupVariables')});
+                return {
+                    valid: false,
+                    errorMessage: validationData.errorMessage,
+                    backupVariables: studioApp.models.jobModel.get('BackupVariables')
+                };
+            }
+        }
+
+        function refreshVariablesView(existingVariables, updatedVariable, originalName) {
+            var studioApp = require('StudioApp');
+            var jobModel = studioApp.models.jobModel;
+            var jobVariables = {};
+
+            var jobVariablesByGroup = new Map();
+            jobVariablesByGroup.set("NOGROUP", new Map());
+            // first, add only job variables defined in the workflow
+            for (var variable of existingVariables) {
+                if (originalName) {
+                    if (variable.Name === originalName) {
+                        variable = updatedVariable;
+                    }
+                }
+                addVariableToGroup(variable.Name, variable, jobVariablesByGroup);
+            }
+            // Add all grouped variables to the final structure
+            addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
+
+            $('#variable-editor-modal').modal('hide');
+            studioApp.views.workflowVariablesView.render({
+                'jobModel': jobModel,
+                'jobVariables': jobVariables,
+                'showAdvanced': $('#advanced-checkbox').is(":checked"),
+                'showHidden': $('#hidden-checkbox').is(":checked")
+            });
+        }
+
+        function deleteVariable(variableName){
+            var studioApp = require('StudioApp');
+            var filteredExistingVariables = studioApp.views.workflowVariablesView.deleteVariable(variableName);
+
+            studioApp.models.jobModel.set({"Variables": filteredExistingVariables});
+            studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+            studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+            studioApp.views.workflowView.importNoReset();
+
+            refreshVariablesView(filteredExistingVariables)
+        }
+
         $("#undo-button, #undo-button-tool").click(function (event) {
             event.preventDefault();
 
@@ -1914,29 +1977,6 @@ define(
                 openVariablesView(event)
             });
 
-            function validateAndUpdateVariables(newVariables) {
-                var studioApp = require('StudioApp');
-                var backupVariables = JSON.parse(JSON.stringify(studioApp.models.jobModel.get('Variables')));
-                studioApp.models.jobModel.set({"BackupVariables": backupVariables});
-                studioApp.models.jobModel.set({"Variables": newVariables});
-
-                var validationData = validate();
-                if (validationData.valid) {
-                    studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
-                    studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
-                    studioApp.views.workflowView.importNoReset();
-                    delete studioApp.models.jobModel.attributes.BackupVariables;
-                    return {valid: true}
-                } else {
-                    studioApp.models.jobModel.set({"Variables": studioApp.models.jobModel.get('BackupVariables')});
-                    return {
-                        valid: false,
-                        errorMessage: validationData.errorMessage,
-                        backupVariables: studioApp.models.jobModel.get('BackupVariables')
-                    };
-                }
-            }
-
             $("#save-variables-button").click(function () {
                 var studioApp = require('StudioApp');
                 var updatedVariablesArray = studioApp.views.workflowVariablesView.updateVariables();
@@ -1949,7 +1989,7 @@ define(
                 }
             });
 
-            $("#save-var-edit-button").click(function () {
+            $("#save-var-edit-btn").click(function () {
                 var studioApp = require('StudioApp');
                 var updatedVariable = studioApp.views.variableEditorView.updateVariable();
                 var originalName = studioApp.views.variableEditorView.originalName();
@@ -1960,36 +2000,20 @@ define(
                         existingVariables[i] = updatedVariable;
                     }
                 }
+                // Case: new variable
+                if (originalName === '') {
+                    existingVariables.push(updatedVariable)
+                }
 
                 var validationResult = validateAndUpdateVariables(existingVariables);
 
                 if (validationResult.valid) {
-                    var jobModel = studioApp.models.jobModel;
-                    var jobVariables = {};
-
-                    var jobVariablesByGroup = new Map();
-                    jobVariablesByGroup.set("NOGROUP", new Map());
-                    // first, add only job variables defined in the workflow
-                    for (var variable of existingVariables) {
-                        if (variable.Name === originalName) {
-                            variable = updatedVariable;
-                        }
-                        addVariableToGroup(variable.Name, variable, jobVariablesByGroup);
-                    }
-                    // Add all grouped variables to the final structure
-                    addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
-
-                    $('#variable-editor-modal').modal('hide');
-                    studioApp.views.workflowVariablesView.render({
-                        'jobModel': jobModel,
-                        'jobVariables': jobVariables,
-                        'showAdvanced': $('#advanced-checkbox').is(":checked"),
-                        'showHidden': $('#hidden-checkbox').is(":checked")
-                    });
+                    refreshVariablesView(existingVariables,updatedVariable)
                 } else {
                     $("#variable-editor-error").text(validationResult.errorMessage)
                 }
             });
+
         });
 
         $('#workflow-variables-modal').on('hidden.bs.modal', function () {
@@ -2013,8 +2037,14 @@ define(
             $('input').addClass("form-control");
         })
 
-        $(document).on('click', '#variables-button', function (event) {
+        $(document).on('click', 'a[id="Workflow Variables"]', function (event) {
+            event.preventDefault();
             openVariablesView(event)
+        })
+
+        $(document).on('click', '.var-delete-btn', function (event) {
+            event.preventDefault();
+            deleteVariable(event.target.getAttribute('value'))
         })
 
         // saving job xml every min to local store
