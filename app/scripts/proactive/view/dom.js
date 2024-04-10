@@ -929,8 +929,10 @@ define(
             var jobVariablesByGroup = new Map();
             jobVariablesByGroup.set("NOGROUP", new Map());
             // first, add only job variables defined in the workflow
-            for (var variable of jobModel.attributes.Variables) {
-                addVariableToGroup(variable.Name, variable, jobVariablesByGroup);
+            if (jobModel.attributes.Variables) {
+                for (var variable of jobModel.attributes.Variables) {
+                    addVariableToGroup(variable.Name, variable, jobVariablesByGroup);
+                }
             }
             // Add all grouped variables to the final structure
             addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
@@ -1497,7 +1499,7 @@ define(
 
         function validateAndUpdateVariables(newVariables) {
             var studioApp = require('StudioApp');
-            var backupVariables = JSON.parse(JSON.stringify(studioApp.models.jobModel.get('Variables')));
+            var backupVariables = studioApp.models.jobModel.get('Variables') ? JSON.parse(JSON.stringify(studioApp.models.jobModel.get('Variables'))) : [];
             studioApp.models.jobModel.set({"BackupVariables": backupVariables});
             studioApp.models.jobModel.set({"Variables": newVariables});
 
