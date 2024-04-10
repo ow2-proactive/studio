@@ -53,7 +53,7 @@ define(
 
                 // Create a backup with the initial state of the workflow variables
                 var studioApp = require('StudioApp');
-                var backupVariables = JSON.parse(JSON.stringify(this.model.jobModel.Variables));
+                var backupVariables = this.model.jobModel.Variables ? JSON.parse(JSON.stringify(this.model.jobModel.Variables)) : [];
                 if (!studioApp.models.jobModel.get("InitialVariables")) {
                     studioApp.models.jobModel.set({"InitialVariables": backupVariables});
                 }
@@ -70,6 +70,9 @@ define(
 
             updateVariables: function () {
                 var that = this;
+                if (!that.model.jobModel.Variables){
+                    return []
+                }
                 that.model.jobModel.Variables.forEach(function (variable) {
                     var updatedVarElement = $(document.getElementById(variable.Name));
                     if (updatedVarElement.attr("data-variable-model").toLowerCase() === "pa:boolean") {
