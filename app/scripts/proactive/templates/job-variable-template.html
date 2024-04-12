@@ -235,7 +235,9 @@ jQuery(document).ready(function($){
                             origin += '/'
                         }
                         urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_URL}', origin + 'catalog');
+                        urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_PUBLIC_URL}', origin + 'catalog');
                         urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_URL}', origin + 'rest');
+                        urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_PUBLIC_URL}', origin + 'rest');
                         $.ajax({url: urlToFetch,
                             async: false,
                             dataType: "text",
