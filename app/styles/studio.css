@@ -137,15 +137,6 @@ footer {
     width: 100%;
 }
 
-.btn-group {
-    width: max-content;
-    height: 26px;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    margin-top: -2px;
-}
-
 .btn-group.pa-shortcuts {
     height: 40px;
     display: -webkit-inline-flex;
@@ -1352,7 +1343,7 @@ li.success {
 
 .pa-tools {
     margin-top: 2px;
-
+    display: inline-flex;
 }
 
 .pa-tool-btn {

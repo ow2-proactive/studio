@@ -197,11 +197,9 @@ define(
             },
 
             deleteVariable: function (variableName) {
-                var that = this;
-                var filteredVariables = that.updateVariables().filter(function (variable) {
+                return this.updateVariables().filter(function (variable) {
                     return variable.Name !== variableName
                 })
-                return filteredVariables;
             }
         })
     })

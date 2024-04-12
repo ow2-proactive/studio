@@ -803,26 +803,6 @@ define(
 
             if (validationData.updatedModels && validationData.updatedVariables) {
 
-                function addVariableToGroup(key, variableToAdd, groupsAndVariables) {
-                    var group = "NOGROUP";
-                    if (variableToAdd.Group && variableToAdd.Group !== "") {
-                        group = variableToAdd.Group;
-                    }
-                    if (!groupsAndVariables.has(group)) {
-                        groupsAndVariables.set(group, new Map());
-                    }
-                    groupsAndVariables.get(group).set(key, variableToAdd);
-                }
-
-                function addVariablesInGroupOrder(groupsAndVariables, variablesJob) {
-                    for (var group of groupsAndVariables.keys()) {
-                        var groupVarsMap = groupsAndVariables.get(group);
-                        for (var key of groupVarsMap.keys()) {
-                            variablesJob[key] = groupVarsMap.get(key);
-                        }
-                    }
-                }
-
                 var jobVariablesByGroup = new Map();
                 jobVariablesByGroup.set("NOGROUP", new Map());
                 // first, add only job variables defined in the workflow
@@ -898,6 +878,15 @@ define(
             if (!groupsAndVariables.has(group)) {
                 groupsAndVariables.set(group, new Map());
             }
+            var groupSize = groupsAndVariables.get(group).size;
+            if (groupSize === 0) {
+                variableToAdd.isTop = true;
+                variableToAdd.isBottom = true;
+            } else {
+                variableToAdd.isBottom = true;
+                var previous = Array.from(groupsAndVariables.get(group).keys())[groupSize - 1];
+                groupsAndVariables.get(group).get(previous).isBottom = false;
+            }
             groupsAndVariables.get(group).set(key, variableToAdd);
         }
 
@@ -944,6 +933,32 @@ define(
                 'showAdvanced': false,
                 'showHidden': false
             });
+        }
+
+        function changeVariableOrder(variableName, order) {
+            var studioApp = require('StudioApp');
+
+            var variablesNewOrder = studioApp.views.workflowVariablesView.updateVariables();
+
+            var actualVarIndex = variablesNewOrder.findIndex(function (variable) {
+                return variable.Name === variableName
+            });
+            var actualVariable = variablesNewOrder[actualVarIndex];
+
+            for (var i = actualVarIndex + order; (order > 0) ? i < variablesNewOrder.length : i >= 0; i += order) {
+                if (variablesNewOrder[i].Group === actualVariable.Group) {
+                    variablesNewOrder.splice(actualVarIndex, 1);
+                    variablesNewOrder.splice(i, 0, actualVariable);
+
+                    studioApp.models.jobModel.set({"Variables": variablesNewOrder});
+                    studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                    studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                    studioApp.views.workflowView.importNoReset();
+
+                    refreshVariablesView(variablesNewOrder)
+                    break;
+                }
+            }
         }
 
         $("#plan-button").click(function (event) {
@@ -1460,7 +1475,7 @@ define(
 
         function save_workflow() {
             var studioApp = require('StudioApp');
-            if (studioApp.models.jobModel) {
+            if (studioApp.models.jobModel && $("#workflow-variables-modal").data('bs.modal') === undefined || !$("#workflow-variables-modal").data('bs.modal').isShown) {
                 studioApp.views.propertiesView.saveCurrentWorkflow(
                     studioApp.models.jobModel.get("Name"),
                     studioApp.views.xmlView.generateXml(),
@@ -1475,7 +1490,7 @@ define(
         function validate_job(automaticValidation) {
             $(".invalid-task").removeClass("invalid-task");
             var studioApp = require('StudioApp');
-            if (studioApp.isWorkflowOpen()) {
+            if (studioApp.isWorkflowOpen() && $("#workflow-variables-modal").data('bs.modal') === undefined || !$("#workflow-variables-modal").data('bs.modal').isShown) {
                 // disable checking the validity of PA:CREDENTIALS variables in case of automaticValidation, to facilitate workflow designer
                 var disableCheckCredential = automaticValidation;
                 StudioClient.validateWithPopup(studioApp.views.xmlView.generateXml(), studioApp.models.jobModel, automaticValidation, disableCheckCredential);
@@ -1527,6 +1542,10 @@ define(
 
             var jobVariablesByGroup = new Map();
             jobVariablesByGroup.set("NOGROUP", new Map());
+            for (var variable of existingVariables) {
+                variable.isTop = false;
+                variable.isBottom = false;
+            }
             // first, add only job variables defined in the workflow
             for (var variable of existingVariables) {
                 if (originalName) {
@@ -2047,6 +2066,16 @@ define(
         $(document).on('click', '.var-delete-btn', function (event) {
             event.preventDefault();
             deleteVariable(event.target.getAttribute('value'))
+        })
+
+        $(document).on('click', '.var-up-btn', function (event) {
+            event.preventDefault();
+            changeVariableOrder(event.target.getAttribute('value'), -1);
+        })
+
+        $(document).on('click', '.var-down-btn', function (event) {
+            event.preventDefault();
+            changeVariableOrder(event.target.getAttribute('value'), 1);
         })
 
         // saving job xml every min to local store
