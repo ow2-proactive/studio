@@ -23,15 +23,6 @@ define(
 
             initialize: function () {
                 this.$el = $('#var-edit');
-                // fix overlays of nested modal "third-party-credential-modal" inside "execute-workflow-modal" (backdrop overlays the previous modal)
-                $(document).on('show.bs.modal', '.nested-modal', function () {
-                    var zIndex = 1040 + (10 * $('.modal:visible').length);
-                    $(this).css('z-index', zIndex);
-                    // setTimeout is used because the .modal-backdrop isn't created when the event show.bs.modal is triggered.
-                    setTimeout(function () {
-                        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-                    }, 0);
-                });
             },
 
             render: function (varInfo) {
