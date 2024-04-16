@@ -293,7 +293,7 @@ define(
             var studioApp = require('StudioApp');
             var updatedVarKey = studioApp.views.catalogGetView.varKey;
             var updatedVar = {[updatedVarKey]: selectedObjectValue};
-            if ($("#workflow-variables-modal").data('bs.modal') !== null && $("#workflow-variables-modal").data('bs.modal').isShown) {
+            if ($("#workflow-variables-modal").data('bs.modal') && $("#workflow-variables-modal").data('bs.modal').isShown) {
                 studioApp.views.workflowVariablesView.updateVariableValue(updatedVar);
             } else {
                 studioApp.views.jobVariableView.updateVariableValue(updatedVar);
@@ -1475,7 +1475,7 @@ define(
 
         function save_workflow() {
             var studioApp = require('StudioApp');
-            if (studioApp.models.jobModel && $("#workflow-variables-modal").data('bs.modal') === undefined || !$("#workflow-variables-modal").data('bs.modal').isShown) {
+            if (studioApp.models.jobModel && !$("#workflow-variables-modal").data('bs.modal') || !$("#workflow-variables-modal").data('bs.modal').isShown) {
                 studioApp.views.propertiesView.saveCurrentWorkflow(
                     studioApp.models.jobModel.get("Name"),
                     studioApp.views.xmlView.generateXml(),
@@ -1490,7 +1490,7 @@ define(
         function validate_job(automaticValidation) {
             $(".invalid-task").removeClass("invalid-task");
             var studioApp = require('StudioApp');
-            if (studioApp.isWorkflowOpen() && $("#workflow-variables-modal").data('bs.modal') === undefined || !$("#workflow-variables-modal").data('bs.modal').isShown) {
+            if (studioApp.isWorkflowOpen() && !$("#workflow-variables-modal").data('bs.modal') || !$("#workflow-variables-modal").data('bs.modal').isShown) {
                 // disable checking the validity of PA:CREDENTIALS variables in case of automaticValidation, to facilitate workflow designer
                 var disableCheckCredential = automaticValidation;
                 StudioClient.validateWithPopup(studioApp.views.xmlView.generateXml(), studioApp.models.jobModel, automaticValidation, disableCheckCredential);

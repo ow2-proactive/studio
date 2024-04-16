@@ -75,7 +75,7 @@ define(
                 }
                 that.model.jobModel.Variables.forEach(function (variable) {
                     var updatedVarElement = $(document.getElementById(variable.Name));
-                    if (updatedVarElement.attr("data-variable-model").toLowerCase() === "pa:boolean") {
+                    if (updatedVarElement.attr("data-variable-model") && updatedVarElement.attr("data-variable-model").toLowerCase() === "pa:boolean") {
                         variable.Value = updatedVarElement.find("input:checked").val();
                     } else {
                         variable.Value = updatedVarElement.val();
