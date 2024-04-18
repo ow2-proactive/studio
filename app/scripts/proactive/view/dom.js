@@ -992,21 +992,21 @@ define(
         $(document).on("click", '.third-party-credential-button', function (event) {
             var varKey = event.currentTarget.getAttribute('value');
             var varValue = event.currentTarget.parentElement.querySelector('.variableValue').value;
-
+            var isWorkflowVariablesView = $("#workflow-variables-modal").data('bs.modal') && $("#workflow-variables-modal").data('bs.modal').isShown
             executeOrCheck(event, true, false, function(response) {
                 if (response && response.updatedVariables && varKey in response.updatedVariables) {
                     varValue = response.updatedVariables[varKey];
                 }
                 new ThirdPartyCredentialView({credKey: varValue}).render();
-            });
+            },isWorkflowVariablesView);
         });
 
-        function executeOrCheck(event, check, plan, handler) {
+        function executeOrCheck(event, check, plan, handler,isWorkflowVariablesView) {
             var studioApp = require('StudioApp');
             executeIfConnected(function () {
                 var oldVariables = readOrStoreVariablesInModel();
                 var inputVariables = {};
-                var inputReceived = $('#job-variables .variableValue');
+                var inputReceived = isWorkflowVariablesView?$('#workflow-variables-mode .variableValue'):$('#job-variables .variableValue');
                 var showAdvanced = $('#advanced-checkbox').is(":checked");
                 var showHidden = $('#hidden-checkbox').is(":checked");
                 var toggledTasks = getToggledTasks();
@@ -1236,10 +1236,10 @@ define(
             StudioClient.submit(xml);
         }
 
-        function validate() {
+        function validate(checkCredentials) {
             var studioApp = require('StudioApp');
             var xml = studioApp.views.xmlView.generateXml();
-            return StudioClient.validate(xml, studioApp.models.jobModel, true);
+            return StudioClient.validate(xml, studioApp.models.jobModel, checkCredentials!==undefined?checkCredentials:true);
         }
 
         $("#clear-button, #clear-button-tool").click(function (event) {
@@ -1518,7 +1518,7 @@ define(
             studioApp.models.jobModel.set({"BackupVariables": backupVariables});
             studioApp.models.jobModel.set({"Variables": newVariables});
 
-            var validationData = validate();
+            var validationData = validate(false);
             if (validationData.valid) {
                 studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
                 studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});

@@ -319,7 +319,6 @@ for (var key in jobVariables) {
             %>
             <div class="col-md-4 container-flex">
                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
-                <button class="third-party-credential-button btn input-button" value="<%- key %>" title="Manage third-party credentials" type="button"><img src="images/key.png"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
                     <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
