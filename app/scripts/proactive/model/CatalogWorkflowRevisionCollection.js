@@ -1,10 +1,11 @@
 define(
     [
         'backbone',
+        'proactive/config',
         'proactive/model/CatalogRestWorkflow'
     ],
 
-    function (Backbone, RestWorkflow) {
+    function (Backbone, config, RestWorkflow) {
 
         "use strict";
 
@@ -16,7 +17,7 @@ define(
                 this.callback = options.callback;
             },
             url: function() {
-                return '/catalog/buckets/' + this.bucketname + '/resources/' + this.workflowname + '/revisions';
+                return config.prefixURl + '/catalog/buckets/' + this.bucketname + '/resources/' + this.workflowname + '/revisions';
             },
             parse: function(data) {
             	this.callback(data);

@@ -2,11 +2,12 @@ define(
     [
         'underscore',
         'backbone',
+        'proactive/config',
         'proactive/model/CatalogRestWorkflow',
         'proactive/model/GroupByProjectMixin'
     ],
 
-    function (_, Backbone, RestWorkflow, GroupByProjectMixin) {
+    function (_, Backbone, config, RestWorkflow, GroupByProjectMixin) {
 
         "use strict";
 
@@ -18,7 +19,7 @@ define(
                     this.callback = options.callback;
                 },
                 url: function() {
-                    return '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
+                    return config.prefixURl + '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
                 },
                 parse: function(data) {
                     if (this.callback)

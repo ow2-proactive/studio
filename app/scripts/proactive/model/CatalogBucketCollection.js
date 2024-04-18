@@ -1,10 +1,11 @@
 define(
     [
         'backbone',
+        'proactive/config',
         'proactive/model/CatalogRestBucket'
     ],
 
-    function (Backbone, RestBucket) {
+    function (Backbone, config, RestBucket) {
 
         "use strict";
 
@@ -33,7 +34,7 @@ define(
                 var objectName = this.objectName ? "objectName=" + encodeURIComponent(this.objectName) : '';
                 var bucketName = this.bucketName ? "bucketName=" + encodeURIComponent(this.bucketName) : '';
                 var params = [kindFilter, contentFilter, bucketName, objectName].filter(x => typeof x === 'string' && x.length > 0).join('&');
-                return '/catalog/buckets/?' + params;
+                return config.prefixURl + '/catalog/buckets/?' + params;
             },
             parse: function(data) {
                 return data;

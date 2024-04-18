@@ -1,10 +1,11 @@
 define(
     [
         'backbone',
+        'proactive/config',
         'proactive/model/CatalogRestObject'
     ],
 
-    function (Backbone, RestObject) {
+    function (Backbone, config, RestObject) {
 
         "use strict";
 
@@ -16,7 +17,7 @@ define(
                 this.callback = options.callback;
             },
             url: function() {
-                return '/catalog/buckets/' + this.bucketname + '/resources/' + this.name + '/';
+                return config.prefixURl + '/catalog/buckets/' + this.bucketname + '/resources/' + this.name + '/';
             },
             parse: function(data) {
             	this.callback(data);
