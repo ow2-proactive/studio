@@ -51,7 +51,7 @@ define(
                     }
                 }
 
-                var base_studio_url = "/studio";
+                var base_studio_url = config.prefixURl + "/studio";
                 this.modelType = this.model.get("Type");
                 var iconPath = base_studio_url + "/" + this.icons[this.modelType];
                 var hasGenericInfoIcon = false;
@@ -61,7 +61,7 @@ define(
                     for (var i in genericInformation) {
                         if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') {
                             hasGenericInfoIcon = true;
-                            iconPath = genericInformation[i]["Property Value"];
+                            iconPath = config.prefixURl + genericInformation[i]["Property Value"];
                         }
                     }
                 }
@@ -294,7 +294,6 @@ define(
             updateIcon: function(changed) {
                 var executableTypeStr = this.model.get("Type");
                 var iconPath = this.icons[executableTypeStr];
-
                 var hasAlreadyIconInGenericInfo = false
                 if (executableTypeStr == "ScriptExecutable") {
                     var language;
@@ -311,7 +310,7 @@ define(
                 if (genericInformation.length) {
                     for (var i in genericInformation) {
                         if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') {
-                            iconPath = genericInformation[i]["Property Value"];
+                            iconPath = config.prefixURl + genericInformation[i]["Property Value"];
                             hasAlreadyIconInGenericInfo = true;
                         }
                     }
@@ -1097,7 +1096,7 @@ define(
                 $.ajax({
                     'async': false,
                     'type': "GET",
-                    'url': "/catalog/buckets/" + bucketName + "/resources/" + objectName + "/revisions",
+                    'url': config.prefixURl + "/catalog/buckets/" + bucketName + "/resources/" + objectName + "/revisions",
                     'beforeSend': function(xhr) {
                         xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                     },

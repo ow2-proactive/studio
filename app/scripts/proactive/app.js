@@ -225,7 +225,7 @@ define(
         },
         openWorkflowFromCatalog : function(bucketName, workflowName, revision) {
             var that = this;
-            var url;
+            var url = config.prefixURl;
              if (revision) {
                 url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/revisions/'+revision+'/raw';
              } else {

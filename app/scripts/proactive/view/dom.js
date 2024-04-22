@@ -586,7 +586,7 @@ define(
                     }
                 }
             }
-            var urlCatalog = "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
+            var urlCatalog = config.prefixURl + "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
             //call the rest endpoint to get the list of workflows calling the current workflow
             getWorkflowDependencies(urlCatalog, function(res) {
                 var liCalledStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="padding:3px 10px;">';

@@ -222,11 +222,11 @@ define(
                 if (splitRawUrl.length > 4) {
                     revisionId = splitRawUrl[5];
                 }
-	        	var rawurl;
+	        	var rawurl = window.location.origin + config.prefixURl;
 	        	if (revisionId) {
-	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/' + revisionId +'/raw';
+	        	    rawurl += '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/' + revisionId +'/raw';
 	        	} else {
-	        	    rawurl = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/raw';
+	        	    rawurl += '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/raw';
 	        	}
 
 	        	var name = $(currentRevisionRow).data("name");
