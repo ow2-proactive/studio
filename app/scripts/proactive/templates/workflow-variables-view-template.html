@@ -19,12 +19,12 @@
         color: #E86D1F;
     }
 
-    ul li.formLayout label.advanced-to-hide {
-        display: <%= showAdvanced ? 'none': 'inline-flex' %>;
+    .group-advanced-hidden {
+        display: <%= (showAdvanced || showHidden) ? 'none': 'inline-flex' %>;
         justify-content: flex-end;
     }
 
-    ul li.formLayout label.hidden-to-hide {
+    .hidden-to-hide {
         display: <%= showHidden ? 'none': 'inline-flex' %>;
         justify-content: flex-end;
     }
@@ -37,7 +37,7 @@ for (var key in jobVariables) {
     var hidden = false;
     if (jobVariables.hasOwnProperty(key)) {
         variable = jobVariables[key];
-        if (variable.hasOwnProperty("Hidden")) {
+        if (variable.hasOwnProperty("Hidden") && variable.Hidden) {
             hidden = variable.Hidden;
             totalNumberOfHiddenVariables++;
         }
@@ -93,12 +93,12 @@ for (var key in jobVariables) {
                         // show the advanced variables
                         $('.advanced-var').css('display', 'inline-flex')
                         // hide group labels of visible variables if necessary (see below)
-                        $('.advanced-to-hide').css('display', 'none')
+                        $('.group-advanced-hidden').css('display', 'none')
                     } else {
                         // hide the advanced variables
                         $('.advanced-var').css('display', 'none')
                         // show group labels of visible variables if necessary (see below)
-                        $('.advanced-to-hide').css('display', 'container-flex')
+                        $('.group-advanced-hidden').css('display', 'inline-flex')
                     }
                 })
                 $('#hidden-checkbox').on('change', function () {
@@ -106,12 +106,12 @@ for (var key in jobVariables) {
                         // show the advanced variables
                         $('.hidden-var').css('display', 'inline-flex')
                         // hide group labels of visible variables if necessary (see below)
-                        $('.hidden-to-hide').css('display', 'none')
+                        $('.group-advanced-hidden').css('display', 'none')
                     } else {
                         // hide the advanced variables
                         $('.hidden-var').css('display', 'none')
                         // show group labels of visible variables if necessary (see below)
-                        $('.hidden-to-hide').css('display', 'container-flex')
+                        $('.group-advanced-hidden').css('display', 'inline-flex')
                     }
                 })
             })
@@ -182,10 +182,13 @@ for (var key in jobVariables) {
                 currentGroup = group;
                 groupDisplayStack = [];
             }
-            if (hidden) {
-                groupDisplayStack.push('hidden');
-            } else if (advanced) {
-                groupDisplayStack.push('advanced');
+            if (hidden || advanced) {
+                if (hidden) {
+                    groupDisplayStack.push('hidden');
+                }
+                if (advanced) {
+                    groupDisplayStack.push('advanced');
+                }
             } else {
                 groupDisplayStack.push('visible');
             }
@@ -199,7 +202,7 @@ for (var key in jobVariables) {
             } else if (strategy === 'display-with-class') {
             %>
         <li class="formLayout container-flex <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
-            <label class="col-md-3 advanced-to-hide hidden-to-hide" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
+            <label class="col-md-3 group-advanced-hidden" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
         </li>
             <%
             }
