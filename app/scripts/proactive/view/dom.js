@@ -945,8 +945,6 @@ define(
             });
             var actualVariable = variablesNewOrder[actualVarIndex];
 
-            console.log(variablesNewOrder)
-
             for (var i = actualVarIndex + order; (order > 0) ? i < variablesNewOrder.length : i >= 0; i += order) {
                 if (variablesNewOrder[i].Group === actualVariable.Group) {
                     variablesNewOrder.splice(actualVarIndex, 1);
