@@ -891,11 +891,18 @@ define(
         }
 
         function addVariablesInGroupOrder(groupsAndVariables, variablesJob) {
+            var groupIndex = 0;
             for (var group of groupsAndVariables.keys()) {
                 var groupVarsMap = groupsAndVariables.get(group);
+                var varIndex = 0;
                 for (var key of groupVarsMap.keys()) {
                     variablesJob[key] = groupVarsMap.get(key);
+                    if (groupIndex > 0 && varIndex === 0) {
+                        variablesJob[key].isTopGroup = (groupIndex === 1)
+                        variablesJob[key].isBottomGroup = (groupIndex === groupsAndVariables.size - 1)
+                    }
                 }
+                groupIndex++;
             }
         }
 
@@ -958,6 +965,56 @@ define(
                     refreshVariablesView(variablesNewOrder)
                     break;
                 }
+            }
+        }
+
+        function changeGroupOrder(variableName, order) {
+
+            var studioApp = require('StudioApp');
+
+            var variablesNewOrder = studioApp.views.workflowVariablesView.updateVariables();
+
+            var actualVarIndex = variablesNewOrder.findIndex(function (variable) {
+                return variable.Name === variableName
+            });
+            var actualVariable = variablesNewOrder[actualVarIndex];
+
+            if(!actualVariable.Group){
+                return;
+            }
+
+
+            for (var i = actualVarIndex + order; (order > 0) ? i < variablesNewOrder.length : i >= 0; i += order) {
+
+                if (order <=0) {
+                    if (variablesNewOrder[i].Group && variablesNewOrder[i].isTop) {
+                        variablesNewOrder.splice(actualVarIndex, 1);
+                        variablesNewOrder.splice(i, 0, actualVariable);
+
+                        studioApp.models.jobModel.set({"Variables": variablesNewOrder});
+                        studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                        studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                        studioApp.views.workflowView.importNoReset();
+
+                        refreshVariablesView(variablesNewOrder)
+                        break;
+                    }
+                } else {
+                    if (variablesNewOrder[i].Group && variablesNewOrder[i].Group !== actualVariable.Group && variablesNewOrder[i].isTop) {
+                        var nextTopVar = variablesNewOrder.splice(i, 1)[0];
+                        variablesNewOrder.splice(actualVarIndex, 0, nextTopVar);
+
+                        studioApp.models.jobModel.set({"Variables": variablesNewOrder});
+                        studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                        studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                        studioApp.views.workflowView.importNoReset();
+
+                        refreshVariablesView(variablesNewOrder)
+                        break;
+                    }
+                }
+
+
             }
         }
 
@@ -2076,6 +2133,16 @@ define(
         $(document).on('click', '.var-down-btn', function (event) {
             event.preventDefault();
             changeVariableOrder(event.target.getAttribute('value'), 1);
+        })
+
+        $(document).on('click', '.group-up-btn', function (event) {
+            event.preventDefault();
+            changeGroupOrder(event.target.getAttribute('value'), -1);
+        })
+
+        $(document).on('click', '.group-down-btn', function (event) {
+            event.preventDefault();
+            changeGroupOrder(event.target.getAttribute('value'), 1);
         })
 
         // saving job xml every min to local store

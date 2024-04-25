@@ -197,12 +197,32 @@ for (var key in jobVariables) {
             %>
         <li class="formLayout container-flex <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
             <label class="col-md-3" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
+            <%
+            if (group) {
+            %>
+            <div class="btn-group container-flex m-l-xxs">
+                <button type="button" class="btn btn-default group-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up this Group of Variables" <%= variable.isTopGroup ? 'disabled' : '' %> ></button>
+                <button type="button" class="btn btn-default group-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down this Group of Variables" <%= variable.isBottomGroup ? 'disabled' : '' %>></button>
+            </div>
+            <%
+            }
+            %>
         </li>
             <%
             } else if (strategy === 'display-with-class') {
             %>
         <li class="formLayout container-flex <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
             <label class="col-md-3 group-advanced-hidden" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
+            <%
+            if (group) {
+            %>
+            <div class="btn-group container-flex m-l-xxs group-advanced-hidden">
+                <button type="button" class="btn btn-default group-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up this Group of Variables" <%= variable.isTopGroup ? 'disabled' : '' %> ></button>
+                <button type="button" class="btn btn-default group-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down this Group of Variables" <%= variable.isBottomGroup ? 'disabled' : '' %> ></button>
+            </div>
+            <%
+            }
+            %>
         </li>
             <%
             }
@@ -262,8 +282,8 @@ for (var key in jobVariables) {
                 </select>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -281,8 +301,8 @@ for (var key in jobVariables) {
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs pull-right" value="<%- key %>" title="Delete variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs pull-right">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
                 <%
@@ -292,8 +312,8 @@ for (var key in jobVariables) {
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs pull-right" value="<%- key %>" title="Delete variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs pull-right">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
             </div>
@@ -308,8 +328,8 @@ for (var key in jobVariables) {
                 <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -324,8 +344,8 @@ for (var key in jobVariables) {
                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -343,8 +363,8 @@ for (var key in jobVariables) {
                 <button value="<%- key %>" class="var-globalfile-button btn far fa-folder-open input-button" type="button" title="Browse Global Space files, Upload, and Select one file"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -362,8 +382,8 @@ for (var key in jobVariables) {
                 <button value="<%- key %>" class="var-userfile-button btn far fa-folder-open input-button" type="button" title="Browse User Space files, Upload, and Select one file"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -381,8 +401,8 @@ for (var key in jobVariables) {
                 <button value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload Global Space files, and Select one folder"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -400,8 +420,8 @@ for (var key in jobVariables) {
                 <button value="<%- key %>" class="var-userfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload User Space files, and Select one folder"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -419,8 +439,8 @@ for (var key in jobVariables) {
                 <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn input-button" type="button"><img src="images/catalog-portal.png" height="20"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -437,8 +457,8 @@ for (var key in jobVariables) {
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -453,8 +473,8 @@ for (var key in jobVariables) {
                 <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
@@ -469,8 +489,8 @@ for (var key in jobVariables) {
                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
-                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" <%= variable.isTop ? 'disabled' : '' %> ></button>
-                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" <%= variable.isBottom ? 'disabled' : '' %>></button>
+                    <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
+                    <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-danger var-delete-btn glyphicon glyphicon-trash m-l-xxs" value="<%- key %>" title="Delete variable" type="button"></button>
             </div>
