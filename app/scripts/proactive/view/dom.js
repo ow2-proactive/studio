@@ -954,8 +954,16 @@ define(
 
             for (var i = actualVarIndex + order; (order > 0) ? i < variablesNewOrder.length : i >= 0; i += order) {
                 if (variablesNewOrder[i].Group === actualVariable.Group) {
-                    variablesNewOrder.splice(actualVarIndex, 1);
-                    variablesNewOrder.splice(i, 0, actualVariable);
+                    // Switch variables wrt the order.
+                    if (actualVarIndex < i) {
+                        var nextTopVar = variablesNewOrder.splice(i, 1)[0];
+                        variablesNewOrder.splice(actualVarIndex, 1, nextTopVar);
+                        variablesNewOrder.splice(i, 0, actualVariable);
+                    } else {
+                        variablesNewOrder.splice(actualVarIndex, 1);
+                        var nextBottomVar = variablesNewOrder.splice(i, 1, actualVariable)[0];
+                        variablesNewOrder.splice(actualVarIndex, 0, nextBottomVar);
+                    }
 
                     studioApp.models.jobModel.set({"Variables": variablesNewOrder});
                     studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
@@ -971,28 +979,28 @@ define(
         function changeGroupOrder(variableName, order) {
 
             var studioApp = require('StudioApp');
-
             var variablesNewOrder = studioApp.views.workflowVariablesView.updateVariables();
-
             var actualVarIndex = variablesNewOrder.findIndex(function (variable) {
                 return variable.Name === variableName
             });
             var actualVariable = variablesNewOrder[actualVarIndex];
 
-            if(!actualVariable.Group){
+            if (!actualVariable.Group) {
                 return;
             }
 
-
             for (var i = actualVarIndex + order; (order > 0) ? i < variablesNewOrder.length : i >= 0; i += order) {
 
-                if (order <=0) {
+                if (order <= 0) {
                     if (variablesNewOrder[i].Group && variablesNewOrder[i].isTop) {
                         variablesNewOrder.splice(actualVarIndex, 1);
                         variablesNewOrder.splice(i, 0, actualVariable);
 
                         studioApp.models.jobModel.set({"Variables": variablesNewOrder});
-                        studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                        studioApp.views.workflowView = new WorkflowView({
+                            model: studioApp.models.jobModel,
+                            app: studioApp
+                        });
                         studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
                         studioApp.views.workflowView.importNoReset();
 
@@ -1005,7 +1013,10 @@ define(
                         variablesNewOrder.splice(actualVarIndex, 0, nextTopVar);
 
                         studioApp.models.jobModel.set({"Variables": variablesNewOrder});
-                        studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                        studioApp.views.workflowView = new WorkflowView({
+                            model: studioApp.models.jobModel,
+                            app: studioApp
+                        });
                         studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
                         studioApp.views.workflowView.importNoReset();
 
@@ -1013,8 +1024,6 @@ define(
                         break;
                     }
                 }
-
-
             }
         }
 
