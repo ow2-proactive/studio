@@ -227,9 +227,9 @@ define(
             var that = this;
             var url = Config.prefixURl;
              if (revision) {
-                url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/revisions/'+revision+'/raw';
+                url = url + '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/revisions/'+revision+'/raw';
              } else {
-                url = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
+                url = url + '/catalog/buckets/' + bucketName + '/resources/'+workflowName+ '/raw';
              }
             dom.getWorkflowFromCatalog(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
@@ -238,7 +238,7 @@ define(
         },
         openWorkflowFromScheduler : function(jobId) {
             var that = this;
-            var url = '/rest/scheduler/jobs/'+jobId+'/xml/';
+            var url = Config.prefixURl + '/rest/scheduler/jobs/'+jobId+'/xml/';
             dom.getWorkflowFromScheduler(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
                 dom.open_catalog_workflow();

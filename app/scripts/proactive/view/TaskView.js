@@ -317,7 +317,7 @@ define(
                 }
                 // Add "/studio/" only for tasks stored in Studio project : when generic info doesn't include task.icon
                 if (!hasAlreadyIconInGenericInfo) {
-                    iconPath = "/studio/" + iconPath;
+                    iconPath = config.prefixURl + "/studio/" + iconPath;
                 }
                 this.$el.find("img").attr('src', iconPath);
                 this.updateIconsOnTasksReferencingScripts(this.element);
