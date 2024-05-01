@@ -1889,3 +1889,11 @@ ul, #submitFormUL {
     background-color: #fff;
     border-color: #d43f3a;
 }
+
+.hidden-var {
+    color: #888;
+}
+
+.advanced-var {
+    color: #E86D1F;
+}

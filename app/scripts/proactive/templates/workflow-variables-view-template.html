@@ -8,41 +8,36 @@
     %>
     <h4 class="modal-title"><%- jobModel.Name %> </h4>
 </div>
-<style>
-    .hidden-var {
-        display: <%= showHidden ? 'inline-flex': 'none' %>;
-        color: #888;
-    }
-
-    .advanced-var {
-        display: <%= showAdvanced ? 'inline-flex': 'none' %>;
-        color: #E86D1F;
-    }
-
-    .group-advanced-hidden {
-        display: <%= (showAdvanced || showHidden) ? 'none': 'inline-flex' %>;
-        justify-content: flex-end;
-    }
-
-    .hidden-to-hide {
-        display: <%= showHidden ? 'none': 'inline-flex' %>;
-        justify-content: flex-end;
-    }
-</style>
 <%
+
+// Count the total number of advanced, hidden and visible variables per group and in general
 var totalNumberOfadvancedVariables = 0;
 var totalNumberOfHiddenVariables = 0;
+var countsPerGroup = {};
 for (var key in jobVariables) {
     var variable;
     var hidden = false;
     if (jobVariables.hasOwnProperty(key)) {
         variable = jobVariables[key];
+        var group='_NO_GROUP_'
+        if (variable.hasOwnProperty('Group')) {
+            group = variable.Group
+        }
+        if (!countsPerGroup.hasOwnProperty(group)){
+            countsPerGroup[group] = {hidden:0,advanced:0,visible:0}
+        }
+
         if (variable.hasOwnProperty("Hidden") && variable.Hidden) {
             hidden = variable.Hidden;
             totalNumberOfHiddenVariables++;
+            countsPerGroup[group].hidden++;
         }
         if (!hidden && variable.hasOwnProperty("Advanced") && variable.Advanced) {
             totalNumberOfadvancedVariables++;
+            countsPerGroup[group].advanced++;
+        }
+        if (!variable.Hidden && !variable.Advanced){
+            countsPerGroup[group].visible++;
         }
     }
 }
@@ -54,33 +49,13 @@ for (var key in jobVariables) {
         if (totalNumberOfadvancedVariables > 0) {
         %>
         <label class="m-l-xs" for="Advanced" style="color: #E86D1F; white-space: nowrap;" data-toggle="tooltip">Advanced
-            <%
-            if (showAdvanced) {
-            %>
-            <input id="advanced-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
-            <%
-            } else {
-            %>
-            <input id="advanced-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
-            <%
-            }
-            %>
+            <input id="advanced-checkbox" type="checkbox" <%- showAdvanced ? 'checked' : '' %> style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
         </label>
         <%
         }if (totalNumberOfHiddenVariables > 0) {
         %>
         <label class="m-l-xs" for="Hidden" style="color: #888; white-space: nowrap;" data-toggle="tooltip">Hidden
-            <%
-            if (showHidden) {
-            %>
-            <input id="hidden-checkbox" type="checkbox" checked style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
-            <%
-            } else {
-            %>
-            <input id="hidden-checkbox" type="checkbox" style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
-            <%
-            }
-            %>
+            <input id="hidden-checkbox" type="checkbox" <%- showHidden ? 'checked' : '' %> style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
         </label>
         <%
         }
@@ -90,28 +65,28 @@ for (var key in jobVariables) {
             jQuery(document).ready(function ($) {
                 $('#advanced-checkbox').on('change', function () {
                     if ($(this).is(':checked')) {
-                        // show the advanced variables
-                        $('.advanced-var').css('display', 'inline-flex')
-                        // hide group labels of visible variables if necessary (see below)
-                        $('.group-advanced-hidden').css('display', 'none')
+                        // show advanced variables
+                        $('.advanced-var').toggleClass('hidden',false)
+                        // show group labels with only advanced variables if necessary (see below)
+                        $('.group-advanced').toggleClass('hidden',false)
                     } else {
-                        // hide the advanced variables
-                        $('.advanced-var').css('display', 'none')
-                        // show group labels of visible variables if necessary (see below)
-                        $('.group-advanced-hidden').css('display', 'inline-flex')
+                        // hide advanced variables
+                        $('.advanced-var').toggleClass('hidden',true)
+                        // hide group labels with only advanced  variables if necessary (see below)
+                        $('.group-advanced').toggleClass('hidden',true)
                     }
                 })
                 $('#hidden-checkbox').on('change', function () {
                     if ($(this).is(':checked')) {
-                        // show the advanced variables
-                        $('.hidden-var').css('display', 'inline-flex')
-                        // hide group labels of visible variables if necessary (see below)
-                        $('.group-advanced-hidden').css('display', 'none')
+                        // show hidden variables
+                        $('.hidden-var').toggleClass('hidden',false)
+                        // show group labels with only hidden  variables if necessary (see below)
+                        $('.group-hidden').toggleClass('hidden',false)
                     } else {
-                        // hide the advanced variables
-                        $('.hidden-var').css('display', 'none')
-                        // show group labels of visible variables if necessary (see below)
-                        $('.group-advanced-hidden').css('display', 'inline-flex')
+                        // hide hidden variables
+                        $('.hidden-var').toggleClass('hidden',true)
+                        // hide group labels with only hidden  variables if necessary (see below)
+                        $('.group-hidden').toggleClass('hidden',true)
                     }
                 })
             })
@@ -119,47 +94,33 @@ for (var key in jobVariables) {
         </script>
     </div>
     <%
-    // contains the current group of variables
-    var currentGroup = null;
-
     // The following algorithm handles the complicated group display, which must appear on top of a set of variables, where some may be hidden or advanced.
     // handling of advanced variables is especially difficult where they appear in the list before visible variables
-    // in that case, we must add two group labels in the list, one visible and one invisible, which will be toggled on/off when the advanced checkbox changes.
-    var groupDisplayStack = [];
-    function displayGroupStrategy(stack) {
-        var advancedVariables = 0;
-        var hiddenVariables = 0;
-        var visibleVariables = 0;
-        for (var i = 0; i < stack.length; i++) {
-            if (stack[i] === 'advanced') {
-                advancedVariables++;
-                if (advancedVariables === 1 && visibleVariables === 0 && i === stack.length - 1) {
-                    return 'display';
-                }
-            }
-            else if (stack[i] === 'hidden') {
-                hiddenVariables++;
-                if (hiddenVariables === 1 && visibleVariables === 0 && i === stack.length - 1) {
-                    return 'display';
-                }
-            }
-            else if (stack[i] === 'visible') {
-                visibleVariables++;
-                if (visibleVariables === 1 && i === stack.length - 1) {
-                    // display-with-class means that the group label will be visible or not, depending on the advanced checkbox status
-                    return (advancedVariables === 0 && hiddenVariables === 0) ? 'display' : 'display-with-class';
-                }
-            }
+    function getGroupClass(group){
+        var groupName=group?group:'_NO_GROUP_';
+        var cssClass=''
+        if (countsPerGroup[groupName].visible) {
+            return ''
         }
-        return 'none';
+        if (countsPerGroup[groupName].hidden) {
+            cssClass+='group-hidden '
+        }
+        if (countsPerGroup[groupName].advanced) {
+            cssClass+='group-advanced '
+        }
+        if ((showHidden && countsPerGroup[groupName].hidden) || (showAdvanced && countsPerGroup[groupName].advanced)) {
+            return cssClass;
+        } else {
+            return cssClass+ ' hidden'
+        }
     }
 
     var variableOrder = 0;
     for (var key in jobVariables) {
         var variable;
-        var hidden = false;
         var description = "";
         var group = "";
+        var hidden = false;
         var advanced = false;
         variableOrder++
 
@@ -177,25 +138,10 @@ for (var key in jobVariables) {
             if (variable.hasOwnProperty("Advanced")) {
                 advanced = variable.Advanced;
             }
-            // a new group to handle
-            if (group !== currentGroup) {
-                currentGroup = group;
-                groupDisplayStack = [];
-            }
-            if (hidden || advanced) {
-                if (hidden) {
-                    groupDisplayStack.push('hidden');
-                }
-                if (advanced) {
-                    groupDisplayStack.push('advanced');
-                }
-            } else {
-                groupDisplayStack.push('visible');
-            }
-            var strategy = displayGroupStrategy(groupDisplayStack);
-            if (strategy === 'display') {
+
+            if (variable.isTop) {
             %>
-        <li class="formLayout container-flex <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
+        <li class="formLayout container-flex group-header <%- getGroupClass(group) %>">
             <label class="col-md-3" style="font-weight: bold !important; text-align: right; text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
             <%
             if (group) {
@@ -209,25 +155,9 @@ for (var key in jobVariables) {
             %>
         </li>
             <%
-            } else if (strategy === 'display-with-class') {
-            %>
-        <li class="formLayout container-flex <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
-            <label class="col-md-3 group-advanced-hidden" style="font-weight: bold !important; text-align: right;  text-decoration: underline;" data-toggle="tooltip"><%- group && group !== "" ? group : "Main Variables" %></label>
-            <%
-            if (group) {
-            %>
-            <div class="btn-group container-flex m-l-xxs group-advanced-hidden">
-                <button type="button" class="btn btn-default group-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up this Group of Variables" <%= variable.isTopGroup ? 'disabled' : '' %> ></button>
-                <button type="button" class="btn btn-default group-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down this Group of Variables" <%= variable.isBottomGroup ? 'disabled' : '' %> ></button>
-            </div>
-            <%
             }
             %>
-        </li>
-            <%
-            }
-            %>
-        <li class="formLayout container-flex <%- hidden ? ' hidden-var' : '' %><%- advanced ? ' advanced-var' : '' %>">
+        <li class="formLayout container-flex <%- hidden ? (showHidden ? 'hidden-var' : 'hidden-var hidden') : '' %> <%- advanced ? (showAdvanced ? 'advanced-var' : 'advanced-var hidden') : '' %> <%- !advanced && !hidden ?'visible':'' %>">
             <div class="variableName col-md-3"><label for="<%- key %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label><span class="badge m-l-xxs"><%- variableOrder %></span></div>
             <%
             var model = null;
