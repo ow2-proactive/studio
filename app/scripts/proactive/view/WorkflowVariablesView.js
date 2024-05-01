@@ -196,6 +196,21 @@ define(
                 });
             },
 
+            getVisibleVariablesCount : function(group){
+                for(var variable in this.model.jobVariables){
+                    if(variable.Group === group){
+                        if (!variable.Hidden && !variable.Advanced){
+                            return true;
+                        } else if (variable.Advanced && $('#advanced-checkbox').is(":checked")){
+                            return true;
+                        } else if (variable.Hidden && $('#hidden-checkbox').is(":checked")){
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            },
+
             deleteVariable: function (variableName) {
                 return this.updateVariables().filter(function (variable) {
                     return variable.Name !== variableName
