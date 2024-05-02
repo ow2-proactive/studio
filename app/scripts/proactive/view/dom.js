@@ -2089,7 +2089,16 @@ define(
                 }
                 // Case: new variable
                 if (originalName === '') {
-                    existingVariables.push(updatedVariable)
+                    // Check if variable name already exists
+                    var actualVarIndex = existingVariables.findIndex(function (variable) {
+                        return variable.Name === updatedVariable.Name
+                    });
+                    if (actualVarIndex < 0) {
+                        existingVariables.push(updatedVariable)
+                    } else {
+                        $("#variable-editor-error").text("A variable already exists with the name \"" + updatedVariable.Name + "\"")
+                        return;
+                    }
                 }
 
                 var validationResult = validateAndUpdateVariables(existingVariables);
