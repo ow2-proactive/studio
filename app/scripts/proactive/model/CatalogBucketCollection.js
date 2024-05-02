@@ -34,7 +34,7 @@ define(
                 var objectName = this.objectName ? "objectName=" + encodeURIComponent(this.objectName) : '';
                 var bucketName = this.bucketName ? "bucketName=" + encodeURIComponent(this.bucketName) : '';
                 var params = [kindFilter, contentFilter, bucketName, objectName].filter(x => typeof x === 'string' && x.length > 0).join('&');
-                return config.prefixURl + '/catalog/buckets/?' + params;
+                return config.prefixURL + '/catalog/buckets/?' + params;
             },
             parse: function(data) {
                 return data;

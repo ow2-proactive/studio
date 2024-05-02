@@ -222,7 +222,7 @@ define(
                 if (splitRawUrl.length > 4) {
                     revisionId = splitRawUrl[5];
                 }
-	        	var rawurl = window.location.origin + config.prefixURl;
+	        	var rawurl = window.location.origin + config.prefixURL;
 	        	if (revisionId) {
 	        	    rawurl += '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/' + revisionId +'/raw';
 	        	} else {

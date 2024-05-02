@@ -151,7 +151,7 @@ define(
                     type: "GET",
                     headers : { 'sessionID': localStorage['pa.session'] },
                     async: false,
-                    url: config.prefixURl + '/catalog/buckets/?kind=workflow',
+                    url: config.prefixURL + '/catalog/buckets/?kind=workflow',
                     success: function (data) {
                         var foundBucket = false;
                         that.listOfAllCatalogBuckets = data;
@@ -189,7 +189,7 @@ define(
                     var objectKeyVal = template.get("object_key_values");
                     for (var i in objectKeyVal) {
                         if (objectKeyVal[i]["key"].toLowerCase() == 'workflow.icon'.toLowerCase()) {
-                            iconName = config.prefixURl + objectKeyVal[i]["value"];
+                            iconName = config.prefixURL + objectKeyVal[i]["value"];
                         }
                         if (objectKeyVal[i]["key"].toLowerCase() === 'description'.toLowerCase()) {
                             description = objectKeyVal[i]["value"];

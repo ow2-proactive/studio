@@ -1142,12 +1142,12 @@
 <script>
     // Get the base URL dynamically
     const index = window.location.pathname.indexOf("studio")
-    const prefixURl = window.location.pathname.substring(0, index > 0 ? index - 1 : index);
+    const prefixURL = window.location.pathname.substring(0, index > 0 ? index - 1 : index);
 
     // Add the dynamic part of the URL
-    var ADUrl = prefixURl + "/automation-dashboard/";
-    var SPUrl = prefixURl + "/scheduler/";
-    var RMUrl = prefixURl + "/rm/";
+    var ADUrl = prefixURL + "/automation-dashboard/";
+    var SPUrl = prefixURL + "/scheduler/";
+    var RMUrl = prefixURL + "/rm/";
 
     // Set the href attribute of the anchor tag
     document.getElementById("ad-link").setAttribute("href", ADUrl);

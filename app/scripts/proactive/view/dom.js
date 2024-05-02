@@ -505,7 +505,7 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><span style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</span><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><span style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</span><a href="' + config.prefixURL +  '/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
                                 } else if (objectKind == "null") {
                                     var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 250px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
@@ -586,7 +586,7 @@ define(
                     }
                 }
             }
-            var urlCatalog = config.prefixURl + "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
+            var urlCatalog = config.prefixURL + "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
             //call the rest endpoint to get the list of workflows calling the current workflow
             getWorkflowDependencies(urlCatalog, function(res) {
                 var liCalledStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="padding:3px 10px;">';
@@ -602,7 +602,7 @@ define(
 
                         const calledByWorkflowArray = x.split(",");
                         for (let i = 0; i < calledByWorkflowArray.length; i++) {
-                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></a></li>');
+                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="' + config.prefixURL + '/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></a></li>');
                             $("#ul-called").append(menuItemCalled);
                         }
                     }

@@ -19,7 +19,7 @@ define(
                     this.callback = options.callback;
                 },
                 url: function() {
-                    return config.prefixURl + '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
+                    return config.addPrefixUrL + '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
                 },
                 parse: function(data) {
                     if (this.callback)

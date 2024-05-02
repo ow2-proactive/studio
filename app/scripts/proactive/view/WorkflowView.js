@@ -61,7 +61,7 @@ define(
                         var templateModel = that.options.app.models.templates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
                         var bucketName = templateModel.attributes.bucket_name;
                         var workflowName = templateModel.attributes.name;
-                        templateUrl = config.prefixURl + '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/raw';
+                        templateUrl = config.prefixURL + '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/raw';
                       }
                       $.ajax({
                           type: "GET",

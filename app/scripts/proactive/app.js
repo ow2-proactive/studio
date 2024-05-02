@@ -225,7 +225,7 @@ define(
         },
         openWorkflowFromCatalog : function(bucketName, workflowName, revision) {
             var that = this;
-            var url = Config.prefixURl;
+            var url = Config.prefixURL;
              if (revision) {
                 url = url + '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/revisions/'+revision+'/raw';
              } else {
@@ -238,7 +238,7 @@ define(
         },
         openWorkflowFromScheduler : function(jobId) {
             var that = this;
-            var url = Config.prefixURl + '/rest/scheduler/jobs/'+jobId+'/xml/';
+            var url = Config.prefixURL + '/rest/scheduler/jobs/'+jobId+'/xml/';
             dom.getWorkflowFromScheduler(url, function (response) {
                 that.xmlToImport = new XMLSerializer().serializeToString(response);
                 dom.open_catalog_workflow();

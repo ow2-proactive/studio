@@ -17,7 +17,7 @@ define(
                 this.callback = options.callback;
             },
             url: function() {
-                return config.prefixURl + '/catalog/buckets/' + this.bucketname + '/resources/' + encodeURIComponent(this.name) + '/revisions';
+                return config.prefixURL + '/catalog/buckets/' + this.bucketname + '/resources/' + encodeURIComponent(this.name) + '/revisions';
             },
             parse: function(data) {
             	this.callback(data);

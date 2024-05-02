@@ -51,8 +51,8 @@ define(
 
         render: function (jobInfos) {
             const wfIcon = jobInfos.jobGenericInfos.find((info => info["Property Name"] === "workflow.icon"))
-            if(wfIcon){
-                wfIcon["Property Value"] = config.prefixURl + wfIcon["Property Value"]
+            if(wfIcon && (wfIcon["Property Value"].startsWith("/studio") || wfIcon["Property Value"].startsWith("/automation-dashboard")) ){
+                wfIcon["Property Value"] = config.prefixURL + wfIcon["Property Value"]
             }
             var jobInfosCloned = JSON.parse(JSON.stringify(jobInfos));
             this.model = $.extend(this.model, jobInfosCloned);

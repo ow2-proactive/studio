@@ -8,17 +8,17 @@ define(function () {
         'equals', 'toString', 'size', 'length', 'parseInt', 'parseDouble', 'parseLong', 'org', 'objectweb', 'ow2', 'proactive', 'scripting', 'helper', 'selection', 'SelectionUtils', 'checkHostName', 'checkIp', 'checkOSName', 'checkJavaProperty',
         'checkOSVersion', 'checkFreeMemory', 'checkExec', 'checkFreeSpaceDiskAvailable', 'node', 'nodesource', 'api', 'PAActiveObject', 'getNode', 'getNodeInformation', 'getName', 'getURL', 'org.ow2.proactive.scripting.helper.selection.SelectionUtils', 'proactive.node.nodesource', 'org.objectweb.proactive.api.PAActiveObject'];
     const index = window.location.pathname.indexOf("studio")
-    const prefixURl = window.location.pathname.substring(0, index > 0 ? index - 1 : index);
-   function addPrefixUrl(url) {
-        return prefixURl + url;
+    const prefixURL = window.location.pathname.substring(0, index > 0 ? index - 1 : index);
+   function addPrefixURL(url) {
+        return prefixURL + url;
     }
     return {
-        prefixURl: prefixURl,
-        restApiUrl: addPrefixUrl('/rest/studio'),
-        schedulerRestApiUrl: addPrefixUrl('/rest/scheduler'),
-        commonRestApiUrl: addPrefixUrl('/rest/common'),
-        execution_scheduler_restApiUrl: addPrefixUrl('/job-planner/planned_jobs'),
-        docUrl: addPrefixUrl('/doc'),
+        prefixURL: prefixURL,
+        restApiUrl: addPrefixURL('/rest/studio'),
+        schedulerRestApiUrl: addPrefixURL('/rest/scheduler'),
+        commonRestApiUrl: addPrefixURL('/rest/common'),
+        execution_scheduler_restApiURl: addPrefixURL('/job-planner/planned_jobs'),
+        docUrl: addPrefixURL('/doc'),
         autoCompleteJobGenericInfo: {
             selector: ".jobGenericInfo",
             wrapper: true,
