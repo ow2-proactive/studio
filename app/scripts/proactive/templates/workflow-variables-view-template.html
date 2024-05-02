@@ -157,7 +157,7 @@ for (var key in jobVariables) {
             <%
             }
             %>
-        <li class="formLayout container-flex <%- hidden ? (showHidden ? 'hidden-var' : 'hidden-var hidden') : '' %> <%- advanced ? (showAdvanced ? 'advanced-var' : 'advanced-var hidden') : '' %> <%- !advanced && !hidden ?'visible':'' %>">
+        <li class="formLayout container-flex <%- advanced ? (showAdvanced ? 'advanced-var' : 'advanced-var hidden') : '' %> <%- hidden ? (showHidden ? 'hidden-var' : 'hidden-var hidden') : '' %> <%- !advanced && !hidden ?'visible':'' %>">
             <div class="variableName col-md-3"><label for="<%- key %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label><span class="badge m-l-xxs"><%- variableOrder %></span></div>
             <%
             var model = null;

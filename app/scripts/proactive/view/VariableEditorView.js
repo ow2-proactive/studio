@@ -39,11 +39,11 @@ define(
 
             updateVariable: function () {
                 var updatedVar = {
-                    'Name': $(document.getElementById('var-name')).val(),
+                    'Name': $(document.getElementById('var-name')).val().trim(),
                     'Value': $(document.getElementById('var-value')).val(),
                     'Description': $(document.getElementById('var-description')).val(),
                     'Model': $(document.getElementById('Model')).val(),
-                    'Group': $(document.getElementById('var-group')).val(),
+                    'Group': $(document.getElementById('var-group')).val().trim(),
                     'Advanced': $(document.getElementById('var-advanced')).is(":checked"),
                     'Hidden': $(document.getElementById('var-hidden')).is(":checked")
                 }
