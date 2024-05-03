@@ -1359,8 +1359,8 @@ define(
             event.preventDefault();
 
             var url = window.location.href;
-            var arr = url.split("/");
-            var result = arr[0] + "//" + arr[2] + "/rest";
+            var arr = url.split("/studio");
+            var result = arr[0] + "/rest";
 
             $("#version").text( conf.studioVersion);
             $("#restServer").text( result );
@@ -1939,7 +1939,7 @@ define(
                 if (!docUrl.endsWith("/")) {
                     docUrl = docUrl + "/";
                 }
-                $("#documentationLinkId").attr("href", config.docUrl);
+                $("#documentationLinkId").attr("href", docUrl);
             });
             $('#workflow-designer-outer').on('contextmenu', function(e) {
                     var top = e.offsetY + 30;
