@@ -1360,7 +1360,7 @@ define(
 
             var url = window.location.href;
             var arr = url.split("/studio");
-            var result = arr[0] + "/rest";
+            var result = arr[0] + "/rest/";
 
             $("#version").text( conf.studioVersion);
             $("#restServer").text( result );
@@ -1447,6 +1447,10 @@ define(
             var studioApp = require('StudioApp');
             studioApp.views.catalogGetView.importCatalogObject();
         });
+
+        $("#open-calendar-portal").click(function () {
+            window.open(config.prefixURL + '/automation-dashboard/#/portal/job-planner-calendar-def-workflows')
+        })
 
         function add_workflow_to_current(clearCurrentFirst){
             var studioApp = require('StudioApp');
