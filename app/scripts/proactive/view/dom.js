@@ -1431,7 +1431,17 @@ define(
             console.log("Saving xml");
             var studioApp = require('StudioApp');
             var jobName = studioApp.models.jobModel.get("Name")
-            var blob = new Blob([studioApp.views.xmlView.generatedXml]);
+            //remove the prefix url, in order to make the wf more generic
+            const xmlCode = studioApp.views.xmlView.generatedXml.replace(/(href|src)="([^"]*)"/g, function(match, p1, p2) {
+                    var newUrl = p2;
+                     if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
+                          const len = config.prefixURL.length;
+                          newUrl = p2.substring(len);
+                     }
+                    return p1 + '="' + newUrl + '"';
+              })
+
+            var blob = new Blob([xmlCode]);
             saveAs(blob, jobName + ".xml")
         })
 

@@ -340,20 +340,33 @@ define(
 
                 var that = this;
 
-                that.send_multipart_request(config.restApiUrl + "/submit?submission.mode=studio", jobXml, {
-                    "sessionid": localStorage['pa.session']
-                }, function(result) {
-                    that.pausecomp(2000);
-                    if (result.errorMessage) {
-                        that.alert("Cannot submit the job", result.errorMessage, 'error');
-                    } else if (result.id) {
-                        that.alert("Job submitted", "<html></html><label style='font-size: 16px';>" + result.readableName + "' submitted successfully (Id " + result.id + ")</label>"+
-                        "<br><a href='/automation-dashboard/#/workflow-execution' target='_blank'>Open Job in Workflow Execution Portal</a></br><a href='/scheduler' target='_blank'>Open Job in Scheduler Portal</a></html>", 'success');
-                    } else {
-                        that.alert("Job submission", request.responseText, 'error');
-                    }
-                }, true);
-
+                that.send_multipart_request(
+                    config.restApiUrl + "/submit?submission.mode=studio",
+                    jobXml.replace(/(href|src)="([^"]*)"/g, function(match, p1, p2) {
+                        //remove the prefix url, in order to make the wf more generic
+                        var newUrl = p2;
+                        if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
+                            const len = config.prefixURL.length;
+                            newUrl = p2.substring(len);
+                        }
+                        return p1 + '="' + newUrl + '"';
+                    }),
+                    {
+                        "sessionid": localStorage['pa.session']
+                    },
+                    function(result) {
+                        that.pausecomp(2000);
+                        if (result.errorMessage) {
+                            that.alert("Cannot submit the job", result.errorMessage, 'error');
+                        } else if (result.id) {
+                            that.alert("Job submitted", "<html></html><label style='font-size: 16px';>" + result.readableName + "' submitted successfully (Id " + result.id + ")</label>"+
+                                                        "<br><a href='" + config.prefixURL + "/automation-dashboard/#/workflow-execution' target='_blank'>Open Job in Workflow Execution Portal</a></br><a href='" + config.prefixURL + "/scheduler/' target='_blank'>Open Job in Scheduler Portal</a></html>", 'success');
+                        } else {
+                            that.alert("Job submission", request.responseText, 'error');
+                        }
+                    },
+                    true
+                );
             },
 
             validateWithPopup: function(jobXml, jobModel, automaticValidation, disableCheckCredential) {
