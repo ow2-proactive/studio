@@ -1432,7 +1432,7 @@ define(
             var studioApp = require('StudioApp');
             var jobName = studioApp.models.jobModel.get("Name")
             //remove the prefix url, in order to make the wf more generic
-            const xmlCode = studioApp.views.xmlView.generatedXml.replace(/(href|src)="([^"]*)"/g, function(match, p1, p2) {
+            const xmlCode = studioApp.views.xmlView.generatedXml.replace(/(href|src|value)="([^"]*)"/g, function(match, p1, p2) {
                     var newUrl = p2;
                      if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
                           const len = config.prefixURL.length;

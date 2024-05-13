@@ -342,7 +342,7 @@ define(
 
                 that.send_multipart_request(
                     config.restApiUrl + "/submit?submission.mode=studio",
-                    jobXml.replace(/(href|src)="([^"]*)"/g, function(match, p1, p2) {
+                    jobXml.replace(/(href|src|value)="([^"]*)"/g, function(match, p1, p2) {
                         //remove the prefix url, in order to make the wf more generic
                         var newUrl = p2;
                         if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {

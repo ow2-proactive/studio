@@ -132,7 +132,7 @@ define(
             this.$el.append(codeDiv);
 
             var highlightedXml = CodeMirror(codeDiv[0], {
-                value: this.generatedXml.replace(/(href|src)="([^"]*)"/g, function(match, p1, p2) {
+                value: this.generatedXml.replace(/(href|src|value)="([^"]*)"/g, function(match, p1, p2) {
                    // remove the prefix url, in order to make the wf more generic
                      var newUrl = p2;
                       if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
