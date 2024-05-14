@@ -824,8 +824,10 @@ define(
             },
             setloop: function (task) {
                 console.log('Adding loop')
-                this.set({'Control Flow': 'loop'});
-                this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
+                if (!this.controlFlow['loop']) {
+                    this.set({'Control Flow': 'loop'});
+                    this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
+                }
             },
             removeloop: function (controlFlow, task) {
                 console.log('Removing loop')
