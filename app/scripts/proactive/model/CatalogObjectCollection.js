@@ -2,10 +2,11 @@ define(
     [
         'underscore',
         'backbone',
+        'proactive/config',
         'proactive/model/CatalogRestWorkflow'
     ],
 
-    function (_, Backbone, RestWorkflow) {
+    function (_, Backbone, config, RestWorkflow) {
 
         "use strict";
 
@@ -24,7 +25,7 @@ define(
                     var contentFilter = (this.contentType && this.contentType.toLowerCase() != 'all') ? 'contentType=' + encodeURIComponent(this.contentType) : '';
                     var objectName = this.objectName ? "objectName=" + encodeURIComponent(this.objectName) : '';
                     var params =  [kindFilter, contentFilter, objectName].filter(x => typeof x === 'string' && x.length > 0).join('&');
-                    return '/catalog/buckets/' + this.bucketname + '/resources/' + "?" + params;
+                    return config.prefixURL + '/catalog/buckets/' + this.bucketname + '/resources/' + "?" + params;
                 },
                 parse: function(data) {
                     if (this.callback)

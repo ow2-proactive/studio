@@ -51,7 +51,7 @@ define(
                     }
                 }
 
-                var base_studio_url = "/studio";
+                var base_studio_url = config.prefixURL + "/studio";
                 this.modelType = this.model.get("Type");
                 var iconPath = base_studio_url + "/" + this.icons[this.modelType];
                 var hasGenericInfoIcon = false;
@@ -61,7 +61,7 @@ define(
                     for (var i in genericInformation) {
                         if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') {
                             hasGenericInfoIcon = true;
-                            iconPath = genericInformation[i]["Property Value"];
+                            iconPath = config.prefixURL + genericInformation[i]["Property Value"];
                         }
                     }
                 }
@@ -294,7 +294,6 @@ define(
             updateIcon: function(changed) {
                 var executableTypeStr = this.model.get("Type");
                 var iconPath = this.icons[executableTypeStr];
-
                 var hasAlreadyIconInGenericInfo = false
                 if (executableTypeStr == "ScriptExecutable") {
                     var language;
@@ -311,14 +310,14 @@ define(
                 if (genericInformation.length) {
                     for (var i in genericInformation) {
                         if (genericInformation[i]["Property Name"].toLowerCase() === 'task.icon') {
-                            iconPath = genericInformation[i]["Property Value"];
+                            iconPath = config.prefixURL + genericInformation[i]["Property Value"];
                             hasAlreadyIconInGenericInfo = true;
                         }
                     }
                 }
                 // Add "/studio/" only for tasks stored in Studio project : when generic info doesn't include task.icon
                 if (!hasAlreadyIconInGenericInfo) {
-                    iconPath = "/studio/" + iconPath;
+                    iconPath = config.prefixURL + "/studio/" + iconPath;
                 }
                 this.$el.find("img").attr('src', iconPath);
                 this.updateIconsOnTasksReferencingScripts(this.element);
@@ -1061,9 +1060,10 @@ define(
             visuIconEvent: function() {
                 var that = this;
                 $(".visu-icon").click(function(evt) {
+                    console.log("visu-icon ====-----------------")
                     var parentVariableValue = $(evt.currentTarget).parent().parent().parent().children()[1].innerHTML;
                     var parentObjectDetails = that.getCalledObjectDetails(parentVariableValue);
-                    var url = '/studio/#workflowcatalog/' + parentObjectDetails["bucketName"] + '/workflow/' + parentObjectDetails["objectName"];
+                    var url = config.prefixURL + '/studio/#workflowcatalog/' + parentObjectDetails["bucketName"] + '/workflow/' + parentObjectDetails["objectName"];
                     var parentObjectKind = $(evt.currentTarget).parent().parent().parent().children()[3].innerHTML;
                     if (parentObjectKind.indexOf('Workflow') == 0) {
                         var win = window.open(url);
@@ -1097,7 +1097,7 @@ define(
                 $.ajax({
                     'async': false,
                     'type': "GET",
-                    'url': "/catalog/buckets/" + bucketName + "/resources/" + objectName + "/revisions",
+                    'url': config.prefixURL + "/catalog/buckets/" + bucketName + "/resources/" + objectName + "/revisions",
                     'beforeSend': function(xhr) {
                         xhr.setRequestHeader('sessionid', localStorage['pa.session'])
                     },

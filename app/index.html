@@ -73,8 +73,8 @@
             </div>
             <!-- Automation Dashboard -->
             <div id="automation-dashboard-shortcut" class="btn-group pa-shortcuts" style="width: 188px">
-                <a class="btn btn-small btn-default pa-shortcuts" href="/automation-dashboard/"
-                   target="/automation-dashboard/">
+                <a class="btn btn-small btn-default pa-shortcuts" href="#" id="ad-link"
+                   target="_blank">
                     <img src="images/automation_dashboard_30.png" class="right-padding" style="height:25px; margin: auto;">
                     <div class="pa-shortcut" style="width: 145px;">Automation Dashboard</div>
                 </a>
@@ -88,14 +88,14 @@
             </div>
             <!-- Scheduler Portal -->
             <div id="scheduler-portal-shortcut" class="btn-group pa-shortcuts" style="width: 214px">
-                <a class="btn btn-small btn-default pa-shortcuts" href="/scheduler/" target="/scheduler/">
+                <a class="btn btn-small btn-default pa-shortcuts" href="#" id="sp-link" target="_blank">
                     <img src="images/scheduler_30.png" class="right-padding" style="height:25px; margin: auto;">
                     <div class="pa-shortcut" style="width: 171px;">Scheduling & Orchestration</div>
                 </a>
             </div>
             <!-- Resource Manager -->
             <div id="rm-portal-shortcut" class="btn-group pa-shortcuts" style="width: 161px">
-                <a class="btn btn-small btn-default pa-shortcuts" href="/rm/" target="/rm/">
+                <a class="btn btn-small btn-default pa-shortcuts" href="#" id="rm-link" target="_blank">
                     <img src="images/rm_30.png" class="right-padding" style="height:25px; margin: auto;">
                     <span class="pa-shortcut" style="width: 118px;">Resource Manager</span>
                 </a>
@@ -986,8 +986,7 @@
             </div>
             <div class="modal-footer" style="text-align: center;margin-top: unset;">
                 <div>
-                    <button class="btn btn-primary" type="button"
-                            onclick="window.open('/automation-dashboard/#/portal/job-planner-calendar-def-workflows')"
+                    <button class="btn btn-primary" type="button" id="open-calendar-portal"
                             data-dismiss="modal">Yes
                     </button>
                     <button class="btn btn-primary" data-dismiss="modal" type="button">No</button>
@@ -1139,5 +1138,20 @@
     </div>
 </div>
 <script data-main="scripts/main" src="libs/requirejs/require.js"></script>
+<script>
+    // Get the base URL dynamically
+    const index = window.location.pathname.indexOf("studio")
+    const prefixURL = window.location.pathname.substring(0, index > 0 ? index - 1 : index);
+
+    // Add the dynamic part of the URL
+    var ADUrl = prefixURL + "/automation-dashboard/";
+    var SPUrl = prefixURL + "/scheduler/";
+    var RMUrl = prefixURL + "/rm/";
+
+    // Set the href attribute of the anchor tag
+    document.getElementById("ad-link").setAttribute("href", ADUrl);
+    document.getElementById("sp-link").setAttribute("href", SPUrl);
+    document.getElementById("rm-link").setAttribute("href", RMUrl);
+</script>
 </body>
 </html>

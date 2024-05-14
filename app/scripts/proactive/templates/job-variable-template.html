@@ -231,9 +231,15 @@ jQuery(document).ready(function($){
                         var indexEnd = resolvedModel.lastIndexOf(')');
                         var urlToFetch = resolvedModel.substring(indexBegin + 1 , indexEnd)
                         var origin = window.location.origin
-                        if (!origin.endsWith('/')) {
+
+                        const index = window.location.pathname.indexOf("studio")
+                        const prefixURL = window.location.pathname.substring(0, index);
+                        if (!origin.endsWith('/') && !prefixURL) {
                             origin += '/'
+                        } else {
+                            origin += prefixURL
                         }
+
                         urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_URL}', origin + 'catalog');
                         urlToFetch = urlToFetch.replace('${PA_CATALOG_REST_PUBLIC_URL}', origin + 'catalog');
                         urlToFetch = urlToFetch.replace('${PA_SCHEDULER_REST_URL}', origin + 'rest');

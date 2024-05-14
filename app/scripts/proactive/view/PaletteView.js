@@ -151,7 +151,7 @@ define(
                     type: "GET",
                     headers : { 'sessionID': localStorage['pa.session'] },
                     async: false,
-                    url: '/catalog/buckets/?kind=workflow',
+                    url: config.prefixURL + '/catalog/buckets/?kind=workflow',
                     success: function (data) {
                         var foundBucket = false;
                         that.listOfAllCatalogBuckets = data;
@@ -189,12 +189,13 @@ define(
                     var objectKeyVal = template.get("object_key_values");
                     for (var i in objectKeyVal) {
                         if (objectKeyVal[i]["key"].toLowerCase() == 'workflow.icon'.toLowerCase()) {
-                            iconName = objectKeyVal[i]["value"];
+                            iconName = config.prefixURL + objectKeyVal[i]["value"];
                         }
                         if (objectKeyVal[i]["key"].toLowerCase() === 'description'.toLowerCase()) {
                             description = objectKeyVal[i]["value"];
                         }
                     }
+
                     if (iconName)
                         menuItem = $('<li class="sub-menu draggable ui-draggable job-element"><a class="" onclick="return false;"> <img src=" ' + iconName + '" width="20px"> ' + template.get("name") + '</a></li>');
                     else

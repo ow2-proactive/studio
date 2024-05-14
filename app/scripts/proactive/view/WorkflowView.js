@@ -2,6 +2,7 @@ define(
     [
         'underscore',
         'dagre',
+        'proactive/config',
         'proactive/rest/studio-client',
         'proactive/model/Job',
         'proactive/view/ViewWithProperties',
@@ -10,7 +11,7 @@ define(
         'proactive/view/utils/undo'
     ],
 
-    function (_, d, StudioClient, Job, ViewWithProperties, FlowScript, TaskView, undoManager) {
+    function (_, d, config, StudioClient, Job, ViewWithProperties, FlowScript, TaskView, undoManager) {
 
     "use strict";
 
@@ -60,7 +61,7 @@ define(
                         var templateModel = that.options.app.models.templates[elem.data('bucketName')].find(function(template) {return template.attributes.name == templateName});
                         var bucketName = templateModel.attributes.bucket_name;
                         var workflowName = templateModel.attributes.name;
-                        templateUrl = '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/raw';
+                        templateUrl = config.prefixURL + '/catalog/buckets/' + bucketName + '/resources/'+workflowName+'/raw';
                       }
                       $.ajax({
                           type: "GET",
