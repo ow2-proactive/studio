@@ -827,11 +827,20 @@ define(
                 if (!this.controlFlow['loop']) {
                     this.set({'Control Flow': 'loop'});
                     this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
+                    if (this.previousControlFlowLoop) {
+                        this.controlFlow['loop'] = this.previousControlFlowLoop;
+                        this.previousControlFlowScript = undefined;
+                    }
                 }
             },
             removeloop: function (controlFlow, task) {
                 console.log('Removing loop')
                 this.set({'Control Flow': 'none'});
+                /*
+                    Save the current control flow before deletion so that when you drop the loop on an empty space
+                    and a groovy task is automatically created, the script will be copied in the new task.
+                 */
+                this.previousControlFlowLoop = this.controlFlow['loop'];
                 delete this.controlFlow['loop']
             },
             setreplicate: function () {
