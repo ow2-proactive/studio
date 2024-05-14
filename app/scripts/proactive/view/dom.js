@@ -225,7 +225,16 @@ define(
             if (studioApp.isWorkflowOpen()){
                 save_workflow();
                 studioApp.views.catalogPublishView.setKind("workflow/standard", "Workflow");
-                studioApp.views.catalogPublishView.setContentToPublish(studioApp.views.xmlView.generateXml());
+                const xmlCode = studioApp.views.xmlView.generateXml().replace(/(href|src|value)="([^"]*)"/g, function(match, p1, p2) {
+                     // remove the prefix url, in order to make the wf more generic
+                       var newUrl = p2;
+                        if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
+                             const len = config.prefixURL.length;
+                             newUrl = p2.substring(len);
+                        }
+                       return p1 + '="' + newUrl + '"';
+                 })
+                studioApp.views.catalogPublishView.setContentToPublish(xmlCode);
                 studioApp.views.catalogPublishView.render();
                 studioApp.views.catalogPublishView.triggerClickShowAll();
                 $('#catalog-publish-modal').modal();
@@ -505,7 +514,7 @@ define(
                                 var calledObjectDetails = taskViewModel.getCalledObjectDetails(variableValue)
                                 var objectKind = taskViewModel.getObjectKind(calledObjectDetails["bucketName"], calledObjectDetails["objectName"])
                                 if (objectKind.indexOf('Workflow') == 0) {
-                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><span style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</span><a href="/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
+                                    var menuItemCalling = $(liCallingStyle + taskName + '</span></a><span style="display: table-cell; padding:3px 10px;min-width: 300px"> ' + variableValue + '</span><a href="' + config.prefixURL +  '/studio/#workflowcatalog/' + calledObjectDetails["bucketName"] + '/workflow/' + calledObjectDetails["objectName"] + '" target="_blank" style="color:#337ab7; display: table-cell;"><span><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></span></a></li>');
                                 } else if (objectKind == "null") {
                                     var menuItemCalling = $(liCallingStyle + taskName + '</a><a title="The selected workflow or object does not exist" style="color:red; display: table-cell; padding:3px 10px;min-width: 250px"> ' + variableValue + '</a><a style="display: table-cell;"><i title="The selected workflow or object does not exist" class="glyphicon glyphicon-eye-close"></i></a></li>');
                                 } else {
@@ -586,7 +595,7 @@ define(
                     }
                 }
             }
-            var urlCatalog = "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
+            var urlCatalog = config.prefixURL + "/catalog/buckets/" + bucketName + "/resources/" + jobName + "/dependencies";
             //call the rest endpoint to get the list of workflows calling the current workflow
             getWorkflowDependencies(urlCatalog, function(res) {
                 var liCalledStyle = '<li class="sub-menu draggable ui-draggable job-element"><a style="padding:3px 10px;">';
@@ -602,7 +611,7 @@ define(
 
                         const calledByWorkflowArray = x.split(",");
                         for (let i = 0; i < calledByWorkflowArray.length; i++) {
-                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></a></li>');
+                            var menuItemCalled = $(liCalledStyle + calledByWorkflowArray[i].split("/")[0] + '/' + calledByWorkflowArray[i].split("/")[1] + '<a href="' + config.prefixURL + '/studio/#workflowcatalog/' + calledByWorkflowArray[i].split("/")[0] + '/workflow/' + calledByWorkflowArray[i].split("/")[1] + '" target="_blank" style="color:#337ab7; display: table-cell;" href="javascript:void(0)"><i title="Open the workflow in a new Studio Tab" class="glyphicon glyphicon-eye-open"></i></a></a></li>');
                             $("#ul-called").append(menuItemCalled);
                         }
                     }
@@ -1359,8 +1368,8 @@ define(
             event.preventDefault();
 
             var url = window.location.href;
-            var arr = url.split("/");
-            var result = arr[0] + "//" + arr[2] + "/rest";
+            var arr = url.split("/studio");
+            var result = arr[0] + "/rest/";
 
             $("#version").text( conf.studioVersion);
             $("#restServer").text( result );
@@ -1431,7 +1440,17 @@ define(
             console.log("Saving xml");
             var studioApp = require('StudioApp');
             var jobName = studioApp.models.jobModel.get("Name")
-            var blob = new Blob([studioApp.views.xmlView.generatedXml]);
+            //remove the prefix url, in order to make the wf more generic
+            const xmlCode = studioApp.views.xmlView.generatedXml.replace(/(href|src|value)="([^"]*)"/g, function(match, p1, p2) {
+                    var newUrl = p2;
+                     if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
+                          const len = config.prefixURL.length;
+                          newUrl = p2.substring(len);
+                     }
+                    return p1 + '="' + newUrl + '"';
+              })
+
+            var blob = new Blob([xmlCode]);
             saveAs(blob, jobName + ".xml")
         })
 
@@ -1447,6 +1466,10 @@ define(
             var studioApp = require('StudioApp');
             studioApp.views.catalogGetView.importCatalogObject();
         });
+
+        $("#open-calendar-portal").click(function () {
+            window.open(config.prefixURL + '/automation-dashboard/#/portal/job-planner-calendar-def-workflows')
+        })
 
         function add_workflow_to_current(clearCurrentFirst){
             var studioApp = require('StudioApp');
@@ -1939,7 +1962,7 @@ define(
                 if (!docUrl.endsWith("/")) {
                     docUrl = docUrl + "/";
                 }
-                $("#documentationLinkId").attr("href", config.docUrl);
+                $("#documentationLinkId").attr("href", docUrl);
             });
             $('#workflow-designer-outer').on('contextmenu', function(e) {
                     var top = e.offsetY + 30;

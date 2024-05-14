@@ -2,11 +2,12 @@ define(
     [
         'underscore',
         'backbone',
+        'proactive/config',
         'text!proactive/templates/file-browser-template.html',
         'proactive/rest/studio-client',
         'proactive/view/BeautifiedModalAdapter'
     ],
-    function (_, Backbone, fileBrowserTemplate, StudioClient, BeautifiedModalAdapter) {
+    function (_, Backbone, config, fileBrowserTemplate, StudioClient, BeautifiedModalAdapter) {
 
     "use strict";
 
@@ -14,7 +15,7 @@ define(
 
         dataspace: "", // the concerned data space, its value could be "user" or "global".
 
-        dataspaceRestUrl: "/rest/data/",
+        dataspaceRestUrl: config.prefixURL + "/rest/data/",
 
         uploadRequest: undefined,
 

@@ -18,9 +18,12 @@ define(
                     this.callback = options.callback;
                 },
                 url: function() {
-                    return '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
+                    const index = window.location.pathname.indexOf("studio")
+                    const prefixURL = window.location.pathname.substring(0, index > 0 ? index - 1 : index);
+                    return prefixURL + '/catalog/buckets/' + this.bucketname + '/resources/?kind=workflow';
                 },
                 parse: function(data) {
+
                     if (this.callback)
                         this.callback(data);
                     return data;

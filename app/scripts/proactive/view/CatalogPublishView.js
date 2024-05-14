@@ -313,7 +313,7 @@ define(
             payload.append('tags', tags);
             payload.append('objectContentType', contentTypeToPublish );
 
-            var url = '/catalog/buckets/' + bucketName + '/resources';
+            var url = config.prefixURL + '/catalog/buckets/' + bucketName + '/resources';
             var isRevision = ($("#catalog-publish-description").data("first") != true)
             if (isRevision){
                 url += "/" + objectName + "/revisions";
@@ -337,7 +337,7 @@ define(
                     //If the URL is a specific revision of the same script (and not the latest one), we set the URL to the new revision
                     var oldUrlValue = document.getElementById(that.relatedInputId).value;
                     if (oldUrlValue.indexOf('revisions') > -1 && oldUrlValue.indexOf('resources/'+objectName) > -1) {
-                        var newUrlValue = window.location.origin + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/'+ response.commit_time_raw +'/raw';
+                        var newUrlValue = window.location.origin + config.prefixURL + '/catalog/buckets/' + bucketName + '/resources/' + objectName + '/revisions/'+ response.commit_time_raw +'/raw';
                         var urlInput = document.getElementById(that.relatedInputId);
                         urlInput.value = newUrlValue;
                         //trigger input keyup event for model update

@@ -2,12 +2,13 @@ define(
     [
         'underscore',
         'backbone',
+        'proactive/config',
         'text!proactive/templates/job-variable-template.html',
         'proactive/view/ThirdPartyCredentialView',
         'proactive/view/FileBrowserView',
         'proactive/view/BeautifiedModalAdapter'
     ],
-    function (_, Backbone, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter) {
+    function (_, Backbone, config, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter) {
 
     "use strict";
 
@@ -49,6 +50,10 @@ define(
         },
 
         render: function (jobInfos) {
+            const wfIcon = jobInfos.jobGenericInfos.find((info => info["Property Name"] === "workflow.icon"))
+            if(wfIcon && (wfIcon["Property Value"].startsWith("/studio") || wfIcon["Property Value"].startsWith("/automation-dashboard")) ){
+                wfIcon["Property Value"] = config.prefixURL + wfIcon["Property Value"]
+            }
             var jobInfosCloned = JSON.parse(JSON.stringify(jobInfos));
             this.model = $.extend(this.model, jobInfosCloned);
             this.$el.html(this.template(this.model));

@@ -3,6 +3,7 @@ define(
         'underscore',
         'jquery',
         'backbone',
+        'proactive/config',
         'vkbeautify',
         'proactive/view/xml/TaskXmlView',
         'text!proactive/templates/job-template.html',
@@ -12,7 +13,7 @@ define(
         'proactive/view/utils/escapeHtml'
     ],
 
-    function (_, $, Backbone, beautify, TaskXmlView, JobTemplate, WorkflowTemplate, CodeMirror) {
+    function (_, $, Backbone, config, beautify, TaskXmlView, JobTemplate, WorkflowTemplate, CodeMirror) {
 
     "use strict";
 
@@ -131,7 +132,15 @@ define(
             this.$el.append(codeDiv);
 
             var highlightedXml = CodeMirror(codeDiv[0], {
-                value: this.generatedXml,
+                value: this.generatedXml.replace(/(href|src|value)="([^"]*)"/g, function(match, p1, p2) {
+                   // remove the prefix url, in order to make the wf more generic
+                     var newUrl = p2;
+                      if (p2.startsWith('/') && p2.startsWith(config.prefixURL)) {
+                           const len = config.prefixURL.length;
+                           newUrl = p2.substring(len);
+                      }
+                     return p1 + '="' + newUrl + '"';
+               }),
                 mode: 'xml',
                 lineNumbers: true,
                 readOnly: true
