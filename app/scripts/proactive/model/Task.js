@@ -838,7 +838,7 @@ define(
                 this.set({'Control Flow': 'none'});
                 /*
                     Save the current control flow before deletion so that when you drop the loop on an empty space
-                    and a groovy task is automatically created, the script will be copied in the new task.
+                    and a groovy task is automatically created, the script will be copied in the new loop script.
                  */
                 this.previousControlFlowLoop = this.controlFlow['loop'];
                 delete this.controlFlow['loop']
