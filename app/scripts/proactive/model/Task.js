@@ -824,15 +824,22 @@ define(
             },
             setloop: function (task) {
                 console.log('Adding loop')
-                if (!this.controlFlow['loop']) {
-                    this.set({'Control Flow': 'loop'});
-                    this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
-                    if (this.previousControlFlowLoopScript) {
-                        this.controlFlow['loop'].script = this.previousControlFlowLoopScript;
-                        this.controlFlow['loop'].model = this.previousControlFlowLoopModel;
-                        this.previousControlFlowLoopScript = undefined;
-                        this.previousControlFlowLoopModel = undefined;
-                    }
+                var currentScript;
+                var currentModel;
+                if (this.controlFlow['loop']) {
+                    currentScript = this.controlFlow['loop'].script;
+                    currentModel = this.controlFlow['loop'].model;
+                }
+                this.set({'Control Flow': 'loop'});
+                this.controlFlow = {'loop': {task: task, model: new FlowScript()}}
+                if (this.previousControlFlowLoopScript) {
+                    this.controlFlow['loop'].script = this.previousControlFlowLoopScript;
+                    this.controlFlow['loop'].model = this.previousControlFlowLoopModel;
+                    this.previousControlFlowLoopScript = undefined;
+                    this.previousControlFlowLoopModel = undefined;
+                } else if (currentScript) {
+                    this.controlFlow['loop'].script = currentScript;
+                    this.controlFlow['loop'].model = currentModel;
                 }
             },
             removeloop: function (controlFlow, task) {
