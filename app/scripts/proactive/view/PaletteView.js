@@ -200,7 +200,14 @@ define(
                         menuItem = $('<li class="sub-menu draggable ui-draggable job-element"><a class="" onclick="return false;"> <img src=" ' + iconName + '" width="20px"> ' + template.get("name") + '</a></li>');
                     else
                         menuItem = $('<li class="sub-menu draggable ui-draggable job-element"><a class="" href="#" onclick="return false;">' + template.get("name") + '</a></li>');
-                    menuItem.tooltip({title: description?description:"Drag&Drop me", placement: "top", delay:300});
+
+                    menuItem.tooltip({
+                        title: description ? description : "Drag&Drop me",
+                        placement: "top",
+                        delay: 300,
+                        container: 'body',
+                        zIndex: 9999
+                    });
                     menuContent.append(menuItem);
                     menuItem.data("templateName", template.get("name"));
                     menuItem.data("bucketName", bucketName);
