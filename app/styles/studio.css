@@ -1129,6 +1129,7 @@ li.success {
 
 .tooltip-inner {
     text-align: left !important;
+    min-width: 11em;
 }
 
 .ui-pnotify {
