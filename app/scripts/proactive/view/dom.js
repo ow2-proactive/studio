@@ -1386,7 +1386,7 @@ define(
                 type: "GET",
                 headers : { 'sessionID': localStorage['pa.session'] },
                 async: false,
-                url: '/rest/common/currentuserdata',
+                url:  config.prefixURL + '/rest/common/currentuserdata',
                 success: function (result) {
                        $("#accountUsername").text(result.userName);
                        if (result.domain != null) {
