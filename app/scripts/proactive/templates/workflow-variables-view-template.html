@@ -49,13 +49,13 @@ for (var key in jobVariables) {
         if (totalNumberOfadvancedVariables > 0) {
         %>
         <label class="m-l-xs" for="Advanced" style="color: #E86D1F; white-space: nowrap;" data-toggle="tooltip">Advanced
-            <input id="advanced-checkbox" type="checkbox" <%- showAdvanced ? 'checked' : '' %> style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <input id="wfv-advanced-checkbox" type="checkbox" <%- showAdvanced ? 'checked' : '' %> style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
         </label>
         <%
         }if (totalNumberOfHiddenVariables > 0) {
         %>
         <label class="m-l-xs" for="Hidden" style="color: #888; white-space: nowrap;" data-toggle="tooltip">Hidden
-            <input id="hidden-checkbox" type="checkbox" <%- showHidden ? 'checked' : '' %> style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
+            <input id="wfv-hidden-checkbox" type="checkbox" <%- showHidden ? 'checked' : '' %> style="margin-left: 3px; display: table-cell; vertical-align: middle; margin-bottom: 5px;">
         </label>
         <%
         }
@@ -63,30 +63,30 @@ for (var key in jobVariables) {
         <script type="text/javascript">
             //<![CDATA[
             jQuery(document).ready(function ($) {
-                $('#advanced-checkbox').on('change', function () {
+                $('#wfv-advanced-checkbox').on('change', function () {
                     if ($(this).is(':checked')) {
                         // show advanced variables
-                        $('.advanced-var').toggleClass('hidden',false)
+                        $('.wfv-advanced-var').toggleClass('hidden',false)
                         // show group labels with only advanced variables if necessary (see below)
-                        $('.group-advanced').toggleClass('hidden',false)
+                        $('.wfv-group-advanced').toggleClass('hidden',false)
                     } else {
                         // hide advanced variables
-                        $('.advanced-var').toggleClass('hidden',true)
+                        $('.wfv-advanced-var').toggleClass('hidden',true)
                         // hide group labels with only advanced  variables if necessary (see below)
-                        $('.group-advanced').toggleClass('hidden',true)
+                        $('.wfv-group-advanced').toggleClass('hidden',true)
                     }
                 })
-                $('#hidden-checkbox').on('change', function () {
+                $('#wfv-hidden-checkbox').on('change', function () {
                     if ($(this).is(':checked')) {
                         // show hidden variables
-                        $('.hidden-var').toggleClass('hidden',false)
+                        $('.wfv-hidden-var').toggleClass('hidden',false)
                         // show group labels with only hidden  variables if necessary (see below)
-                        $('.group-hidden').toggleClass('hidden',false)
+                        $('.wfv-group-hidden').toggleClass('hidden',false)
                     } else {
                         // hide hidden variables
-                        $('.hidden-var').toggleClass('hidden',true)
+                        $('.wfv-hidden-var').toggleClass('hidden',true)
                         // hide group labels with only hidden  variables if necessary (see below)
-                        $('.group-hidden').toggleClass('hidden',true)
+                        $('.wfv-group-hidden').toggleClass('hidden',true)
                     }
                 })
             })
@@ -103,10 +103,10 @@ for (var key in jobVariables) {
             return ''
         }
         if (countsPerGroup[groupName].hidden) {
-            cssClass+='group-hidden '
+            cssClass+='wfv-group-hidden '
         }
         if (countsPerGroup[groupName].advanced) {
-            cssClass+='group-advanced '
+            cssClass+='wfv-group-advanced '
         }
         if ((showHidden && countsPerGroup[groupName].hidden) || (showAdvanced && countsPerGroup[groupName].advanced)) {
             return cssClass;
@@ -157,8 +157,8 @@ for (var key in jobVariables) {
             <%
             }
             %>
-        <li class="formLayout container-flex <%- advanced ? (showAdvanced ? 'advanced-var' : 'advanced-var hidden') : '' %> <%- hidden ? (showHidden ? 'hidden-var' : 'hidden-var hidden') : '' %> <%- !advanced && !hidden ?'visible':'' %>">
-            <div class="variableName col-md-3"><label for="<%- key %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label><span class="badge m-l-xxs"><%- variableOrder %></span></div>
+        <li class="formLayout container-flex <%- advanced ? (showAdvanced ? 'wfv-advanced-var' : 'wfv-advanced-var hidden') : '' %> <%- hidden ? (showHidden ? 'wfv-hidden-var' : 'wfv-hidden-var hidden') : '' %> <%- !advanced && !hidden ?'visible':'' %>">
+            <div class="variableName col-md-3"><label for="wfv-<%- key %>" style="width: initial" data-help-self data-help="<%- description %>" ><%- (key.split(":").length == 2 ? key.split(":")[1] : key) %></label><span class="badge m-l-xxs"><%- variableOrder %></span></div>
             <%
             var model = null;
 
@@ -199,7 +199,7 @@ for (var key in jobVariables) {
             }
             if (model && model.toLowerCase().indexOf('pa:list')==0) {  %>
             <div class="col-md-4 container-flex">
-                <select class="form-control variableValue" name="<%- key %>" id="<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
+                <select class="form-control variableValue" name="<%- key %>" id="wfv-<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" >
                 <%
                 var indexBegin = model.indexOf('(');
                 var indexEnd = model.lastIndexOf(')');
@@ -230,7 +230,7 @@ for (var key in jobVariables) {
             <%
             } else if ((model && model.toLowerCase().indexOf('pa:boolean')==0) ) {
             %>
-            <div class="variableValue radio-div col-md-4" id="<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
+            <div class="variableValue radio-div col-md-4" id="wfv-<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
             <%
                 if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) {%>
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
@@ -261,7 +261,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:hidden')==0) {
             %>
             <div class="col-md-4 container-flex">
-                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
                     <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
@@ -277,7 +277,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:credential')==0) {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
                     <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
@@ -295,7 +295,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:global_file') ==0 ) {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button value="<%- key %>" class="var-globalfile-button btn far fa-folder-open input-button" type="button" title="Browse Global Space files, Upload, and Select one file"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
@@ -314,7 +314,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:user_file') ==0 ) {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button value="<%- key %>" class="var-userfile-button btn far fa-folder-open input-button" type="button" title="Browse User Space files, Upload, and Select one file"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
@@ -333,7 +333,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:global_folder') ==0 ) {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload Global Space files, and Select one folder"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
@@ -352,7 +352,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:user_folder') ==0 ) {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button value="<%- key %>" class="var-userfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload User Space files, and Select one folder"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
@@ -371,7 +371,7 @@ for (var key in jobVariables) {
             } else if (model && model.toLowerCase().indexOf('pa:catalog_object') ==0 ) {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button title="Select one catalog object" value="<%- key %>" class="var-catalogobject-button btn input-button" type="button"><img src="images/catalog-portal.png" height="20"></button>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
@@ -390,7 +390,7 @@ for (var key in jobVariables) {
             } else if (model && (model.toLowerCase().indexOf('pa:not_empty_string') == 0 || model.toLowerCase().indexOf('pa:json') == 0 || model.toLowerCase().indexOf('pa:spel') == 0 || model.toLowerCase().indexOf('pa:regexp') == 0) ) {
             %>
             <div class="col-md-4 container-flex">
-                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="wfv-<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
                     <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
@@ -406,7 +406,7 @@ for (var key in jobVariables) {
             } else if (!model) {
             %>
             <div class="col-md-4 container-flex">
-                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
+                <textarea class="variableValue textareavalues submitVariableValue" rows=1 name="<%- key %>" title="<%- description %>" id="wfv-<%- key %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>"><%- variable.Value %></textarea>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
                     <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
@@ -422,7 +422,7 @@ for (var key in jobVariables) {
             } else {
             %>
             <div class="col-md-4 container-flex">
-                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
+                <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- key %>" title="<%- description %>" id="wfv-<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs" value="<%- key %>" title="Edit variable" type="button"></button>
                 <div class="btn-group container-flex m-l-xxs">
                     <button type="button" class="btn btn-default var-up-btn glyphicon glyphicon-arrow-up p-w-xxs" value="<%- key %>" title="Move up Variable" <%= variable.isTop ? 'disabled' : '' %> ></button>
