@@ -1890,10 +1890,10 @@ ul, #submitFormUL {
     border-color: #d43f3a;
 }
 
-.advanced-var {
+.advanced-var, .wfv-advanced-var {
     color: #E86D1F;
 }
 
-.hidden-var {
+.hidden-var, .wfv-hidden-var {
     color: #888;
 }

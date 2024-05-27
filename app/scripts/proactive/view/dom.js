@@ -1651,8 +1651,8 @@ define(
             studioApp.views.workflowVariablesView.render({
                 'jobModel': jobModel,
                 'jobVariables': jobVariables,
-                'showAdvanced': $('#advanced-checkbox').is(":checked"),
-                'showHidden': $('#hidden-checkbox').is(":checked")
+                'showAdvanced': $('#wfv-advanced-checkbox').is(":checked"),
+                'showHidden': $('#wfv-hidden-checkbox').is(":checked")
             });
         }
 
@@ -2148,6 +2148,8 @@ define(
                 studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
                 studioApp.views.workflowView.importNoReset();
             }
+
+            $(this).data('bs.modal', null);
         });
 
         // adding form-control classes to new input elements after clicking on "add"

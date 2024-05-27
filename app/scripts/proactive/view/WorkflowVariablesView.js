@@ -68,7 +68,7 @@ define(
             updateVariableValue: function (jobVariables) {
                 for (var key in jobVariables) {
                     this.model.jobVariables[key].Value = jobVariables[key];
-                    var updatedVarElement = $(document.getElementById(key));
+                    var updatedVarElement = $(document.getElementById('wfv-'+key));
                     updatedVarElement.attr('value', _.escape(jobVariables[key]));
                 }
             },
@@ -79,7 +79,7 @@ define(
                     return []
                 }
                 that.model.jobModel.Variables.forEach(function (variable) {
-                    var updatedVarElement = $(document.getElementById(variable.Name));
+                    var updatedVarElement = $(document.getElementById('wfv-'+variable.Name));
                     if (updatedVarElement.attr("data-variable-model") && updatedVarElement.attr("data-variable-model").toLowerCase() === "pa:boolean") {
                         variable.Value = updatedVarElement.find("input:checked").val();
                     } else {
@@ -169,7 +169,7 @@ define(
                     return variable.Name === event.target.getAttribute('value')
                 })
 
-                var updatedVarElement = $(document.getElementById(selectedVariable.Name));
+                var updatedVarElement = $(document.getElementById('wfv-'+selectedVariable.Name));
                 if (updatedVarElement.attr("data-variable-model").toLowerCase() === "pa:boolean") {
                     selectedVariable.Value = updatedVarElement.find("input:checked").val();
                 } else {
@@ -206,9 +206,9 @@ define(
                     if(variable.Group === group){
                         if (!variable.Hidden && !variable.Advanced){
                             return true;
-                        } else if (variable.Advanced && $('#advanced-checkbox').is(":checked")){
+                        } else if (variable.Advanced && $('#wfv-advanced-checkbox').is(":checked")){
                             return true;
-                        } else if (variable.Hidden && $('#hidden-checkbox').is(":checked")){
+                        } else if (variable.Hidden && $('#wfv-hidden-checkbox').is(":checked")){
                             return true;
                         }
                     }
