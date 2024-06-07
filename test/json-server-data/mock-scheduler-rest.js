@@ -24,33 +24,24 @@ server.use(middlewares);
 server.post('/rest/studio/login', function (req, res, next) {
     console.log('LOGIN');
     parseFormdata(req, function (err, data) {
-        console.log("Received body data:");
-    	console.log('received:');
-    	console.log(JSON.stringify(data));
-        if (err) throw err
-
-        if (err) throw err
-            console.log('fields:', data.fields)
-            data.parts.forEach(function (part) {
-                console.log('part:', part.fieldname)
-            })
-        // We assume the request is well formed
-        var username = data.fields.username;
-        var password = data.fields.password;
-
-        console.log("username : "+ username);
-        console.log("password : "+ password);
-
-        // check the user/pass
-        var statusCode = 404;
-        if (username === 'user' && password === 'pwd') {
-            console.log('login successful');
-            statusCode = 200;
+        if (err) {
+            console.error('Error parsing form data:', err);
+            return res.status(500).end();
         }
-        res.setHeader('content-type', 'application/json');
-        res.status(statusCode);
-        res.write('MOCKED_SESSION_ID');
-        res.end();
+
+        const { username, password } = data.fields;
+
+        console.log("Received username:", username);
+        console.log("Received password:", password);
+
+        // Check the user/pass
+        if (username === 'user' && password === 'pwd') {
+            console.log('Login successful');
+            return res.status(200).json({ sessionId: 'MOCKED_SESSION_ID' });
+        } else {
+            console.log('Invalid credentials');
+            return res.status(401).end();
+        }
     });
 });
 
