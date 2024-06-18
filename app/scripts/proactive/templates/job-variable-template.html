@@ -278,18 +278,19 @@ jQuery(document).ready(function($){
                         </div>
                 <% } else if ((resolvedModel && resolvedModel.toLowerCase().indexOf('pa:boolean')==0) ) {  %>
                         <div class="variableValue radio-div col-md-4" id="<%- key %>" onchange="$('#check-button').click()" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
-                    <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) {%>
+                    <% if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) { %>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
-                    <% } else %>
+                    <% } else { %>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
                             <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
+                    <% } %>
                         </div>
                         <div class="variableInfo col-md-5">
                             <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
                             <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
                         </div>
-                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:hidden')==0) {  %>
+                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:hidden')==0) { %>
                         <div class="col-md-4 container-flex">
                             <input class="variableValue textareavalues submitVariableValue" name="<%- key %>" type="password" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" autocomplete="new-password" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                         </div>
@@ -297,7 +298,7 @@ jQuery(document).ready(function($){
                             <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
                             <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
                         </div>
-                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:credential')==0) {  %>
+                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:credential')==0) { %>
                             <div class="col-md-4 container-flex">
                                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                                 <button class="third-party-credential-button btn input-button" value="<%- key %>" title="Manage third-party credentials" type="button"><img src="images/key.png"></button>
@@ -308,7 +309,7 @@ jQuery(document).ready(function($){
                                     <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
                                 </div>
                             </div>
-                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_file') ==0 ) {  %>
+                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_file') ==0 ) { %>
                             <div class="col-md-4 container-flex">
                                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                                 <button value="<%- key %>" class="var-globalfile-button btn far fa-folder-open input-button" type="button" title="Browse Global Space files, Upload, and Select one file"></button>
@@ -319,7 +320,7 @@ jQuery(document).ready(function($){
                                     <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
                                 </div>
                             </div>
-                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_file') ==0 ) {  %>
+                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_file') ==0 ) { %>
                             <div class="col-md-4 container-flex">
                                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                                 <button value="<%- key %>" class="var-userfile-button btn far fa-folder-open input-button" type="button" title="Browse User Space files, Upload, and Select one file"></button>
@@ -330,7 +331,7 @@ jQuery(document).ready(function($){
                                     <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
                                 </div>
                             </div>
-                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_folder') ==0 ) {  %>
+                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:global_folder') ==0 ) { %>
                             <div class="col-md-4 container-flex">
                                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                                 <button value="<%- key %>" class="var-globalfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload Global Space files, and Select one folder"></button>
@@ -341,7 +342,7 @@ jQuery(document).ready(function($){
                                     <label class="font-smaller text-muted" data-help-self data-help="<%- resolvedModel %>"><%- resolvedModel %></label>
                                 </div>
                             </div>
-                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_folder') ==0 ) {  %>
+                <% } else if (resolvedModel && resolvedModel.toLowerCase().indexOf('pa:user_folder') ==0 ) { %>
                             <div class="col-md-4 container-flex">
                                 <input type="text" class="variableValue textareavalues submitVariableValue" name="<%- variable.Name %>" title="<%- description %>" id="<%- key %>" value="<%- _.escape(variable.Value) %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>" />
                                 <button value="<%- key %>" class="var-userfolder-button btn far fa-folder-open input-button" type="button" title="Browse, Upload User Space files, and Select one folder"></button>
