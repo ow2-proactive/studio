@@ -231,7 +231,7 @@ for (var key in jobVariables) {
             } else if ((model && model.toLowerCase().indexOf('pa:boolean')==0) ) {
             %>
             <div class="variableValue radio-div col-md-4" id="wfv-<%- key %>" title="<%- description %>" data-variable-model="<%- model %>" data-variable-description="<%- description %>" data-variable-group="<%- group %>" data-variable-advanced="<%- advanced ? 'true' : 'false' %>"  data-variable-hidden="<%- hidden ? 'true' : 'false' %>">
-            <%
+                <%
                 if (variable.Value && (variable.Value.toLowerCase() === 'true' || Number(variable.Value) > 0)) {%>
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="true" checked/>TRUE</label>
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="false"/>FALSE</label>
@@ -242,7 +242,7 @@ for (var key in jobVariables) {
                 </div>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
                 <%
-                } else
+                } else {
                 %>
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="true"/>TRUE</label>
                 <label class="radio-inline"><input type="radio" name="<%- key %>" value="false" checked/>FALSE</label>
@@ -252,6 +252,9 @@ for (var key in jobVariables) {
                     <button type="button" class="btn btn-default var-down-btn glyphicon glyphicon-arrow-down p-w-xxs" value="<%- key %>" title="Move down Variable" <%= variable.isBottom ? 'disabled' : '' %> ></button>
                 </div>
                 <button class="btn btn-default var-edit-btn glyphicon glyphicon-edit text-link m-l-xxs pull-right" value="<%- key %>" title="Edit variable" type="button"></button>
+                <%
+                }
+                %>
             </div>
             <div class="variableInfo col-md-5">
                 <label class="font-smaller" data-help-self data-help="<%- description %>"><%- description %></label>
