@@ -377,7 +377,7 @@ define(function () {
             'globalspace', 'userspace', 'globalspaceapi', 'userspaceapi', 'forkEnvironment', '	addAdditionalClasspath', 'addJVMArgument', 'addPreJavaCommand', 'addSystemEnvironmentVariable', 'getAdditionalClasspath', 'getJavaHome',
             'getJVMArguments', 'getPreJavaCommand', 'getSystemEnvironment', 'getSystemEnvironmentVariable', 'getWorkingDir', 'isDockerWindowsToLinux', 'setDockerWindowsToLinux', 'setJavaHome', 'setPreJavaCommand', 'setWorkingDir',
             'schedulerapi', 'synchronizationapi', 'rmapi',
-            'result', 'results', 'resultMetadata', 'credentials', 'branch', 'runs', 'loop', 'selected', 'nodeurl', 'nodename', 'nodehost', 'content.type', 'file.name', 'file.extension',
+            'result', 'results', 'resultMetadata', 'resultMap', 'credentials', 'branch', 'runs', 'loop', 'selected', 'nodeurl', 'nodename', 'nodehost', 'content.type', 'file.name', 'file.extension',
             'PA_JOB_ID', 'PA_JOB_NAME', 'PA_TASK_ID', 'PA_TASK_NAME', 'PA_TASK_ITERATION', 'PA_TASK_REPLICATION',
             'PA_TASK_SUCCESS', 'PA_SCHEDULER_HOME', 'PA_TASK_PROGRESS_FILE', 'PA_NODESFILE', 'PA_NODESNUMBER', 'PA_USER',
             'PA_NODE_URL', 'PA_NODE_NAME', 'PA_NODE_HOST', 'PA_SCHEDULER_REST_URL', 'PA_SCHEDULER_REST_PUBLIC_URL', 'PA_CATALOG_REST_URL', 'PA_CATALOG_REST_PUBLIC_URL',
