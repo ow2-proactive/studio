@@ -180,9 +180,19 @@ define(
                 var that = this;
                 that.$el = $(that.template());
                 var domains = StudioClient.getDomains();
+                var user =  this.getCookie('user') ? this.getCookie('user') : localStorage['pa.login'];
+                var userName = '';
+                var domainName = '';
 
-                // get the cookie variable "user"
-                var user = this.getCookie('user');
+                if (user) {
+                    var userData = user.split("\\");
+                    if (userData.length > 1) {
+                        domainName = userData[0];
+                        userName = userData[1];
+                    } else {
+                        userName = userData[0];
+                    }
+                }
 
                 $('body').append(that.$el).show();
 
@@ -210,9 +220,17 @@ define(
                     domainOptionString = domainOptionString + '</select></div>';
                     var domainOption = $(domainOptionString);
                     $("#login-basic").prepend(domainOption);
+
+                    if (domainName && domains.includes(domainName)) {
+                        $('#domain-mode').val(domainName);
+                    }
                 } else {
                     var domainOption = $('<div class="form-group"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" disabled="disabled" class="controls font-size-11" style="width:165.667px. height:23px;"> </select></div>');
                     $("#login-options").append(domainOption);
+                }
+
+                if (userName) {
+                    $('#user').val(userName);
                 }
                 return this;
             }
