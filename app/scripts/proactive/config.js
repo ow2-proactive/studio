@@ -26,7 +26,7 @@ define(function () {
                 src: [
                     {"Resource Manager" : "NODE_ACCESS_TOKEN"}, {"Resource Manager" : "NODE_SOURCE"}, {"Resource Manager" : "NODESOURCENAME"},
                     {"Resource Manager" : "NS"}, {"Resource Manager" : "NS_BATCH"}, {"Resource Manager" : "NS_PRE"},
-                    {"Scheduling" : "JOB_DDL"}, {"Scheduling" : "JOB_EXEC_TIME"}, {"Scheduling" : "START_AT"}, {"Scheduling" : "WALLTIME"},
+                    {"Scheduling" : "JOB_DDL"}, {"Scheduling" : "JOB_EXEC_TIME"}, {"Scheduling" : "MAX_NODES_USAGE"}, {"Scheduling" : "REQUIRED_LICENSES"}, {"Scheduling" : "START_AT"}, {"Scheduling" : "WALLTIME"},
                     {"Housekeeping" : "REMOVE_DELAY"}, {"Housekeeping" : "REMOVE_DELAY_ON_ERROR"},
                     {"Notification" : "EMAIL"}, {"Notification" : "NOTIFICATION_EVENTS"},
                     {"User Interface" : "Documentation"}, {"User Interface" : "submission.mode"}, {"User Interface" : "workflow.icon"},
@@ -88,8 +88,8 @@ define(function () {
             data: {
                 src: [
                     {"Resource Manager" : "NODE_ACCESS_TOKEN"}, {"Resource Manager" : "NODE_SOURCE"}, {"Resource Manager" : "NODESOURCENAME"},
-                    {"Resource Manager" : "NS"}, {"Resource Manager" : "NS_BATCH"}, {"Resource Manager" : "NS_PRE"},
-                    {"Scheduling" : "START_AT"}, {"Scheduling" : "WALLTIME"},
+                    {"Resource Manager" : "NS"}, {"Resource Manager" : "NS_BATCH"}, {"Resource Manager" : "NS_PRE"}, {"Resource Manager" : "RESOURCE_TAGS"},
+                    {"Scheduling" : "REQUIRED_LICENSES"}, {"Scheduling" : "START_AT"}, {"Scheduling" : "WALLTIME"},
                     {"Task Control" : "DISABLE_PTK"}, {"Task Control" : "PRE_SCRIPT_AS_FILE"},
                     {"Result Format" : "content.type"}, {"Result Format" : "file.name"}, {"Result Format" : "file.extension"},
                     {"User Interface" : "task.documentation"}, {"User Interface" : "task.icon"},
