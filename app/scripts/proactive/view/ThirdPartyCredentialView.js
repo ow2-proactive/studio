@@ -74,19 +74,18 @@ define(
         addThirdPartyCredential: function(event) {
             var credValue = $('#multiline-cred').prop('checked') ? $('#new-cred-value-multiline').val() : $('#new-cred-value').val();
             var credKey = $('#new-cred-key').val();
-            this.thirdPartyCredentialRequest("POST", { key: credKey, value: credValue }, this.closeThirdPartyCredential);
+            this.thirdPartyCredentialRequest("/rest/scheduler/credentials/", "POST", { key: credKey, value: credValue }, this.closeThirdPartyCredential);
         },
 
         removeThirdPartyCredential: function(event) {
-            this.thirdPartyCredentialRequest("DELETE", { key: $('#new-cred-key').val() }, this.refreshThirdPartyCredential);
+            this.thirdPartyCredentialRequest("/rest/scheduler/credentials?key=" + encodeURIComponent(event.target.id), "DELETE", {}, this.refreshThirdPartyCredential);
         },
 
-        thirdPartyCredentialRequest: function(typeRequest, requestData, successHandler) {
+        thirdPartyCredentialRequest: function(url, typeRequest, requestData, successHandler) {
             var that = this;
-            $.ajax({
-                url: "/rest/scheduler/credentials/",
+            var queryData = {
+                url: url,
                 type: typeRequest,
-                data: requestData,
                 headers: { "sessionid": localStorage['pa.session'] },
                 success: function (data) {
                     successHandler(that);
@@ -94,7 +93,11 @@ define(
                 error: function (xhr, status, error) {
                     alert('Failed to edit the third-party credential.' + xhr.status + ': ' + xhr.statusText);
                 }
-            });
+            }
+            if (Object.keys(requestData).length !== 0) {
+                queryData.data = requestData;
+            }
+            $.ajax(queryData);
         },
 
         changeMultilineCredential: function(event) {

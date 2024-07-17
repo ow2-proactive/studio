@@ -915,7 +915,7 @@ define(
             }
         }
 
-        function openVariablesView(event) {
+        function openVariablesView(event) { // TODO
             event.preventDefault();
 
             var studioApp = require('StudioApp');
