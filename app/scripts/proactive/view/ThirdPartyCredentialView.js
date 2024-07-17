@@ -74,17 +74,17 @@ define(
         addThirdPartyCredential: function(event) {
             var credValue = $('#multiline-cred').prop('checked') ? $('#new-cred-value-multiline').val() : $('#new-cred-value').val();
             var credKey = $('#new-cred-key').val();
-            this.thirdPartyCredentialRequest("/rest/scheduler/credentials/", "POST", { key: credKey, value: credValue }, this.closeThirdPartyCredential);
+            this.thirdPartyCredentialRequest("", "POST", { key: credKey, value: credValue }, this.closeThirdPartyCredential);
         },
 
         removeThirdPartyCredential: function(event) {
-            this.thirdPartyCredentialRequest("/rest/scheduler/credentials?key=" + encodeURIComponent(event.target.id), "DELETE", {}, this.refreshThirdPartyCredential);
+            this.thirdPartyCredentialRequest("?key=" + encodeURIComponent(event.target.id), "DELETE", {}, this.refreshThirdPartyCredential);
         },
 
-        thirdPartyCredentialRequest: function(url, typeRequest, requestData, successHandler) {
+        thirdPartyCredentialRequest: function(additionalPath, typeRequest, requestData, successHandler) {
             var that = this;
             var queryData = {
-                url: url,
+                url: "/rest/scheduler/credentials" + additionalPath,
                 type: typeRequest,
                 headers: { "sessionid": localStorage['pa.session'] },
                 success: function (data) {
