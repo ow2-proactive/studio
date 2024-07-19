@@ -191,7 +191,7 @@ for (var key in jobVariables) {
                         model = data;
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
-                            alert("Could not fetch model from url '" + urlToFetch + "': " + xhr.responseText);
+                            console.error("Could not fetch model from url '" + urlToFetch + "': " + xhr.responseText);
                         }
                     });
                     // failure to fetch implies no change in the model
