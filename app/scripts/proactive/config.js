@@ -538,9 +538,9 @@ try {
 
     switch (family) {
         case OperatingSystemFamily.WINDOWS:
-        throw new IllegalStateException("Singularity is not supported on Windows operating system")
+        throw new IllegalStateException("Singularity/Apptainer is not supported on Windows operating system")
         case OperatingSystemFamily.MAC:
-        throw new IllegalStateException("Singularity is not supported on Mac operating system")
+        throw new IllegalStateException("Singularity/Apptainer is not supported on Mac operating system")
         default:
             isWindows = false;
     }
@@ -550,6 +550,7 @@ try {
     if (process.waitFor() == 0) {
         version = process.text
         version = version.replace("singularity version ", "").trim()
+        version = version.replace("apptainer version ", "").trim()
         println "Singularity version: " + version
         majorVersion = Integer.parseInt(version.substring(0, version.indexOf(".")))
     } else {
