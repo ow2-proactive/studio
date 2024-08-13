@@ -359,8 +359,18 @@ define(
                         if (result.errorMessage) {
                             that.alert("Cannot submit the job", result.errorMessage, 'error');
                         } else if (result.id) {
-                            that.alert("Job submitted", "<html></html><label style='font-size: 16px';>" + result.readableName + "' submitted successfully (Id " + result.id + ")</label>"+
-                                                        "<br><a href='" + config.prefixURL + "/automation-dashboard/#/workflow-execution' target='_blank'>Open Job in Workflow Execution Portal</a></br><a href='" + config.prefixURL + "/scheduler/' target='_blank'>Open Job in Scheduler Portal</a></html>", 'success');
+                            that.alert(
+                                "Job submitted",
+                                "<html>" +
+                                    "<label style='font-size: 16px;'>Your Workflow has been submitted successfully, Job Id: " + encodeURIComponent(result.id) + "</label>" +
+                                    "</br>" +
+                                    "<a href='" + encodeURI(config.prefixURL + "/automation-dashboard/#/workflow-execution") + "' target='_blank'>Open Job in Workflow Execution Portal</a></br>" +
+                                    "<a href='javascript:void(0);' onclick=\"window.open('/automation-dashboard/#/job-info?jobid=" + encodeURIComponent(result.id) + "&tab=0', 'job-info-" + encodeURIComponent(result.id) + "', 'toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,directories=no,status=no')\" target='_blank'>Open Job Details in a New Popup Window</a></br>" +
+                                    "<a href='" + encodeURI(config.prefixURL + "/scheduler/") + "' target='_blank'>Open Job in Scheduler Portal</a>" +
+                                "</html>",
+                                'success'
+                            );
+
                         } else {
                             that.alert("Job submission", request.responseText, 'error');
                         }
