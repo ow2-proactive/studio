@@ -47,8 +47,8 @@ server.post('/rest/studio/login', function (req, res, next) {
             console.log('login successful');
             statusCode = 200;
         }
-        res.setHeader('content-type', 'application/json');
         res.status(statusCode);
+        res.setHeader('content-type', 'application/json');
         res.write('MOCKED_SESSION_ID');
         res.end();
     });
