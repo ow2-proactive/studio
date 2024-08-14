@@ -56,8 +56,8 @@ server.post('/rest/studio/login', function (req, res, next) {
 
 server.put('/rest/studio/logout', function (req, res, next) {
     console.log('LOGOUT');
-    res.setHeader('content-type', 'application/json');
     res.status(204);
+    res.setHeader('content-type', 'application/json');
     res.end();
 });
 
