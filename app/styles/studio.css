@@ -1700,6 +1700,9 @@ li.success {
     width: 80%;
 }
 
+.modal-footer {
+    text-align: center
+}
 #direct-object-url button, #direct-object-url input {
     background-color: #F3F4F6;
 }
