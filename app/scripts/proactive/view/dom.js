@@ -1615,7 +1615,7 @@ define(
                 delete studioApp.models.jobModel.attributes.BackupVariables;
                 return {valid: true}
             } else {
-                studioApp.models.jobModel.set({"Variables": studioApp.models.jobModel.get('BackupVariables')});
+                studioApp.models.jobModel.set({"Variables": backupVariables});
                 return {
                     valid: false,
                     errorMessage: validationData.errorMessage,
@@ -1624,7 +1624,7 @@ define(
             }
         }
 
-        function refreshVariablesView(existingVariables, updatedVariable, originalName) {
+        function refreshVariablesView(existingVariables, isCloseVarEditModal, updatedVariable, originalName) {
             var studioApp = require('StudioApp');
             var jobModel = studioApp.models.jobModel;
             var jobVariables = {};
@@ -1647,7 +1647,9 @@ define(
             // Add all grouped variables to the final structure
             addVariablesInGroupOrder(jobVariablesByGroup, jobVariables);
 
-            $('#variable-editor-modal').modal('hide');
+            if (isCloseVarEditModal) {
+                $('#variable-editor-modal').modal('hide');
+            }
             studioApp.views.workflowVariablesView.render({
                 'jobModel': jobModel,
                 'jobVariables': jobVariables,
@@ -1665,7 +1667,7 @@ define(
             studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
             studioApp.views.workflowView.importNoReset();
 
-            refreshVariablesView(filteredExistingVariables)
+            refreshVariablesView(filteredExistingVariables, false)
         }
 
         $("#undo-button, #undo-button-tool").click(function (event) {
@@ -2125,10 +2127,12 @@ define(
                 }
 
                 var validationResult = validateAndUpdateVariables(existingVariables);
-
                 if (validationResult.valid) {
-                    refreshVariablesView(existingVariables,updatedVariable)
+                    refreshVariablesView(existingVariables, true, updatedVariable)
                 } else {
+                    if (originalName === '') {
+                        deleteVariable(updatedVariable.Name)
+                    }
                     $("#variable-editor-error").text(validationResult.errorMessage)
                 }
             });
