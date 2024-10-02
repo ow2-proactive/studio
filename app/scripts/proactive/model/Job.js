@@ -206,8 +206,9 @@ define(
             fieldAttrs: {
                 'placeholder': '@attributes->tags',
                 'listseparator': /\s*,\s*/,
-                'data-tab' : 'Workflow Tags'
-                },
+                'data-tab' : 'Workflow Tags',
+                "data-help": "Enable the end-user to attach any kind of information to workflows to organize, search, and manage them more effectively"
+            },
             itemTemplate: Utils.bigCrossTemplate
         },
         "User Space Url": {
