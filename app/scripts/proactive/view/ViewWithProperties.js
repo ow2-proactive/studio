@@ -274,6 +274,11 @@ define(
 							}
 						})
 
+						// Checking if input has an edit button (for description edit button)
+						if (el.attr('data-edit-button')) {
+							el.find('div:first').before($('<a id="edit-description-button" class="pointer pull-right glyphicon glyphicon-edit" style="margin-right: 30px" title="Edit description"></a>'))
+						}
+
 						// modifying checkbox layout
 						var checkbox = el.find("input[type='checkbox']");
 						if (checkbox.length > 0) {

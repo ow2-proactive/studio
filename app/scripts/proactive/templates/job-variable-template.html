@@ -1,5 +1,5 @@
 <div>
-    <center>
+    <div class="text-center">
         <% _.each(jobGenericInfos, function(gi) {
                     var label = gi["Property Name"];
                     if (label == "workflow.icon" )  %>
@@ -7,23 +7,37 @@
         <% }) %>
 
         <h4 class="modal-title"><%- jobName %> </h4>
-    </center>
+    </div>
 
-    <span class="font-bold"><b>Description : </b><div class="description"><small><%- jobDescription %></small></div></span>
-    <span class="font-bold"><b>Project name : </b><small><%- jobProjectName %></small></span><br>
+    <div>
+        <span class="font-bold">Description : </span>
+        <div><%- jobDescription %></div>
+    </div>
+    <div>
+        <span class="font-bold">Project name : </span>
+        <span><%- jobProjectName %></span>
+    </div>
     <% if (jobTags && jobTags.length>0) { %>
-    <span class="font-bold"><b>Tags : </b><small><%=jobTags.join()%></small></span><br>
-    <% } %><br>
+    <div>
+        <span class="font-bold">Tags : </span>
+        <span><%=jobTags.join()%></span>
+    </div>
+    <% } %>
     <% _.each(jobGenericInfos, function(gi) {
     var label = gi["Property Name"];
     if (label == "bucketName" )  %>
-    <span class="font-bold"><b>Bucket name : </b><small><%=gi["Property Value"] %></small></span><br>
+    <div>
+        <span class="font-bold">Bucket name : </span>
+        <span><%=gi["Property Value"] %></span>
+    </div>
 <% }) %>
 
 <% _.each(jobGenericInfos, function(gi) {
 	var label = gi["Property Name"];
     if (label == "Documentation" )  %>
-    <span class="font-bold"><b> Documentation : </b><small><a href='<%="/doc/"+gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></small></span><br>
+    <div class="font-bold">
+        <span class="font-bold"> Documentation : </span>
+        <a href='<%="/doc/"+gi["Property Value"]%>' target="_blank"><%=gi["Property Value"]%></a></div>
 <% }) %>
 
 </div>
@@ -33,7 +47,7 @@
     ul li.formLayout label.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;}
     ul li.formLayout br.advanced-to-hide {display: <%= showAdvanced ? 'none' : 'inline-flex' %>;}
 </style>
-<br>
+
 <%
 var totalNumberOfadvancedVariables = 0;
 for (var key in jobVariables) {
@@ -56,7 +70,7 @@ for (var key in jobVariables) {
 %>
 <ul id="submitFormUL">
     <div class="formLayout">
-        <div for="Job_Variables" style="font-weight: bold;width: 100%" data-toggle="tooltip">Job Variables</div>
+        <div for="Job_Variables" class="font-bold w-100" data-toggle="tooltip">Job Variables</div>
         <%
         if (totalNumberOfadvancedVariables > 0) {
         %>
