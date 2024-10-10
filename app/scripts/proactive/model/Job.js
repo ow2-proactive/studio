@@ -51,7 +51,8 @@ define(
           editorClass: "textareaworkflowdescription",
           fieldAttrs: {
             'placeholder': ['description->#cdata-section', 'description->#text'],
-            "data-help": "Small textual explanation of what this job does."
+            "data-help": "Small textual explanation of what this job does.",
+            "data-edit-button": "true"
           }
         },
         "Copyright": {

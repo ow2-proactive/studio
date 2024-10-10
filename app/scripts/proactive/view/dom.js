@@ -915,6 +915,24 @@ define(
             }
         }
 
+        function openDescriptionEditor(event){
+            event.preventDefault();
+
+            $('#full-description-textarea').val('')
+
+            var studioApp = require('StudioApp');
+            if (!studioApp.isWorkflowOpen()) {
+                $('#select-workflow-modal').modal();
+                return;
+            }
+
+            save_workflow();
+            closeCollapsedMenu();
+
+            $('#full-description-modal').modal();
+            $('#full-description-textarea').val(studioApp.models.jobModel.attributes.Description)
+        }
+
         function openVariablesView(event) { // TODO
             event.preventDefault();
 
@@ -2135,8 +2153,27 @@ define(
                     }
                     $("#variable-editor-error").text(validationResult.errorMessage)
                 }
+            })
+
+            $("#edit-description-button").click(function (event) {
+                openDescriptionEditor(event)
+            })
+
+            $("#save-description-edit").click(function () {
+                var studioApp = require('StudioApp');
+                studioApp.models.jobModel.attributes.Description = $('#full-description-textarea').val()
+
+                save_workflow();
+                //Refresh Variables view in side menu
+                studioApp.views.workflowView = new WorkflowView({model: studioApp.models.jobModel, app: studioApp});
+                studioApp.views.xmlView = new JobXmlView({model: studioApp.models.jobModel});
+                studioApp.views.workflowView.importNoReset();
             });
 
+        });
+
+        $('#full-description-modal').on('hidden.bs.modal', function () {
+            $('#full-description-textarea').val('');
         });
 
         $('#workflow-variables-modal').on('hidden.bs.modal', function () {
@@ -2190,6 +2227,10 @@ define(
         $(document).on('click', '.group-down-btn', function (event) {
             event.preventDefault();
             changeGroupOrder(event.target.getAttribute('value'), 1);
+        })
+
+        $(document).on('click', '#edit-description-button', function (event) {
+            openDescriptionEditor(event);
         })
 
         // saving job xml every min to local store
