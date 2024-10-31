@@ -21,7 +21,8 @@
     "jquery-ui": "~1.10.3",
     "jquery-mousewheel": "~3.1.9",
     "xml2json": "./app/scripts/thirdparties/xml2json.js",
-    "components-font-awesome": "^5.4.2"
+    "components-font-awesome": "^5.4.2",
+    "showdown": "^2.1.0"
   },
   "devDependencies": {}
 }
