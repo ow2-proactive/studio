@@ -6,9 +6,10 @@ define(
         'text!proactive/templates/job-variable-template.html',
         'proactive/view/ThirdPartyCredentialView',
         'proactive/view/FileBrowserView',
-        'proactive/view/BeautifiedModalAdapter'
+        'proactive/view/BeautifiedModalAdapter',
+        'Showdown',
     ],
-    function (_, Backbone, config, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter) {
+    function (_, Backbone, config, jobVariableTemplate, ThirdPartyCredentialView, FileBrowserView, BeautifiedModalAdapter, Showdown) {
 
     "use strict";
 
@@ -58,6 +59,12 @@ define(
             this.model = $.extend(this.model, jobInfosCloned);
             this.$el.html(this.template(this.model));
             new BeautifiedModalAdapter().beautifyForm(this.$el);
+
+            // Render markdown for job descriptions
+            var converter = new Showdown.Converter();
+            var html = converter.makeHtml(this.model.jobDescription);
+            $('#job-description-container').html(html)
+
             return this;
         },
 

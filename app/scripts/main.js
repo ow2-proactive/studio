@@ -96,6 +96,7 @@ require.config({
         filesaver: '../libs/FileSaver/FileSaver',
         xml2json: 'thirdparties/xml2json',
         autoComplete: '../libs/autocomplete/autoComplete.min',
+        Showdown:'../libs/showdown/dist/showdown.min',
 
         StudioApp: 'proactive/app'
     }
