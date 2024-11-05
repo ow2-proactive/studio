@@ -1749,6 +1749,10 @@ ul, #submitFormUL {
   list-style-type: none;
 }
 
+#job-description-container ul, #job-description-container li{
+    list-style-type: unset;
+}
+
 /* Remove margins and padding from the parent ul */
 #submitFormUL {
   margin: 0;
