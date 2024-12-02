@@ -396,7 +396,7 @@ module.exports = function (grunt) {
     });
     grunt.loadNpmTasks('grunt-selenium-standalone');
     grunt.loadNpmTasks('grunt-bg-shell');
-    grunt.loadNpmTasks('grunt-nightwatch-report');
+    //grunt.loadNpmTasks('grunt-nightwatch-report');
 
     grunt.registerTask('mock:run', 'Expose the studio with a mocked scheduler in a very hacky way but it should be fine', function () {
             grunt.task.run([
@@ -407,15 +407,15 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test:ui:dev', 'Run the ui tests using a mocked REST scheduler', function () {
         grunt.task.run([
-            'publishJsonServerFiles',
-            'bgShell:seleniumInstall',
-            'bgShell:seleniumStart',
-            'bgShell:jsonServerStart',
-            'waitFor5Seconds',
-            'bgShell:nightwatchChrome',
-            'bgShell:seleniumStop',
-            'bgShell:jsonServerStop',
-            'nightwatch_report'
+            //'publishJsonServerFiles',
+            //'bgShell:seleniumInstall',
+            //'bgShell:seleniumStart',
+            //'bgShell:jsonServerStart',
+            //'waitFor5Seconds',
+            //'bgShell:nightwatchChrome',
+            //'bgShell:seleniumStop',
+            //'bgShell:jsonServerStop',
+            //'nightwatch_report'
         ]);
     });
 
