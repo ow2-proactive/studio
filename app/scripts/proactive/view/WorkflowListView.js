@@ -38,7 +38,7 @@ define([
                 'click': 'open',
                 'click .btn-open': 'open',
                 'click .btn-clone': 'clone',
-                'click .btn-remove': 'destroy',
+                'click .btn-remove': 'destroy'
             },
             open: function() {
                 PNotify.removeAll();
@@ -73,7 +73,7 @@ define([
                 'change #select-mode': 'switchMode',
                 'click #btn-remove-all': 'removeAll',
                 'click #search-workflow-button': 'searchWorkflows',
-                'change #sort-workflows': 'sortWorkflows',
+                'change #sort-workflows': 'sortWorkflows'
             },
             listenToCollection: function (success) {
                 this.stopListening();

@@ -38,11 +38,12 @@ define(
                     var name_object = this.getObjectKeyValues().find(function(obj) {
                         return obj.key == "name";
                     });
-                    if (!name_object)
+                    if (!name_object) {
                         return "";
+                    }
                     return name_object.value;
                 } catch (e) {
-                    return "";
+                    return "error while getting workflow name ";
                 }
             },
             setProject: function (project) {

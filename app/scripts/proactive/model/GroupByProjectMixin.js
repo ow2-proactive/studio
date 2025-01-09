@@ -44,22 +44,24 @@ define(
        }
 
        function sortProjectsByNewerEdit(keys, values) {
+            var index1, index2, model1Date, model2Date;
             keys.sort(function(model1, model2) {
-                var index1 = getIndexOfWorkflow(keys, model1);
-                var index2 = getIndexOfWorkflow(keys, model2);
-                var model1Date = getModifyDateOfProject(values, index1, "Newer edit");
-                var model2Date = getModifyDateOfProject(values, index2, "Newer edit");
+                index1 = getIndexOfWorkflow(keys, model1);
+                index2 = getIndexOfWorkflow(keys, model2);
+                model1Date = getModifyDateOfProject(values, index1, "Newer edit");
+                model2Date = getModifyDateOfProject(values, index2, "Newer edit");
                 return model2Date - model1Date;
             });
             return keys;
        }
 
        function sortProjectsByOlderEdit(keys, values) {
+             var index1, index2, model1Date, model2Date;
             keys.sort(function(model1, model2) {
-                var index1 = getIndexOfWorkflow(keys, model1);
-                var index2 = getIndexOfWorkflow(keys, model2);
-                var model1Date = getModifyDateOfProject(values, index1, "Older edit");
-                var model2Date = getModifyDateOfProject(values, index2, "Older edit");
+                index1 = getIndexOfWorkflow(keys, model1);
+                index2 = getIndexOfWorkflow(keys, model2);
+                model1Date = getModifyDateOfProject(values, index1, "Older edit");
+                model2Date = getModifyDateOfProject(values, index2, "Older edit");
                 return model1Date - model2Date;
             });
             return keys;
@@ -68,7 +70,7 @@ define(
        function getIndexOfWorkflow(keys, key) {
             var index =0;
             for (var i = 1; i < keys.length; i ++) {
-                if (keys.at(i) === key) {
+                if (keys[i] === key) {
                     index = i;
                 }
             }
@@ -76,9 +78,9 @@ define(
        }
 
         function getModifyDateOfProject(values, i, option) {
-            var modifyDate = values.at(i).at(0).attributes.modifyDate;
-            for (var j = 0; j < values.at(i).length; j ++) {
-                var anotherDate = values.at(i).at(j).attributes.modifyDate;
+            var modifyDate = values[i][0].attributes.modifyDate;
+            for (var j = 0; j < values[i].length; j ++) {
+                var anotherDate = values[i][j].attributes.modifyDate;
                 if (option == "Newer edit" && modifyDate < anotherDate) {
                     modifyDate = anotherDate;
                 }

@@ -1490,7 +1490,6 @@ define(
         });
         $("#confirm-remove-all-workflows").click(function () {
             var searchWorkflow = document.getElementById("search-workflow-input").value;
-            console.log("searchWorkflow dom " + searchWorkflow);
             removeAllWorkflows(searchWorkflow);
                 var btn = document.getElementById("btn-remove-all");
                 btn.disabled = true;
