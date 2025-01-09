@@ -1,4 +1,5 @@
-<label><%= name %></label>
+<label title="<%= name %>"><%= name %></label>
+<br><img src="images/last-modified.png" title="Last modified. Click to open workflow." height="15" style="position: absolute;"><label title="Last modified. Click to open workflow." style="color:grey; font-size: 11px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<%= (new Date(modifyDate)).toLocaleString() %></label>
 <div class="btn-group btn-group-xs pull-right" role="group">
     <button type="button" class="btn btn-success btn-mini btn-open">Open</button>
     <button type="button" class="btn btn-info btn-mini btn-clone">Clone</button>

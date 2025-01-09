@@ -412,10 +412,14 @@ define(
 
             if( typeof alreadyPublishedBucketName === "undefined"){
                 var studioApp = require('StudioApp');
-                const bucketNameObject = studioApp.models.jobModel.get("Generic Info").filter(function(item){
-                                            return item["Property Name"] === "bucketName";
-                                        })
-                alreadyPublishedBucketName = bucketNameObject.length ? bucketNameObject[0]["Property Value"] : "";
+                if (studioApp.models === undefined) {
+                    alreadyPublishedBucketName = "";
+                } else {
+                    const bucketNameObject = studioApp.models.jobModel.get("Generic Info").filter(function(item) {
+                        return item["Property Name"] === "bucketName";
+                    })
+                    alreadyPublishedBucketName = bucketNameObject.length ? bucketNameObject[0]["Property Value"] : "";
+                }
             }
 
 

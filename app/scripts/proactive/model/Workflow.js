@@ -20,7 +20,8 @@ define(
             defaults: {
                 name: "",
                 xml: "",
-                metadata: ""
+                metadata: "",
+                modifyDate: new Date().getTime()
             },
             getMetadata: function () {
                 try {
@@ -31,6 +32,9 @@ define(
             },
             getProject: function () {
                 return this.getMetadata().project;
+            },
+            getName: function () {
+                return this.name;
             },
             setMetadata: function (metadata) {
                 this.set('metadata', JSON.stringify(metadata));
