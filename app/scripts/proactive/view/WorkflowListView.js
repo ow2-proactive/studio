@@ -38,7 +38,7 @@ define([
                 'click': 'open',
                 'click .btn-open': 'open',
                 'click .btn-clone': 'clone',
-                'click .btn-remove': 'destroy'
+                'click .btn-remove': 'destroy',
             },
             open: function() {
                 PNotify.removeAll();
@@ -70,7 +70,10 @@ define([
             },
             events: {
                 'click .create-workflow-button': 'createOne',
-                'change #select-mode': 'switchMode'
+                'change #select-mode': 'switchMode',
+                'click #btn-remove-all': 'removeAll',
+                'click #search-workflow-button': 'searchWorkflows',
+                'change #sort-workflows': 'sortWorkflows',
             },
             listenToCollection: function (success) {
                 this.stopListening();
@@ -78,6 +81,26 @@ define([
                 this.listenTo(this.collection, 'add', this.addAll);
                 this.listenTo(this.collection, 'remove', this.addAll);
                 this.collection.fetch({reset: true, success: success});
+            },
+            removeAll: function (event) {
+                var searchWorkflow = document.getElementById("search-workflow-input").value;
+                if (this.removeAllLabel === undefined) {
+                    this.removeAllLabel = document.createElement('label');
+                    $('#confirm-remove-all-text').last().append(this.removeAllLabel);
+                }
+                this.removeAllLabel.innerHTML = "You are about to remove all workflows.";
+                if(searchWorkflow !== undefined && searchWorkflow !== "") {
+                    this.removeAllLabel.innerHTML = "You are about to remove all workflows whose names contains " + searchWorkflow;
+                }
+                $('#remove-all-workflows-confirmation-modal').modal();
+            },
+            searchWorkflows: function (event) {
+                this.searchWorkflow = document.getElementById("search-workflow-input").value;
+                this.addAll();
+            },
+            sortWorkflows: function (event) {
+               this.selectedOption = document.getElementById("sort-workflows").value;
+               this.addAll();
             },
             createOne: function (event) {
                 var jobModel = new Job();
@@ -135,11 +158,38 @@ define([
                 }
                 this.$el.html(this.template({jobName: jobName}));
                 var categoryTemplate = _.template(workflowListCategory);
+
+                if (this.selectedOption != undefined) {
+                    document.getElementById("sort-workflows").value = this.selectedOption;
+                }
+                if (this.searchWorkflow != undefined) {
+                    document.getElementById("search-workflow-input").value = this.searchWorkflow;
+                }
+
                 this.collection.groupByProject(function(project, workflows) {
                     that.$('#workflow-list').append(categoryTemplate({project: project}));
                     _.each(workflows, that.addOne, that);
 
-                });
+                }, this.selectedOption, this.searchWorkflow);
+
+                var removeAllButton = document.getElementById("btn-remove-all");
+                var searchInput = document.getElementById("search-workflow-input");
+                var searchButton = document.getElementById("search-workflow-button");
+                if (removeAllButton !== null && searchInput !== null && searchButton !== null) {
+                    if (this.collection.models.length < 1) {
+                        removeAllButton.disabled = true;
+                        searchInput.disabled = true;
+                        searchButton.disabled = true;
+                        var noWorkflowsLabel = document.createElement('label');
+                        noWorkflowsLabel.innerHTML = "";
+                        this.$('#workflow-list').last().append(noWorkflowsLabel);
+                        this.searchWorkflow = "";
+                    } else {
+                        removeAllButton.disabled = false;
+                        searchInput.disabled = false;
+                        searchButton.disabled = false;
+                    }
+                }
             },
             listWorkflows: function (openAfterFetch) {
                 this.collection = this.options.workflows;

@@ -1487,7 +1487,40 @@ define(
 
         $("#open-calendar-portal").click(function () {
             window.open(config.prefixURL + '/automation-dashboard/#/portal/job-planner-calendar-def-workflows')
-        })
+        });
+        $("#confirm-remove-all-workflows").click(function () {
+            var searchWorkflow = document.getElementById("search-workflow-input").value;
+            console.log("searchWorkflow dom " + searchWorkflow);
+            removeAllWorkflows(searchWorkflow);
+                var btn = document.getElementById("btn-remove-all");
+                btn.disabled = true;
+        });
+
+        function removeAllWorkflows(searchWorkflow) {
+            var url = config.prefixURL + '/rest/studio/workflows';
+            if(searchWorkflow !== undefined && searchWorkflow !== "") {
+                url = config.prefixURL + '/rest/studio/workflows?workflowName=' + searchWorkflow;
+            }
+            var headers = { 'sessionID': localStorage['pa.session'] };
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                headers: headers
+            }).success(function (response) {
+               console.log("Successfully removed workflows");
+               destroyWorkflowView();
+            }).error(function (response) {
+                console.log("Error removing workflows");
+            });
+        }
+
+        function destroyWorkflowView() {
+            event.stopPropagation();
+            var studioApp = require('StudioApp');
+            studioApp.emptyWorkflowView();
+            studioApp.router.navigate("workflows/" , {trigger: true});
+         }
 
         function add_workflow_to_current(clearCurrentFirst){
             var studioApp = require('StudioApp');
