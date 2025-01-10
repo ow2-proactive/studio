@@ -73,7 +73,8 @@ define([
                 'change #select-mode': 'switchMode',
                 'click #btn-remove-all': 'removeAll',
                 'click #search-workflow-button': 'searchWorkflows',
-                'change #sort-workflows': 'sortWorkflows'
+                'change #sort-workflows': 'sortWorkflows',
+                'keypress #search-workflow-input':  "keyPressSortWorkflows"
             },
             listenToCollection: function (success) {
                 this.stopListening();
@@ -81,6 +82,12 @@ define([
                 this.listenTo(this.collection, 'add', this.addAll);
                 this.listenTo(this.collection, 'remove', this.addAll);
                 this.collection.fetch({reset: true, success: success});
+            },
+            keyPressSortWorkflows: function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    this.searchWorkflows();
+                }
             },
             removeAll: function (event) {
                 var searchWorkflow = document.getElementById("search-workflow-input").value;
