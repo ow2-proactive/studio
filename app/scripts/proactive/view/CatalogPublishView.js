@@ -412,7 +412,7 @@ define(
 
             if( typeof alreadyPublishedBucketName === "undefined"){
                 var studioApp = require('StudioApp');
-                if (studioApp.models === undefined) {
+                if (studioApp.models === undefined || studioApp.models.jobModel === undefined) {
                     alreadyPublishedBucketName = "";
                 } else {
                     const bucketNameObject = studioApp.models.jobModel.get("Generic Info").filter(function(item) {
