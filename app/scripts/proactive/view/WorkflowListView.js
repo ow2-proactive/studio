@@ -73,6 +73,7 @@ define([
                 'change #select-mode': 'switchMode',
                 'click #btn-remove-all': 'removeAll',
                 'click #search-workflow-button': 'searchWorkflows',
+                'click #remove-workflow-filter-button': 'removeWorkflowFilter',
                 'change #sort-workflows': 'sortWorkflows',
                 'keypress #search-workflow-input':  "keyPressSortWorkflows"
             },
@@ -103,6 +104,10 @@ define([
             },
             searchWorkflows: function (event) {
                 this.searchWorkflow = document.getElementById("search-workflow-input").value;
+                this.addAll();
+            },
+            removeWorkflowFilter: function (event) {
+                this.searchWorkflow = "";
                 this.addAll();
             },
             sortWorkflows: function (event) {

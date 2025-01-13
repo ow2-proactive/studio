@@ -1,25 +1,30 @@
 <ul id="breadcrumb" class="breadcrumb">
-    <li class="active"><span>Workflows</span></li>
-    <li style="float: right">
+    <li class="active"><span><b>List of Workflows under Development</b></span></li>
+    </li>
+</ul>
+<form class="form-inline" role="form" id="workflow-list-controls">
+    <div class="form-group w-100">
+        <button type="button" class="btn create-workflow-button">Create New Workflow</button>
+        <button type="button" id="btn-remove-all" class="btn btn-danger btn-mini" style="float:right;">Remove all</button>
+    </div>
+    <div class="input-group w-100" style="margin-top:10px;">
+        <div style="width: 70%; float:left">
+            <input type="text" id="search-workflow-input" placeholder="Workflow name" class="form-control" style="width:60%; height:34px !important;">
+            <button id="search-workflow-button" class="btn btn-default" type="button">
+                <i class="fa fa-search"></i>
+            </button>
+            <button id="remove-workflow-filter-button" class="btn btn-default" type="button" style="margin-left:-5px;">
+                <i class="fas fa-window-close"></i>
+            </button>
+        </div>
+        <div style="float:right; padding-top:6px;">
         <select id="sort-workflows" style="border-radius: 5px; border: white;">
             <option value="A-Z" selected>A-Z</option>
             <option value="Z-A">Z-A</option>
             <option value="Newer edit">Newer edit</option>
             <option value="Older edit">Older edit</option>
         </select>
-
-    </li>
-</ul>
-<form class="form-inline" role="form" id="workflow-list-controls">
-    <div class="form-group">
-        <button type="button" class="btn create-workflow-button">Create</button>
-            <div class="input-group" style="width:50%;">
-                <input type="text" id="search-workflow-input" placeholder="Workflow name" class="form-control" style="width:78%;height:34px !important;">
-                <button id="search-workflow-button" class="btn btn-default" type="button">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        <button type="button" id="btn-remove-all" class="btn btn-danger btn-mini" style="float:right;">Remove all</button>
+        </div>
     </div>
 </form>
 <div id="workflow-list"></div>
