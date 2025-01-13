@@ -8,7 +8,7 @@ define(
 
         "use strict";
 
-        var defaultProjectName = 'Default';
+        var defaultProjectName = 'None';
 
         function sortDefaultFirst(groups, option) {
             var keys = _.keys(groups);
