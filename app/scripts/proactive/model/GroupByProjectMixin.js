@@ -17,9 +17,9 @@ define(
                 keys = sortProjectsAsc(keys);
             } else if (option == "Z-A") {
                 keys = sortProjectsDesc(keys);
-            } else if (option == "Newer edit") {
+            } else if (option == "Newest edit") {
                 keys = sortProjectsByNewerEdit(keys, values);
-            } else if (option == "Older edit") {
+            } else if (option == "Oldest edit") {
                 keys = sortProjectsByOlderEdit(keys, values);
             }
             return keys;
@@ -48,8 +48,8 @@ define(
             keys.sort(function(model1, model2) {
                 index1 = getIndexOfWorkflow(keys, model1);
                 index2 = getIndexOfWorkflow(keys, model2);
-                model1Date = getModifyDateOfProject(values, index1, "Newer edit");
-                model2Date = getModifyDateOfProject(values, index2, "Newer edit");
+                model1Date = getModifyDateOfProject(values, index1, "Newest edit");
+                model2Date = getModifyDateOfProject(values, index2, "Newest edit");
                 return model2Date - model1Date;
             });
             return keys;
@@ -60,8 +60,8 @@ define(
             keys.sort(function(model1, model2) {
                 index1 = getIndexOfWorkflow(keys, model1);
                 index2 = getIndexOfWorkflow(keys, model2);
-                model1Date = getModifyDateOfProject(values, index1, "Older edit");
-                model2Date = getModifyDateOfProject(values, index2, "Older edit");
+                model1Date = getModifyDateOfProject(values, index1, "Oldest edit");
+                model2Date = getModifyDateOfProject(values, index2, "Oldest edit");
                 return model1Date - model2Date;
             });
             return keys;
@@ -81,10 +81,10 @@ define(
             var modifyDate = values[i][0].attributes.modifyDate;
             for (var j = 0; j < values[i].length; j ++) {
                 var anotherDate = values[i][j].attributes.modifyDate;
-                if (option == "Newer edit" && modifyDate < anotherDate) {
+                if (option == "Newest edit" && modifyDate < anotherDate) {
                     modifyDate = anotherDate;
                 }
-                if (option == "Older edit" && modifyDate > anotherDate) {
+                if (option == "Oldest edit" && modifyDate > anotherDate) {
                     modifyDate = anotherDate;
                 }
             }
@@ -122,9 +122,9 @@ define(
                     this.sortWorkflowsAsc();
                } else if (option === "Z-A") {
                     this.sortWorkflowsDesc();
-               } else if (option === "Newer edit") {
+               } else if (option === "Newest edit") {
                     this.sortWorkflowsByNewerEdit();
-               } else if (option === "Older edit") {
+               } else if (option === "Oldest edit") {
                     this.sortWorkflowsByOlderEdit();
                }
             },
