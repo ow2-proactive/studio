@@ -187,6 +187,8 @@ define([
                 var removeAllButton = document.getElementById("btn-remove-all");
                 var searchInput = document.getElementById("search-workflow-input");
                 var searchButton = document.getElementById("search-workflow-button");
+                var sortWorkflowsElem = document.getElementById("sort-workflows");
+                var removeWorkflowFilterButton = document.getElementById("remove-workflow-filter-button");
                 var filterModels = undefined;
                 if (this.searchWorkflow != undefined && this.searchWorkflow != "") {
                     var filterModels = this.collection.models.filter(item => (item.attributes.name.toLowerCase().includes(this.searchWorkflow.toLowerCase())));
@@ -194,12 +196,15 @@ define([
                 if (removeAllButton !== null && searchInput !== null && searchButton !== null) {
                     if (this.collection.models.length < 1 || (filterModels != undefined && filterModels.length < 1)) {
                         removeAllButton.disabled = true;
+                        sortWorkflowsElem.disabled = true;
                     } else {
                         removeAllButton.disabled = false;
+                        sortWorkflowsElem.disabled = false;
                     }
                     if (this.collection.models.length < 1) {
                         searchInput.disabled = true;
                         searchButton.disabled = true;
+                        removeWorkflowFilterButton.disabled = true;
                         var noWorkflowsLabel = document.createElement('label');
                         noWorkflowsLabel.innerHTML = "";
                         this.$('#workflow-list').last().append(noWorkflowsLabel);
@@ -207,6 +212,7 @@ define([
                     } else {
                         searchInput.disabled = false;
                         searchButton.disabled = false;
+                        removeWorkflowFilterButton.disabled = false;
                     }
                 }
             },
