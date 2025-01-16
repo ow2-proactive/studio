@@ -213,7 +213,7 @@ define(
                     that.fill();
                 });
                 if (domains.length !== 0) {
-                    var domainOptionString = '<div class="form-group"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" class="controls font-size-11" style="width:165.667px; height:23px;">';
+                    var domainOptionString = '<div class="form-group"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" class="controls font-size-11" style="width:170px;">';
                     for(var i = 0; i < domains.length ; i++) {
                         domainOptionString = domainOptionString + '<option value="' + domains[i] + '">' +  new String(domains[i]) + '</option>';
                     }
@@ -225,7 +225,7 @@ define(
                         $('#domain-mode').val(domainName);
                     }
                 } else {
-                    var domainOption = $('<div class="form-group"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" disabled="disabled" class="controls font-size-11" style="width:165.667px. height:23px;"> </select></div>');
+                    var domainOption = $('<div class="form-group"><label class="control-label">Domain | Tenant: </label><select id="domain-mode" name="domain-mode" disabled="disabled" class="controls font-size-11" style="width:170px;"> </select></div>');
                     $("#login-options").append(domainOption);
                 }
 
