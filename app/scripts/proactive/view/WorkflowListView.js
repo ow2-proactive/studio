@@ -98,7 +98,7 @@ define([
                 }
                 this.removeAllLabel.innerHTML = "You are about to remove all workflows.";
                 if(searchWorkflow !== undefined && searchWorkflow !== "") {
-                    this.removeAllLabel.innerHTML = "You are about to remove all workflows whose names contains " + searchWorkflow;
+                    this.removeAllLabel.innerHTML = "You are about to remove all workflows whose names contain <b>" + searchWorkflow + "</b>";
                 }
                 $('#remove-all-workflows-confirmation-modal').modal();
             },
