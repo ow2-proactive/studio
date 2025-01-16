@@ -23,7 +23,7 @@ module.exports = {
             .assert.containsText("#breadcrumb", 'Workflows')
 
             .click("#breadcrumb-list-workflows")
-            .assert.containsText("#workflow-list", 'Project: <none>')
+            .assert.containsText("#workflow-list", 'Project: (No project)')
             .assert.containsText("#breadcrumb", 'Workflows')
 
             .clickCloseWorkflow()
