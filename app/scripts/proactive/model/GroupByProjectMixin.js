@@ -8,7 +8,7 @@ define(
 
         "use strict";
 
-        var defaultProjectName = '&ltnone&gt';
+        var defaultProjectName = '(No project)';
 
         function sortDefaultFirst(groups, option) {
             var keys = _.keys(groups);
@@ -118,7 +118,7 @@ define(
                 }
             },
             sortWorkflows: function (option) {
-               if (option === "A-Z") {
+               if (option === undefined || option === "A-Z") {
                     this.sortWorkflowsAsc();
                } else if (option === "Z-A") {
                     this.sortWorkflowsDesc();
