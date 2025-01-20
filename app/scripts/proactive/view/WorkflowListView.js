@@ -157,6 +157,8 @@ define([
                         }
                     }
                 });
+                this.options.app.models.currentWorkflow = workflow;
+                this.addAll();
             },
             addOne: function (model) {
                 var workflow = new WorkflowListEntry({model: model, app: this.options.app});
