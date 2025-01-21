@@ -33,12 +33,29 @@ define(
             },
 
             tryToConnect: function() {
-                if (StudioClient.isLoggedIn()) {
+                if (StudioClient.isSessionPresent()) {
                     if ($("#login-container").is(":visible")) {
-                        StudioClient.setCurrentUser();
-                        window.location.reload();
-                        clearInterval(this.connectionCheckingTimer);
-                        this.connectionCheckingTimer = null;
+                        var isConnectedUrl = StudioClient.getIsConnectedUrl();
+                        $.ajax({
+                            type: "GET",
+                            url: isConnectedUrl,
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader('sessionid', localStorage['pa.session'])
+                            },
+                            success: function(data) {
+                                if (data) {
+                                    StudioClient.setCurrentUser();
+                                    window.location.reload();
+                                    clearInterval(this.connectionCheckingTimer);
+                                    this.connectionCheckingTimer = null;
+                                } else {
+                                    localStorage.removeItem('pa.session');
+                                }
+                            },
+                            error: function(data) {
+                                localStorage.removeItem('pa.session');
+                            }
+                        });
                     }
                 }
             },

@@ -153,8 +153,12 @@ define(
             },
 
             /* check if session is opened from here or from another tab (scheduler/rm portals) */
-            isLoggedIn: function() {
+            isSessionPresent: function() {
                  return localStorage['pa.session'] !== null && localStorage['pa.session'] !== undefined
+            },
+
+            getIsConnectedUrl: function() {
+                return config.restApiUrl + "/connected"
             },
 
             isConnected: function(success, fail) {

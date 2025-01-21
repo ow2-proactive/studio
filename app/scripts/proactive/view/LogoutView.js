@@ -54,7 +54,7 @@ define(
                 }
 
                 function tryToConnect() {
-                    if (StudioClient.isLoggedIn()) {
+                    if (StudioClient.isSessionPresent()) {
                         isConnected()
                         if ($("#login-container").is(":visible")) {
                             StudioClient.setCurrentUser();
@@ -72,7 +72,7 @@ define(
                 }
 
                 function checkConnected() {
-                    if (!StudioClient.isLoggedIn()) {
+                    if (!StudioClient.isSessionPresent()) {
                         isConnected()
                     }
                 }
