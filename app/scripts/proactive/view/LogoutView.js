@@ -53,7 +53,7 @@ define(
                     })
                 }
 
-                function tryToConnect() {
+                function isSessionPresent() {
                     if (StudioClient.isLoggedIn()) {
                         isConnected()
                         if ($("#login-container").is(":visible")) {
@@ -77,7 +77,7 @@ define(
                     }
                 }
 
-                connectionCheckingTimer = setInterval(tryToConnect, 10000)
+                connectionCheckingTimer = setInterval(isSessionPresent, 10000)
                 isConnected()
                 return this;
             }
