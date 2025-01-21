@@ -157,6 +157,10 @@ define(
                  return localStorage['pa.session'] !== null && localStorage['pa.session'] !== undefined
             },
 
+            getIsConnectedUrl: function() {
+                return config.restApiUrl + "/connected"
+            },
+
             isConnected: function(success, fail) {
                 var that = this;
                 if (localStorage['pa.session']) {
