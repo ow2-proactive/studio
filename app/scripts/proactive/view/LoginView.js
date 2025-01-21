@@ -19,7 +19,7 @@ define(
                 this.render();
                 if (Backbone.history.location.hostname === 'try.activeeon.com'|| Backbone.history.location.hostname === 'azure-try.activeeon.com')
                     $("#login-container").append("<a href='https://www.activeeon.com/register/web-download' target='_blank'>Or create an account</a>");
-                this.connectionCheckingTimer = setInterval(this.isSessionPresent, 10000);
+                this.connectionCheckingTimer = setInterval(this.tryToConnect, 10000);
             },
 
             events: {
@@ -32,8 +32,8 @@ define(
                 "click #login-ssh-label"   : "sshOption"
             },
 
-            isSessionPresent: function() {
-                if (StudioClient.isLoggedIn()) {
+            tryToConnect: function() {
+                if (StudioClient.isSessionPresent()) {
                     if ($("#login-container").is(":visible")) {
                         var isConnectedUrl = StudioClient.getIsConnectedUrl();
                         $.ajax({
