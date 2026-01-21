@@ -251,7 +251,7 @@ module.exports = function (grunt) {
                     name: 'main',
                     generateSourceMaps: true,
                     preserveLicenseComments: false,
-                    optimize: 'uglify2',
+                    optimize: 'none',
                     paths: {
                         'proactive/config': 'empty:'
                     }

@@ -5,7 +5,7 @@ module.exports = {
     "Detailed form by default": function (browser) {
         browser
             .login()
-            .closeNotification()
+            //.closeNotification()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -24,7 +24,7 @@ module.exports = {
     "Switch from job to simple view and back": function (browser) {
         browser
             .login()
-            .closeNotification()
+            //.closeNotification()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -48,7 +48,7 @@ module.exports = {
     "Switch from task to detailed view and back": function (browser) {
         browser
             .login()
-            .closeNotification()
+            //.closeNotification()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
@@ -77,7 +77,7 @@ module.exports = {
     	
         browser
             .login()
-            .closeNotification()
+            //.closeNotification()
             .clickCloseWorkflow()
             .removeAllWorkflows()
             .createNewWorkflow()
